@@ -1204,19 +1204,34 @@
 const supabaseClient = window.ECHOES_SUPABASE;
 
 async function testDatabaseConnection() {
+  const statusText = document.querySelector(".admin-status span:last-child");
+
+  if (statusText) {
+    statusText.textContent = "Testing database connection...";
+  }
+
   const { error } = await supabaseClient
     .from("content_items")
     .select("id", { count: "exact", head: true });
 
   if (error) {
     console.error("Supabase database connection error:", error);
+
+    if (statusText) {
+      statusText.textContent = "Database connection failed";
+    }
+
     return false;
   }
 
   console.log("Supabase database connection: OK");
+
+  if (statusText) {
+    statusText.textContent = "Database connection: Connected";
+  }
+
   return true;
 }
-
 testDatabaseConnection();
 
     function getContent() {
