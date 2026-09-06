@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Echoes of Humanity — Content Management</title>
+
+  <meta
+    name="description"
+    content="Echoes of Humanity content management panel."
+  >
+
+  <link rel="stylesheet" href="../assets/css/echoes.css">
+
+  <style>
+    /* =========================================================
+       ECHOES OF HUMANITY — ADMIN PANEL
+       ========================================================= */
+
+    :root {
+      --admin-sidebar-width: 270px;
+      --admin-header-height: 72px;
+      --admin-bg: #06111b;
+      --admin-surface: rgba(10, 25, 37, 0.88);
+      --admin-surface-soft: rgba(14, 34, 49, 0.72);
+      --admin-border: rgba(105, 190, 214, 0.14);
+      --admin-border-strong: rgba(105, 190, 214, 0.28);
+      --admin-text: #e9f5f8;
+      --admin-muted: #8ca8b3;
+      --admin-accent: #69c6dc;
+      --admin-accent-soft: rgba(105, 198, 220, 0.12);
+      --admin-success: #7bd6ad;
+      --admin-warning: #e7c878;
+      --admin-danger: #e58d9c;
+      --admin-radius: 18px;
+      --admin-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at 20% 10%,
+          rgba(44, 116, 137, 0.10),
+          transparent 34%
+        ),
+        radial-gradient(
+          circle at 85% 80%,
+          rgba(36, 89, 108, 0.08),
+          transparent 30%
+        ),
+        var(--admin-bg);
+      color: var(--admin-text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* =========================================================
+       LAYOUT
+       ========================================================= */
+
+    .admin-shell {
+      min-height: 100vh;
+    }
+
+    .admin-sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: var(--admin-sidebar-width);
+      padding: 28px 20px;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(8, 25, 38, 0.98),
+          rgba(5, 17, 27, 0.98)
+        );
+      border-right: 1px solid var(--admin-border);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admin-brand {
+      padding: 4px 10px 28px;
+    }
+
+    .admin-brand-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .admin-brand-subtitle {
+      margin: 7px 0 0;
+      color: var(--admin-muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    .admin-nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .admin-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 46px;
+      padding: 0 14px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      color: var(--admin-muted);
+      transition:
+        color 180ms ease,
+        background 180ms ease,
+        border-color 180ms ease,
+        transform 180ms ease;
+    }
+
+    .admin-nav-link:hover {
+      color: var(--admin-text);
+      background: var(--admin-accent-soft);
+      border-color: var(--admin-border);
+      transform: translateX(2px);
+    }
+
+    .admin-nav-link.active {
+      color: var(--admin-text);
+      background: var(--admin-accent-soft);
+      border-color: var(--admin-border-strong);
+    }
+
+    .admin-nav-icon {
+      width: 20px;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .admin-sidebar-footer {
+      margin-top: auto;
+      padding: 18px 10px 4px;
+      color: var(--admin-muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .admin-main {
+      min-height: 100vh;
+      margin-left: var(--admin-sidebar-width);
+    }
+
+    .admin-mobile-header {
+      display: none;
+    }
+
+    .admin-content {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 44px;
+    }
+
+    /* =========================================================
+       PAGE HEADER
+       ========================================================= */
+
+    .admin-page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 34px;
+    }
+
+    .admin-eyebrow {
+      margin: 0 0 9px;
+      color: var(--admin-accent);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .admin-page-title {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.08;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+    }
+
+    .admin-page-description {
+      max-width: 700px;
+      margin: 12px 0 0;
+      color: var(--admin-muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    /* =========================================================
+       STATUS
+       ========================================================= */
+
+    .admin-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 14px;
+      border: 1px solid var(--admin-border);
+      border-radius: 999px;
+      background: var(--admin-surface-soft);
+      color: var(--admin-muted);
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .admin-status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--admin-warning);
+      box-shadow: 0 0 12px rgba(231, 200, 120, 0.45);
+    }
+
+    /* =========================================================
+       DASHBOARD CARDS
+       ========================================================= */
+
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 34px;
+    }
+
+    .admin-stat-card {
+      padding: 24px;
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius);
+      background: var(--admin-surface);
+      box-shadow: var(--admin-shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .admin-stat-label {
+      color: var(--admin-muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .admin-stat-value {
+      display: block;
+      margin-top: 12px;
+      font-size: 34px;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    /* =========================================================
+       SECTIONS
+       ========================================================= */
+
+    .admin-section {
+      margin-bottom: 34px;
+    }
+
+    .admin-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .admin-section-title {
+      margin: 0;
+      font-size: 19px;
+      font-weight: 500;
+    }
+
+    .admin-section-description {
+      margin: 5px 0 0;
+      color: var(--admin-muted);
+      font-size: 13px;
+    }
+
+    .admin-panel {
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius);
+      background: var(--admin-surface);
+      box-shadow: var(--admin-shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    /* =========================================================
+       UPLOAD AREA
+       ========================================================= */
+
+    .admin-upload-panel {
+      padding: 24px;
+    }
+
+    .admin-upload-zone {
+      position: relative;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 34px;
+      border: 1px dashed var(--admin-border-strong);
+      border-radius: 15px;
+      background: rgba(105, 198, 220, 0.035);
+      text-align: center;
+      transition:
+        border-color 180ms ease,
+        background 180ms ease;
+    }
+
+    .admin-upload-zone:hover,
+    .admin-upload-zone.dragover {
+      border-color: var(--admin-accent);
+      background: rgba(105, 198, 220, 0.075);
+    }
+
+    .admin-upload-content {
+      max-width: 560px;
+    }
+
+    .admin-upload-icon {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 16px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--admin-border);
+      border-radius: 50%;
+      background: var(--admin-accent-soft);
+      color: var(--admin-accent);
+      font-size: 22px;
+    }
+
+    .admin-upload-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .admin-upload-text {
+      margin: 9px 0 0;
+      color: var(--admin-muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .admin-file-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .admin-upload-button {
+      margin-top: 18px;
+    }
+
+    /* =========================================================
+       PREVIEW
+       ========================================================= */
+
+    .admin-preview {
+      display: none;
+      margin-top: 20px;
+      padding: 18px;
+      border: 1px solid var(--admin-border);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    .admin-preview.visible {
+      display: block;
+    }
+
+    .admin-preview-label {
+      margin: 0 0 12px;
+      color: var(--admin-muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .admin-preview-media {
+      max-width: 100%;
+      max-height: 360px;
+      display: block;
+      margin: 0 auto;
+      border-radius: 10px;
+    }
+
+    .admin-preview audio {
+      width: 100%;
+    }
+
+    .admin-file-name {
+      margin: 12px 0 0;
+      color: var(--admin-muted);
+      font-size: 12px;
+      word-break: break-word;
+    }
+
+    /* =========================================================
+       FORM
+       ========================================================= */
+
+    .admin-form {
+      display: grid;
+      gap: 22px;
+      margin-top: 22px;
+    }
+
+    .admin-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .admin-field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .admin-field.full {
+      grid-column: 1 / -1;
+    }
+
+    .admin-label {
+      color: var(--admin-text);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .admin-input,
+    .admin-textarea,
+    .admin-select {
+      width: 100%;
+      border: 1px solid var(--admin-border);
+      border-radius: 11px;
+      outline: none;
+      background: rgba(4, 14, 23, 0.72);
+      color: var(--admin-text);
+      transition:
+        border-color 180ms ease,
+        box-shadow 180ms ease;
+    }
+
+    .admin-input,
+    .admin-select {
+      min-height: 46px;
+      padding: 0 14px;
+    }
+
+    .admin-textarea {
+      min-height: 130px;
+      padding: 13px 14px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .admin-input:focus,
+    .admin-textarea:focus,
+    .admin-select:focus {
+      border-color: var(--admin-accent);
+      box-shadow: 0 0 0 3px rgba(105, 198, 220, 0.08);
+    }
+
+    .admin-help {
+      color: var(--admin-muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    /* =========================================================
+       ACTIONS
+       ========================================================= */
+
+    .admin-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 4px;
+    }
+
+    .admin-button {
+      min-height: 44px;
+      padding: 0 18px;
+      border: 1px solid var(--admin-border);
+      border-radius: 10px;
+      background: rgba(105, 198, 220, 0.07);
+      color: var(--admin-text);
+      transition:
+        background 180ms ease,
+        border-color 180ms ease,
+        transform 180ms ease;
+    }
+
+    .admin-button:hover {
+      border-color: var(--admin-border-strong);
+      background: rgba(105, 198, 220, 0.13);
+      transform: translateY(-1px);
+    }
+
+    .admin-button-primary {
+      border-color: rgba(105, 198, 220, 0.42);
+      background: rgba(105, 198, 220, 0.16);
+      color: #dff8fc;
+    }
+
+    .admin-button-danger {
+      color: var(--admin-danger);
+    }
+
+    /* =========================================================
+       LIBRARY
+       ========================================================= */
+
+    .admin-library {
+      overflow: hidden;
+    }
+
+    .admin-library-empty {
+      padding: 42px 24px;
+      color: var(--admin-muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .admin-content-list {
+      display: grid;
+      gap: 1px;
+      background: var(--admin-border);
+    }
+
+    .admin-content-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      padding: 20px;
+      background: rgba(7, 19, 29, 0.92);
+    }
+
+    .admin-content-item-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .admin-content-item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+      color: var(--admin-muted);
+      font-size: 11px;
+    }
+
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 9px;
+      border: 1px solid var(--admin-border);
+      border-radius: 999px;
+      color: var(--admin-muted);
+      background: rgba(105, 198, 220, 0.045);
+    }
+
+    .admin-badge-draft {
+      color: var(--admin-warning);
+    }
+
+    .admin-badge-published {
+      color: var(--admin-success);
+    }
+
+    .admin-content-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 980px) {
+      :root {
+        --admin-sidebar-width: 230px;
+      }
+
+      .admin-content {
+        padding: 32px 26px;
+      }
+
+      .admin-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .admin-sidebar {
+        display: none;
+      }
+
+      .admin-main {
+        margin-left: 0;
+      }
+
+      .admin-mobile-header {
+        position: sticky;
+        top: 0;
+        z-index: 90;
+        min-height: var(--admin-header-height);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 18px;
+        border-bottom: 1px solid var(--admin-border);
+        background: rgba(5, 17, 27, 0.94);
+        backdrop-filter: blur(18px);
+      }
+
+      .admin-mobile-brand {
+        font-size: 14px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .admin-content {
+        padding: 28px 18px;
+      }
+
+      .admin-page-header {
+        display: grid;
+      }
+
+      .admin-form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-field.full {
+        grid-column: auto;
+      }
+
+      .admin-content-item {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-content-item-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .admin-content {
+        padding: 22px 14px;
+      }
+
+      .admin-upload-panel {
+        padding: 14px;
+      }
+
+      .admin-upload-zone {
+        min-height: 190px;
+        padding: 22px 14px;
+      }
+
+      .admin-actions {
+        display: grid;
+      }
+
+      .admin-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="admin-shell">
+
+    <!-- =======================================================
+         SIDEBAR
+         ======================================================= -->
+
+    <aside class="admin-sidebar">
+
+      <div class="admin-brand">
+        <h1 class="admin-brand-title">
+          Echoes of Humanity
+        </h1>
+
+        <p class="admin-brand-subtitle">
+          Content Management
+        </p>
+      </div>
+
+      <nav class="admin-nav" aria-label="Admin navigation">
+
+        <a
+          href="#dashboard"
+          class="admin-nav-link active"
+          data-section="dashboard"
+        >
+          <span class="admin-nav-icon">◈</span>
+          <span>Dashboard</span>
+        </a>
+
+        <a
+          href="#new-content"
+          class="admin-nav-link"
+          data-section="new-content"
+        >
+          <span class="admin-nav-icon">＋</span>
+          <span>New Content</span>
+        </a>
+
+        <a
+          href="#content-library"
+          class="admin-nav-link"
+          data-section="content-library"
+        >
+          <span class="admin-nav-icon">▤</span>
+          <span>Content Library</span>
+        </a>
+
+        <a
+          href="#settings"
+          class="admin-nav-link"
+          data-section="settings"
+        >
+          <span class="admin-nav-icon">⚙</span>
+          <span>Settings</span>
+        </a>
+
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        Echoes of Humanity<br>
+        Content system foundation
+      </div>
+
+    </aside>
+
+
+    <!-- =======================================================
+         MOBILE HEADER
+         ======================================================= -->
+
+    <header class="admin-mobile-header">
+      <div class="admin-mobile-brand">
+        Echoes of Humanity
+      </div>
+
+      <div class="admin-status">
+        <span class="admin-status-dot"></span>
+        <span>Backend pending</span>
+      </div>
+    </header>
+
+
+    <!-- =======================================================
+         MAIN
+         ======================================================= -->
+
+    <main class="admin-main">
+
+      <div class="admin-content">
+
+        <!-- =====================================================
+             PAGE HEADER
+             ===================================================== -->
+
+        <header class="admin-page-header">
+
+          <div>
+            <p class="admin-eyebrow">
+              Echoes of Humanity
+            </p>
+
+            <h2 class="admin-page-title">
+              Content Management
+            </h2>
+
+            <p class="admin-page-description">
+              Upload, organize and prepare the stories, images,
+              videos, music and documents that will become part
+              of the Echoes of Humanity world.
+            </p>
+          </div>
+
+          <div class="admin-status">
+            <span class="admin-status-dot"></span>
+            <span>Storage connection: Pending secure backend connection</span>
+          </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             DASHBOARD
+             ===================================================== -->
+
+        <section
+          id="dashboard"
+          class="admin-section"
+        >
+
+          <div class="admin-section-header">
+
+            <div>
+              <h3 class="admin-section-title">
+                Dashboard
+              </h3>
+
+              <p class="admin-section-description">
+                Overview of the current content library.
+              </p>
+            </div>
+
+          </div>
+
+          <div class="admin-stats">
+
+            <article class="admin-stat-card">
+              <span class="admin-stat-label">
+                Published
+              </span>
+
+              <strong
+                id="publishedCount"
+                class="admin-stat-value"
+              >
+                0
+              </strong>
+            </article>
+
+            <article class="admin-stat-card">
+              <span class="admin-stat-label">
+                Drafts
+              </span>
+
+              <strong
+                id="draftCount"
+                class="admin-stat-value"
+              >
+                0
+              </strong>
+            </article>
+
+            <article class="admin-stat-card">
+  <span class="admin-stat-label">
+    Total Content
+  </span>
+
+  <strong
+    id="totalCount"
+    class="admin-stat-value"
+  >
+    0
+  </strong>
+</article>
+
+</div>
+
+        </section>
+
+        
+        <!-- =====================================================
+             CONTENT LIBRARY
+             ===================================================== -->
+
+        <section
+          id="content-library"
+          class="admin-section"
+        >
+
+          <div class="admin-section-header">
+
+            <div>
+              <h3 class="admin-section-title">
+                Content Library
+              </h3>
+
+              <p class="admin-section-description">
+                Manage your existing content.
+              </p>
+            </div>
+
+          </div>
+
+          <div
+            id="contentLibrary"
+            class="admin-panel admin-library"
+          >
+
+            <div
+              id="libraryEmpty"
+              class="admin-library-empty"
+            >
+              No content has been added yet.
+            </div>
+
+            <div
+              id="contentList"
+              class="admin-content-list"
+            ></div>
+
+          </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SETTINGS
+             ===================================================== -->
+
+        <section
+          id="settings"
+          class="admin-section"
+        >
+
+          <div class="admin-section-header">
+
+            <div>
+              <h3 class="admin-section-title">
+                Settings
+              </h3>
+
+              <p class="admin-section-description">
+                Content system configuration.
+              </p>
+            </div>
+
+          </div>
+
+          <div class="admin-panel admin-upload-panel">
+
+            <div class="admin-field">
+
+              <label class="admin-label">
+                Storage Connection
+              </label>
+
+              <div class="admin-status">
+                <span class="admin-status-dot"></span>
+                <span>
+                  Pending secure backend connection
+                </span>
+              </div>
+
+              <span class="admin-help">
+                The secure storage and database connection
+                will be configured after the panel foundation
+                is complete.
+              </span>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+      </div>
+
+    </main>
+
+  </div>
+
+    <script src="../assets/js/echoes.js"></script>
+
+  <script>
+    const STORAGE_KEY = "echoes_admin_content";
+
+    const uploadZone = document.getElementById("uploadZone");
+    const fileInput = document.getElementById("fileInput");
+    const chooseFileButton = document.getElementById("chooseFileButton");
+    const preview = document.getElementById("preview");
+    const previewContent = document.getElementById("previewContent");
+    const fileName = document.getElementById("fileName");
+
+    const contentForm = document.getElementById("contentForm");
+    const saveDraftButton = document.getElementById("saveDraftButton");
+    const publishButton = document.getElementById("publishButton");
+    const clearButton = document.getElementById("clearButton");
+
+    const contentList = document.getElementById("contentList");
+    const libraryEmpty = document.getElementById("libraryEmpty");
+
+    const publishedCount = document.getElementById("publishedCount");
+    const draftCount = document.getElementById("draftCount");
+    const totalCount = document.getElementById("totalCount");
+
+
+    function getContent() {
+      try {
+        return JSON.parse(
+          localStorage.getItem(STORAGE_KEY) || "[]"
+        );
+      } catch (error) {
+        return [];
+      }
+    }
+
+
+    function saveContent(items) {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(items)
+      );
+
+      renderLibrary();
+      updateStats();
+    }
+
+
+    function updateStats() {
+      const items = getContent();
+
+      publishedCount.textContent =
+        items.filter(item => item.status === "published").length;
+
+      draftCount.textContent =
+        items.filter(item => item.status === "draft").length;
+
+      totalCount.textContent = items.length;
+    }
+
+
+    function renderLibrary() {
+      const items = getContent();
+
+      contentList.innerHTML = "";
+
+      if (!items.length) {
+        libraryEmpty.style.display = "block";
+        return;
+      }
+
+      libraryEmpty.style.display = "none";
+
+      items.slice().reverse().forEach(item => {
+
+        const article = document.createElement("article");
+        article.className = "admin-content-item";
+
+        const statusClass =
+          item.status === "published"
+            ? "admin-badge-published"
+            : "admin-badge-draft";
+
+        article.innerHTML = `
+          <div>
+            <h4 class="admin-content-item-title">
+              ${escapeHtml(item.title)}
+            </h4>
+
+            <div class="admin-content-item-meta">
+              <span class="admin-badge">
+                ${escapeHtml(item.type)}
+              </span>
+
+              <span class="admin-badge">
+                ${escapeHtml(item.language)}
+              </span>
+
+              <span class="admin-badge ${statusClass}">
+                ${escapeHtml(item.status)}
+              </span>
+            </div>
+          </div>
+
+          <div class="admin-content-item-actions">
+            <button
+              type="button"
+              class="admin-button admin-button-danger"
+              data-delete="${item.id}"
+            >
+              Delete
+            </button>
+          </div>
+        `;
+
+        contentList.appendChild(article);
+      });
+    }
+
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+
+    function showPreview(file) {
+      previewContent.innerHTML = "";
+      fileName.textContent = file.name;
+
+      const url = URL.createObjectURL(file);
+
+      if (file.type.startsWith("image/")) {
+
+        const image = document.createElement("img");
+        image.src = url;
+        image.className = "admin-preview-media";
+
+        previewContent.appendChild(image);
+
+      } else if (file.type.startsWith("video/")) {
+
+        const video = document.createElement("video");
+        video.src = url;
+        video.className = "admin-preview-media";
+        video.controls = true;
+
+        previewContent.appendChild(video);
+
+      } else if (file.type.startsWith("audio/")) {
+
+        const audio = document.createElement("audio");
+        audio.src = url;
+        audio.controls = true;
+
+        previewContent.appendChild(audio);
+
+      } else {
+
+        const text = document.createElement("p");
+        text.className = "admin-file-name";
+        text.textContent = "Document selected.";
+
+        previewContent.appendChild(text);
+      }
+
+      preview.classList.add("visible");
+    }
+
+
+    function handleFile(file) {
+      if (!file) return;
+
+      showPreview(file);
+    }
+
+
+    chooseFileButton.addEventListener(
+      "click",
+      () => fileInput.click()
+    );
+
+
+    fileInput.addEventListener(
+      "change",
+      event => {
+        handleFile(event.target.files[0]);
+      }
+    );
+
+
+    uploadZone.addEventListener(
+      "dragover",
+      event => {
+        event.preventDefault();
+        uploadZone.classList.add("dragover");
+      }
+    );
+
+
+    uploadZone.addEventListener(
+      "dragleave",
+      () => {
+        uploadZone.classList.remove("dragover");
+      }
+    );
+
+
+    uploadZone.addEventListener(
+      "drop",
+      event => {
+        event.preventDefault();
+
+        uploadZone.classList.remove("dragover");
+
+        const file = event.dataTransfer.files[0];
+
+        if (file) {
+          fileInput.files = event.dataTransfer.files;
+          handleFile(file);
+        }
+      }
+    );
+
+        contentForm.addEventListener("submit", event => {
+      event.preventDefault();
+    });
+
+
+    saveDraftButton.addEventListener("click", () => {
+      saveItem("draft");
+    });
+
+
+    publishButton.addEventListener("click", () => {
+      saveItem("pending");
+    });
+
+
+    function saveItem(status) {
+
+      const title = document.getElementById("title").value.trim();
+
+      if (!title) {
+        alert("Please enter a title.");
+        return;
+      }
+
+      const items = getContent();
+
+      const item = {
+        id: Date.now(),
+        type: document.getElementById("contentType").value,
+        language: document.getElementById("language").value,
+        title: title,
+        description:
+          document.getElementById("description").value.trim(),
+        category:
+          document.getElementById("category").value.trim(),
+        tags:
+          document.getElementById("tags").value.trim(),
+        fileName:
+          fileInput.files[0]
+            ? fileInput.files[0].name
+            : "",
+        status: status,
+        createdAt: new Date().toISOString()
+      };
+
+      items.push(item);
+
+      saveContent(items);
+
+      alert(
+        status === "draft"
+          ? "Draft saved."
+          : "Content prepared for publishing."
+      );
+
+      contentForm.reset();
+
+      preview.classList.remove("visible");
+      previewContent.innerHTML = "";
+      fileName.textContent = "";
+      fileInput.value = "";
+    }
+
+
+    clearButton.addEventListener("click", () => {
+
+      contentForm.reset();
+
+      preview.classList.remove("visible");
+      previewContent.innerHTML = "";
+      fileName.textContent = "";
+
+      fileInput.value = "";
+    });
+
+
+    contentList.addEventListener("click", event => {
+
+      const button =
+        event.target.closest("[data-delete]");
+
+      if (!button) return;
+
+      const id = Number(button.dataset.delete);
+
+      const items = getContent().filter(
+        item => item.id !== id
+      );
+
+      saveContent(items);
+    });
+
+
+    document.querySelectorAll(".admin-nav-link")
+      .forEach(link => {
+
+        link.addEventListener("click", () => {
+
+          document
+            .querySelectorAll(".admin-nav-link")
+            .forEach(item =>
+              item.classList.remove("active")
+            );
+
+          link.classList.add("active");
+        });
+
+      });
+
+
+    renderLibrary();
+    updateStats();
+
+  </script>
+
+</body>
+</html>
