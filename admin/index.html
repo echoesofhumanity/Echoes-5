@@ -1234,98 +1234,115 @@ async function testDatabaseConnection() {
 }
 testDatabaseConnection();
 
-    function getContent() {
-      try {
-        return JSON.parse(
-          localStorage.getItem(STORAGE_KEY) || "[]"
-        );
-      } catch (error) {
-        return [];
-      }
+    
+
+async function saveContent() {
+  await renderLibrary();
+  await updateStats();
+}
+
+
+async function updateStats() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("content_items")
+      .select("status");
+
+    if (error) {
+      console.error("Supabase statistics error:", error);
+      return;
     }
 
+    const items = data || [];
 
-    function saveContent(items) {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(items)
-      );
+    publishedCount.textContent =
+      items.filter(item => item.status === "published").length;
 
-      renderLibrary();
-      updateStats();
+    draftCount.textContent =
+      items.filter(item => item.status === "draft").length;
+
+    totalCount.textContent = items.length;
+
+  } catch (error) {
+    console.error("Statistics error:", error);
+  }
+}
+
+
+async function renderLibrary() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("content_items")
+      .select(
+        "id, type, title, language, status, created_at"
+      )
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Supabase library error:", error);
+      return;
     }
 
+    const items = data || [];
 
-    function updateStats() {
-      const items = getContent();
+    contentList.innerHTML = "";
 
-      publishedCount.textContent =
-        items.filter(item => item.status === "published").length;
-
-      draftCount.textContent =
-        items.filter(item => item.status === "draft").length;
-
-      totalCount.textContent = items.length;
+    if (!items.length) {
+      libraryEmpty.style.display = "block";
+      return;
     }
 
+    libraryEmpty.style.display = "none";
 
-    function renderLibrary() {
-      const items = getContent();
+    items.forEach(item => {
+      const article = document.createElement("article");
 
-      contentList.innerHTML = "";
+      article.className = "admin-content-item";
 
-      if (!items.length) {
-        libraryEmpty.style.display = "block";
-        return;
-      }
+      const statusClass =
+        item.status === "published"
+          ? "admin-badge-published"
+          : "admin-badge-draft";
 
-      libraryEmpty.style.display = "none";
+      article.innerHTML = `
+        <div>
+          <h4 class="admin-content-item-title">
+            ${escapeHtml(item.title)}
+          </h4>
 
-      items.slice().reverse().forEach(item => {
+          <div class="admin-content-item-meta">
+            <span class="admin-badge">
+              ${escapeHtml(item.type)}
+            </span>
 
-        const article = document.createElement("article");
-        article.className = "admin-content-item";
+            <span class="admin-badge">
+              ${escapeHtml(item.language)}
+            </span>
 
-        const statusClass =
-          item.status === "published"
-            ? "admin-badge-published"
-            : "admin-badge-draft";
-
-        article.innerHTML = `
-          <div>
-            <h4 class="admin-content-item-title">
-              ${escapeHtml(item.title)}
-            </h4>
-
-            <div class="admin-content-item-meta">
-              <span class="admin-badge">
-                ${escapeHtml(item.type)}
-              </span>
-
-              <span class="admin-badge">
-                ${escapeHtml(item.language)}
-              </span>
-
-              <span class="admin-badge ${statusClass}">
-                ${escapeHtml(item.status)}
-              </span>
-            </div>
+            <span class="admin-badge ${statusClass}">
+              ${escapeHtml(item.status)}
+            </span>
           </div>
+        </div>
 
-          <div class="admin-content-item-actions">
-            <button
-              type="button"
-              class="admin-button admin-button-danger"
-              data-delete="${item.id}"
-            >
-              Delete
-            </button>
-          </div>
-        `;
+        <div class="admin-content-item-actions">
+          <button
+            type="button"
+            class="admin-button admin-button-danger"
+            data-delete="${item.id}"
+          >
+            Delete
+          </button>
+        </div>
+      `;
 
-        contentList.appendChild(article);
-      });
-    }
+      contentList.appendChild(article);
+    });
+
+  } catch (error) {
+    console.error("Library error:", error);
+  }
+}
 
 
     function escapeHtml(value) {
