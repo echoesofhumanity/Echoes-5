@@ -1649,9 +1649,17 @@ async function renderLibrary() {
     });
 
 
-    publishButton.addEventListener("click", () => {
-      saveItem("pending");
-    });
+publishButton.addEventListener("click", async () => {
+  publishButton.disabled = true;
+  publishButton.textContent = "Publishing...";
+
+  try {
+    await saveItem("pending");
+  } finally {
+    publishButton.disabled = false;
+    publishButton.textContent = "Publish";
+  }
+});
 
 
     async function saveItem(status) {
