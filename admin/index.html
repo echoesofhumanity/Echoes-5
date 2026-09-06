@@ -1468,52 +1468,89 @@ async function renderLibrary() {
     });
 
 
-    function saveItem(status) {
+    async function saveItem(status) {
+  const title = document.getElementById("title").value.trim();
 
-      const title = document.getElementById("title").value.trim();
+  if (!title) {
+    alert("Please enter a title.");
+    return;
+  }
 
-      if (!title) {
-        alert("Please enter a title.");
-        return;
-      }
+  const type = document.getElementById("contentType").value;
+  const language = document.getElementById("language").value;
+  const description =
+    document.getElementById("description").value.trim();
+  const category =
+    document.getElementById("category").value.trim();
+  const tagsValue =
+    document.getElementById("tags").value.trim();
 
-      const items = getContent();
+  const tags = tagsValue
+    ? tagsValue
+        .split(",")
+        .map(tag => tag.trim())
+        .filter(Boolean)
+    : [];
 
-      const item = {
-        id: Date.now(),
-        type: document.getElementById("contentType").value,
-        language: document.getElementById("language").value,
-        title: title,
-        description:
-          document.getElementById("description").value.trim(),
-        category:
-          document.getElementById("category").value.trim(),
-        tags:
-          document.getElementById("tags").value.trim(),
-        fileName:
-          fileInput.files[0]
-            ? fileInput.files[0].name
-            : "",
-        status: status,
-        createdAt: new Date().toISOString()
-      };
+  const finalStatus =
+    status === "pending" ? "published" : status;
 
-      items.push(item);
+  try {
+    const {
+      data: { user },
+      error: userError
+    } = await supabaseClient.auth.getUser();
 
-      saveContent(items);
+    if (userError || !user) {
+      console.error("Authentication error:", userError);
+      alert("Your session has expired. Please sign in again.");
+      return;
+    }
 
-      alert(
-        status === "draft"
-          ? "Draft saved."
-          : "Content prepared for publishing."
-      );
+    const { error } = await supabaseClient
+      .from("content_items")
+      .insert({
+        type,
+        title,
+        description: description || null,
+        language,
+        category: category || null,
+        tags,
+        file_path: null,
+        cover_path: null,
+        status: finalStatus,
+        author_id: user.id,
+        published_at:
+          finalStatus === "published"
+            ? new Date().toISOString()
+            : null
+      });
 
-      contentForm.reset();
+    if (error) {
+      console.error("Supabase content insert error:", error);
+      alert("Content could not be saved.");
+      return;
+    }
 
-      preview.classList.remove("visible");
-      previewContent.innerHTML = "";
-      fileName.textContent = "";
-      fileInput.value = "";
+    await renderLibrary();
+    await updateStats();
+
+    alert(
+      finalStatus === "draft"
+        ? "Draft saved."
+        : "Content published."
+    );
+
+    contentForm.reset();
+    preview.classList.remove("visible");
+    previewContent.innerHTML = "";
+    fileName.textContent = "";
+    fileInput.value = "";
+
+  } catch (error) {
+    console.error("Save content error:", error);
+    alert("An unexpected error occurred.");
+  }
     }
 
 
