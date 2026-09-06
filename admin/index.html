@@ -1495,6 +1495,8 @@ async function renderLibrary() {
   const finalStatus =
     status === "pending" ? "published" : status;
 
+  let uploadedPath = null;
+
   try {
     const {
       data: { user },
@@ -1507,27 +1509,68 @@ async function renderLibrary() {
       return;
     }
 
-    const { error } = await supabaseClient
-      .from("content_items")
-      .insert({
-        type,
-        title,
-        description: description || null,
-        language,
-        category: category || null,
-        tags,
-        file_path: null,
-        cover_path: null,
-        status: finalStatus,
-        author_id: user.id,
-        published_at:
-          finalStatus === "published"
-            ? new Date().toISOString()
-            : null
-      });
+    const file = fileInput.files[0];
 
-    if (error) {
-      console.error("Supabase content insert error:", error);
+    if (file) {
+      const safeFileName = file.name
+        .replace(/[^a-zA-Z0-9._-]/g, "-")
+        .replace(/-+/g, "-");
+
+      uploadedPath =
+        `${user.id}/${crypto.randomUUID()}-${safeFileName}`;
+
+      const { error: uploadError } =
+        await supabaseClient.storage
+          .from("echoes-media")
+          .upload(uploadedPath, file, {
+            cacheControl: "3600",
+            upsert: false,
+            contentType: file.type || "application/octet-stream"
+          });
+
+      if (uploadError) {
+        console.error(
+          "Supabase storage upload error:",
+          uploadError
+        );
+
+        alert("File could not be uploaded.");
+        return;
+      }
+    }
+
+    const { error: insertError } =
+      await supabaseClient
+        .from("content_items")
+        .insert({
+          type,
+          title,
+          description: description || null,
+          language,
+          category: category || null,
+          tags,
+          file_path: uploadedPath,
+          cover_path: null,
+          status: finalStatus,
+          author_id: user.id,
+          published_at:
+            finalStatus === "published"
+              ? new Date().toISOString()
+              : null
+        });
+
+    if (insertError) {
+      console.error(
+        "Supabase content insert error:",
+        insertError
+      );
+
+      if (uploadedPath) {
+        await supabaseClient.storage
+          .from("echoes-media")
+          .remove([uploadedPath]);
+      }
+
       alert("Content could not be saved.");
       return;
     }
@@ -1549,6 +1592,13 @@ async function renderLibrary() {
 
   } catch (error) {
     console.error("Save content error:", error);
+
+    if (uploadedPath) {
+      await supabaseClient.storage
+        .from("echoes-media")
+        .remove([uploadedPath]);
+    }
+
     alert("An unexpected error occurred.");
   }
     }
