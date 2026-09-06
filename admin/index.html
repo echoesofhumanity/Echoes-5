@@ -1201,7 +1201,23 @@
     const publishedCount = document.getElementById("publishedCount");
     const draftCount = document.getElementById("draftCount");
     const totalCount = document.getElementById("totalCount");
+const supabaseClient = window.ECHOES_SUPABASE;
 
+async function testDatabaseConnection() {
+  const { error } = await supabaseClient
+    .from("content_items")
+    .select("id", { count: "exact", head: true });
+
+  if (error) {
+    console.error("Supabase database connection error:", error);
+    return false;
+  }
+
+  console.log("Supabase database connection: OK");
+  return true;
+}
+
+testDatabaseConnection();
 
     function getContent() {
       try {
