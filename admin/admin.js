@@ -160,21 +160,25 @@
 
 
   function showAdmin() {
-    state.authenticated = true;
+  state.authenticated = true;
 
-    if (authView) {
-      authView.classList.remove("is-active");
-      authView.hidden = true;
-    }
+  if (authView) {
+    authView.classList.remove("is-active");
+    authView.hidden = true;
+  }
 
-    if (adminShell) {
-      adminShell.hidden = false;
-    }
+  if (adminShell) {
+    adminShell.hidden = false;
+  }
 
-    setConnectionStatus(
-      "Connected",
-      "connected"
-    );
+  setConnectionStatus(
+    "Connected",
+    "connected"
+  );
+
+  if (window.EchoesAdminData) {
+    window.EchoesAdminData.refreshDashboard();
+  }
   }
 
 
