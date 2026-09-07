@@ -64,6 +64,9 @@
   const publishButton =
     document.getElementById("publishButton");
 
+   const library =
+  document.getElementById("library");
+
 
   /* =======================================================
      STATE
@@ -835,6 +838,61 @@
         .refreshDashboard();
     }
   }
+
+   /* =======================================================
+   DELETE BUTTON HANDLER
+   ======================================================= */
+
+if (library) {
+  library.addEventListener(
+    "click",
+    async (event) => {
+      const button =
+        event.target.closest(
+          '[data-action="delete-content"]'
+        );
+
+      if (!button) {
+        return;
+      }
+
+      const contentId =
+        button.dataset.contentId;
+
+      if (!contentId) {
+        return;
+      }
+
+      const confirmed =
+        window.confirm(
+          "Delete this content permanently?"
+        );
+
+      if (!confirmed) {
+        return;
+      }
+
+      try {
+        button.disabled = true;
+
+        await deleteContent(
+          contentId
+        );
+      } catch (error) {
+        console.error(
+          "Content deletion failed:",
+          error
+        );
+
+        showMessage(
+          "Content could not be deleted."
+        );
+
+        button.disabled = false;
+      }
+    }
+  );
+}
   /* =======================================================
      PUBLIC API
      ======================================================= */
