@@ -1,7 +1,7 @@
 /* =========================================================
    ECHOES OF HUMANITY
    ADMIN DATA LAYER
-   Database Read Operations
+   Database + Library Read Operations
    ========================================================= */
 
 (() => {
@@ -31,6 +31,9 @@
   const statPending =
     document.getElementById("statPending");
 
+  const library =
+    document.getElementById("library");
+
 
   /* =======================================================
      HELPERS
@@ -42,6 +45,56 @@
     }
 
     element.textContent = String(value);
+  }
+
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+
+  function formatDate(value) {
+    if (!value) {
+      return "—";
+    }
+
+    const date =
+      new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return "—";
+    }
+
+    return date.toLocaleDateString(
+      undefined,
+      {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      }
+    );
+  }
+
+
+  function getStatusClass(status) {
+    if (status === "published") {
+      return "admin-badge-success";
+    }
+
+    if (status === "pending") {
+      return "admin-badge-warning";
+    }
+
+    if (status === "archived") {
+      return "admin-badge-danger";
+    }
+
+    return "";
   }
 
 
@@ -113,6 +166,7 @@
           item.status === "pending"
       ).length;
 
+
     setStat(
       statTotal,
       total
@@ -136,39 +190,143 @@
 
 
   /* =======================================================
-     PUBLIC API
+     CONTENT LIBRARY
+     ======================================================= */
+
+  function renderLibrary(items) {
+    if (!library) {
+      return;
+    }
+
+    if (!items.length) {
+      library.innerHTML = `
+        <div class="admin-empty">
+          No content has been added yet.
+        </div>
+      `;
+
+      return;
+    }
+
+
+    library.innerHTML =
+      items.map(item => {
+
+        const statusClass =
+          getStatusClass(
+            item.status
+          );
+
+        const category =
+          item.category ||
+          "Uncategorized";
+
+        const language =
+          item.language ||
+          "—";
+
+        const type =
+          item.type ||
+          "—";
+
+        return `
+          <article
+            class="admin-library-item"
+            data-content-id="${escapeHtml(item.id)}"
+          >
+
+            <div class="admin-library-info">
+
+              <h3 class="admin-library-title">
+                ${escapeHtml(item.title)}
+              </h3>
+
+              <div class="admin-library-meta">
+
+                <span class="admin-badge">
+                  ${escapeHtml(type)}
+                </span>
+
+                <span class="admin-badge">
+                  ${escapeHtml(language)}
+                </span>
+
+                <span class="admin-badge">
+                  ${escapeHtml(category)}
+                </span>
+
+                <span
+                  class="admin-badge ${statusClass}"
+                >
+                  ${escapeHtml(item.status)}
+                </span>
+
+                <span>
+                  ${formatDate(item.created_at)}
+                </span>
+
+              </div>
+
+            </div>
+
+          </article>
+        `;
+
+      }).join("");
+  }
+
+
+  /* =======================================================
+     REFRESH ADMIN DATA
      ======================================================= */
 
   async function refreshDashboard() {
     try {
+
       const items =
         await loadContentItems();
+
 
       updateDashboardStats(
         items
       );
 
+
+      renderLibrary(
+        items
+      );
+
+
       return items;
 
     } catch (error) {
-      showDataError(error);
+
+      showDataError(
+        error
+      );
+
+      if (library) {
+        library.innerHTML = `
+          <div class="admin-empty">
+            Unable to load content.
+          </div>
+        `;
+      }
 
       return [];
     }
   }
 
 
+  /* =======================================================
+     PUBLIC API
+     ======================================================= */
+
   window.EchoesAdminData = {
     loadContentItems,
     updateDashboardStats,
+    renderLibrary,
     refreshDashboard
   };
-
-
-  /* =======================================================
-     INITIAL LOAD
-     ======================================================= */
-
-
 
 })();
