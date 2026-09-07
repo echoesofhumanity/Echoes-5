@@ -1723,15 +1723,22 @@ publishButton.addEventListener("click", async () => {
           });
 
       if (uploadError) {
-        console.error(
-          "Supabase storage upload error:",
-          uploadError
-        );
+  console.error(
+    "Supabase storage upload error:",
+    uploadError
+  );
 
-        alert("File could not be uploaded.");
-        return;
+  alert(
+    "File could not be uploaded.\n\n" +
+    (uploadError.message || "") +
+    "\n\n" +
+    (uploadError.details || "") +
+    "\n\n" +
+    (uploadError.hint || "")
+  );
+
+  return;
       }
-    }
 
     const { error: insertError } =
       await supabaseClient
