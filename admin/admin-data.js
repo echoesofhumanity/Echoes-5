@@ -123,7 +123,7 @@
     } = await supabaseClient
       .from("content_items")
       .select(
-        "id, type, title, language, category, status, created_at, updated_at"
+        "id, type, title, language, category, status, file_path, created_at, updated_at"
       )
       .order(
         "created_at",
@@ -268,6 +268,16 @@
               </div>
 
             </div>
+        <div class="admin-library-actions">
+          <button
+            type="button"
+            class="admin-button"
+            data-action="delete-content"
+            data-content-id="${escapeHtml(item.id)}"
+          >
+            Delete
+          </button>
+        </div>
 
           </article>
         `;
