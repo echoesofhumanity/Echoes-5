@@ -196,6 +196,7 @@
 
       image.src = url;
       image.alt = file.name;
+       image.className = "admin-preview-media";
 
       previewContent.appendChild(
         image
@@ -209,6 +210,7 @@
 
       video.src = url;
       video.controls = true;
+       video.className = "admin-preview-media";
 
       previewContent.appendChild(
         video
@@ -222,6 +224,7 @@
 
       audio.src = url;
       audio.controls = true;
+       audio.className = "admin-preview-media";
 
       previewContent.appendChild(
         audio
