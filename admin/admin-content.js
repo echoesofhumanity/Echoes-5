@@ -759,14 +759,90 @@
     );
   }
 
+  /* =======================================================
+     DELETE CONTENT
+     ======================================================= */
 
+  async function deleteContent(
+    contentId
+  ) {
+    if (!supabaseClient) {
+      throw new Error(
+        "Supabase connection is unavailable."
+      );
+    }
+
+    if (!contentId) {
+      throw new Error(
+        "Content ID is required."
+      );
+    }
+
+    const {
+      data: item,
+      error: fetchError
+    } = await supabaseClient
+      .from("content_items")
+      .select(
+        "id, file_path"
+      )
+      .eq(
+        "id",
+        contentId
+      )
+      .single();
+
+    if (fetchError) {
+      throw fetchError;
+    }
+
+    const {
+      error: deleteError
+    } = await supabaseClient
+      .from("content_items")
+      .delete()
+      .eq(
+        "id",
+        contentId
+      );
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    if (item.file_path) {
+      const {
+        error: storageError
+      } = await supabaseClient
+        .storage
+        .from("echoes-media")
+        .remove([
+          item.file_path
+        ]);
+
+      if (storageError) {
+        console.error(
+          "Storage cleanup failed:",
+          storageError
+        );
+      }
+    }
+
+    if (
+      window.EchoesAdminData
+    ) {
+      await window.EchoesAdminData
+        .refreshDashboard();
+    }
+  }
   /* =======================================================
      PUBLIC API
      ======================================================= */
 
   window.EchoesAdminContent = {
     saveContent,
-    clearForm
+    clearForm,
+  deleteContent
   };
 
 })();
