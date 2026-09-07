@@ -1729,14 +1729,9 @@ publishButton.addEventListener("click", async () => {
   );
 
   alert(
-    "File could not be uploaded.\n\n" +
-    (uploadError.message || "") +
-    "\n\n" +
-    (uploadError.details || "") +
-    "\n\n" +
-    (uploadError.hint || "")
-  );
-
+  "File could not be uploaded.\n\n" +
+  JSON.stringify(uploadError, null, 2)
+);
   return;
       }
 
