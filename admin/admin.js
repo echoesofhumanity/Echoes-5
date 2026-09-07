@@ -11,13 +11,8 @@
      SUPABASE
      ======================================================= */
 
-  const supabaseClient = window.supabase.createClient(
-    window.ECHOES_SUPABASE_URL,
-    window.ECHOES_SUPABASE_PUBLISHABLE_KEY
-  );
-
-  window.ECHOES_SUPABASE = supabaseClient;
-
+  const supabaseClient =
+  window.ECHOES_SUPABASE;
 
   /* =======================================================
      DOM
