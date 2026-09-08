@@ -608,8 +608,32 @@ async function updateContentItem(
     );
 
     let uploadedPath = null;
-
+let previousFilePath = null;
     try {
+
+if (
+  editingContentId &&
+  selectedFile
+) {
+  const {
+    data: existingItem,
+    error: existingItemError
+  } = await supabaseClient
+    .from("content_items")
+    .select("file_path")
+    .eq(
+      "id",
+      editingContentId
+    )
+    .single();
+
+  if (existingItemError) {
+    throw existingItemError;
+  }
+
+  previousFilePath =
+    existingItem.file_path || null;
+}
 
 if (selectedFile) {
   uploadedPath =
@@ -633,7 +657,28 @@ if (editingContentId) {
   );
 }
 
+if (
+  editingContentId &&
+  selectedFile &&
+  previousFilePath &&
+  previousFilePath !== uploadedPath
+) {
+  const {
+    error: storageCleanupError
+  } = await supabaseClient
+    .storage
+    .from("echoes-media")
+    .remove([
+      previousFilePath
+    ]);
 
+  if (storageCleanupError) {
+    console.error(
+      "Previous media cleanup failed:",
+      storageCleanupError
+    );
+  }
+     }
       showMessage(
         status === "published"
           ? "Content published successfully."
