@@ -33,8 +33,13 @@
 
   const library =
     document.getElementById("library");
+const librarySearch =
+  document.getElementById("librarySearch");
+/* =======================================================
+   STATE
+   ======================================================= */
 
-
+let allContentItems = [];
   /* =======================================================
      HELPERS
      ======================================================= */
@@ -302,17 +307,17 @@
     try {
 
       const items =
-        await loadContentItems();
+  await loadContentItems();
 
+allContentItems = items;
 
-      updateDashboardStats(
-        items
-      );
+updateDashboardStats(
+  items
+);
 
-
-      renderLibrary(
-        items
-      );
+renderLibrary(
+  items
+);
 
 
       return items;
@@ -335,7 +340,43 @@
     }
   }
 
+/* =======================================================
+   LIBRARY SEARCH
+   ======================================================= */
 
+if (librarySearch) {
+  librarySearch.addEventListener(
+    "input",
+    () => {
+      const query =
+        librarySearch.value
+          .trim()
+          .toLowerCase();
+
+      if (!query) {
+        renderLibrary(
+          allContentItems
+        );
+
+        return;
+      }
+
+      const filteredItems =
+        allContentItems.filter(
+          item =>
+            String(
+              item.title || ""
+            )
+              .toLowerCase()
+              .includes(query)
+        );
+
+      renderLibrary(
+        filteredItems
+      );
+    }
+  );
+}
   /* =======================================================
      PUBLIC API
      ======================================================= */
