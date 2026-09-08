@@ -359,6 +359,10 @@ function applyLibraryFilters() {
     libraryStatusFilter
       ? libraryStatusFilter.value
       : "all";
+   const type =
+  libraryTypeFilter
+    ? libraryTypeFilter.value
+    : "all";
 
   const filteredItems =
     allContentItems.filter(item => {
@@ -371,10 +375,14 @@ function applyLibraryFilters() {
       const matchesStatus =
         status === "all" ||
         item.status === status;
+       const matchesType =
+  type === "all" ||
+  item.type === type;
 
       return (
-        matchesSearch &&
-        matchesStatus
+  matchesSearch &&
+  matchesStatus &&
+  matchesType
       );
     });
 
@@ -396,6 +404,12 @@ if (libraryStatusFilter) {
     applyLibraryFilters
   );
 }
+   if (libraryTypeFilter) {
+  libraryTypeFilter.addEventListener(
+    "change",
+    applyLibraryFilters
+  );
+   }
   /* =======================================================
      PUBLIC API
      ======================================================= */
