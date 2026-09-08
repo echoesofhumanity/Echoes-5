@@ -40,6 +40,9 @@ const librarySearch =
   document.getElementById("libraryStatusFilter");
    const libraryTypeFilter =
   document.getElementById("libraryTypeFilter");
+
+   const libraryLanguageFilter =
+  document.getElementById("libraryLanguageFilter");
 /* =======================================================
    STATE
    ======================================================= */
@@ -364,6 +367,11 @@ function applyLibraryFilters() {
     ? libraryTypeFilter.value
     : "all";
 
+   const language =
+  libraryLanguageFilter
+    ? libraryLanguageFilter.value
+    : "all";
+
   const filteredItems =
     allContentItems.filter(item => {
       const matchesSearch =
@@ -379,11 +387,16 @@ function applyLibraryFilters() {
   type === "all" ||
   item.type === type;
 
+       const matchesLanguage =
+  language === "all" ||
+  item.language === language;
+
       return (
   matchesSearch &&
   matchesStatus &&
-  matchesType
-      );
+  matchesType &&
+  matchesLanguage
+);
     });
 
   renderLibrary(
@@ -404,6 +417,13 @@ if (libraryStatusFilter) {
     applyLibraryFilters
   );
 }
+
+   if (libraryLanguageFilter) {
+  libraryLanguageFilter.addEventListener(
+    "change",
+    applyLibraryFilters
+  );
+   }
    if (libraryTypeFilter) {
   libraryTypeFilter.addEventListener(
     "change",
