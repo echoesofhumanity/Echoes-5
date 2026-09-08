@@ -838,7 +838,120 @@ editingContentId = null;
         .refreshDashboard();
     }
   }
+/* =======================================================
+   EDIT BUTTON HANDLER
+   ======================================================= */
 
+if (library) {
+  library.addEventListener(
+    "click",
+    async (event) => {
+      const button =
+        event.target.closest(
+          '[data-action="edit-content"]'
+        );
+
+      if (!button) {
+        return;
+      }
+
+      const contentId =
+        button.dataset.contentId;
+
+      if (!contentId) {
+        return;
+      }
+
+      if (!supabaseClient) {
+        showMessage(
+          "Supabase connection is unavailable."
+        );
+
+        return;
+      }
+
+      try {
+        const {
+          data: item,
+          error
+        } = await supabaseClient
+          .from("content_items")
+          .select(
+            "id, title, type, language, category, description, tags, file_path"
+          )
+          .eq(
+            "id",
+            contentId
+          )
+          .single();
+
+        if (error) {
+          throw error;
+        }
+
+        editingContentId = item.id;
+
+        if (contentTitle) {
+          contentTitle.value =
+            item.title || "";
+        }
+
+        if (contentType) {
+          contentType.value =
+            item.type || "";
+        }
+
+        if (contentLanguage) {
+          contentLanguage.value =
+            item.language || "";
+        }
+
+        if (contentCategory) {
+          contentCategory.value =
+            item.category || "";
+        }
+
+        if (contentDescription) {
+          contentDescription.value =
+            item.description || "";
+        }
+
+        if (contentTags) {
+          contentTags.value =
+            Array.isArray(item.tags)
+              ? item.tags.join(", ")
+              : "";
+        }
+
+        selectedFile = null;
+
+        clearPreview();
+
+        showMessage(
+          "Content loaded for editing.",
+          "success"
+        );
+
+        if (contentForm) {
+          contentForm.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        }
+
+      } catch (error) {
+        console.error(
+          "Content edit failed:",
+          error
+        );
+
+        showMessage(
+          "Content could not be loaded."
+        );
+      }
+    }
+  );
+         }
    /* =======================================================
    DELETE BUTTON HANDLER
    ======================================================= */
