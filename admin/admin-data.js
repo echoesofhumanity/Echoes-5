@@ -38,6 +38,8 @@ const librarySearch =
 
    const libraryStatusFilter =
   document.getElementById("libraryStatusFilter");
+   const libraryTypeFilter =
+  document.getElementById("libraryTypeFilter");
 /* =======================================================
    STATE
    ======================================================= */
