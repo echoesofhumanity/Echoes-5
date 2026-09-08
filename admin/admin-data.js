@@ -35,6 +35,9 @@
     document.getElementById("library");
 const librarySearch =
   document.getElementById("librarySearch");
+
+   const libraryStatusFilter =
+  document.getElementById("libraryStatusFilter");
 /* =======================================================
    STATE
    ======================================================= */
@@ -341,40 +344,56 @@ renderLibrary(
   }
 
 /* =======================================================
-   LIBRARY SEARCH
+   LIBRARY FILTERS
    ======================================================= */
+
+function applyLibraryFilters() {
+  const query =
+    librarySearch
+      ? librarySearch.value
+          .trim()
+          .toLowerCase()
+      : "";
+
+  const status =
+    libraryStatusFilter
+      ? libraryStatusFilter.value
+      : "all";
+
+  const filteredItems =
+    allContentItems.filter(item => {
+      const matchesSearch =
+        !query ||
+        String(item.title || "")
+          .toLowerCase()
+          .includes(query);
+
+      const matchesStatus =
+        status === "all" ||
+        item.status === status;
+
+      return (
+        matchesSearch &&
+        matchesStatus
+      );
+    });
+
+  renderLibrary(
+    filteredItems
+  );
+}
 
 if (librarySearch) {
   librarySearch.addEventListener(
     "input",
-    () => {
-      const query =
-        librarySearch.value
-          .trim()
-          .toLowerCase();
+    applyLibraryFilters
+  );
+}
 
-      if (!query) {
-        renderLibrary(
-          allContentItems
-        );
-
-        return;
-      }
-
-      const filteredItems =
-        allContentItems.filter(
-          item =>
-            String(
-              item.title || ""
-            )
-              .toLowerCase()
-              .includes(query)
-        );
-
-      renderLibrary(
-        filteredItems
-      );
-    }
+if (libraryStatusFilter) {
+  libraryStatusFilter.addEventListener(
+    "change",
+    applyLibraryFilters
   );
 }
   /* =======================================================
