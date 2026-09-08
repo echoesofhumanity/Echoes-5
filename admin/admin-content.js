@@ -485,7 +485,70 @@ let editingContentId = null;
     return item;
   }
 
+/* =======================================================
+   UPDATE CONTENT
+   ======================================================= */
 
+async function updateContentItem(
+  data,
+  filePath,
+  contentId
+) {
+  const payload = {
+    title:
+      data.title,
+
+    type:
+      data.type,
+
+    language:
+      data.language,
+
+    category:
+      data.category,
+
+    description:
+      data.description,
+
+    tags:
+      data.tags,
+
+    status:
+      data.status,
+
+    updated_at:
+      new Date().toISOString(),
+
+    published_at:
+      data.status === "published"
+        ? new Date().toISOString()
+        : null
+  };
+
+  if (filePath) {
+    payload.file_path =
+      filePath;
+  }
+
+  const {
+    data: item,
+    error
+  } = await supabaseClient
+    .from("content_items")
+    .update(payload)
+    .eq(
+      "id",
+      contentId
+    )
+    .select()
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return item;
+}
   /* =======================================================
      SAVE CONTENT
      ======================================================= */
@@ -548,20 +611,27 @@ let editingContentId = null;
 
     try {
 
-      if (selectedFile) {
-        uploadedPath =
-          await uploadFile(
-            selectedFile,
-            user.id
-          );
-      }
+if (selectedFile) {
+  uploadedPath =
+    await uploadFile(
+      selectedFile,
+      user.id
+    );
+}
 
-
-      await createContentItem(
-        formData,
-        uploadedPath,
-        user.id
-      );
+if (editingContentId) {
+  await updateContentItem(
+    formData,
+    uploadedPath,
+    editingContentId
+  );
+} else {
+  await createContentItem(
+    formData,
+    uploadedPath,
+    user.id
+  );
+}
 
 
       showMessage(
