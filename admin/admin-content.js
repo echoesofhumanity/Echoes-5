@@ -73,7 +73,7 @@
      ======================================================= */
 
   let selectedFile = null;
-
+let editingContentId = null;
 
   /* =======================================================
      MESSAGES
@@ -642,7 +642,7 @@
     }
 
     clearPreview();
-
+editingContentId = null;
     if (
       clearMessageState
     ) {
