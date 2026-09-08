@@ -269,16 +269,24 @@
 
             </div>
         <div class="admin-library-actions">
-          <button
-            type="button"
-            class="admin-button"
-            data-action="delete-content"
-            data-content-id="${escapeHtml(item.id)}"
-          >
-            Delete
-          </button>
-        </div>
+  <button
+    type="button"
+    class="admin-button"
+    data-action="edit-content"
+    data-content-id="${escapeHtml(item.id)}"
+  >
+    Edit
+  </button>
 
+  <button
+    type="button"
+    class="admin-button"
+    data-action="delete-content"
+    data-content-id="${escapeHtml(item.id)}"
+  >
+    Delete
+  </button>
+</div>
           </article>
         `;
 
