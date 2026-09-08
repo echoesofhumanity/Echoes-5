@@ -931,7 +931,14 @@ if (library) {
           "Content loaded for editing.",
           "success"
         );
+const newContentButton =
+  document.querySelector(
+    '.admin-nav button[data-section="contentSection"]'
+  );
 
+if (newContentButton) {
+  newContentButton.click();
+}
         if (contentForm) {
           contentForm.scrollIntoView({
             behavior: "smooth",
