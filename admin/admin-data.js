@@ -318,9 +318,7 @@ updateDashboardStats(
   items
 );
 
-renderLibrary(
-  items
-);
+applyLibraryFilters();
 
 
       return items;
