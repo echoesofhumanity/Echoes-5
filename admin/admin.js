@@ -187,29 +187,32 @@
      ======================================================= */
 
   function activateSection(sectionId) {
-    if (!sectionId) {
-      return;
-    }
+  if (!sectionId) {
+    return;
+  }
 
-    sections.forEach(section => {
-      const isTarget =
-        section.id === sectionId;
+  sections.forEach(section => {
+    const isTarget =
+      section.id === sectionId;
 
-      section.classList.toggle(
-        "is-active",
-        isTarget
-      );
-    });
+    section.classList.toggle(
+      "is-active",
+      isTarget
+    );
 
-    navigationButtons.forEach(button => {
-      const isTarget =
-        button.dataset.section === sectionId;
+    section.style.display =
+      isTarget ? "block" : "none";
+  });
 
-      button.classList.toggle(
-        "is-active",
-        isTarget
-      );
-    });
+  navigationButtons.forEach(button => {
+    const isTarget =
+      button.dataset.section === sectionId;
+
+    button.classList.toggle(
+      "is-active",
+      isTarget
+    );
+  });
   }
 
 
