@@ -200,9 +200,11 @@
       isTarget
     );
 
-    section.style.display =
-      isTarget ? "block" : "none";
-  });
+    section.style.setProperty(
+  "display",
+  isTarget ? "block" : "none",
+  "important"
+);
 
   navigationButtons.forEach(button => {
     const isTarget =
