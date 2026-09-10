@@ -56,9 +56,9 @@
     );
 
   const sections =
-    document.querySelectorAll(
-        "main .admin-section"
-    );
+  document.querySelectorAll(
+    "#adminShell .admin-section"
+  );
 
 
   /* =======================================================
