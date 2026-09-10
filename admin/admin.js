@@ -187,36 +187,20 @@
      ======================================================= */
 
   function activateSection(sectionId) {
-  if (!sectionId) {
-    return;
-  }
-
   sections.forEach(section => {
-    const isTarget =
-      section.id === sectionId;
+    const isTarget = section.id === sectionId;
 
-    section.classList.toggle(
-      "is-active",
-      isTarget
-    );
-
-    section.style.setProperty(
-  "display",
-  isTarget ? "block" : "none",
-  "important"
-);
+    section.hidden = !isTarget;
+    section.classList.toggle("is-active", isTarget);
   });
-  navigationButtons.forEach(button => {
-    const isTarget =
-      button.dataset.section === sectionId;
 
+  navigationButtons.forEach(button => {
     button.classList.toggle(
       "is-active",
-      isTarget
+      button.dataset.section === sectionId
     );
   });
   }
-
 
   navigationButtons.forEach(button => {
     button.addEventListener(
