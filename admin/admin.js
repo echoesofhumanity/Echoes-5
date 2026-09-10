@@ -205,7 +205,7 @@
   isTarget ? "block" : "none",
   "important"
 );
-
+  });
   navigationButtons.forEach(button => {
     const isTarget =
       button.dataset.section === sectionId;
