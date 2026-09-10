@@ -199,19 +199,25 @@
   });
        const targetSection = document.getElementById(sectionId);
 
-  alert(
-    "TARGET: " +
-      sectionId +
-      "\nSECTIONS: " +
-      sections.length +
-      "\nFOUND: " +
-      Boolean(targetSection) +
-      "\nDISPLAY: " +
-      (targetSection
-        ? getComputedStyle(targetSection).display
-        : "N/A")
-  );
-
+alert(
+  "TARGET: " +
+    sectionId +
+    "\nSECTIONS: " +
+    sections.length +
+    "\nFOUND: " +
+    Boolean(targetSection) +
+    "\nIN MAIN: " +
+    Boolean(
+      targetSection &&
+      targetSection.closest("main")
+    ) +
+    "\nMAIN COUNT: " +
+    document.querySelectorAll("main").length +
+    "\nSECTION IDS: " +
+    Array.from(sections)
+      .map(section => section.id)
+      .join(", ")
+);
   navigationButtons.forEach(button => {
     button.classList.toggle(
       "is-active",
