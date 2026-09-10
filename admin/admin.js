@@ -57,7 +57,7 @@
 
   const sections =
     document.querySelectorAll(
-      "main .admin-section"
+        "main .admin-section"
     );
 
 
