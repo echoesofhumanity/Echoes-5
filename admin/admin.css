@@ -752,3 +752,6 @@ button {
     flex: 1;
   }
   }
+.admin-section[hidden] {
+  display: none !important;
+}
