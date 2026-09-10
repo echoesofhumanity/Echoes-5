@@ -197,6 +197,20 @@
 );
     section.classList.toggle("is-active", isTarget);
   });
+       const targetSection = document.getElementById(sectionId);
+
+  alert(
+    "TARGET: " +
+      sectionId +
+      "\nSECTIONS: " +
+      sections.length +
+      "\nFOUND: " +
+      Boolean(targetSection) +
+      "\nDISPLAY: " +
+      (targetSection
+        ? getComputedStyle(targetSection).display
+        : "N/A")
+  );
 
   navigationButtons.forEach(button => {
     button.classList.toggle(
