@@ -488,12 +488,12 @@
      EVENTS
      ======================================================= */
 
-  if (loginForm) {
-    loginForm.addEventListener(
-      "submit",
-      handleLogin
-    );
-  }
+if (loginButton) {
+  loginButton.addEventListener(
+    "click",
+    handleLogin
+  );
+}
 
   if (logoutButton) {
     logoutButton.addEventListener(
