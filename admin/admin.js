@@ -190,7 +190,11 @@
   sections.forEach(section => {
     const isTarget = section.id === sectionId;
 
-    section.hidden = !isTarget;
+    section.style.setProperty(
+  "display",
+  isTarget ? "block" : "none",
+  "important"
+);
     section.classList.toggle("is-active", isTarget);
   });
 
