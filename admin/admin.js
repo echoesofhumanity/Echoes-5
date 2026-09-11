@@ -183,24 +183,6 @@
      NAVIGATION
      ======================================================= */
 
-function activateSection(sectionId) {
-  sections.forEach(section => {
-    const isTarget = section.id === sectionId;
-
-    section.hidden = !isTarget;
-    section.classList.toggle(
-      "is-active",
-      isTarget
-    );
-  });
-
-  navigationButtons.forEach(button => {
-    button.classList.toggle(
-      "is-active",
-      button.dataset.section === sectionId
-    );
-  });
-}
 
   navigationButtons.forEach(button => {
     button.addEventListener(
