@@ -137,27 +137,24 @@
      VIEW STATE
      ======================================================= */
 
-  function showLogin() {
-    state.authenticated = false;
-    state.user = null;
-    state.isAdmin = false;
+  function activateSection(sectionId) {
+  sections.forEach(section => {
+    const isTarget = section.id === sectionId;
 
-    if (authView) {
-      authView.classList.add("is-active");
-      authView.hidden = false;
-    }
-
-    if (adminShell) {
-      adminShell.hidden = true;
-    }
-
-    clearMessage(loginMessage);
-
-    setConnectionStatus(
-      "Authentication required"
+    section.hidden = !isTarget;
+    section.classList.toggle(
+      "is-active",
+      isTarget
     );
-  }
+  });
 
+  navigationButtons.forEach(button => {
+    button.classList.toggle(
+      "is-active",
+      button.dataset.section === sectionId
+    );
+  });
+  }
 
   function showAdmin() {
   state.authenticated = true;
