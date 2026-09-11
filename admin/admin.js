@@ -190,34 +190,9 @@
   sections.forEach(section => {
     const isTarget = section.id === sectionId;
 
-    section.style.setProperty(
-  "display",
-  isTarget ? "block" : "none",
-  "important"
-);
-    section.classList.toggle("is-active", isTarget);
-  });
-       const targetSection = document.getElementById(sectionId);
-
-alert(
-  "TARGET: " +
-    sectionId +
-    "\nSECTIONS: " +
-    sections.length +
-    "\nFOUND: " +
-    Boolean(targetSection) +
-    "\nIN MAIN: " +
-    Boolean(
-      targetSection &&
-      targetSection.closest("main")
-    ) +
-    "\nMAIN COUNT: " +
-    document.querySelectorAll("main").length +
-    "\nSECTION IDS: " +
-    Array.from(sections)
-      .map(section => section.id)
-      .join(", ")
-);
+ section.hidden = !isTarget;
+section.classList.toggle("is-active", isTarget);
+       
   navigationButtons.forEach(button => {
     button.classList.toggle(
       "is-active",
