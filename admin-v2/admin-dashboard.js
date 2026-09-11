@@ -291,11 +291,9 @@
      ======================================================= */
 
   async function handleAuthenticated() {
-    if (!initialized) {
-      return;
-    }
+  try {
 
-    try {
+    
       await refreshDashboard();
     } catch (error) {
       console.error(
