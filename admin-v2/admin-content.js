@@ -910,24 +910,22 @@
           previousFilePath !== uploadedPath
         )
       ) {
-        setMessage(
-          editing
-            ? "Content updated successfully."
-            : "Content created successfully.",
-          "success"
-        );
-      }
+        clearForm();
 
+setMessage(
+  editing
+    ? "Content updated successfully."
+    : "Content created successfully.",
+  "success"
+);
 
-      emit(
-        "echoes:content-saved",
-        {
-          content: result,
-          editing
-        }
-      );
-
-      clearForm();
+emit(
+  "echoes:content-saved",
+  {
+    content: result,
+    editing
+  }
+);
 
       return result;
 
