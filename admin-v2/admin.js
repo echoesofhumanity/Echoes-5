@@ -1,19 +1,34 @@
 document.addEventListener("DOMContentLoaded", () => {
   const BUCKET_NAME = "echoes-media";
 
-  // Supabase İstemcisi
+  // Supabase istemcisini dinamik ve güvenli şekilde doğrulama
   function getSupabase() {
     if (window.ECHOES_SUPABASE_API && typeof window.ECHOES_SUPABASE_API.getClient === "function") {
-      return window.ECHOES_SUPABASE_API.getClient();
+      const client = window.ECHOES_SUPABASE_API.getClient();
+      if (client && typeof client.from === "function") return client;
     }
-    if (window.ECHOES_SUPABASE) return window.ECHOES_SUPABASE;
-    if (window.supabase) return window.supabase;
+    if (window.ECHOES_SUPABASE && typeof window.ECHOES_SUPABASE.from === "function") {
+      return window.ECHOES_SUPABASE;
+    }
+    if (window.supabaseClient && typeof window.supabaseClient.from === "function") {
+      return window.supabaseClient;
+    }
+    if (window.supabase && typeof window.supabase.from === "function") {
+      return window.supabase;
+    }
+    // Kütüphane nesnesinden istemci türetme kontrolü
+    if (window.supabase && typeof window.supabase.createClient === "function") {
+      const url = window.SUPABASE_URL || window.ECHOES_SUPABASE_URL || (window.ECHOES_CONFIG && window.ECHOES_CONFIG.SUPABASE_URL);
+      const key = window.SUPABASE_ANON_KEY || window.ECHOES_SUPABASE_KEY || (window.ECHOES_CONFIG && window.ECHOES_CONFIG.SUPABASE_KEY);
+      if (url && key) {
+        window.ECHOES_SUPABASE = window.supabase.createClient(url, key);
+        return window.ECHOES_SUPABASE;
+      }
+    }
     return null;
   }
 
-  const supabase = getSupabase();
-
-  // Elements
+  // HTML Elemanları
   const alertBox = document.getElementById("statusAlert");
   const form = document.getElementById("contentForm");
   const editingIdInput = document.getElementById("editingId");
@@ -29,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const sectionLibrary = document.getElementById("sectionLibrary");
   const libraryList = document.getElementById("libraryList");
 
-  // Navigasyon Tıklamaları
+  // Navigasyon Kontrolleri
   document.getElementById("navNewContent").addEventListener("click", () => {
     resetForm();
     sectionForm.style.display = "block";
@@ -54,8 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("formTitle").textContent = "Yeni İçerik Ekle";
   }
 
-  // Medya Yükleme
-  async function uploadFile(file) {
+  // Dosya Yükleme Fonksiyonu
+  async function uploadFile(supabase, file) {
     if (!file) return null;
     const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
     const filePath = `uploads/${Date.now()}-${cleanName}`;
@@ -65,19 +80,20 @@ document.addEventListener("DOMContentLoaded", () => {
     return filePath;
   }
 
-  // Kaydet / Güncelle
+  // Kaydet / Güncelle İşlemi
   async function handleSave(status) {
-    if (!supabase) return showAlert("Supabase bağlantısı kurulamadı!", "error");
+    const supabase = getSupabase();
+    if (!supabase) return showAlert("Supabase istemcisi yüklenemedi. Yapılandırma dosyasını kontrol edin.", "error");
 
     const title = titleInput.value.trim();
-    if (!title) return showAlert("Başlık girmelisiniz.", "error");
+    if (!title) return showAlert("Lütfen bir başlık girin.", "error");
 
     try {
       showAlert("Kaydediliyor...", "info");
 
       let filePath = null;
       if (fileInput.files[0]) {
-        filePath = await uploadFile(fileInput.files[0]);
+        filePath = await uploadFile(supabase, fileInput.files[0]);
       }
 
       const tags = tagsInput.value ? tagsInput.value.split(",").map(t => t.trim()).filter(Boolean) : [];
@@ -105,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (res.error) throw res.error;
 
-      showAlert(editingId ? "Güncellendi!" : "Başarıyla kaydedildi!", "success");
+      showAlert(editingId ? "İçerik güncellendi!" : "İçerik başarıyla kaydedildi!", "success");
       resetForm();
     } catch (err) {
       console.error(err);
@@ -113,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Event Listeners
+  // Buton Dinleyicileri
   document.getElementById("btnSaveDraft").addEventListener("click", () => handleSave("draft"));
   document.getElementById("btnPublish").addEventListener("click", () => handleSave("published"));
   document.getElementById("btnClear").addEventListener("click", resetForm);
@@ -121,7 +137,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Kütüphane Yükleme
   async function loadLibrary() {
-    if (!supabase) return;
+    const supabase = getSupabase();
+    if (!supabase) {
+      libraryList.innerHTML = "<p style='color:#ef4444;'>Hata: Supabase bağlantısı kurulamadı.</p>";
+      return;
+    }
+
     libraryList.innerHTML = "Yükleniyor...";
 
     try {
@@ -133,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (error) throw error;
 
       if (!data || data.length === 0) {
-        libraryList.innerHTML = "<p style='color:#94a3b8;'>Henüz içerik eklenmemiş.</p>";
+        libraryList.innerHTML = "<p style='color:#94a3b8;'>Henüz içerik bulunmuyor.</p>";
         return;
       }
 
@@ -157,8 +178,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Global Fonksiyonlar
+  // Global Düzenle ve Sil İşlevleri
   window.editItem = async (id) => {
+    const supabase = getSupabase();
+    if (!supabase) return showAlert("Supabase bağlantısı kurulamadı.", "error");
+
     const { data, error } = await supabase.from("content_items").select("*").eq("id", id).single();
     if (error || !data) return showAlert("Detay getirilemedi.", "error");
 
@@ -176,6 +200,9 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.deleteItem = async (id, filePath) => {
+    const supabase = getSupabase();
+    if (!supabase) return showAlert("Supabase bağlantısı kurulamadı.", "error");
+
     if (!confirm("Bu içeriği silmek istediğinizden emin misiniz?")) return;
 
     try {
@@ -193,4 +220,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 });
-
+    
