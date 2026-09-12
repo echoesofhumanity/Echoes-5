@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Echoes Admin Panel V2</title>
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; background: #1e293b; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 15px; margin-bottom: 20px; }
+    h2 { margin: 0; color: #38bdf8; }
+    nav button { background: #334155; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-left: 8px; transition: 0.2s; }
+    nav button:hover { background: #475569; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; margin-bottom: 6px; font-size: 0.9rem; color: #94a3b8; }
+    input, select, textarea { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 0.95rem; }
+    input:focus, select:focus, textarea:focus { border-color: #38bdf8; outline: none; }
+    .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .btn-publish { background: #22c55e; color: #fff; }
+    .btn-draft { background: #eab308; color: #000; }
+    .btn-clear { background: #64748b; color: #fff; }
+    .btn:hover { opacity: 0.9; }
+    .alert { padding: 12px; border-radius: 6px; margin-bottom: 15px; display: none; font-size: 0.9rem; }
+    .alert.info { background: #0284c7; color: white; display: block; }
+    .alert.success { background: #15803d; color: white; display: block; }
+    .alert.error { background: #b91c1c; color: white; display: block; }
+    .card { background: #0f172a; border: 1px solid #334155; padding: 15px; border-radius: 8px; margin-bottom: 12px; }
+    .card-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .btn-sm { padding: 6px 12px; font-size: 0.85rem; border: none; border-radius: 4px; cursor: pointer; }
+    .btn-edit { background: #0284c7; color: white; }
+    .btn-delete { background: #dc2626; color: white; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h2>Echoes Admin Panel V2</h2>
+      <nav>
+        <button id="navNewContent">Yeni İçerik</button>
+        <button id="navLibrary">İçerik Kütüphanesi</button>
+      </nav>
+    </header>
+
+    <div id="statusAlert" class="alert"></div>
+
+    <!-- FORM SEKSİYONU -->
+    <section id="sectionForm">
+      <h3 id="formTitle" style="margin-top:0;">Yeni İçerik Ekle</h3>
+      <form id="contentForm">
+        <input type="hidden" id="editingId">
+
+        <div class="form-group">
+          <label>Başlık *</label>
+          <input type="text" id="contentTitle" required placeholder="İçerik başlığı">
+        </div>
+
+        <div style="display: flex; gap: 15px;">
+          <div class="form-group" style="flex:1;">
+            <label>Tip</label>
+            <select id="contentType">
+              <option value="story">Story</option>
+              <option value="video">Video</option>
+              <option value="image">Image</option>
+              <option value="music">Music</option>
+              <option value="document">Document</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>Dil</label>
+            <select id="contentLanguage">
+              <option value="tr">Türkçe</option>
+              <option value="en">English</option>
+              <option value="fr">Français</option>
+              <option value="es">Español</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Kategori</label>
+          <input type="text" id="contentCategory" placeholder="Örn: general, test">
+        </div>
+
+        <div class="form-group">
+          <label>Açıklama</label>
+          <textarea id="contentDescription" rows="4" placeholder="İçerik detayı..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Etiketler (Virgülle ayırın)</label>
+          <input type="text" id="contentTags" placeholder="humanity, story, art">
+        </div>
+
+        <div class="form-group">
+          <label>Medya Dosyası (İsteğe Bağlı)</label>
+          <input type="file" id="contentFile">
+        </div>
+
+        <div class="btn-group">
+          <button type="button" id="btnClear" class="btn btn-clear">Temizle</button>
+          <button type="button" id="btnSaveDraft" class="btn btn-draft">Taslak Kaydet</button>
+          <button type="button" id="btnPublish" class="btn btn-publish">Yayınla</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- KÜTÜPHANE SEKSİYONU -->
+    <section id="sectionLibrary" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h3 style="margin:0;">Kayıtlı İçerikler</h3>
+        <button id="btnRefresh" class="btn btn-clear">Yenile</button>
+      </div>
+      <div id="libraryList">Yükleniyor...</div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
+
