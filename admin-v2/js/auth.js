@@ -4,56 +4,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const passwordInput = document.getElementById('password');
     const errorDiv = document.getElementById('loginError');
 
-    if (btnLogin) {
-        btnLogin.addEventListener('click', async () => {
-            errorDiv.style.whiteSpace = 'pre-wrap';
-            errorDiv.style.textAlign = 'left';
-            errorDiv.style.fontSize = '11px';
-            errorDiv.textContent = '--- TEŞHİS TESTİ BAŞLATILDI ---\n';
+    if (!btnLogin) return;
 
-            const url = window.ECHOES_SUPABASE_URL;
-            const key = window.ECHOES_SUPABASE_PUBLISHABLE_KEY;
+    btnLogin.addEventListener('click', async (e) => {
+        e.preventDefault();
 
-            errorDiv.textContent += `1. Target URL: "${url}"\n`;
-            errorDiv.textContent += `2. Key Var Mı: ${!!key}\n`;
-            errorDiv.textContent += `3. DB Objesi: ${typeof db !== 'undefined' && !!db}\n`;
+        const email = emailInput ? emailInput.value.trim() : '';
+        const password = passwordInput ? passwordInput.value : '';
 
-            if (!url) {
-                errorDiv.textContent += 'SONUÇ: URL Tanımsız!\n';
-                return;
+        if (!email || !password) {
+            errorDiv.textContent = 'Lütfen e-posta ve şifrenizi girin.';
+            return;
+        }
+
+        errorDiv.style.color = '#3b82f6';
+        errorDiv.textContent = 'Giriş yapılıyor, lütfen bekleyin...';
+
+        try {
+            const client = window.supabaseClient || (window.supabase && window.supabase.createClient ? 
+                window.supabase.createClient(window.ECHOES_SUPABASE_URL, window.ECHOES_SUPABASE_PUBLISHABLE_KEY) : null);
+
+            if (!client) {
+                throw new Error('Supabase istemcisi başlatılamadı.');
             }
 
-            // Test A: Doğrudan Sunucu Erişilebilirliği (Yalın Fetch)
-            try {
-                errorDiv.textContent += '4. Sunucuya Doğrudan İstek Atılıyor...\n';
-                const testRes = await fetch(`${url}/auth/v1/health`, {
-                    headers: { 'apikey': key || '' }
-                });
-                errorDiv.textContent += `5. Sunucu Yanıtı: HTTP ${testRes.status} (${testRes.statusText})\n`;
-            } catch (netErr) {
-                errorDiv.textContent += `AĞ HATASI: ${netErr.name} - ${netErr.message}\n`;
-                errorDiv.textContent += `Online Durumu: ${navigator.onLine ? 'İnternet Var' : 'İnternet Yok'}\n`;
-                return;
+            const { data, error } = await client.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+            if (error) {
+                throw error;
             }
 
-            // Test B: SDK Giriş Testi
-            try {
-                errorDiv.textContent += '6. SDK Giriş Deneniyor...\n';
-                const { data, error } = await db.auth.signInWithPassword({
-                    email: emailInput.value.trim(),
-                    password: passwordInput.value
-                });
-
-                if (error) {
-                    errorDiv.textContent += `AUTH HATASI: ${error.message} (Kod: ${error.status})\n`;
-                } else {
-                    errorDiv.textContent += 'BAŞARILI! Yönlendiriliyor...\n';
-                    window.location.href = 'index.html';
-                }
-            } catch (sdkErr) {
-                errorDiv.textContent += `SDK İSTİSNA: ${sdkErr.name} - ${sdkErr.message}\n`;
-            }
-        });
-    }
-});
+            errorDiv.style.color = '#22c55e';
+            errorDiv.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';
             
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+
+        } catch (err) {
+            errorDiv.style.color = '#ef4444';
+            errorDiv.textContent = 'Giriş Hatası: ' + (err.message || 'Bilinmeyen bir hata oluştu.');
+        }
+    });
+});
