@@ -30,8 +30,9 @@
    * ============================================================
    *
    * These IDs MUST match admin/index.html.
-   * Keeping them in one place prevents HTML/JS binding drift.
+   * ============================================================
    */
+
   const DASHBOARD_IDS = {
     total: "totalContent",
     published: "publishedContent",
@@ -188,6 +189,35 @@
     );
   }
 
+  function validateDom() {
+    const missing = getMissingDomReferences();
+
+    if (missing.length === 0) {
+      return true;
+    }
+
+    console.error(
+      `${MODULE_NAME}: missing DOM references.`,
+      missing
+    );
+
+    if (refs.dashboardStatus) {
+      refs.dashboardStatus.textContent =
+        "Dashboard interface is incomplete.";
+
+      refs.dashboardStatus.classList.remove(
+        "success",
+        "warning"
+      );
+
+      refs.dashboardStatus.classList.add(
+        "error"
+      );
+    }
+
+    return false;
+  }
+
   /*
    * ============================================================
    * SUPABASE ACCESS
@@ -201,7 +231,11 @@
       api &&
       typeof api.getClient === "function"
     ) {
-      return api.getClient();
+      const client = api.getClient();
+
+      if (client) {
+        return client;
+      }
     }
 
     if (
@@ -229,7 +263,7 @@
 
   /*
    * ============================================================
-   * AUTHENTICATION STATE
+   * AUTHENTICATION ACCESS
    * ============================================================
    */
 
@@ -247,7 +281,10 @@
       return Boolean(auth.isAuthenticated());
     }
 
-    if (auth && auth.currentUser) {
+    if (
+      auth &&
+      auth.currentUser
+    ) {
       return true;
     }
 
@@ -268,9 +305,9 @@
     );
   }
 
-  /*
+    /*
    * ============================================================
-   * STATUS MESSAGE
+   * STATUS
    * ============================================================
    */
 
@@ -279,7 +316,8 @@
       return;
     }
 
-    refs.dashboardStatus.textContent = message || "";
+    refs.dashboardStatus.textContent =
+      message || "";
 
     refs.dashboardStatus.classList.remove(
       "success",
@@ -365,7 +403,7 @@
 
   /*
    * ============================================================
-   * STATISTICS
+   * CALCULATE STATISTICS
    * ============================================================
    */
 
@@ -377,7 +415,10 @@
     }
 
     for (const item of items) {
-      if (!item || typeof item !== "object") {
+      if (
+        !item ||
+        typeof item !== "object"
+      ) {
         continue;
       }
 
@@ -399,8 +440,9 @@
     }
 
     return stats;
-      }
-    /*
+  }
+
+  /*
    * ============================================================
    * RENDER STATISTICS
    * ============================================================
@@ -461,14 +503,10 @@
     );
   }
 
-  /*
-   * ============================================================
-   * RENDER EMPTY STATE
-   * ============================================================
-   */
-
   function renderEmpty() {
-    renderStats(createEmptyStats());
+    renderStats(
+      createEmptyStats()
+    );
   }
 
   /*
@@ -486,12 +524,7 @@
       );
     }
 
-    if (
-      window.ECHOES_SUPABASE_API &&
-      typeof window.ECHOES_SUPABASE_API.isReady ===
-        "function" &&
-      !window.ECHOES_SUPABASE_API.isReady()
-    ) {
+    if (!isSupabaseReady()) {
       throw new Error(
         "Supabase connection is not ready."
       );
@@ -499,18 +532,26 @@
 
     const response = await supabase
       .from("content_items")
-      .select("id,type,status")
-      .order("created_at", {
-        ascending: false
-      });
+      .select(
+        "id,type,status"
+      )
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
 
-    const data = response
-      ? response.data
-      : null;
+    if (!response) {
+      throw new Error(
+        "No response received from Supabase."
+      );
+    }
 
-    const error = response
-      ? response.error
-      : null;
+    const {
+      data,
+      error
+    } = response;
 
     if (error) {
       console.error(
@@ -520,13 +561,15 @@
 
       throw new Error(
         error.message ||
-          "Unable to load dashboard data."
+        "Unable to load dashboard data."
       );
     }
 
-    return Array.isArray(data)
-      ? data
-      : [];
+    if (!Array.isArray(data)) {
+      return [];
+    }
+
+    return data;
   }
 
   /*
@@ -541,16 +584,14 @@
     }
 
     setLoading(true);
-    setStatus("Loading dashboard.");
+    setStatus(
+      "Loading dashboard."
+    );
 
     try {
-      /*
-       * Do not silently display zeros when the user
-       * is not authenticated. The dashboard is an
-       * authenticated admin surface.
-       */
       if (!isAuthenticated()) {
         allItems = [];
+
         renderEmpty();
 
         setStatus(
@@ -561,19 +602,9 @@
         return null;
       }
 
-      if (!isSupabaseReady()) {
-        throw new Error(
-          "Supabase connection is not ready."
-        );
-      }
-
       const items =
         await loadContentItems();
 
-      /*
-       * Store the actual database result.
-       * No hard-coded dashboard values.
-       */
       allItems = items;
 
       const stats =
@@ -601,11 +632,6 @@
         error
       );
 
-      /*
-       * Keep previous data out of a failed refresh.
-       * This prevents stale numbers from being presented
-       * as current database values.
-       */
       allItems = [];
 
       renderEmpty();
@@ -632,19 +658,15 @@
     } finally {
       setLoading(false);
     }
-  }
+      }
 
-  /*
+    /*
    * ============================================================
    * AUTHENTICATED EVENT
    * ============================================================
    */
 
   async function handleAuthenticated() {
-    /*
-     * Authentication has already been verified
-     * by admin-auth.js.
-     */
     await refreshDashboard();
   }
 
@@ -661,7 +683,10 @@
 
     setStatus("");
 
-    initialized = false;
+    /*
+     * Keep event listeners registered.
+     * A later login must be able to refresh the dashboard.
+     */
   }
 
   /*
@@ -730,7 +755,7 @@
 
   /*
    * ============================================================
-   * BUTTON
+   * REFRESH BUTTON
    * ============================================================
    */
 
@@ -749,33 +774,6 @@
 
   /*
    * ============================================================
-   * DOM CONTRACT CHECK
-   * ============================================================
-   */
-
-  function validateDom() {
-    const missing =
-      getMissingDomReferences();
-
-    if (missing.length === 0) {
-      return true;
-    }
-
-    console.error(
-      `${MODULE_NAME}: missing DOM references.`,
-      missing
-    );
-
-    setStatus(
-      "Dashboard interface is incomplete.",
-      "error"
-    );
-
-    return false;
-  }
-
-   /*
-   * ============================================================
    * INITIALIZATION
    * ============================================================
    */
@@ -788,14 +786,15 @@
     cacheDom();
 
     /*
-     * If the HTML contract is wrong, stop here.
-     * We do not attempt to guess alternative IDs.
+     * Never guess alternate IDs.
+     * If the HTML contract is wrong, stop explicitly.
      */
     if (!validateDom()) {
       return;
     }
 
     registerEvents();
+
     registerButton();
 
     renderEmpty();
@@ -803,11 +802,12 @@
     initialized = true;
 
     /*
-     * If authentication has already completed before
-     * this module initialized, load immediately.
+     * The authentication module may already have completed
+     * before this module initializes. In that case, detect
+     * the authenticated state directly.
      *
-     * Otherwise admin-auth.js will emit
-     * echoes:authenticated and trigger the same flow.
+     * Otherwise the echoes:authenticated event will trigger
+     * refreshDashboard().
      */
     if (isAuthenticated()) {
       refreshDashboard();
@@ -826,11 +826,15 @@
     render: renderStats,
 
     getItems() {
-      return [...allItems];
+      return [
+        ...allItems
+      ];
     },
 
     getStats() {
-      return calculateStats(allItems);
+      return calculateStats(
+        allItems
+      );
     },
 
     isLoading() {
@@ -842,13 +846,15 @@
     }
   };
 
-  /*
+    /*
    * ============================================================
    * STARTUP
    * ============================================================
    */
 
-  if (document.readyState === "loading") {
+  if (
+    document.readyState === "loading"
+  ) {
     document.addEventListener(
       "DOMContentLoaded",
       initializeDashboard,
