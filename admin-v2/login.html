@@ -33,13 +33,14 @@
     <!-- 1. Supabase Kütüphanesi -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- 2. Doğru Dosya Adı: supabase-client.js -->
+    <!-- 2. Ana Bağlantı Yapılandırması (db değişkenini oluşturan dosya) -->
+    <script src="../assets/js/supabase-config.js"></script>
     <script src="js/supabase-client.js"></script>
 
-    <!-- 3. Değişken Tanımlama Garantisi -->
+    <!-- 3. Güvenlik ve Yedek Bağlantı Tanımı -->
     <script>
-      if (typeof db === 'undefined' && typeof supabase !== 'undefined') {
-        window.db = supabase;
+      if (typeof db === 'undefined') {
+        window.db = window.supabaseClient || (typeof supabase !== 'undefined' ? supabase : null);
       }
     </script>
 
