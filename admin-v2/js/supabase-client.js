@@ -1,8 +1,8 @@
 // Supabase CDN kütüphanesini HTML sayfanıza eklemeyi unutmayın:
 // <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-const SUPABASE_URL = 'BURAYA_PROJECT_URL_GELECEK'; 
-const SUPABASE_ANON_KEY = 'BURAYA_ANON_PUBLIC_KEY_GELECEK';
+const SUPABASE_URL = 'https://nlawhidxubmnoxtcxbiq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sYXdoaWR4dWJubW94dGN4YmlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTQ0NzYsImV4cCI6MjEwNDI3MDQ3Nn0.UlthQVGVGU5G3d1_A0gTLq06NJTmdhEwKoYKyWQ8k4g';
 
 // Supabase İstemcisi
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
