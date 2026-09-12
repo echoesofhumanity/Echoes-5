@@ -1,30 +1,32 @@
 document.addEventListener("DOMContentLoaded", () => {
   const BUCKET_NAME = "echoes-media";
 
-  // Supabase istemcisini dinamik ve güvenli şekilde doğrulama
-  function getSupabase() {
+  // Supabase İstemcisini Güvenli Şekilde Başlatma
+  function getSupabaseClient() {
+    // 1. Zaten başlatılmış istemci varsa onu kullan
+    if (window.supabaseClient && typeof window.supabaseClient.from === "function") return window.supabaseClient;
+    if (window.ECHOES_SUPABASE && typeof window.ECHOES_SUPABASE.from === "function") return window.ECHOES_SUPABASE;
     if (window.ECHOES_SUPABASE_API && typeof window.ECHOES_SUPABASE_API.getClient === "function") {
-      const client = window.ECHOES_SUPABASE_API.getClient();
-      if (client && typeof client.from === "function") return client;
+      const c = window.ECHOES_SUPABASE_API.getClient();
+      if (c && typeof c.from === "function") return c;
     }
-    if (window.ECHOES_SUPABASE && typeof window.ECHOES_SUPABASE.from === "function") {
-      return window.ECHOES_SUPABASE;
-    }
-    if (window.supabaseClient && typeof window.supabaseClient.from === "function") {
-      return window.supabaseClient;
-    }
-    if (window.supabase && typeof window.supabase.from === "function") {
-      return window.supabase;
-    }
-    // Kütüphane nesnesinden istemci türetme kontrolü
+
+    // 2. CDN nesnesi (window.supabase) varsa createClient ile istemci oluştur
     if (window.supabase && typeof window.supabase.createClient === "function") {
       const url = window.SUPABASE_URL || window.ECHOES_SUPABASE_URL || (window.ECHOES_CONFIG && window.ECHOES_CONFIG.SUPABASE_URL);
       const key = window.SUPABASE_ANON_KEY || window.ECHOES_SUPABASE_KEY || (window.ECHOES_CONFIG && window.ECHOES_CONFIG.SUPABASE_KEY);
+      
       if (url && key) {
-        window.ECHOES_SUPABASE = window.supabase.createClient(url, key);
-        return window.ECHOES_SUPABASE;
+        window.supabaseClient = window.supabase.createClient(url, key);
+        return window.supabaseClient;
       }
     }
+
+    // 3. Doğrudan istemci nesnesi olarak atanmışsa
+    if (window.supabase && typeof window.supabase.from === "function") {
+      return window.supabase;
+    }
+
     return null;
   }
 
@@ -44,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const sectionLibrary = document.getElementById("sectionLibrary");
   const libraryList = document.getElementById("libraryList");
 
-  // Navigasyon Kontrolleri
+  // Navigasyon
   document.getElementById("navNewContent").addEventListener("click", () => {
     resetForm();
     sectionForm.style.display = "block";
@@ -69,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("formTitle").textContent = "Yeni İçerik Ekle";
   }
 
-  // Dosya Yükleme Fonksiyonu
+  // Dosya Yükleme
   async function uploadFile(supabase, file) {
     if (!file) return null;
     const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
@@ -80,10 +82,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return filePath;
   }
 
-  // Kaydet / Güncelle İşlemi
+  // Kaydet / Güncelle
   async function handleSave(status) {
-    const supabase = getSupabase();
-    if (!supabase) return showAlert("Supabase istemcisi yüklenemedi. Yapılandırma dosyasını kontrol edin.", "error");
+    const supabase = getSupabaseClient();
+    if (!supabase) return showAlert("Supabase istemcisi başlatılamadı. Yapılandırma eksik.", "error");
 
     const title = titleInput.value.trim();
     if (!title) return showAlert("Lütfen bir başlık girin.", "error");
@@ -129,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Buton Dinleyicileri
+  // Event Listeners
   document.getElementById("btnSaveDraft").addEventListener("click", () => handleSave("draft"));
   document.getElementById("btnPublish").addEventListener("click", () => handleSave("published"));
   document.getElementById("btnClear").addEventListener("click", resetForm);
@@ -137,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Kütüphane Yükleme
   async function loadLibrary() {
-    const supabase = getSupabase();
+    const supabase = getSupabaseClient();
     if (!supabase) {
       libraryList.innerHTML = "<p style='color:#ef4444;'>Hata: Supabase bağlantısı kurulamadı.</p>";
       return;
@@ -168,8 +170,8 @@ document.addEventListener("DOMContentLoaded", () => {
             Tip: <strong>${item.type}</strong> | Dil: <strong>${item.language}</strong> ${item.category ? '| Kat: ' + item.category : ''}
           </p>
           <div class="card-actions">
-            <button class="btn-sm btn-edit" onclick="editItem('${item.id}')">Düzenle</button>
-            <button class="btn-sm btn-delete" onclick="deleteItem('${item.id}', '${item.file_path || ''}')">Sil</button>
+            <button class="btn-sm btn-warning" onclick="editItem('${item.id}')">Düzenle</button>
+            <button class="btn-sm btn-danger" onclick="deleteItem('${item.id}', '${item.file_path || ''}')">Sil</button>
           </div>
         </div>
       `).join("");
@@ -180,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Global Düzenle ve Sil İşlevleri
   window.editItem = async (id) => {
-    const supabase = getSupabase();
+    const supabase = getSupabaseClient();
     if (!supabase) return showAlert("Supabase bağlantısı kurulamadı.", "error");
 
     const { data, error } = await supabase.from("content_items").select("*").eq("id", id).single();
@@ -200,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.deleteItem = async (id, filePath) => {
-    const supabase = getSupabase();
+    const supabase = getSupabaseClient();
     if (!supabase) return showAlert("Supabase bağlantısı kurulamadı.", "error");
 
     if (!confirm("Bu içeriği silmek istediğinizden emin misiniz?")) return;
@@ -220,4 +222,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 });
-    
+          
