@@ -2,95 +2,132 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
+
   <meta
-    name="description"
-    content="Echoes of Humanity content administration."
+    name="robots"
+    content="noindex, nofollow"
   >
+
   <title>Echoes of Humanity — Admin</title>
-  <link rel="stylesheet" href="admin.css">
+
+  <link
+    rel="stylesheet"
+    href="admin.css"
+  >
 </head>
 
 <body>
-  <div id="adminApp" class="admin-app">
 
-    <!-- =========================================================
-         AUTHENTICATION
-         ========================================================= -->
+  <!-- =========================================================
+       ECHOES OF HUMANITY — ADMIN APPLICATION
+       ========================================================= -->
+
+  <div
+    id="adminApp"
+    class="admin-app"
+  >
+
+    <!-- =======================================================
+         AUTHENTICATION VIEW
+         ======================================================= -->
 
     <section
       id="authView"
-      class="auth-view"
-      aria-labelledby="loginTitle"
+      class="admin-section is-active"
+      aria-label="Administrator login"
     >
-      <div class="auth-card">
 
-        <div class="auth-header">
-          <p class="admin-eyebrow">Echoes of Humanity</p>
-          <h1 id="loginTitle">Admin</h1>
+      <div class="admin-shell">
 
-          <p class="auth-description">
-            Sign in to manage your content.
-          </p>
+        <div class="admin-panel">
+
+          <div class="admin-section-header">
+
+            <h1>
+              Echoes of Humanity
+            </h1>
+
+            <p>
+              Content Management
+            </p>
+
+          </div>
+
+          <form
+            id="loginForm"
+            class="admin-form"
+            novalidate
+          >
+
+            <div class="admin-field">
+
+              <label for="loginEmail">
+                Email
+              </label>
+
+              <input
+                id="loginEmail"
+                name="email"
+                type="email"
+                autocomplete="username"
+                inputmode="email"
+                required
+              >
+
+            </div>
+
+            <div class="admin-field">
+
+              <label for="loginPassword">
+                Password
+              </label>
+
+              <input
+                id="loginPassword"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+              >
+
+            </div>
+
+            <div
+              id="loginMessage"
+              class="admin-message"
+              role="alert"
+              aria-live="polite"
+            ></div>
+
+            <div class="admin-actions">
+
+              <button
+                id="loginButton"
+                type="submit"
+                class="admin-button admin-button-primary"
+              >
+                Sign in
+              </button>
+
+            </div>
+
+          </form>
+
         </div>
 
-        <form
-          id="loginForm"
-          class="auth-form"
-          novalidate
-        >
-
-          <div class="form-field">
-            <label for="loginEmail">Email</label>
-
-            <input
-              id="loginEmail"
-              name="email"
-              type="email"
-              autocomplete="username"
-              inputmode="email"
-              required
-            >
-          </div>
-
-          <div class="form-field">
-            <label for="loginPassword">Password</label>
-
-            <input
-              id="loginPassword"
-              name="password"
-              type="password"
-              autocomplete="current-password"
-              required
-            >
-          </div>
-
-          <button
-            id="loginButton"
-            class="admin-button admin-button-primary"
-            type="submit"
-          >
-            <span class="button-label">Sign in</span>
-          </button>
-
-          <div
-            id="loginMessage"
-            class="form-message"
-            role="status"
-            aria-live="polite"
-          ></div>
-
-        </form>
       </div>
+
     </section>
 
 
-    <!-- =========================================================
+    <!-- =======================================================
          ADMIN SHELL
-         ========================================================= -->
+         ======================================================= -->
 
     <div
       id="adminShell"
@@ -98,124 +135,129 @@
       hidden
     >
 
-      <aside
-        id="adminSidebar"
-        class="admin-sidebar"
-      >
+      <!-- =====================================================
+           HEADER
+           ===================================================== -->
+
+      <header class="admin-header">
 
         <div class="admin-brand">
-          <p class="admin-eyebrow">Echoes of Humanity</p>
-          <h1>Admin</h1>
+
+          <div class="admin-brand-mark">
+            EH
+          </div>
+
+          <div>
+
+            <h1>
+              Echoes of Humanity
+            </h1>
+
+            <p>
+              Content Management
+            </p>
+
+          </div>
+
         </div>
 
-        <nav
-          id="adminNavigation"
-          class="admin-navigation"
-          aria-label="Admin navigation"
+        <div
+          id="connectionStatus"
+          class="admin-status"
+          aria-live="polite"
         >
 
-          <button
-            type="button"
-            class="admin-nav-button is-active"
-            data-section="dashboardSection"
-            aria-controls="dashboardSection"
-            aria-selected="true"
-          >
-            <span class="nav-label">Dashboard</span>
-          </button>
+          <span
+            class="admin-status-dot"
+            aria-hidden="true"
+          ></span>
 
-          <button
-            type="button"
-            class="admin-nav-button"
-            data-section="contentSection"
-            aria-controls="contentSection"
-            aria-selected="false"
-          >
-            <span class="nav-label">New Content</span>
-          </button>
+          <span>
+            Connecting...
+          </span>
 
-          <button
-            type="button"
-            class="admin-nav-button"
-            data-section="librarySection"
-            aria-controls="librarySection"
-            aria-selected="false"
-          >
-            <span class="nav-label">Content Library</span>
-          </button>
-
-          <button
-            type="button"
-            class="admin-nav-button"
-            data-section="settingsSection"
-            aria-controls="settingsSection"
-            aria-selected="false"
-          >
-            <span class="nav-label">Settings</span>
-          </button>
-
-        </nav>
-
-        <div class="admin-sidebar-footer">
-          <button
-            id="logoutButton"
-            type="button"
-            class="admin-button admin-button-secondary"
-          >
-            Sign out
-          </button>
         </div>
 
-      </aside>
+      </header>
 
 
-      <main
-        id="adminMain"
-        class="admin-main"
+      <!-- =====================================================
+           NAVIGATION
+           ===================================================== -->
+
+      <nav
+        class="admin-nav"
+        aria-label="Admin navigation"
       >
 
-        <header class="admin-topbar">
+        <button
+          type="button"
+          class="is-active"
+          data-section="dashboardSection"
+        >
+          Dashboard
+        </button>
 
-          <div class="admin-topbar-title">
-            <p class="admin-eyebrow">Content Management</p>
-            <h2 id="adminPageTitle">Dashboard</h2>
-          </div>
+        <button
+          type="button"
+          data-section="contentSection"
+        >
+          New Content
+        </button>
 
-          <div
-            id="connectionStatus"
-            class="connection-status"
-            role="status"
-            aria-live="polite"
-          >
-            Connecting…
-          </div>
+        <button
+          type="button"
+          data-section="librarySection"
+        >
+          Content Library
+        </button>
 
-        </header>
+        <button
+          type="button"
+          data-section="settingsSection"
+        >
+          Settings
+        </button>
+
+        <button
+          id="logoutButton"
+          type="button"
+        >
+          Sign out
+        </button>
+
+      </nav>
 
 
-        <!-- =======================================================
+      <!-- =====================================================
+           MAIN APPLICATION
+           ===================================================== -->
+
+      <main>
+
+
+        <!-- ===================================================
              DASHBOARD
-             ======================================================= -->
+             =================================================== -->
 
         <section
           id="dashboardSection"
           class="admin-section is-active"
-          data-page-title="Dashboard"
-          aria-labelledby="dashboardHeading"
         >
 
           <div class="admin-section-header">
 
             <div>
-              <p class="admin-eyebrow">Overview</p>
 
-              <h2 id="dashboardHeading">
+              <h2>
                 Dashboard
               </h2>
 
               <p>
-                Overview of the Echoes of Humanity content system.
+                Overview of the Echoes of Humanity
+                content system.
               </p>
+
             </div>
 
             <button
@@ -230,218 +272,250 @@
 
 
           <div
-            id="dashboardMessage"
-            class="form-message"
+            id="dashboardStatus"
+            class="admin-message"
             role="status"
             aria-live="polite"
           ></div>
 
 
-          <div class="dashboard-grid">
+          <div class="admin-grid admin-grid-4">
 
-            <article class="dashboard-card">
-              <span class="dashboard-card-label">
+
+            <div class="admin-stat">
+
+              <div class="admin-stat-label">
                 Total Content
-              </span>
+              </div>
 
-              <strong
-                id="totalContentCount"
-                class="dashboard-card-value"
+              <div
+                id="totalContent"
+                class="admin-stat-value"
               >
-                0
-              </strong>
-            </article>
+                —
+              </div>
+
+            </div>
 
 
-            <article class="dashboard-card">
-              <span class="dashboard-card-label">
-                Drafts
-              </span>
+            <div class="admin-stat">
 
-              <strong
-                id="draftContentCount"
-                class="dashboard-card-value"
-              >
-                0
-              </strong>
-            </article>
-
-
-            <article class="dashboard-card">
-              <span class="dashboard-card-label">
-                Pending
-              </span>
-
-              <strong
-                id="pendingContentCount"
-                class="dashboard-card-value"
-              >
-                0
-              </strong>
-            </article>
-
-
-            <article class="dashboard-card">
-              <span class="dashboard-card-label">
+              <div class="admin-stat-label">
                 Published
-              </span>
+              </div>
 
-              <strong
-                id="publishedContentCount"
-                class="dashboard-card-value"
+              <div
+                id="publishedContent"
+                class="admin-stat-value"
               >
-                0
-              </strong>
-            </article>
+                —
+              </div>
+
+            </div>
 
 
-            <article class="dashboard-card">
-              <span class="dashboard-card-label">
+            <div class="admin-stat">
+
+              <div class="admin-stat-label">
+                Drafts
+              </div>
+
+              <div
+                id="draftContent"
+                class="admin-stat-value"
+              >
+                —
+              </div>
+
+            </div>
+
+
+            <div class="admin-stat">
+
+              <div class="admin-stat-label">
+                Pending
+              </div>
+
+              <div
+                id="pendingContent"
+                class="admin-stat-value"
+              >
+                —
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="admin-grid admin-grid-4">
+
+
+            <div class="admin-stat">
+
+              <div class="admin-stat-label">
                 Archived
-              </span>
+              </div>
 
-              <strong
-                id="archivedContentCount"
-                class="dashboard-card-value"
+              <div
+                id="archivedContent"
+                class="admin-stat-value"
               >
-                0
-              </strong>
-            </article>
-
-          </div>
-
-
-          <div class="admin-panel">
-
-            <div class="admin-panel-header">
-              <div>
-                <h3>Content by Type</h3>
-
-                <p>
-                  Current content distribution.
-                </p>
+                —
               </div>
+
             </div>
 
-            <div
-              id="dashboardTypeBreakdown"
-              class="dashboard-breakdown"
-            ></div>
 
-          </div>
+            <div class="admin-stat">
 
-
-          <div class="admin-panel">
-
-            <div class="admin-panel-header">
-              <div>
-                <h3>Content by Language</h3>
-
-                <p>
-                  Current language distribution.
-                </p>
+              <div class="admin-stat-label">
+                Stories
               </div>
+
+              <div
+                id="storyContent"
+                class="admin-stat-value"
+              >
+                —
+              </div>
+
             </div>
 
-            <div
-              id="dashboardLanguageBreakdown"
-              class="dashboard-breakdown"
-            ></div>
+
+            <div class="admin-stat">
+
+              <div class="admin-stat-label">
+                Videos
+              </div>
+
+              <div
+                id="videoContent"
+                class="admin-stat-value"
+              >
+                —
+              </div>
+
+            </div>
+
+
+            <div class="admin-stat">
+
+              <div class="admin-stat-label">
+                Images
+              </div>
+
+              <div
+                id="imageContent"
+                class="admin-stat-value"
+              >
+                —
+              </div>
+
+            </div>
 
           </div>
 
-  </section>
 
-                <!-- =====================================================
-             CONTENT CREATION / EDITING
-             ===================================================== -->
+          <div class="admin-grid admin-grid-2">
+
+
+            <div class="admin-stat">
+
+              <div class="admin-stat-label">
+                Music
+              </div>
+
+              <div
+                id="musicContent"
+                class="admin-stat-value"
+              >
+                —
+              </div>
+
+            </div>
+
+
+            <div class="admin-stat">
+
+              <div class="admin-stat-label">
+                Documents
+              </div>
+
+              <div
+                id="documentContent"
+                class="admin-stat-value"
+              >
+                —
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- ===================================================
+             NEW CONTENT / CONTENT EDITOR
+             =================================================== -->
 
         <section
           id="contentSection"
           class="admin-section"
-          data-page-title="New Content"
-          aria-labelledby="contentHeading"
-          hidden
         >
 
           <div class="admin-section-header">
 
             <div>
-              <p class="admin-eyebrow">Content Management</p>
 
-              <h2 id="contentHeading">
+              <h2>
                 New Content
               </h2>
 
               <p>
-                Create, edit, save and publish content.
+                Create, edit, save and publish
+                Echoes of Humanity content.
               </p>
+
             </div>
 
           </div>
 
 
-          <div
-            id="contentFormMessage"
-            class="form-message"
-            role="status"
-            aria-live="polite"
-          ></div>
+          <div class="admin-panel">
 
-
-          <form
-            id="contentForm"
-            class="admin-form"
-            novalidate
-          >
-
-            <input
-              id="editingContentId"
-              name="editingContentId"
-              type="hidden"
-              value=""
+            <form
+              id="contentForm"
+              class="admin-form"
+              novalidate
             >
 
 
-            <!-- BASIC INFORMATION -->
-
-            <div class="admin-panel">
-
-              <div class="admin-panel-header">
-                <div>
-                  <h3>Basic Information</h3>
-
-                  <p>
-                    Define the main information for this content item.
-                  </p>
-                </div>
-              </div>
+              <div class="admin-grid admin-grid-2">
 
 
-              <div class="form-grid">
+                <div class="admin-field">
 
-                <div class="form-field form-field-full">
-
-                  <label for="contentTitleInput">
+                  <label for="contentTitle">
                     Title
                   </label>
 
                   <input
-                    id="contentTitleInput"
+                    id="contentTitle"
                     name="title"
                     type="text"
-                    maxlength="200"
-                    autocomplete="off"
+                    maxlength="255"
                     required
                   >
 
                 </div>
 
 
-                <div class="form-field">
+                <div class="admin-field">
 
                   <label for="contentType">
-                    Type
+                    Content Type
                   </label>
 
                   <select
@@ -449,17 +523,37 @@
                     name="type"
                     required
                   >
-                    <option value="story">Story</option>
-                    <option value="video">Video</option>
-                    <option value="image">Image</option>
-                    <option value="music">Music</option>
-                    <option value="document">Document</option>
+
+                    <option value="">
+                      Select type
+                    </option>
+
+                    <option value="story">
+                      Story
+                    </option>
+
+                    <option value="video">
+                      Video
+                    </option>
+
+                    <option value="image">
+                      Image
+                    </option>
+
+                    <option value="music">
+                      Music
+                    </option>
+
+                    <option value="document">
+                      Document
+                    </option>
+
                   </select>
 
                 </div>
 
 
-                <div class="form-field">
+                <div class="admin-field">
 
                   <label for="contentLanguage">
                     Language
@@ -470,17 +564,37 @@
                     name="language"
                     required
                   >
-                    <option value="en">English</option>
-                    <option value="tr">Turkish</option>
-                    <option value="hr">Croatian</option>
-                    <option value="fr">French</option>
-                    <option value="es">Spanish</option>
+
+                    <option value="">
+                      Select language
+                    </option>
+
+                    <option value="en">
+                      English
+                    </option>
+
+                    <option value="tr">
+                      Türkçe
+                    </option>
+
+                    <option value="hr">
+                      Hrvatski
+                    </option>
+
+                    <option value="fr">
+                      Français
+                    </option>
+
+                    <option value="es">
+                      Español
+                    </option>
+
                   </select>
 
                 </div>
 
 
-                <div class="form-field">
+                <div class="admin-field">
 
                   <label for="contentCategory">
                     Category
@@ -490,160 +604,139 @@
                     id="contentCategory"
                     name="category"
                     type="text"
-                    maxlength="120"
-                    autocomplete="off"
+                    maxlength="255"
                   >
-
-                </div>
-
-
-                <div class="form-field">
-
-                  <label for="contentStatus">
-                    Status
-                  </label>
-
-                  <select
-                    id="contentStatus"
-                    name="status"
-                    required
-                  >
-                    <option value="draft">Draft</option>
-                    <option value="pending">Pending</option>
-                    <option value="published">Published</option>
-                    <option value="archived">Archived</option>
-                  </select>
-
-                </div>
-
-
-                <div class="form-field form-field-full">
-
-                  <label for="contentTags">
-                    Tags
-                  </label>
-
-                  <input
-                    id="contentTags"
-                    name="tags"
-                    type="text"
-                    maxlength="500"
-                    autocomplete="off"
-                    placeholder="children, awareness, humanity"
-                  >
-
-                  <small class="form-help">
-                    Separate multiple tags with commas.
-                  </small>
-
-                </div>
-
-
-                <div class="form-field form-field-full">
-
-                  <label for="contentDescriptionInput">
-                    Description
-                  </label>
-
-                  <textarea
-                    id="contentDescriptionInput"
-                    name="description"
-                    rows="7"
-                    maxlength="5000"
-                  ></textarea>
 
                 </div>
 
               </div>
 
-            </div>
 
+              <div class="admin-field">
 
-            <!-- MEDIA -->
+                <label for="contentDescription">
+                  Description
+                </label>
 
-            <div class="admin-panel">
+                <textarea
+                  id="contentDescription"
+                  name="description"
+                  rows="6"
+                  maxlength="5000"
+                ></textarea>
 
-              <div class="admin-panel-header">
-                <div>
-                  <h3>Media</h3>
-
-                  <p>
-                    Upload the primary media file for this content item.
-                  </p>
-                </div>
               </div>
 
+
+              <div class="admin-field">
+
+                <label for="contentTags">
+                  Tags
+                </label>
+
+                <input
+                  id="contentTags"
+                  name="tags"
+                  type="text"
+                  placeholder="humanity, story, children"
+                  autocomplete="off"
+                >
+
+              </div>
+
+
+              <!-- =============================================
+                   MEDIA UPLOAD
+                   ============================================= -->
+
+              <div class="admin-field">
+
+                <label>
+                  Media File
+                </label>
+
+                <div
+                  id="uploadZone"
+                  class="admin-upload-zone"
+                  tabindex="0"
+                  role="button"
+                  aria-label="Choose or drop a media file"
+                >
+
+                  <div>
+
+                    <strong>
+                      Drop a file here
+                    </strong>
+
+                    <span>
+                      or choose a file from your device
+                    </span>
+
+                    <button
+                      id="chooseFileButton"
+                      type="button"
+                      class="admin-button admin-button-secondary"
+                    >
+                      Choose File
+                    </button>
+
+                  </div>
+
+                </div>
+
+                <input
+                  id="fileInput"
+                  type="file"
+                  accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt"
+                  hidden
+                >
+
+              </div>
+
+
+              <!-- =============================================
+                   PREVIEW
+                   ============================================= -->
 
               <div
-                id="uploadZone"
-                class="upload-zone"
-                tabindex="0"
-                role="button"
-                aria-controls="contentFileInput"
-                aria-label="Choose a media file"
-              >
-
-                <div class="upload-zone-content">
-
-                  <strong>
-                    Drop a file here
-                  </strong>
-
-                  <span>
-                    or choose a file from your device
-                  </span>
-
-                  <button
-                    id="chooseFileButton"
-                    type="button"
-                    class="admin-button admin-button-secondary"
-                  >
-                    Choose File
-                  </button>
-
-                </div>
-
-              </div>
-
-
-              <input
-                id="contentFileInput"
-                name="file"
-                type="file"
+                id="preview"
+                class="admin-preview"
                 hidden
               >
 
+                <div
+                  id="previewContent"
+                ></div>
+
+              </div>
+
+
+              <!-- =============================================
+                   CONTENT MESSAGE
+                   ============================================= -->
 
               <div
-                id="selectedFileInfo"
-                class="selected-file-info"
+                id="contentMessage"
+                class="admin-message"
+                role="alert"
                 aria-live="polite"
               ></div>
 
 
-              <div
-                id="mediaPreview"
-                class="media-preview"
-                aria-live="polite"
-              ></div>
+              <!-- =============================================
+                   CONTENT ACTIONS
+                   ============================================= -->
 
-            </div>
+              <div class="admin-actions">
 
-
-            <!-- ACTIONS -->
-
-            <div class="admin-form-actions">
-
-              <button
-                id="clearContentButton"
-                type="button"
-                class="admin-button admin-button-secondary"
-              >
-                Clear
-              </button>
-
-
-              <div class="admin-form-actions-primary">
+                <button
+                  id="clearContentButton"
+                  type="button"
+                  class="admin-button admin-button-secondary"
+                >
+                  Clear
+                </button>
 
                 <button
                   id="saveDraftButton"
@@ -652,7 +745,6 @@
                 >
                   Save Draft
                 </button>
-
 
                 <button
                   id="publishContentButton"
@@ -664,42 +756,38 @@
 
               </div>
 
-            </div>
+            </form>
 
-          </form>
+          </div>
 
-        </section>
+  </section>
 
-
-        <!-- =====================================================
+                <!-- ===================================================
              CONTENT LIBRARY
-             ===================================================== -->
+             =================================================== -->
 
         <section
           id="librarySection"
           class="admin-section"
-          data-page-title="Content Library"
-          aria-labelledby="libraryHeading"
-          hidden
         >
 
           <div class="admin-section-header">
 
             <div>
-              <p class="admin-eyebrow">Content Management</p>
 
-              <h2 id="libraryHeading">
+              <h2>
                 Content Library
               </h2>
 
               <p>
-                Search, filter, edit and delete content.
+                Search, filter, edit and delete
+                existing content.
               </p>
+
             </div>
 
-
             <button
-              id="libraryRefreshButton"
+              id="refreshLibraryButton"
               type="button"
               class="admin-button admin-button-secondary"
             >
@@ -711,7 +799,7 @@
 
           <div
             id="libraryStatus"
-            class="form-message"
+            class="admin-message"
             role="status"
             aria-live="polite"
           ></div>
@@ -719,152 +807,228 @@
 
           <div class="admin-panel">
 
-            <div class="admin-panel-header">
-              <div>
-                <h3>Filters</h3>
 
-                <p>
-                  Narrow the library by title, type, language or status.
-                </p>
-              </div>
-            </div>
+            <!-- =============================================
+                 LIBRARY TOOLBAR
+                 ============================================= -->
+
+            <div class="admin-library-toolbar">
 
 
-            <div class="library-filters">
-
-              <div class="form-field library-search-field">
+              <div class="admin-field">
 
                 <label for="librarySearch">
-                  Search
+                  Search Content
                 </label>
 
                 <input
                   id="librarySearch"
                   type="search"
+                  placeholder="Search title, description, category or tags..."
                   autocomplete="off"
-                  placeholder="Search by title..."
                 >
 
               </div>
 
 
-              <div class="form-field">
-
-                <label for="libraryStatusFilter">
-                  Status
-                </label>
-
-                <select id="libraryStatusFilter">
-                  <option value="">All statuses</option>
-                  <option value="draft">Draft</option>
-                  <option value="pending">Pending</option>
-                  <option value="published">Published</option>
-                  <option value="archived">Archived</option>
-                </select>
-
-              </div>
-
-
-              <div class="form-field">
+              <div class="admin-field">
 
                 <label for="libraryTypeFilter">
-                  Type
+                  Content Type
                 </label>
 
-                <select id="libraryTypeFilter">
-                  <option value="">All types</option>
-                  <option value="story">Story</option>
-                  <option value="video">Video</option>
-                  <option value="image">Image</option>
-                  <option value="music">Music</option>
-                  <option value="document">Document</option>
+                <select
+                  id="libraryTypeFilter"
+                >
+
+                  <option value="">
+                    All
+                  </option>
+
+                  <option value="story">
+                    Story
+                  </option>
+
+                  <option value="video">
+                    Video
+                  </option>
+
+                  <option value="image">
+                    Image
+                  </option>
+
+                  <option value="music">
+                    Music
+                  </option>
+
+                  <option value="document">
+                    Document
+                  </option>
+
                 </select>
 
               </div>
 
 
-              <div class="form-field">
+              <div class="admin-field">
 
                 <label for="libraryLanguageFilter">
                   Language
                 </label>
 
-                <select id="libraryLanguageFilter">
-                  <option value="">All languages</option>
-                  <option value="en">English</option>
-                  <option value="tr">Turkish</option>
-                  <option value="hr">Croatian</option>
-                  <option value="fr">French</option>
-                  <option value="es">Spanish</option>
+                <select
+                  id="libraryLanguageFilter"
+                >
+
+                  <option value="">
+                    All
+                  </option>
+
+                  <option value="en">
+                    English
+                  </option>
+
+                  <option value="tr">
+                    Türkçe
+                  </option>
+
+                  <option value="hr">
+                    Hrvatski
+                  </option>
+
+                  <option value="fr">
+                    Français
+                  </option>
+
+                  <option value="es">
+                    Español
+                  </option>
+
                 </select>
 
               </div>
 
+
+              <div class="admin-field">
+
+                <label for="libraryStatusFilter">
+                  Status
+                </label>
+
+                <select
+                  id="libraryStatusFilter"
+                >
+
+                  <option value="">
+                    All
+                  </option>
+
+                  <option value="draft">
+                    Draft
+                  </option>
+
+                  <option value="pending">
+                    Pending
+                  </option>
+
+                  <option value="published">
+                    Published
+                  </option>
+
+                  <option value="archived">
+                    Archived
+                  </option>
+
+                </select>
+
+              </div>
+
+
             </div>
 
-          </div>
 
+            <div class="admin-actions">
 
-          <div class="admin-panel">
+              <button
+                id="clearLibraryFilters"
+                type="button"
+                class="admin-button admin-button-secondary"
+              >
+                Clear Filters
+              </button>
 
-            <div class="admin-panel-header">
+              <div
+                class="admin-library-count"
+                aria-live="polite"
+              >
+                <span>
+                  Showing
+                </span>
 
-              <div>
-                <h3>Library</h3>
+                <strong
+                  id="libraryCount"
+                >
+                  0
+                </strong>
 
-                <p id="libraryResultSummary">
-                  Content items
-                </p>
               </div>
 
             </div>
 
+
+            <!-- =============================================
+                 LIBRARY EMPTY STATE
+                 ============================================= -->
 
             <div
               id="libraryEmpty"
               class="admin-empty"
               hidden
-            >
-              No content items match the current filters.
-            </div>
+            ></div>
 
+
+            <!-- =============================================
+                 LIBRARY GRID
+                 ============================================= -->
 
             <div
-              id="libraryList"
-              class="library-list"
-              aria-live="polite"
-            ></div>
+              id="libraryGrid"
+              class="admin-library"
+            >
+
+              <div class="admin-loading">
+                Loading content...
+              </div>
+
+            </div>
 
           </div>
 
         </section>
 
-                <!-- =====================================================
+
+        <!-- ===================================================
              SETTINGS
-             ===================================================== -->
+             =================================================== -->
 
         <section
           id="settingsSection"
           class="admin-section"
-          data-page-title="Settings"
-          aria-labelledby="settingsHeading"
-          hidden
         >
 
           <div class="admin-section-header">
 
             <div>
-              <p class="admin-eyebrow">System</p>
 
-              <h2 id="settingsHeading">
+              <h2>
                 Settings
               </h2>
 
               <p>
-                Review administrator and system configuration.
+                Administrator and system information.
               </p>
-            </div>
 
+            </div>
 
             <button
               id="settingsRefreshButton"
@@ -878,247 +1042,162 @@
 
 
           <div
-            id="settingsMessage"
-            class="form-message"
+            id="settingsStatus"
+            class="admin-message"
             role="status"
             aria-live="polite"
           ></div>
 
 
-          <!-- SYSTEM STATUS -->
+          <div
+            id="settingsContent"
+            class="admin-settings-grid"
+          >
 
-          <div class="admin-panel">
 
-            <div class="admin-panel-header">
+            <!-- =============================================
+                 AUTHENTICATION / ADMIN
+                 ============================================= -->
 
-              <div>
-                <h3>System Status</h3>
+            <div class="admin-panel">
 
-                <p>
-                  Live status of the services used by the Admin panel.
-                </p>
+              <div class="admin-panel-header">
+
+                <h3>
+                  Administrator
+                </h3>
+
+              </div>
+
+              <div
+                id="settingsAdmin"
+                class="admin-settings-value"
+              >
+                Loading...
               </div>
 
             </div>
 
 
-            <div class="settings-status-grid">
+            <!-- =============================================
+                 SUPABASE PROJECT
+                 ============================================= -->
 
-              <article class="settings-status-card">
+            <div class="admin-panel">
 
-                <div class="settings-status-card-header">
-                  <span>Supabase</span>
-                </div>
+              <div class="admin-panel-header">
 
-                <strong
-                  id="settingsSupabaseStatus"
-                  class="settings-status-value"
-                >
-                  Checking…
-                </strong>
+                <h3>
+                  Supabase Project
+                </h3>
 
-              </article>
+              </div>
 
-
-              <article class="settings-status-card">
-
-                <div class="settings-status-card-header">
-                  <span>Authentication</span>
-                </div>
-
-                <strong
-                  id="settingsAuthStatus"
-                  class="settings-status-value"
-                >
-                  Checking…
-                </strong>
-
-              </article>
-
-
-              <article class="settings-status-card">
-
-                <div class="settings-status-card-header">
-                  <span>Database</span>
-                </div>
-
-                <strong
-                  id="settingsDatabaseStatus"
-                  class="settings-status-value"
-                >
-                  Checking…
-                </strong>
-
-              </article>
-
-
-              <article class="settings-status-card">
-
-                <div class="settings-status-card-header">
-                  <span>Storage</span>
-                </div>
-
-                <strong
-                  id="settingsStorageStatus"
-                  class="settings-status-value"
-                >
-                  Checking…
-                </strong>
-
-              </article>
-
-            </div>
-
-          </div>
-
-
-          <!-- ADMINISTRATOR -->
-
-          <div class="admin-panel">
-
-            <div class="admin-panel-header">
-
-              <div>
-                <h3>Administrator</h3>
-
-                <p>
-                  The currently authenticated administrator account.
-                </p>
+              <div
+                id="settingsProject"
+                class="admin-settings-value"
+              >
+                Loading...
               </div>
 
             </div>
 
 
-            <div class="settings-detail-grid">
+            <!-- =============================================
+                 DATABASE
+                 ============================================= -->
 
-              <div class="settings-detail-item">
+            <div class="admin-panel">
 
-                <span class="settings-detail-label">
-                  Email
-                </span>
+              <div class="admin-panel-header">
 
-                <strong
-                  id="settingsAdminEmail"
-                  class="settings-detail-value"
-                >
-                  —
-                </strong>
+                <h3>
+                  Database
+                </h3>
 
               </div>
 
-
-              <div class="settings-detail-item">
-
-                <span class="settings-detail-label">
-                  User ID
-                </span>
-
-                <strong
-                  id="settingsAdminUserId"
-                  class="settings-detail-value settings-detail-value-mono"
-                >
-                  —
-                </strong>
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <!-- CONTENT STATISTICS -->
-
-          <div class="admin-panel">
-
-            <div class="admin-panel-header">
-
-              <div>
-                <h3>Content Statistics</h3>
-
-                <p>
-                  Current content counts from the database.
-                </p>
+              <div
+                id="settingsDatabase"
+                class="admin-settings-value"
+              >
+                Loading...
               </div>
 
             </div>
 
 
-            <div class="settings-stat-grid">
+            <!-- =============================================
+                 STORAGE
+                 ============================================= -->
 
-              <article class="settings-stat-card">
+            <div class="admin-panel">
 
-                <span>Total Content</span>
+              <div class="admin-panel-header">
 
-                <strong id="settingsTotalContent">
-                  0
-                </strong>
+                <h3>
+                  Media Storage
+                </h3>
 
-              </article>
+              </div>
 
-
-              <article class="settings-stat-card">
-
-                <span>Published Content</span>
-
-                <strong id="settingsPublishedContent">
-                  0
-                </strong>
-
-              </article>
-
-            </div>
-
-          </div>
-
-
-          <!-- SUPPORTED CONFIGURATION -->
-
-          <div class="admin-panel">
-
-            <div class="admin-panel-header">
-
-              <div>
-                <h3>Supported Configuration</h3>
-
-                <p>
-                  Content types and languages supported by this Admin.
-                </p>
+              <div
+                id="settingsStorage"
+                class="admin-settings-value"
+              >
+                Loading...
               </div>
 
             </div>
 
 
-            <div class="settings-configuration-grid">
+            <!-- =============================================
+                 CONTENT SYSTEM
+                 ============================================= -->
 
-              <div class="settings-configuration-item">
+            <div class="admin-panel">
 
-                <span class="settings-detail-label">
-                  Content Types
-                </span>
+              <div class="admin-panel-header">
 
-                <div
-                  id="settingsSupportedTypes"
-                  class="settings-tag-list"
-                ></div>
+                <h3>
+                  Content System
+                </h3>
 
               </div>
 
-
-              <div class="settings-configuration-item">
-
-                <span class="settings-detail-label">
-                  Languages
-                </span>
-
-                <div
-                  id="settingsSupportedLanguages"
-                  class="settings-tag-list"
-                ></div>
-
+              <div
+                id="settingsContentSystem"
+                class="admin-settings-value"
+              >
+                Loading...
               </div>
 
             </div>
+
+
+            <!-- =============================================
+                 CONNECTION
+                 ============================================= -->
+
+            <div class="admin-panel">
+
+              <div class="admin-panel-header">
+
+                <h3>
+                  Connection
+                </h3>
+
+              </div>
+
+              <div
+                id="settingsConnection"
+                class="admin-settings-value"
+              >
+                Loading...
+              </div>
+
+            </div>
+
 
           </div>
 
@@ -1130,33 +1209,69 @@
 
   </div>
 
-    <!-- ===========================================================
-       SUPABASE CLIENT LIBRARY
-       =========================================================== -->
+    <!-- =========================================================
+       GLOBAL / ACCESSIBILITY SUPPORT
+       ========================================================= -->
+
+  <noscript>
+
+    <div
+      class="admin-noscript-message"
+    >
+      Echoes of Humanity Admin requires
+      JavaScript to operate.
+    </div>
+
+  </noscript>
+
+
+  <!-- =========================================================
+       SUPABASE + ADMIN MODULES
+       ========================================================= -->
+
+  <script
+    src="../assets/js/supabase-config.js"
+  ></script>
 
   <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
   ></script>
 
+  <script
+    src="admin-supabase.js"
+    defer
+  ></script>
 
-  <!-- ===========================================================
-       ECHOES OF HUMANITY SUPABASE CONFIGURATION
-       =========================================================== -->
+  <script
+    src="admin-auth.js"
+    defer
+  ></script>
 
-  <script src="../assets/js/supabase-config.js"></script>
+  <script
+    src="admin-dashboard.js"
+    defer
+  ></script>
 
+  <script
+    src="admin-content.js"
+    defer
+  ></script>
 
-  <!-- ===========================================================
-       ADMIN APPLICATION MODULES
-       =========================================================== -->
+  <script
+    src="admin-library.js"
+    defer
+  ></script>
 
-  <script src="admin-supabase.js"></script>
-  <script src="admin-auth.js"></script>
-  <script src="admin-dashboard.js"></script>
-  <script src="admin-content.js"></script>
-  <script src="admin-library.js"></script>
-  <script src="admin-settings.js"></script>
-  <script src="admin.js"></script>
+  <script
+    src="admin-settings.js"
+    defer
+  ></script>
+
+  <script
+    src="admin.js"
+    defer
+  ></script>
+
 
 </body>
 </html>
