@@ -30,21 +30,13 @@
         <div id="loginError" class="error"></div>
     </div>
 
-    <!-- 1. Supabase Kütüphanesi -->
+    <!-- 1. Supabase CDN Kütüphanesi -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- 2. Ana Bağlantı Yapılandırması (db değişkenini oluşturan dosya) -->
+    <!-- 2. Konfigürasyon Dosyası (window.db nesnesini oluşturan) -->
     <script src="../assets/js/supabase-config.js"></script>
-    <script src="js/supabase-client.js"></script>
 
-    <!-- 3. Güvenlik ve Yedek Bağlantı Tanımı -->
-    <script>
-      if (typeof db === 'undefined') {
-        window.db = window.supabaseClient || (typeof supabase !== 'undefined' ? supabase : null);
-      }
-    </script>
-
-    <!-- 4. Giriş Kodları -->
+    <!-- 3. Giriş İşlemleri -->
     <script src="js/auth.js"></script>
     
     
