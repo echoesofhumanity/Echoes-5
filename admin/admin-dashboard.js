@@ -14,195 +14,272 @@
    *
    * This module does NOT:
    * - authenticate users
-   * - manage content records
+   * - create/edit/delete content
    * - manage storage files
    * - manage library filtering
    * - manage settings
-   * - control navigation
+   * - control application navigation
+   * ============================================================
    */
 
+  const MODULE_NAME = "Echoes Admin: Dashboard";
 
-  /* ============================================================
-     DOM REFERENCES
-     ============================================================ */
+  /*
+   * ============================================================
+   * DOM ID CONTRACT
+   * ============================================================
+   *
+   * These IDs MUST match admin/index.html.
+   * Keeping them in one place prevents HTML/JS binding drift.
+   */
+  const DASHBOARD_IDS = {
+    total: "totalContent",
+    published: "publishedContent",
+    draft: "draftContent",
+    pending: "pendingContent",
+    archived: "archivedContent",
 
-  const refs = {
-    totalContent:
-      null,
+    story: "storyContent",
+    video: "videoContent",
+    image: "imageContent",
+    music: "musicContent",
+    document: "documentContent",
 
-    publishedContent:
-      null,
-
-    draftContent:
-      null,
-
-    pendingContent:
-      null,
-
-    archivedContent:
-      null,
-
-    storyContent:
-      null,
-
-    videoContent:
-      null,
-
-    imageContent:
-      null,
-
-    musicContent:
-      null,
-
-    documentContent:
-      null,
-
-    dashboardStatus:
-      null,
-
-    dashboardRefreshButton:
-      null
+    status: "dashboardStatus",
+    refresh: "dashboardRefreshButton"
   };
 
+  /*
+   * ============================================================
+   * SUPPORTED VALUES
+   * ============================================================
+   */
 
-  /* ============================================================
-     STATE
-     ============================================================ */
+  const SUPPORTED_STATUSES = [
+    "draft",
+    "pending",
+    "published",
+    "archived"
+  ];
+
+  const SUPPORTED_TYPES = [
+    "story",
+    "video",
+    "image",
+    "music",
+    "document"
+  ];
+
+  /*
+   * ============================================================
+   * DOM REFERENCES
+   * ============================================================
+   */
+
+  const refs = {
+    totalContent: null,
+    publishedContent: null,
+    draftContent: null,
+    pendingContent: null,
+    archivedContent: null,
+
+    storyContent: null,
+    videoContent: null,
+    imageContent: null,
+    musicContent: null,
+    documentContent: null,
+
+    dashboardStatus: null,
+    dashboardRefreshButton: null
+  };
+
+  /*
+   * ============================================================
+   * STATE
+   * ============================================================
+   */
 
   let initialized = false;
   let loading = false;
   let allItems = [];
 
-
-  /* ============================================================
-     DOM CACHE
-     ============================================================ */
+  /*
+   * ============================================================
+   * DOM CACHE
+   * ============================================================
+   */
 
   function cacheDom() {
-    refs.totalContent =
-      document.getElementById(
-        "dashboardTotalContent"
-      );
+    refs.totalContent = document.getElementById(
+      DASHBOARD_IDS.total
+    );
 
-    refs.publishedContent =
-      document.getElementById(
-        "dashboardPublishedContent"
-      );
+    refs.publishedContent = document.getElementById(
+      DASHBOARD_IDS.published
+    );
 
-    refs.draftContent =
-      document.getElementById(
-        "dashboardDraftContent"
-      );
+    refs.draftContent = document.getElementById(
+      DASHBOARD_IDS.draft
+    );
 
-    refs.pendingContent =
-      document.getElementById(
-        "dashboardPendingContent"
-      );
+    refs.pendingContent = document.getElementById(
+      DASHBOARD_IDS.pending
+    );
 
-    refs.archivedContent =
-      document.getElementById(
-        "dashboardArchivedContent"
-      );
+    refs.archivedContent = document.getElementById(
+      DASHBOARD_IDS.archived
+    );
 
-    refs.storyContent =
-      document.getElementById(
-        "dashboardStoryContent"
-      );
+    refs.storyContent = document.getElementById(
+      DASHBOARD_IDS.story
+    );
 
-    refs.videoContent =
-      document.getElementById(
-        "dashboardVideoContent"
-      );
+    refs.videoContent = document.getElementById(
+      DASHBOARD_IDS.video
+    );
 
-    refs.imageContent =
-      document.getElementById(
-        "dashboardImageContent"
-      );
+    refs.imageContent = document.getElementById(
+      DASHBOARD_IDS.image
+    );
 
-    refs.musicContent =
-      document.getElementById(
-        "dashboardMusicContent"
-      );
+    refs.musicContent = document.getElementById(
+      DASHBOARD_IDS.music
+    );
 
-    refs.documentContent =
-      document.getElementById(
-        "dashboardDocumentContent"
-      );
+    refs.documentContent = document.getElementById(
+      DASHBOARD_IDS.document
+    );
 
-    refs.dashboardStatus =
-      document.getElementById(
-        "dashboardStatus"
-      );
+    refs.dashboardStatus = document.getElementById(
+      DASHBOARD_IDS.status
+    );
 
-    refs.dashboardRefreshButton =
-      document.getElementById(
-        "dashboardRefreshButton"
-      );
+    refs.dashboardRefreshButton = document.getElementById(
+      DASHBOARD_IDS.refresh
+    );
   }
 
+  /*
+   * ============================================================
+   * DOM VALIDATION
+   * ============================================================
+   */
 
-  /* ============================================================
-     SUPABASE ACCESS
-     ============================================================ */
+  function getMissingDomReferences() {
+    const required = {
+      totalContent: refs.totalContent,
+      publishedContent: refs.publishedContent,
+      draftContent: refs.draftContent,
+      pendingContent: refs.pendingContent,
+      archivedContent: refs.archivedContent,
+
+      storyContent: refs.storyContent,
+      videoContent: refs.videoContent,
+      imageContent: refs.imageContent,
+      musicContent: refs.musicContent,
+      documentContent: refs.documentContent,
+
+      dashboardStatus: refs.dashboardStatus,
+      dashboardRefreshButton: refs.dashboardRefreshButton
+    };
+
+    return Object.keys(required).filter(
+      (key) => !required[key]
+    );
+  }
+
+  /*
+   * ============================================================
+   * SUPABASE ACCESS
+   * ============================================================
+   */
 
   function getSupabase() {
+    const api = window.ECHOES_SUPABASE_API;
+
     if (
-      !window.ECHOES_SUPABASE_API ||
-      typeof
-        window.ECHOES_SUPABASE_API.getClient !==
-          "function"
+      api &&
+      typeof api.getClient === "function"
     ) {
-      return null;
+      return api.getClient();
     }
 
-    return window.ECHOES_SUPABASE_API.getClient();
-  }
+    if (
+      window.ECHOES_SUPABASE &&
+      typeof window.ECHOES_SUPABASE.from === "function"
+    ) {
+      return window.ECHOES_SUPABASE;
+    }
 
+    return null;
+  }
 
   function isSupabaseReady() {
-    return Boolean(
-      window.ECHOES_SUPABASE_API &&
-      typeof
-        window.ECHOES_SUPABASE_API.isReady ===
-          "function" &&
-      window.ECHOES_SUPABASE_API.isReady()
-    );
+    const api = window.ECHOES_SUPABASE_API;
+
+    if (
+      api &&
+      typeof api.isReady === "function"
+    ) {
+      return Boolean(api.isReady());
+    }
+
+    return Boolean(getSupabase());
   }
 
+  /*
+   * ============================================================
+   * AUTHENTICATION STATE
+   * ============================================================
+   */
 
-  /* ============================================================
-     EVENT HELPER
-     ============================================================ */
+  function getAuthApi() {
+    return window.ECHOES_ADMIN_AUTH || null;
+  }
 
-  function emit(
-    name,
-    detail = {}
-  ) {
+  function isAuthenticated() {
+    const auth = getAuthApi();
+
+    if (
+      auth &&
+      typeof auth.isAuthenticated === "function"
+    ) {
+      return Boolean(auth.isAuthenticated());
+    }
+
+    if (auth && auth.currentUser) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /*
+   * ============================================================
+   * EVENT HELPER
+   * ============================================================
+   */
+
+  function emit(name, detail = {}) {
     document.dispatchEvent(
-      new CustomEvent(
-        name,
-        {
-          detail
-        }
-      )
+      new CustomEvent(name, {
+        detail
+      })
     );
   }
 
+  /*
+   * ============================================================
+   * STATUS MESSAGE
+   * ============================================================
+   */
 
-  /* ============================================================
-     STATUS MESSAGE
-     ============================================================ */
-
-  function setStatus(
-    message,
-    type = ""
-  ) {
+  function setStatus(message, type = "") {
     if (!refs.dashboardStatus) {
       return;
     }
 
-    refs.dashboardStatus.textContent =
-      message || "";
+    refs.dashboardStatus.textContent = message || "";
 
     refs.dashboardStatus.classList.remove(
       "success",
@@ -211,52 +288,59 @@
     );
 
     if (type) {
-      refs.dashboardStatus.classList.add(
-        type
-      );
+      refs.dashboardStatus.classList.add(type);
     }
+
+    refs.dashboardStatus.dataset.status =
+      type || "";
   }
 
+  /*
+   * ============================================================
+   * LOADING STATE
+   * ============================================================
+   */
 
-  /* ============================================================
-     LOADING STATE
-     ============================================================ */
+  function setLoading(isLoading) {
+    loading = Boolean(isLoading);
 
-  function setLoading(
-    isLoading
-  ) {
-    loading = isLoading;
-
-    if (
-      refs.dashboardRefreshButton
-    ) {
-      refs.dashboardRefreshButton.disabled =
-        isLoading;
-
-      refs.dashboardRefreshButton.classList.toggle(
-        "is-loading",
-        isLoading
-      );
+    if (!refs.dashboardRefreshButton) {
+      return;
     }
+
+    refs.dashboardRefreshButton.disabled =
+      loading;
+
+    refs.dashboardRefreshButton.classList.toggle(
+      "is-loading",
+      loading
+    );
+
+    refs.dashboardRefreshButton.setAttribute(
+      "aria-busy",
+      loading ? "true" : "false"
+    );
   }
 
+  /*
+   * ============================================================
+   * VALUE HELPER
+   * ============================================================
+   */
 
-  /* ============================================================
-     VALUE HELPERS
-     ============================================================ */
-
-  function setValue(
-    element,
-    value
-  ) {
+  function setValue(element, value) {
     if (!element) {
       return;
     }
 
-    element.textContent =
-      String(value);
+    element.textContent = String(value);
   }
 
+  /*
+   * ============================================================
+   * EMPTY STATISTICS
+   * ============================================================
+   */
 
   function createEmptyStats() {
     return {
@@ -279,156 +363,164 @@
     };
   }
 
+  /*
+   * ============================================================
+   * STATISTICS
+   * ============================================================
+   */
 
-  /* ============================================================
-     STATISTICS
-     ============================================================ */
+  function calculateStats(items) {
+    const stats = createEmptyStats();
 
-  function calculateStats(
-    items
-  ) {
-    const stats =
-      createEmptyStats();
+    if (!Array.isArray(items)) {
+      return stats;
+    }
 
-    for (
-      const item of items
-    ) {
+    for (const item of items) {
+      if (!item || typeof item !== "object") {
+        continue;
+      }
+
       stats.total += 1;
 
       if (
-        Object.prototype.hasOwnProperty.call(
-          stats.status,
-          item.status
-        )
+        typeof item.status === "string" &&
+        SUPPORTED_STATUSES.includes(item.status)
       ) {
-        stats.status[
-          item.status
-        ] += 1;
+        stats.status[item.status] += 1;
       }
 
       if (
-        Object.prototype.hasOwnProperty.call(
-          stats.type,
-          item.type
-        )
+        typeof item.type === "string" &&
+        SUPPORTED_TYPES.includes(item.type)
       ) {
-        stats.type[
-          item.type
-        ] += 1;
+        stats.type[item.type] += 1;
       }
     }
 
     return stats;
-  }
+      }
+    /*
+   * ============================================================
+   * RENDER STATISTICS
+   * ============================================================
+   */
 
+  function renderStats(stats) {
+    const safeStats =
+      stats || createEmptyStats();
 
-  /* ============================================================
-     RENDER
-     ============================================================ */
-
-  function renderStats(
-    stats
-  ) {
     setValue(
       refs.totalContent,
-      stats.total
+      safeStats.total
     );
 
     setValue(
       refs.publishedContent,
-      stats.status.published
+      safeStats.status.published
     );
 
     setValue(
       refs.draftContent,
-      stats.status.draft
+      safeStats.status.draft
     );
 
     setValue(
       refs.pendingContent,
-      stats.status.pending
+      safeStats.status.pending
     );
 
     setValue(
       refs.archivedContent,
-      stats.status.archived
+      safeStats.status.archived
     );
 
     setValue(
       refs.storyContent,
-      stats.type.story
+      safeStats.type.story
     );
 
     setValue(
       refs.videoContent,
-      stats.type.video
+      safeStats.type.video
     );
 
     setValue(
       refs.imageContent,
-      stats.type.image
+      safeStats.type.image
     );
 
     setValue(
       refs.musicContent,
-      stats.type.music
+      safeStats.type.music
     );
 
     setValue(
       refs.documentContent,
-      stats.type.document
+      safeStats.type.document
     );
   }
 
+  /*
+   * ============================================================
+   * RENDER EMPTY STATE
+   * ============================================================
+   */
 
   function renderEmpty() {
-    renderStats(
-      createEmptyStats()
-    );
+    renderStats(createEmptyStats());
   }
 
-
-  /* ============================================================
-     LOAD CONTENT DATA
-     ============================================================ */
+  /*
+   * ============================================================
+   * LOAD CONTENT DATA
+   * ============================================================
+   */
 
   async function loadContentItems() {
-    const supabase =
-      getSupabase();
+    const supabase = getSupabase();
 
-    if (
-      !supabase ||
-      !isSupabaseReady()
-    ) {
+    if (!supabase) {
       throw new Error(
         "Supabase connection is unavailable."
       );
     }
 
-    const {
-      data,
-      error
-    } =
-      await supabase
-        .from("content_items")
-        .select(
-          "id,type,status"
-        )
-        .order(
-          "created_at",
-          {
-            ascending: false
-          }
-        );
+    if (
+      window.ECHOES_SUPABASE_API &&
+      typeof window.ECHOES_SUPABASE_API.isReady ===
+        "function" &&
+      !window.ECHOES_SUPABASE_API.isReady()
+    ) {
+      throw new Error(
+        "Supabase connection is not ready."
+      );
+    }
+
+    const response = await supabase
+      .from("content_items")
+      .select("id,type,status")
+      .order("created_at", {
+        ascending: false
+      });
+
+    const data = response
+      ? response.data
+      : null;
+
+    const error = response
+      ? response.error
+      : null;
 
     if (error) {
       console.error(
-        "Echoes Admin: Dashboard query failed.",
+        `${MODULE_NAME}: dashboard query failed.`,
         error
       );
 
       throw new Error(
-        "Unable to load dashboard data."
+        error.message ||
+          "Unable to load dashboard data."
       );
     }
 
@@ -437,10 +529,11 @@
       : [];
   }
 
-
-  /* ============================================================
-     REFRESH DASHBOARD
-     ============================================================ */
+  /*
+   * ============================================================
+   * REFRESH DASHBOARD
+   * ============================================================
+   */
 
   async function refreshDashboard() {
     if (loading) {
@@ -448,26 +541,45 @@
     }
 
     setLoading(true);
-
-    setStatus(
-      "Loading dashboard…"
-    );
+    setStatus("Loading dashboard.");
 
     try {
+      /*
+       * Do not silently display zeros when the user
+       * is not authenticated. The dashboard is an
+       * authenticated admin surface.
+       */
+      if (!isAuthenticated()) {
+        allItems = [];
+        renderEmpty();
+
+        setStatus(
+          "Admin authentication required.",
+          "warning"
+        );
+
+        return null;
+      }
+
+      if (!isSupabaseReady()) {
+        throw new Error(
+          "Supabase connection is not ready."
+        );
+      }
+
       const items =
         await loadContentItems();
 
-      allItems =
-        items;
+      /*
+       * Store the actual database result.
+       * No hard-coded dashboard values.
+       */
+      allItems = items;
 
       const stats =
-        calculateStats(
-          allItems
-        );
+        calculateStats(allItems);
 
-      renderStats(
-        stats
-      );
+      renderStats(stats);
 
       setStatus(
         "Dashboard updated.",
@@ -477,25 +589,35 @@
       emit(
         "echoes:dashboard-updated",
         {
-          items:
-            [...allItems],
+          items: [...allItems],
           stats
         }
       );
 
       return stats;
-
     } catch (error) {
       console.error(
-        "Echoes Admin: Dashboard refresh failed.",
+        `${MODULE_NAME}: refresh failed.`,
         error
       );
 
-      setStatus(
+      /*
+       * Keep previous data out of a failed refresh.
+       * This prevents stale numbers from being presented
+       * as current database values.
+       */
+      allItems = [];
+
+      renderEmpty();
+
+      const message =
         error &&
-        error.message
+        typeof error.message === "string"
           ? error.message
-          : "Unable to load dashboard.",
+          : "Unable to load dashboard.";
+
+      setStatus(
+        message,
         "error"
       );
 
@@ -507,30 +629,30 @@
       );
 
       return null;
-
     } finally {
       setLoading(false);
     }
   }
 
-
-  /* ============================================================
-     AUTHENTICATED EVENT
-     ============================================================ */
+  /*
+   * ============================================================
+   * AUTHENTICATED EVENT
+   * ============================================================
+   */
 
   async function handleAuthenticated() {
     /*
-     * Authentication has already been verified by
-     * admin-auth.js. The dashboard simply loads its
-     * own data.
+     * Authentication has already been verified
+     * by admin-auth.js.
      */
     await refreshDashboard();
   }
 
-
-  /* ============================================================
-     SIGNED OUT EVENT
-     ============================================================ */
+  /*
+   * ============================================================
+   * SIGNED OUT EVENT
+   * ============================================================
+   */
 
   function handleSignedOut() {
     allItems = [];
@@ -542,36 +664,47 @@
     initialized = false;
   }
 
-
-  /* ============================================================
-     CONTENT SAVED
-     ============================================================ */
+  /*
+   * ============================================================
+   * CONTENT SAVED EVENT
+   * ============================================================
+   */
 
   async function handleContentSaved() {
     if (!initialized) {
       return;
     }
 
-    await refreshDashboard();
-  }
-
-
-  /* ============================================================
-     CONTENT DELETED
-     ============================================================ */
-
-  async function handleContentDeleted() {
-    if (!initialized) {
+    if (!isAuthenticated()) {
       return;
     }
 
     await refreshDashboard();
   }
 
+  /*
+   * ============================================================
+   * CONTENT DELETED EVENT
+   * ============================================================
+   */
 
-  /* ============================================================
-     EVENT LISTENERS
-     ============================================================ */
+  async function handleContentDeleted() {
+    if (!initialized) {
+      return;
+    }
+
+    if (!isAuthenticated()) {
+      return;
+    }
+
+    await refreshDashboard();
+  }
+
+  /*
+   * ============================================================
+   * EVENT LISTENERS
+   * ============================================================
+   */
 
   function registerEvents() {
     document.addEventListener(
@@ -595,15 +728,14 @@
     );
   }
 
-
-  /* ============================================================
-     BUTTON
-     ============================================================ */
+  /*
+   * ============================================================
+   * BUTTON
+   * ============================================================
+   */
 
   function registerButton() {
-    if (
-      !refs.dashboardRefreshButton
-    ) {
+    if (!refs.dashboardRefreshButton) {
       return;
     }
 
@@ -615,10 +747,38 @@
     );
   }
 
+  /*
+   * ============================================================
+   * DOM CONTRACT CHECK
+   * ============================================================
+   */
 
-  /* ============================================================
-     INITIALIZATION
-     ============================================================ */
+  function validateDom() {
+    const missing =
+      getMissingDomReferences();
+
+    if (missing.length === 0) {
+      return true;
+    }
+
+    console.error(
+      `${MODULE_NAME}: missing DOM references.`,
+      missing
+    );
+
+    setStatus(
+      "Dashboard interface is incomplete.",
+      "error"
+    );
+
+    return false;
+  }
+
+   /*
+   * ============================================================
+   * INITIALIZATION
+   * ============================================================
+   */
 
   function initializeDashboard() {
     if (initialized) {
@@ -627,53 +787,68 @@
 
     cacheDom();
 
-    registerEvents();
+    /*
+     * If the HTML contract is wrong, stop here.
+     * We do not attempt to guess alternative IDs.
+     */
+    if (!validateDom()) {
+      return;
+    }
 
+    registerEvents();
     registerButton();
 
     renderEmpty();
 
     initialized = true;
+
+    /*
+     * If authentication has already completed before
+     * this module initialized, load immediately.
+     *
+     * Otherwise admin-auth.js will emit
+     * echoes:authenticated and trigger the same flow.
+     */
+    if (isAuthenticated()) {
+      refreshDashboard();
+    }
   }
 
-
-  /* ============================================================
-     PUBLIC API
-     ============================================================ */
+  /*
+   * ============================================================
+   * PUBLIC API
+   * ============================================================
+   */
 
   window.ECHOES_ADMIN_DASHBOARD = {
-    refresh:
-      refreshDashboard,
+    refresh: refreshDashboard,
 
-    render:
-      renderStats,
+    render: renderStats,
 
     getItems() {
-      return [
-        ...allItems
-      ];
+      return [...allItems];
     },
 
     getStats() {
-      return calculateStats(
-        allItems
-      );
+      return calculateStats(allItems);
     },
 
     isLoading() {
       return loading;
+    },
+
+    isInitialized() {
+      return initialized;
     }
   };
 
+  /*
+   * ============================================================
+   * STARTUP
+   * ============================================================
+   */
 
-  /* ============================================================
-     STARTUP
-     ============================================================ */
-
-  if (
-    document.readyState ===
-    "loading"
-  ) {
+  if (document.readyState === "loading") {
     document.addEventListener(
       "DOMContentLoaded",
       initializeDashboard,
@@ -684,5 +859,11 @@
   } else {
     initializeDashboard();
   }
+
+  /*
+   * ============================================================
+   * END OF ECHOES OF HUMANITY — ADMIN DASHBOARD
+   * ============================================================
+   */
 
 })();
