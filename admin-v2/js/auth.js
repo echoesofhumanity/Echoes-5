@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = passwordInput ? passwordInput.value : '';
 
         if (!email || !password) {
+            errorDiv.style.color = '#ef4444';
             errorDiv.textContent = 'Lütfen e-posta ve şifrenizi girin.';
             return;
         }
@@ -21,11 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
         errorDiv.textContent = 'Giriş yapılıyor, lütfen bekleyin...';
 
         try {
-            const client = window.supabaseClient || (window.supabase && window.supabase.createClient ? 
-                window.supabase.createClient(window.ECHOES_SUPABASE_URL, window.ECHOES_SUPABASE_PUBLISHABLE_KEY) : null);
+            /*
+             * Supabase client, supabase-config.js tarafından
+             * window.db olarak oluşturuluyor.
+             */
+            const client = window.db;
 
             if (!client) {
-                throw new Error('Supabase istemcisi başlatılamadı.');
+                throw new Error(
+                    'Supabase bağlantısı başlatılamadı. Lütfen sayfayı yenileyin.'
+                );
             }
 
             const { data, error } = await client.auth.signInWithPassword({
@@ -37,16 +43,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw error;
             }
 
+            if (!data || !data.session) {
+                throw new Error(
+                    'Giriş tamamlandı ancak oturum oluşturulamadı.'
+                );
+            }
+
             errorDiv.style.color = '#22c55e';
-            errorDiv.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';
-            
+            errorDiv.textContent =
+                'Giriş başarılı! Yönlendiriliyorsunuz...';
+
             setTimeout(() => {
                 window.location.href = 'index.html';
             }, 1000);
 
         } catch (err) {
+            console.error('Supabase Login Error:', err);
+
             errorDiv.style.color = '#ef4444';
-            errorDiv.textContent = 'Giriş Hatası: ' + (err.message || 'Bilinmeyen bir hata oluştu.');
+            errorDiv.textContent =
+                'Giriş Hatası: ' +
+                (err && err.message
+                    ? err.message
+                    : 'Bilinmeyen bir hata oluştu.');
         }
     });
 });
