@@ -42,7 +42,8 @@
     <div class="nav-btns">
       <button id="navNewContent">Yeni İçerik</button>
       <button id="navLibrary" class="btn-secondary">İçerik Kütüphanesi</button>
-    <button onclick="logout()" class="btn-danger" style="background:#ef4444; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">Çıkış Yap</button>
+<button onclick="try{if(typeof db!=='undefined'&amp;&amp;db.auth){db.auth.signOut();}}catch(e){} localStorage.clear(); window.location.href='login.html';" class="btn-danger" style="background:#ef4444; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">Çıkış Yap</button>
+      
       
     </div>
   </div>
