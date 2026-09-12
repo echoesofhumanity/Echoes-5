@@ -1,326 +1,106 @@
 (() => {
   "use strict";
 
-  /*
-   * ============================================================
-   * ECHOES OF HUMANITY — ADMIN CONTENT MANAGEMENT
-   * ============================================================
-   *
-   * Responsibilities:
-   * - Create content records.
-   * - Edit existing content records.
-   * - Delete content records.
-   * - Upload media to Supabase Storage.
-   * - Replace existing media safely.
-   * - Preview selected media.
-   * - Manage content metadata and publication status.
-   * - Notify other Admin modules through CustomEvents.
-   *
-   * Supported content types:
-   * - story
-   * - video
-   * - image
-   * - music
-   * - document
-   *
-   * Supported languages:
-   * - en
-   * - tr
-   * - hr
-   * - fr
-   * - es
-   *
-   * Supported statuses:
-   * - draft
-   * - pending
-   * - published
-   * - archived
-   *
-   * This module does NOT:
-   * - authenticate users
-   * - control navigation
-   * - render dashboard statistics
-   * - render library filters
-   * - manage system settings
-   */
-
   const STORAGE_BUCKET = "echoes-media";
-
-  const SUPPORTED_TYPES = [
-    "story",
-    "video",
-    "image",
-    "music",
-    "document"
-  ];
-
-  const SUPPORTED_LANGUAGES = [
-    "en",
-    "tr",
-    "hr",
-    "fr",
-    "es"
-  ];
-
-  const CONTENT_STATUSES = [
-    "draft",
-    "pending",
-    "published",
-    "archived"
-  ];
-
-
-  /* ============================================================
-     DOM REFERENCES
-     ============================================================ */
+  const SUPPORTED_TYPES = ["story", "video", "image", "music", "document"];
+  const SUPPORTED_LANGUAGES = ["en", "tr", "hr", "fr", "es"];
+  const CONTENT_STATUSES = ["draft", "pending", "published", "archived"];
 
   const refs = {
-    contentForm:
-      null,
-
-    editingContentId:
-      null,
-
-    contentTitleInput:
-      null,
-
-    contentType:
-      null,
-
-    contentLanguage:
-      null,
-
-    contentCategory:
-      null,
-
-    contentStatus:
-      null,
-
-    contentDescriptionInput:
-      null,
-
-    contentTags:
-      null,
-
-    uploadZone:
-      null,
-
-    contentFileInput:
-      null,
-
-    chooseFileButton:
-      null,
-
-    selectedFileInfo:
-      null,
-
-    mediaPreview:
-      null,
-
-    clearContentButton:
-      null,
-
-    saveDraftButton:
-      null,
-
-    publishContentButton:
-      null,
-
-    contentFormMessage:
-      null
+    contentForm: null,
+    editingContentId: null,
+    contentTitleInput: null,
+    contentType: null,
+    contentLanguage: null,
+    contentCategory: null,
+    contentStatus: null,
+    contentDescriptionInput: null,
+    contentTags: null,
+    uploadZone: null,
+    contentFileInput: null,
+    chooseFileButton: null,
+    selectedFileInfo: null,
+    mediaPreview: null,
+    clearContentButton: null,
+    saveDraftButton: null,
+    publishContentButton: null,
+    contentFormMessage: null
   };
 
-
-  /* ============================================================
-     STATE
-     ============================================================ */
-
-  let initialized = false;
   let selectedFile = null;
   let currentObjectUrl = null;
   let saving = false;
-
-
-  /* ============================================================
-     DOM CACHE
-     ============================================================ */
+  let initialized = false;
 
   function cacheDom() {
-    refs.contentForm =
-      document.getElementById(
-        "contentForm"
-      );
-
-    refs.editingContentId =
-      document.getElementById(
-        "editingContentId"
-      );
-
-    refs.contentTitleInput =
-      document.getElementById(
-        "contentTitleInput"
-      );
-
-    refs.contentType =
-      document.getElementById(
-        "contentType"
-      );
-
-    refs.contentLanguage =
-      document.getElementById(
-        "contentLanguage"
-      );
-
-    refs.contentCategory =
-      document.getElementById(
-        "contentCategory"
-      );
-
-    refs.contentStatus =
-      document.getElementById(
-        "contentStatus"
-      );
-
-    refs.contentDescriptionInput =
-      document.getElementById(
-        "contentDescriptionInput"
-      );
-
-    refs.contentTags =
-      document.getElementById(
-        "contentTags"
-      );
-
-    refs.uploadZone =
-      document.getElementById(
-        "uploadZone"
-      );
-
-    refs.contentFileInput =
-      document.getElementById(
-        "contentFileInput"
-      );
-
-    refs.chooseFileButton =
-      document.getElementById(
-        "chooseFileButton"
-      );
-
-    refs.selectedFileInfo =
-      document.getElementById(
-        "selectedFileInfo"
-      );
-
-    refs.mediaPreview =
-      document.getElementById(
-        "mediaPreview"
-      );
-
-    refs.clearContentButton =
-      document.getElementById(
-        "clearContentButton"
-      );
-
-    refs.saveDraftButton =
-      document.getElementById(
-        "saveDraftButton"
-      );
-
-    refs.publishContentButton =
-      document.getElementById(
-        "publishContentButton"
-      );
-
-    refs.contentFormMessage =
-      document.getElementById(
-        "contentFormMessage"
-      );
+    refs.contentForm = document.getElementById("contentForm");
+    refs.editingContentId = document.getElementById("editingContentId");
+    refs.contentTitleInput = document.getElementById("contentTitleInput");
+    refs.contentType = document.getElementById("contentType");
+    refs.contentLanguage = document.getElementById("contentLanguage");
+    refs.contentCategory = document.getElementById("contentCategory");
+    refs.contentStatus = document.getElementById("contentStatus");
+    refs.contentDescriptionInput = document.getElementById("contentDescriptionInput");
+    refs.contentTags = document.getElementById("contentTags");
+    refs.uploadZone = document.getElementById("uploadZone");
+    refs.contentFileInput = document.getElementById("contentFileInput");
+    refs.chooseFileButton = document.getElementById("chooseFileButton");
+    refs.selectedFileInfo = document.getElementById("selectedFileInfo");
+    refs.mediaPreview = document.getElementById("mediaPreview");
+    refs.clearContentButton = document.getElementById("clearContentButton");
+    refs.saveDraftButton = document.getElementById("saveDraftButton");
+    refs.publishContentButton = document.getElementById("publishContentButton");
+    refs.contentFormMessage = document.getElementById("contentFormMessage");
   }
-
-
-  /* ============================================================
-     SUPABASE ACCESS
-     ============================================================ */
 
   function getSupabase() {
     if (
-      !window.ECHOES_SUPABASE_API ||
-      typeof
-        window.ECHOES_SUPABASE_API.getClient !==
-          "function"
+      window.ECHOES_SUPABASE_API &&
+      typeof window.ECHOES_SUPABASE_API.getClient === "function"
     ) {
-      return null;
+      return window.ECHOES_SUPABASE_API.getClient();
     }
 
-    return window.ECHOES_SUPABASE_API.getClient();
+    return window.ECHOES_SUPABASE || null;
   }
-
 
   function isSupabaseReady() {
     return Boolean(
       window.ECHOES_SUPABASE_API &&
-      typeof
-        window.ECHOES_SUPABASE_API.isReady ===
-          "function" &&
+      typeof window.ECHOES_SUPABASE_API.isReady === "function" &&
       window.ECHOES_SUPABASE_API.isReady()
     );
   }
 
-
-  /* ============================================================
-     AUTH ACCESS
-     ============================================================ */
-
   function getCurrentUser() {
     if (
-      !window.ECHOES_ADMIN_AUTH ||
-      typeof
-        window.ECHOES_ADMIN_AUTH.getCurrentUser !==
-          "function"
+      window.ECHOES_ADMIN_AUTH &&
+      typeof window.ECHOES_ADMIN_AUTH.getCurrentUser === "function"
     ) {
-      return null;
+      return window.ECHOES_ADMIN_AUTH.getCurrentUser();
     }
 
-    return window.ECHOES_ADMIN_AUTH
-      .getCurrentUser();
+    return null;
   }
 
-
-  /* ============================================================
-     EVENT HELPER
-     ============================================================ */
-
-  function emit(
-    name,
-    detail = {}
-  ) {
+  function emit(name, detail = {}) {
     document.dispatchEvent(
-      new CustomEvent(
-        name,
-        {
-          detail
-        }
-      )
+      new CustomEvent(name, {
+        detail
+      })
     );
   }
 
-
-  /* ============================================================
-     MESSAGE
-     ============================================================ */
-
   function setMessage(
-    message,
+    message = "",
     type = ""
   ) {
-    if (
-      !refs.contentFormMessage
-    ) {
+    if (!refs.contentFormMessage) {
       return;
     }
 
     refs.contentFormMessage.textContent =
-      message || "";
+      message;
 
     refs.contentFormMessage.classList.remove(
       "success",
@@ -335,385 +115,35 @@
     }
   }
 
-
-  /* ============================================================
-     FORM STATE
-     ============================================================ */
-
-  function setEditingId(
-    id
-  ) {
-    if (
-      !refs.editingContentId
-    ) {
-      return;
-    }
-
-    refs.editingContentId.value =
-      id || "";
-  }
-
-
-  function getEditingId() {
-    if (
-      !refs.editingContentId
-    ) {
-      return "";
-    }
-
-    return refs.editingContentId.value.trim();
-  }
-
-
-  function setFormLoading(
-    isLoading
-  ) {
-    saving = isLoading;
-
-    const controls = [
-      refs.saveDraftButton,
-      refs.publishContentButton,
-      refs.clearContentButton,
-      refs.chooseFileButton
-    ];
-
-    controls.forEach(
-      (button) => {
-        if (!button) {
-          return;
-        }
-
-        button.disabled =
-          isLoading;
-
-        button.classList.toggle(
-          "is-loading",
-          isLoading
-        );
-      }
-    );
-  }
-
-
-  /* ============================================================
-     FILE HELPERS
-     ============================================================ */
-
-  function getFileExtension(
-    fileName
-  ) {
-    if (
-      typeof fileName !==
-      "string"
-    ) {
-      return "";
-    }
-
-    const lastDot =
-      fileName.lastIndexOf(
-        "."
-      );
-
-    if (
-      lastDot < 0
-    ) {
-      return "";
-    }
-
-    return fileName
-      .slice(lastDot + 1)
-      .toLowerCase();
-  }
-
-
-  function sanitizeFileName(
-    fileName
-  ) {
-    const extension =
-      getFileExtension(
-        fileName
-      );
-
-    const baseName =
-      extension
-        ? fileName.slice(
-            0,
-            -(extension.length + 1)
-          )
-        : fileName;
-
-    const safeBase =
-      baseName
-        .normalize("NFKD")
-        .replace(
-          /[\u0300-\u036f]/g,
-          ""
-        )
-        .replace(
-          /[^a-zA-Z0-9_-]+/g,
-          "-"
-        )
-        .replace(
-          /^-+|-+$/g,
-          ""
-        )
-        .toLowerCase();
-
-    const finalBase =
-      safeBase ||
-      "file";
-
-    return extension
-      ? `${finalBase}.${extension}`
-      : finalBase;
-  }
-
-
-  function createStoragePath(
-    userId,
-    fileName
-  ) {
-    const safeName =
-      sanitizeFileName(
-        fileName
-      );
-
-    const uniqueId =
-      crypto.randomUUID();
-
-    return [
-      "media",
-      userId,
-      `${uniqueId}-${safeName}`
-    ].join("/");
-  }
-
-
-  /* ============================================================
-     TAGS
-     ============================================================ */
-
-  function parseTags(
+  function setLoading(
     value
   ) {
-    if (
-      typeof value !==
-      "string"
-    ) {
-      return [];
+    saving =
+      Boolean(value);
+
+    if (refs.saveDraftButton) {
+      refs.saveDraftButton.disabled =
+        saving;
     }
 
-    return [
-      ...new Set(
-        value
-          .split(",")
-          .map(
-            (tag) =>
-              tag.trim()
-          )
-          .filter(Boolean)
-      )
-    ];
+    if (refs.publishContentButton) {
+      refs.publishContentButton.disabled =
+        saving;
+    }
+
+    if (refs.clearContentButton) {
+      refs.clearContentButton.disabled =
+        saving;
+    }
+
+    if (refs.chooseFileButton) {
+      refs.chooseFileButton.disabled =
+        saving;
+    }
   }
-
-
-  function tagsToText(
-    tags
-  ) {
-    if (
-      !Array.isArray(tags)
-    ) {
-      return "";
-    }
-
-    return tags.join(
-      ", "
-    );
-  }
-
-
-  /* ============================================================
-     FORM DATA
-     ============================================================ */
-
-  function getFormData(
-    statusOverride = null
-  ) {
-    const title =
-      refs.contentTitleInput
-        ? refs.contentTitleInput.value.trim()
-        : "";
-
-    const type =
-      refs.contentType
-        ? refs.contentType.value
-        : "";
-
-    const language =
-      refs.contentLanguage
-        ? refs.contentLanguage.value
-        : "";
-
-    const category =
-      refs.contentCategory
-        ? refs.contentCategory.value.trim()
-        : "";
-
-    const description =
-      refs.contentDescriptionInput
-        ? refs.contentDescriptionInput.value.trim()
-        : "";
-
-    const tags =
-      refs.contentTags
-        ? parseTags(
-            refs.contentTags.value
-          )
-        : [];
-
-    const status =
-      statusOverride ||
-      (
-        refs.contentStatus
-          ? refs.contentStatus.value
-          : ""
-      );
-
-    return {
-      title,
-      type,
-      language,
-      category:
-        category || null,
-      description:
-        description || null,
-      tags,
-      status
-    };
-  }
-
-
-  /* ============================================================
-     VALIDATION
-     ============================================================ */
-
-  function validateForm(
-    data
-  ) {
-    if (
-      !data.title
-    ) {
-      return "Title is required.";
-    }
-
-    if (
-      !SUPPORTED_TYPES.includes(
-        data.type
-      )
-    ) {
-      return "Select a valid content type.";
-    }
-
-    if (
-      !SUPPORTED_LANGUAGES.includes(
-        data.language
-      )
-    ) {
-      return "Select a valid language.";
-    }
-
-    if (
-      !CONTENT_STATUSES.includes(
-        data.status
-      )
-    ) {
-      return "Select a valid content status.";
-    }
-
-    return null;
-  }
-
-
-  /* ============================================================
-     FILE VALIDATION
-     ============================================================ */
-
-  function isFileCompatibleWithType(
-    file,
-    type
-  ) {
-    if (!file) {
-      return true;
-    }
-
-    const mime =
-      (
-        file.type ||
-        ""
-      ).toLowerCase();
-
-    if (
-      type === "image"
-    ) {
-      return mime.startsWith(
-        "image/"
-      );
-    }
-
-    if (
-      type === "video"
-    ) {
-      return mime.startsWith(
-        "video/"
-      );
-    }
-
-    if (
-      type === "music"
-    ) {
-      return (
-        mime.startsWith(
-          "audio/"
-        ) ||
-        /\.(mp3|wav|m4a|aac|ogg|flac)$/i.test(
-          file.name
-        )
-      );
-    }
-
-    if (
-      type === "document"
-    ) {
-      return (
-        mime ===
-          "application/pdf" ||
-        mime.startsWith(
-          "text/"
-        ) ||
-        /\.(pdf|txt|doc|docx|rtf)$/i.test(
-          file.name
-        )
-      );
-    }
-
-    if (
-      type === "story"
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-
-
-  /* ============================================================
-     PREVIEW CLEANUP
-     ============================================================ */
 
   function revokeObjectUrl() {
-    if (
-      currentObjectUrl
-    ) {
+    if (currentObjectUrl) {
       URL.revokeObjectURL(
         currentObjectUrl
       );
@@ -723,51 +153,316 @@
     }
   }
 
-
   function clearPreview() {
     revokeObjectUrl();
 
-    if (
-      refs.mediaPreview
-    ) {
+    if (refs.mediaPreview) {
       refs.mediaPreview.innerHTML =
         "";
     }
   }
 
-
-  /* ============================================================
-     MEDIA PREVIEW
-     ============================================================ */
-
-  function renderFilePreview(
-    file
+  function parseTags(
+    value
   ) {
+    if (!value) {
+      return [];
+    }
+
+    return value
+      .split(",")
+      .map(
+        value =>
+          value.trim()
+      )
+      .filter(Boolean);
+  }
+
+  function tagsToText(
+    tags
+  ) {
+    return Array.isArray(tags)
+      ? tags.join(", ")
+      : "";
+  }
+
+  function getFormData(
+    statusOverride = null
+  ) {
+    return {
+      title:
+        refs.contentTitleInput
+          ? refs.contentTitleInput.value.trim()
+          : "",
+
+      type:
+        refs.contentType
+          ? refs.contentType.value
+          : "",
+
+      language:
+        refs.contentLanguage
+          ? refs.contentLanguage.value
+          : "",
+
+      category:
+        refs.contentCategory
+          ? refs.contentCategory.value.trim()
+          : "",
+
+      description:
+        refs.contentDescriptionInput
+          ? refs.contentDescriptionInput.value.trim()
+          : "",
+
+      tags:
+        refs.contentTags
+          ? parseTags(
+              refs.contentTags.value
+            )
+          : [],
+
+      status:
+        statusOverride ||
+        (
+          refs.contentStatus
+            ? refs.contentStatus.value
+            : ""
+        )
+    };
+        }
+
+   function validateForm(data) {
+    if (!data.title) return "Title is required.";
+    if (!SUPPORTED_TYPES.includes(data.type)) return "Select a valid content type.";
+    if (!SUPPORTED_LANGUAGES.includes(data.language)) return "Select a valid language.";
+    if (!CONTENT_STATUSES.includes(data.status)) return "Select a valid content status.";
+    return null;
+  }
+
+  function isFileCompatibleWithType(file, type) {
+    if (!file) return true;
+    const mime = String(file.type || "").toLowerCase();
+    if (type === "image") return mime.startsWith("image/");
+    if (type === "video") return mime.startsWith("video/");
+    if (type === "music") {
+      return (
+        mime.startsWith("audio/") ||
+        /\.(mp3|wav|m4a|aac|ogg|flac)$/i.test(file.name)
+      );
+    }
+    if (type === "document") {
+      return (
+        mime === "application/pdf" ||
+        mime.startsWith("text/") ||
+        /\.(pdf|txt|doc|docx|rtf)$/i.test(file.name)
+      );
+    }
+    if (type === "story") return true;
+    return false;
+  }
+
+  function createStoragePath(userId, file) {
+    const safeName = String(file.name || "file")
+      .trim()
+      .replace(/[^a-zA-Z0-9._-]+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "") || "file";
+
+    return `media/${userId}/${crypto.randomUUID()}-${safeName}`;
+  }
+
+  async function uploadFile(file, userId) {
+    const supabase = getSupabase();
+
+    if (!supabase || !isSupabaseReady()) {
+      throw new Error("Supabase connection is unavailable.");
+    }
+
+    if (!file) return null;
+
+    const path = createStoragePath(userId, file);
+
+    const { error } = await supabase.storage
+      .from(STORAGE_BUCKET)
+      .upload(path, file, {
+        cacheControl: "3600",
+        contentType: file.type || "application/octet-stream",
+        upsert: false
+      });
+
+    if (error) throw error;
+
+    return path;
+  }
+
+  async function deleteStorageFile(path) {
+    if (!path) return;
+
+    const supabase = getSupabase();
+
+    if (!supabase || !isSupabaseReady()) {
+      throw new Error("Supabase connection is unavailable.");
+    }
+
+    const { error } = await supabase.storage
+      .from(STORAGE_BUCKET)
+      .remove([path]);
+
+    if (error) throw error;
+  }
+
+  async function insertContent(data, filePath, userId) {
+    const supabase = getSupabase();
+
+    const payload = {
+      type: data.type,
+      title: data.title,
+      description: data.description || null,
+      language: data.language,
+      category: data.category || null,
+      tags: data.tags,
+      file_path: filePath || null,
+      cover_path: null,
+      status: data.status,
+      author_id: userId,
+      published_at:
+        data.status === "published"
+          ? new Date().toISOString()
+          : null
+    };
+
+    const {
+      data: inserted,
+      error
+    } = await supabase
+      .from("content_items")
+      .insert(payload)
+      .select("*")
+      .single();
+
+    if (error) throw error;
+
+    return inserted;
+  }
+
+  async function getContentById(id) {
+    const supabase = getSupabase();
+
+    const {
+      data,
+      error
+    } = await supabase
+      .from("content_items")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  }
+
+  async function updateContent(
+    id,
+    data,
+    filePath
+  ) {
+    const supabase = getSupabase();
+
+    const payload = {
+      type: data.type,
+      title: data.title,
+      description: data.description || null,
+      language: data.language,
+      category: data.category || null,
+      tags: data.tags,
+      status: data.status,
+      published_at:
+        data.status === "published"
+          ? new Date().toISOString()
+          : null
+    };
+
+    if (filePath !== undefined) {
+      payload.file_path =
+        filePath || null;
+    }
+
+    const {
+      data: updated,
+      error
+    } = await supabase
+      .from("content_items")
+      .update(payload)
+      .eq("id", id)
+      .select("*")
+      .single();
+
+    if (error) throw error;
+
+    return updated;
+  }
+
+  function renderSelectedFile(file) {
+    if (!refs.selectedFileInfo) return;
+
+    refs.selectedFileInfo.textContent =
+      file
+        ? `${file.name} (${formatBytes(file.size)})`
+        : "";
+  }
+
+  function formatBytes(bytes) {
     if (
-      !refs.mediaPreview
+      !Number.isFinite(bytes) ||
+      bytes <= 0
+    ) {
+      return "0 B";
+    }
+
+    const units = [
+      "B",
+      "KB",
+      "MB",
+      "GB"
+    ];
+
+    const index = Math.min(
+      Math.floor(
+        Math.log(bytes) /
+          Math.log(1024)
+      ),
+      units.length - 1
+    );
+
+    return `${(
+      bytes /
+      Math.pow(1024, index)
+    ).toFixed(index ? 1 : 0)} ${units[index]}`;
+  }
+
+  function renderPreview(file) {
+    clearPreview();
+
+    if (
+      !refs.mediaPreview ||
+      !file
     ) {
       return;
     }
 
-    clearPreview();
-
-    if (!file) {
-      return;
-    }
+    const mime =
+      String(
+        file.type || ""
+      ).toLowerCase();
 
     currentObjectUrl =
       URL.createObjectURL(
         file
       );
 
-    const mime =
-      (
-        file.type ||
-        ""
-      ).toLowerCase();
-
-    let element =
-      null;
+    let element = null;
 
     if (
       mime.startsWith(
@@ -817,95 +512,32 @@
 
       element.controls =
         true;
+
+        } else {
+      element =
+        document.createElement(
+          "div"
+        );
+
+      element.textContent =
+        file.name;
     }
-
-    if (element) {
-      refs.mediaPreview.appendChild(
-        element
-      );
-      return;
-    }
-
-    const message =
-      document.createElement(
-        "div"
-      );
-
-    message.className =
-      "media-preview-empty";
-
-    message.textContent =
-      `Selected file: ${file.name}`;
 
     refs.mediaPreview.appendChild(
-      message
+      element
     );
   }
 
 
-  /* ============================================================
-     SELECTED FILE UI
-     ============================================================ */
-
-  function renderSelectedFile() {
-    if (
-      !refs.selectedFileInfo
-    ) {
-      return;
-    }
-
-    if (!selectedFile) {
-      refs.selectedFileInfo.textContent =
-        "";
-
-      return;
-    }
-
-    const sizeInMb =
-      selectedFile.size /
-      (1024 * 1024);
-
-    const sizeText =
-      sizeInMb >= 1
-        ? `${sizeInMb.toFixed(2)} MB`
-        : `${Math.max(
-            1,
-            Math.round(
-              selectedFile.size /
-              1024
-            )
-          )} KB`;
-
-    refs.selectedFileInfo.textContent =
-      `${selectedFile.name} · ${sizeText}`;
-  }
-
-
-  /* ============================================================
-     FILE SELECTION
-     ============================================================ */
-
   function setSelectedFile(
     file
   ) {
-    if (!file) {
-      selectedFile =
-        null;
-
-      renderSelectedFile();
-
-      clearPreview();
-
-      return;
-    }
-
-    const data =
-      getFormData();
-
     if (
+      file &&
+      refs.contentType &&
       !isFileCompatibleWithType(
         file,
-        data.type
+        refs.contentType.value
       )
     ) {
       setMessage(
@@ -913,376 +545,58 @@
         "error"
       );
 
-      return;
+      return false;
     }
 
     selectedFile =
-      file;
+      file || null;
 
-    renderSelectedFile();
-
-    renderFilePreview(
+    renderSelectedFile(
       selectedFile
     );
 
+    renderPreview(
+      selectedFile
+    );
+
+    if (
+      refs.contentFileInput &&
+      !selectedFile
+    ) {
+      refs.contentFileInput.value =
+        "";
+    }
+
     setMessage("");
+
+    return true;
   }
 
-
-  /* ============================================================
-     STORAGE UPLOAD
-     ============================================================ */
-
-  async function uploadFile(
-    file,
-    userId
-  ) {
-    const supabase =
-      getSupabase();
-
-    if (
-      !supabase ||
-      !isSupabaseReady()
-    ) {
-      throw new Error(
-        "Supabase connection is unavailable."
-      );
-    }
-
-    if (
-      !file
-    ) {
-      return null;
-    }
-
-    const path =
-      createStoragePath(
-        userId,
-        file.name
-      );
-
-    const {
-      error
-    } =
-      await supabase
-        .storage
-        .from(
-          STORAGE_BUCKET
-        )
-        .upload(
-          path,
-          file,
-          {
-            cacheControl:
-              "3600",
-            contentType:
-              file.type ||
-              "application/octet-stream",
-            upsert:
-              false
-          }
-        );
-
-    if (error) {
-      console.error(
-        "Echoes Admin: Storage upload failed.",
-        error
-      );
-
-      throw new Error(
-        "Unable to upload the media file."
-      );
-    }
-
-    return path;
-  }
-
-
-  /* ============================================================
-     STORAGE DELETE
-     ============================================================ */
-
-  async function deleteStorageFile(
-    path
-  ) {
-    if (
-      !path
-    ) {
-      return;
-    }
-
-    const supabase =
-      getSupabase();
-
-    if (
-      !supabase ||
-      !isSupabaseReady()
-    ) {
-      throw new Error(
-        "Supabase connection is unavailable."
-      );
-    }
-
-    const {
-      error
-    } =
-      await supabase
-        .storage
-        .from(
-          STORAGE_BUCKET
-        )
-        .remove([
-          path
-        ]);
-
-    if (error) {
-      console.error(
-        "Echoes Admin: Storage delete failed.",
-        error
-      );
-
-      throw new Error(
-        "Unable to remove the media file."
-      );
-    }
-      }
-
-    /* ============================================================
-     DATABASE — INSERT
-     ============================================================ */
-
-  async function insertContent(
-    data,
-    filePath,
-    userId
-  ) {
-    const supabase =
-      getSupabase();
-
-    const payload = {
-      type:
-        data.type,
-
-      title:
-        data.title,
-
-      description:
-        data.description,
-
-      language:
-        data.language,
-
-      category:
-        data.category,
-
-      tags:
-        data.tags,
-
-      file_path:
-        filePath,
-
-      status:
-        data.status,
-
-      author_id:
-        userId
-    };
-
-    if (
-      data.status ===
-      "published"
-    ) {
-      payload.published_at =
-        new Date().toISOString();
-    } else {
-      payload.published_at =
-        null;
-    }
-
-    const {
-      data: inserted,
-      error
-    } =
-      await supabase
-        .from(
-          "content_items"
-        )
-        .insert(
-          payload
-        )
-        .select(
-          "id,type,title,description,language,category,tags,file_path,cover_path,status,author_id,created_at,updated_at,published_at"
-        )
-        .single();
-
-    if (error) {
-      console.error(
-        "Echoes Admin: Content insert failed.",
-        error
-      );
-
-      throw new Error(
-        "Unable to create the content."
-      );
-    }
-
-    return inserted;
-  }
-
-
-  /* ============================================================
-     DATABASE — READ ONE
-     ============================================================ */
-
-  async function getContentById(
-    id
-  ) {
-    const supabase =
-      getSupabase();
-
-    if (
-      !id
-    ) {
-      throw new Error(
-        "Content ID is required."
-      );
-    }
-
-    const {
-      data,
-      error
-    } =
-      await supabase
-        .from(
-          "content_items"
-        )
-        .select(
-          "id,type,title,description,language,category,tags,file_path,cover_path,status,author_id,created_at,updated_at,published_at"
-        )
-        .eq(
-          "id",
-          id
-        )
-        .single();
-
-    if (error) {
-      console.error(
-        "Echoes Admin: Content lookup failed.",
-        error
-      );
-
-      throw new Error(
-        "Unable to load the content."
-      );
-    }
-
-    return data;
-  }
-
-
-  /* ============================================================
-     DATABASE — UPDATE
-     ============================================================ */
-
-  async function updateContent(
-    id,
-    data,
-    filePath
-  ) {
-    const supabase =
-      getSupabase();
-
-    const payload = {
-      type:
-        data.type,
-
-      title:
-        data.title,
-
-      description:
-        data.description,
-
-      language:
-        data.language,
-
-      category:
-        data.category,
-
-      tags:
-        data.tags,
-
-      status:
-        data.status,
-
-      updated_at:
-        new Date().toISOString()
-    };
-
-    if (
-      filePath !==
-      undefined
-    ) {
-      payload.file_path =
-        filePath;
-    }
-
-    if (
-      data.status ===
-      "published"
-    ) {
-      payload.published_at =
-        new Date().toISOString();
-    } else {
-      payload.published_at =
-        null;
-    }
-
-    const {
-      data: updated,
-      error
-    } =
-      await supabase
-        .from(
-          "content_items"
-        )
-        .update(
-          payload
-        )
-        .eq(
-          "id",
-          id
-        )
-        .select(
-          "id,type,title,description,language,category,tags,file_path,cover_path,status,author_id,created_at,updated_at,published_at"
-        )
-        .single();
-
-    if (error) {
-      console.error(
-        "Echoes Admin: Content update failed.",
-        error
-      );
-
-      throw new Error(
-        "Unable to update the content."
-      );
-    }
-
-    return updated;
-  }
-
-
-  /* ============================================================
-     FORM RESET
-     ============================================================ */
 
   function resetFields() {
     if (
-      refs.contentTitleInput
+      refs.contentForm
     ) {
-      refs.contentTitleInput.value =
+      refs.contentForm.reset();
+    }
+
+    if (
+      refs.editingContentId
+    ) {
+      refs.editingContentId.value =
         "";
     }
+
+    selectedFile =
+      null;
+
+    renderSelectedFile(
+      null
+    );
+
+    clearPreview();
+
+    setMessage("");
 
     if (
       refs.contentType
@@ -1299,235 +613,10 @@
     }
 
     if (
-      refs.contentCategory
-    ) {
-      refs.contentCategory.value =
-        "";
-    }
-
-    if (
       refs.contentStatus
     ) {
       refs.contentStatus.value =
         "draft";
-    }
-
-    if (
-      refs.contentDescriptionInput
-    ) {
-      refs.contentDescriptionInput.value =
-        "";
-    }
-
-    if (
-      refs.contentTags
-    ) {
-      refs.contentTags.value =
-        "";
-    }
-
-    if (
-      refs.contentFileInput
-    ) {
-      refs.contentFileInput.value =
-        "";
-    }
-
-    setEditingId(
-      ""
-    );
-
-    selectedFile =
-      null;
-
-    renderSelectedFile();
-
-    clearPreview();
-  }
-
-
-  function clearForm(
-    options = {}
-  ) {
-    const {
-      clearMessage = true
-    } = options;
-
-    resetFields();
-
-    if (
-      clearMessage
-    ) {
-      setMessage("");
-    }
-  }
-
-
-  /* ============================================================
-     EDIT FORM POPULATION
-     ============================================================ */
-
-  function populateForm(
-    content
-  ) {
-    if (
-      refs.contentTitleInput
-    ) {
-      refs.contentTitleInput.value =
-        content.title ||
-        "";
-    }
-
-    if (
-      refs.contentType
-    ) {
-      refs.contentType.value =
-        SUPPORTED_TYPES.includes(
-          content.type
-        )
-          ? content.type
-          : "story";
-    }
-
-    if (
-      refs.contentLanguage
-    ) {
-      refs.contentLanguage.value =
-        SUPPORTED_LANGUAGES.includes(
-          content.language
-        )
-          ? content.language
-          : "en";
-    }
-
-    if (
-      refs.contentCategory
-    ) {
-      refs.contentCategory.value =
-        content.category ||
-        "";
-    }
-
-    if (
-      refs.contentStatus
-    ) {
-      refs.contentStatus.value =
-        CONTENT_STATUSES.includes(
-          content.status
-        )
-          ? content.status
-          : "draft";
-    }
-
-    if (
-      refs.contentDescriptionInput
-    ) {
-      refs.contentDescriptionInput.value =
-        content.description ||
-        "";
-    }
-
-    if (
-      refs.contentTags
-    ) {
-      refs.contentTags.value =
-        tagsToText(
-          content.tags
-        );
-    }
-
-    setEditingId(
-      content.id
-    );
-
-    selectedFile =
-      null;
-
-    if (
-      refs.contentFileInput
-    ) {
-      refs.contentFileInput.value =
-        "";
-    }
-
-    renderSelectedFile();
-
-    clearPreview();
-  }
-
-
-  /* ============================================================
-     EDIT CONTENT
-     ============================================================ */
-
-  async function editContent(
-    id
-  ) {
-    if (
-      !id
-    ) {
-      setMessage(
-        "Content ID is missing.",
-        "error"
-      );
-
-      return null;
-    }
-
-    if (
-      !isSupabaseReady()
-    ) {
-      setMessage(
-        "Supabase connection is unavailable.",
-        "error"
-      );
-
-      return null;
-    }
-
-    try {
-      setMessage(
-        "Loading content…"
-      );
-
-      const content =
-        await getContentById(
-          id
-        );
-
-      populateForm(
-        content
-      );
-
-      setMessage(
-        "Content loaded for editing.",
-        "success"
-      );
-
-      emit(
-        "echoes:content-editing",
-        {
-          content
-        }
-      );
-
-      return content;
-
-    } catch (error) {
-      console.error(
-        "Echoes Admin: Edit load failed.",
-        error
-      );
-
-      setMessage(
-        error &&
-        error.message
-          ? error.message
-          : "Unable to load content.",
-        "error"
-      );
-
-      return null;
     }
   }
 
@@ -1608,7 +697,9 @@
     }
 
     const editingId =
-      getEditingId();
+      refs.editingContentId
+        ? refs.editingContentId.value.trim()
+        : "";
 
     const editing =
       Boolean(
@@ -1621,13 +712,7 @@
     let uploadedPath =
       null;
 
-    let result =
-      null;
-
-    let cleanupWarning =
-      false;
-
-    setFormLoading(
+    setLoading(
       true
     );
 
@@ -1661,107 +746,78 @@
           );
       }
 
-      if (
+      const result =
         editing
-      ) {
-        result =
-          await updateContent(
-            editingId,
-            formData,
-            uploadedPath !==
-              null
-              ? uploadedPath
-              : undefined
-          );
-      } else {
-        result =
-          await insertContent(
-            formData,
-            uploadedPath,
-            user.id
-          );
-      }
+          ? await updateContent(
+              editingId,
+              formData,
+              uploadedPath !== null
+                ? uploadedPath
+                : undefined
+            )
+          : await insertContent(
+              formData,
+              uploadedPath,
+              user.id
+            );
 
-      /*
-       * Database work has completed successfully.
-       *
-       * If a new media file replaced an old one, remove
-       * the previous Storage object only after the database
-       * operation has succeeded.
-       */
       if (
         editing &&
         uploadedPath &&
         previousFilePath &&
-        previousFilePath !==
-          uploadedPath
+        previousFilePath !== uploadedPath
       ) {
         try {
           await deleteStorageFile(
             previousFilePath
           );
         } catch (
-          storageError
+          cleanupError
         ) {
-          cleanupWarning =
-            true;
-
           console.error(
             "Echoes Admin: Previous media cleanup failed.",
-            storageError
+            cleanupError
           );
+
+          resetFields();
+
+          setMessage(
+            "Content was saved, but the previous media file could not be removed.",
+            "warning"
+          );
+
+          emit(
+            "echoes:content-saved",
+            {
+              content: result,
+              warning: true
+            }
+          );
+
+          return result;
         }
       }
 
-      /*
-       * The form is cleared only after the complete
-       * create/update operation has succeeded.
-       *
-       * clearForm() clears its own message by design,
-       * therefore the final result message is written
-       * AFTER clearForm().
-       */
-      clearForm();
+      resetFields();
 
-      if (
-        cleanupWarning
-      ) {
-        setMessage(
-          "Content was saved, but the previous media file could not be removed.",
-          "warning"
-        );
-      } else {
-        setMessage(
-          editing
-            ? "Content updated successfully."
-            : "Content created successfully.",
-          "success"
-        );
-      }
+      setMessage(
+        editing
+          ? "Content updated successfully."
+          : "Content created successfully.",
+        "success"
+      );
 
       emit(
         "echoes:content-saved",
         {
-          content:
-            result,
-          editing
+          content: result
         }
       );
 
       return result;
-
     } catch (
       error
     ) {
-      console.error(
-        "Echoes Admin: Content save failed.",
-        error
-      );
-
-      /*
-       * If a file was uploaded but the database operation
-       * failed, remove that newly uploaded orphan file.
-       */
       if (
         uploadedPath
       ) {
@@ -1773,11 +829,16 @@
           cleanupError
         ) {
           console.error(
-            "Echoes Admin: Failed to clean up uploaded media after save failure.",
+            "Echoes Admin: Uploaded media cleanup failed.",
             cleanupError
           );
         }
       }
+
+      console.error(
+        "Echoes Admin: Content save failed.",
+        error
+      );
 
       setMessage(
         error &&
@@ -1788,24 +849,151 @@
       );
 
       return null;
-
     } finally {
-      setFormLoading(
+      setLoading(
         false
       );
     }
+  }
+
+
+  /* ============================================================
+     EDIT CONTENT
+     ============================================================ */
+
+  async function editContent(
+    idOrItem
+  ) {
+    const id =
+      typeof idOrItem === "object" &&
+      idOrItem
+        ? idOrItem.id
+        : idOrItem;
+
+    if (
+      !id ||
+      !isSupabaseReady()
+    ) {
+      return null;
+    }
+
+    try {
+      const content =
+        typeof idOrItem === "object" &&
+        idOrItem
+          ? idOrItem
+          : await getContentById(
+              id
+            );
+
+      if (
+        refs.editingContentId
+      ) {
+        refs.editingContentId.value =
+          content.id || "";
+      }
+
+      if (
+        refs.contentTitleInput
+      ) {
+        refs.contentTitleInput.value =
+          content.title || "";
+      }
+
+      if (
+        refs.contentType
+      ) {
+        refs.contentType.value =
+          content.type || "story";
+      }
+
+      if (
+        refs.contentLanguage
+      ) {
+        refs.contentLanguage.value =
+          content.language || "en";
+      }
+
+      if (
+        refs.contentCategory
+      ) {
+        refs.contentCategory.value =
+          content.category || "";
+      }
+
+      if (
+        refs.contentStatus
+      ) {
+        refs.contentStatus.value =
+          content.status || "draft";
+      }
+
+      if (
+        refs.contentDescriptionInput
+      ) {
+        refs.contentDescriptionInput.value =
+          content.description || "";
+      }
+
+      if (
+        refs.contentTags
+      ) {
+        refs.contentTags.value =
+          tagsToText(
+            content.tags
+          );
+      }
+
+      selectedFile =
+        null;
+
+      renderSelectedFile(
+        null
+      );
+
+      clearPreview();
+
+      setMessage(
+        "Content loaded for editing.",
+        "success"
+      );
+
+      emit(
+        "echoes:content-editing",
+        {
+          content
+        }
+      );
+
+      return content;
+    } catch (
+      error
+    ) {
+      console.error(
+        "Echoes Admin: Edit load failed.",
+        error
+      );
+
+      setMessage(
+        error &&
+        error.message
+          ? error.message
+          : "Unable to load content.",
+        "error"
+      );
+
+      return null;
+    }
         }
 
-    /* ============================================================
+   /* ============================================================
      DELETE CONTENT
      ============================================================ */
 
   async function deleteContent(
     id
   ) {
-    if (
-      !id
-    ) {
+    if (!id) {
       setMessage(
         "Content ID is missing.",
         "error"
@@ -1830,9 +1018,7 @@
         "Delete this content permanently?"
       );
 
-    if (
-      !confirmed
-    ) {
+    if (!confirmed) {
       return false;
     }
 
@@ -1851,34 +1037,23 @@
 
       const {
         error
-      } =
-        await supabase
-          .from(
-            "content_items"
-          )
-          .delete()
-          .eq(
-            "id",
-            id
-          );
-
-      if (
-        error
-      ) {
-        console.error(
-          "Echoes Admin: Content delete failed.",
-          error
+      } = await supabase
+        .from("content_items")
+        .delete()
+        .eq(
+          "id",
+          id
         );
 
-        throw new Error(
-          "Unable to delete the content."
-        );
+      if (error) {
+        throw error;
       }
 
-      let storageWarning =
+      let warning =
         false;
 
       if (
+        content &&
         content.file_path
       ) {
         try {
@@ -1886,34 +1061,36 @@
             content.file_path
           );
         } catch (
-          storageError
+          cleanupError
         ) {
-          storageWarning =
+          warning =
             true;
 
           console.error(
-            "Echoes Admin: Media cleanup after content deletion failed.",
-            storageError
+            "Echoes Admin: Storage cleanup failed.",
+            cleanupError
           );
         }
       }
 
-      /*
-       * If the deleted content was currently being edited,
-       * clear the editor now that the record no longer exists.
-       */
       if (
-        getEditingId() ===
-        id
+        refs.editingContentId &&
+        refs.editingContentId.value === id
       ) {
-        clearForm();
+        resetFields();
       }
 
-      if (
-        storageWarning
-      ) {
+      emit(
+        "echoes:content-deleted",
+        {
+          id,
+          warning
+        }
+      );
+
+      if (warning) {
         setMessage(
-          "Content was deleted, but its media file could not be removed.",
+          "Content deleted, but its media file could not be removed.",
           "warning"
         );
       } else {
@@ -1923,20 +1100,12 @@
         );
       }
 
-      emit(
-        "echoes:content-deleted",
-        {
-          content
-        }
-      );
-
       return true;
-
     } catch (
       error
     ) {
       console.error(
-        "Echoes Admin: Content deletion failed.",
+        "Echoes Admin: Content delete failed.",
         error
       );
 
@@ -1954,63 +1123,28 @@
 
 
   /* ============================================================
-     OPEN EDITOR
+     FILE EVENTS
      ============================================================ */
 
-  function openEditorSection() {
-    emit(
-      "echoes:navigate",
-      {
-        section:
-          "contentSection"
-      }
-    );
+  function handleFileChange(
+    event
+  ) {
+    const file =
+      event &&
+      event.target &&
+      event.target.files
+        ? event.target.files[0]
+        : null;
+
+    if (file) {
+      setSelectedFile(
+        file
+      );
+    }
   }
 
 
-  /* ============================================================
-     FILE INPUT
-     ============================================================ */
-
-  function handleFileInput(
-    event
-  ) {
-    const files =
-      event.target.files;
-
-    if (
-      !files ||
-      !files.length
-    ) {
-      return;
-    }
-
-    setSelectedFile(
-      files[0]
-    );
-  }
-
-
-  /* ============================================================
-     CHOOSE FILE
-     ============================================================ */
-
-  function handleChooseFile(
-    event
-  ) {
-    if (
-      event
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    if (
-      saving
-    ) {
-      return;
-    }
-
+  function handleChooseFile() {
     if (
       refs.contentFileInput
     ) {
@@ -2019,20 +1153,29 @@
   }
 
 
-  /* ============================================================
-     DRAG OVER
-     ============================================================ */
-
-  function handleDragOver(
+  function handleDrop(
     event
   ) {
     event.preventDefault();
 
     if (
-      saving
+      !event.dataTransfer ||
+      !event.dataTransfer.files ||
+      !event.dataTransfer.files.length
     ) {
       return;
     }
+
+    setSelectedFile(
+      event.dataTransfer.files[0]
+    );
+  }
+
+
+  function handleDragOver(
+    event
+  ) {
+    event.preventDefault();
 
     if (
       refs.uploadZone
@@ -2043,10 +1186,6 @@
     }
   }
 
-
-  /* ============================================================
-     DRAG LEAVE
-     ============================================================ */
 
   function handleDragLeave(
     event
@@ -2063,108 +1202,45 @@
   }
 
 
-  /* ============================================================
-     DROP
-     ============================================================ */
-
-  function handleDrop(
-    event
-  ) {
-    event.preventDefault();
-
-    if (
-      refs.uploadZone
-    ) {
-      refs.uploadZone.classList.remove(
-        "is-dragover"
-      );
-    }
-
-    if (
-      saving
-    ) {
-      return;
-    }
-
-    const files =
-      event.dataTransfer &&
-      event.dataTransfer.files;
-
-    if (
-      !files ||
-      !files.length
-    ) {
-      return;
-    }
-
-    setSelectedFile(
-      files[0]
-    );
-  }
-
-
-  /* ============================================================
-     TYPE CHANGE
-     ============================================================ */
-
   function handleTypeChange() {
     if (
-      !selectedFile
+      !selectedFile ||
+      !refs.contentType
     ) {
       return;
     }
-
-    const data =
-      getFormData();
 
     if (
       !isFileCompatibleWithType(
         selectedFile,
-        data.type
+        refs.contentType.value
       )
     ) {
-      setMessage(
-        "The current selected file does not match the new content type. Choose another file.",
-        "warning"
+      setSelectedFile(
+        null
       );
 
-      return;
+      setMessage(
+        "The selected file does not match the new content type.",
+        "warning"
+      );
     }
-
-    setMessage("");
   }
 
 
   /* ============================================================
-     CLEAR BUTTON
+     BUTTON EVENTS
      ============================================================ */
 
   function handleClear() {
-    if (
-      saving
-    ) {
-      return;
-    }
-
-    clearForm();
-
-    setMessage(
-      "Content form cleared.",
-      "success"
-    );
+    resetFields();
   }
 
-
-  /* ============================================================
-     SAVE DRAFT BUTTON
-     ============================================================ */
 
   function handleSaveDraft(
     event
   ) {
-    if (
-      event
-    ) {
+    if (event) {
       event.preventDefault();
     }
 
@@ -2174,16 +1250,10 @@
   }
 
 
-  /* ============================================================
-     PUBLISH BUTTON
-     ============================================================ */
-
   function handlePublish(
     event
   ) {
-    if (
-      event
-    ) {
+    if (event) {
       event.preventDefault();
     }
 
@@ -2192,10 +1262,6 @@
     );
   }
 
-
-  /* ============================================================
-     FORM SUBMIT
-     ============================================================ */
 
   function handleFormSubmit(
     event
@@ -2209,89 +1275,6 @@
 
     saveContent(
       status
-    );
-  }
-
-
-  /* ============================================================
-     CONTENT EDIT REQUEST
-     ============================================================ */
-
-  async function handleContentEditRequest(
-    event
-  ) {
-    const id =
-      event &&
-      event.detail
-        ? event.detail.id
-        : null;
-
-    if (
-      !id
-    ) {
-      return;
-    }
-
-    openEditorSection();
-
-    await editContent(
-      id
-    );
-  }
-
-
-  /* ============================================================
-     CONTENT DELETE REQUEST
-     ============================================================ */
-
-  async function handleContentDeleteRequest(
-    event
-  ) {
-    const id =
-      event &&
-      event.detail
-        ? event.detail.id
-        : null;
-
-    if (
-      !id
-    ) {
-      return;
-    }
-
-    await deleteContent(
-      id
-    );
-  }
-
-
-  /* ============================================================
-     AUTH SIGNED OUT
-     ============================================================ */
-
-  function handleSignedOut() {
-    clearForm();
-  }
-
-
-  /* ============================================================
-     EVENT REGISTRATION
-     ============================================================ */
-
-  function registerEvents() {
-    document.addEventListener(
-      "echoes:content-edit-request",
-      handleContentEditRequest
-    );
-
-    document.addEventListener(
-      "echoes:content-delete-request",
-      handleContentDeleteRequest
-    );
-
-    document.addEventListener(
-      "echoes:signed-out",
-      handleSignedOut
     );
   }
 
@@ -2315,7 +1298,7 @@
     ) {
       refs.contentFileInput.addEventListener(
         "change",
-        handleFileInput
+        handleFileChange
       );
     }
 
@@ -2395,9 +1378,7 @@
      ============================================================ */
 
   function initializeContent() {
-    if (
-      initialized
-    ) {
+    if (initialized) {
       return;
     }
 
@@ -2412,8 +1393,6 @@
 
       return;
     }
-
-    registerEvents();
 
     registerDomEvents();
 
@@ -2439,10 +1418,13 @@
       deleteContent,
 
     clear:
-      clearForm,
+      resetFields,
 
-    getCurrentContentId:
-      getEditingId,
+    getCurrentContentId() {
+      return refs.editingContentId
+        ? refs.editingContentId.value.trim()
+        : "";
+    },
 
     getSelectedFile() {
       return selectedFile;
@@ -2492,9 +1474,3 @@
   }
 
 })();
-
-/*
- * ============================================================
- * END OF ECHOES OF HUMANITY — ADMIN CONTENT MANAGEMENT
- * ============================================================
- */
