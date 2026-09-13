@@ -1002,229 +1002,238 @@ return {
     // KÜTÜPHANE
     // ---------------------------------------------------------
 
-    async function loadLibrary() {
+   async function loadLibrary() {
+    if (!libraryList) return;
 
-        if (!libraryList) return;
+    // Aynı anda birden fazla kütüphane sorgusunun
+    // üst üste binmesini engelle.
+    if (libraryLoading) return;
 
-        libraryList.innerHTML =
-            '<p>İçerikler yükleniyor...</p>';
+    libraryLoading = true;
+    const requestId = ++libraryRequestId;
 
-        try {
+    libraryList.innerHTML = `
+        <p style="color:#94a3b8;">
+            İçerikler yükleniyor…
+        </p>
+    `;
 
-            const { data, error } = await db
-                .from('content_items')
-                .select(`
-                    *,
-                    categories (
-                        id,
-                        name,
-                        slug
-                    )
-                `)
-                .order(
-                    'created_at',
-                    { ascending: false }
-                );
+    try {
+        const { data, error } = await db
+            .from('content_items')
+            .select(`
+                *,
+                categories (
+                    id,
+                    name,
+                    slug
+                )
+            `)
+            .order('created_at', { ascending: false });
 
-            if (error) throw error;
+        // Bu istek artık güncel değilse DOM'a dokunma.
+        if (requestId !== libraryRequestId) return;
 
-            if (!data || data.length === 0) {
+        if (error) throw error;
 
-                libraryList.innerHTML =
-                    '<p>Henüz kayıtlı içerik bulunmuyor.</p>';
-
-                return;
-            }
-
-            libraryList.innerHTML =
-                data.map(item => {
-
-                    const categoryName =
-                        item.categories?.name ||
-                        'Kategorisiz';
-
-                    const isArchived =
-                        item.status === 'archived';
-
-                    const isPublished =
-                        item.status === 'published';
-
-                    const media =
-                        item.cover_image_url
-                            ? `
-                                <a
-                                    href="${escapeHtml(
-                                        item.cover_image_url
-                                    )}"
-                                    target="_blank"
-                                    rel="noopener"
-                                >
-                                    Medyayı Aç
-                                </a>
-                              `
-                            : 'Medya yok';
-
-                    return `
-
-                        <article style="
-                            border:1px solid #334155;
-                            padding:16px;
-                            margin-bottom:12px;
-                            border-radius:10px;
-                            background:#0f172a;
-                        ">
-
-                            <div style="
-                                display:flex;
-                                justify-content:
-                                    space-between;
-                                gap:10px;
-                                align-items:
-                                    flex-start;
-                                flex-wrap:wrap;
-                            ">
-
-                                <div style="flex:1;">
-
-                                    <strong style="
-                                        font-size:18px;
-                                    ">
-                                        ${escapeHtml(
-                                            item.title
-                                        )}
-                                    </strong>
-
-                                    <div style="
-                                        margin-top:7px;
-                                        font-size:13px;
-                                        color:#94a3b8;
-                                    ">
-                                        ${statusLabel(
-                                            item.status
-                                        )}
-                                        ·
-                                        ${typeLabel(
-                                            item.type
-                                        )}
-                                        ·
-                                        ${escapeHtml(
-                                            String(
-                                                item.language || ''
-                                            ).toUpperCase()
-                                        )}
-                                        ·
-                                        ${escapeHtml(
-                                            categoryName
-                                        )}
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <p style="
-                                color:#cbd5e1;
-                                margin:12px 0;
-                            ">
-                                ${escapeHtml(
-                                    item.summary || ''
-                                )}
-                            </p>
-
-                            <div style="
-                                font-size:12px;
-                                color:#64748b;
-                                margin-bottom:12px;
-                            ">
-                                Oluşturulma:
-                                ${formatDate(
-                                    item.created_at
-                                )}
-                            </div>
-
-                            <div style="
-                                margin-bottom:12px;
-                            ">
-                                ${media}
-                            </div>
-
-                            <div style="
-                                display:flex;
-                                gap:8px;
-                                flex-wrap:wrap;
-                            ">
-
-                                <button
-                                    data-action="edit"
-                                    data-id="${item.id}"
-                                >
-                                    Düzenle
-                                </button>
-
-                                ${
-                                    isArchived
-                                        ? `
-                                            <button
-                                                data-action="restore"
-                                                data-id="${item.id}"
-                                            >
-                                                Geri Yükle
-                                            </button>
-
-                                            <button
-                                                data-action="delete"
-                                                data-id="${item.id}"
-                                                style="
-                                                    background:#7f1d1d;
-                                                    color:white;
-                                                "
-                                            >
-                                                Kalıcı Sil
-                                            </button>
-                                          `
-                                        : `
-                                            ${
-                                                !isPublished
-                                                    ? `
-                                                        <button
-                                                            data-action="publish"
-                                                            data-id="${item.id}"
-                                                        >
-                                                            Yayınla
-                                                        </button>
-                                                      `
-                                                    : ''
-                                            }
-
-                                            <button
-                                                data-action="archive"
-                                                data-id="${item.id}"
-                                            >
-                                                Arşivle
-                                            </button>
-                                          `
-                                }
-
-                            </div>
-
-                        </article>
-
-                    `;
-
-                }).join('');
-
-        } catch (error) {
-
-            console.error(error);
-
+        if (!data || data.length === 0) {
             libraryList.innerHTML = `
-                <p style="color:#f87171;">
-                    Kütüphane yüklenirken hata:
-                    ${escapeHtml(error.message)}
+                <p style="color:#94a3b8;">
+                    Henüz kayıtlı içerik bulunmuyor.
                 </p>
             `;
+            return;
+        }
+
+        libraryList.innerHTML = data.map(item => {
+
+            const categoryName =
+                item.categories?.name || 'Kategorisiz';
+
+            const isArchived =
+                item.status === 'archived';
+
+            const isPublished =
+                item.status === 'published';
+
+            const media =
+                item.cover_image_url
+                    ? `
+                        <a
+                            href="${escapeHtml(item.cover_image_url)}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            Medyayı Aç
+                        </a>
+                    `
+                    : 'Medya yok';
+
+            return `
+                <article
+                    style="
+                        border:1px solid #334155;
+                        padding:16px;
+                        margin-bottom:12px;
+                        border-radius:10px;
+                        background:#0f172a;
+                    "
+                >
+
+                    <div
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            gap:10px;
+                            align-items:flex-start;
+                            flex-wrap:wrap;
+                        "
+                    >
+
+                        <div style="flex:1;">
+
+                            <strong style="font-size:18px;">
+                                ${escapeHtml(item.title)}
+                            </strong>
+
+                            <div
+                                style="
+                                    margin-top:7px;
+                                    font-size:13px;
+                                    color:#94a3b8;
+                                "
+                            >
+                                ${statusLabel(item.status)}
+                                ·
+                                ${typeLabel(item.type)}
+                                ·
+                                ${escapeHtml(
+                                    String(item.language || '')
+                                        .toUpperCase()
+                                )}
+                                ·
+                                ${escapeHtml(categoryName)}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <p
+                        style="
+                            color:#cbd5e1;
+                            margin:12px 0;
+                        "
+                    >
+                        ${escapeHtml(item.summary || '')}
+                    </p>
+
+                    <div
+                        style="
+                            font-size:12px;
+                            color:#64748b;
+                            margin-bottom:12px;
+                        "
+                    >
+                        Oluşturulma:
+                        ${formatDate(item.created_at)}
+                    </div>
+
+                    <div
+                        style="
+                            margin-bottom:12px;
+                        "
+                    >
+                        ${media}
+                    </div>
+
+                    <div
+                        style="
+                            display:flex;
+                            gap:8px;
+                            flex-wrap:wrap;
+                        "
+                    >
+
+                        <button
+                            data-action="edit"
+                            data-id="${escapeHtml(item.id)}"
+                        >
+                            Düzenle
+                        </button>
+
+                        ${
+                            isArchived
+                                ? `
+                                    <button
+                                        data-action="restore"
+                                        data-id="${escapeHtml(item.id)}"
+                                    >
+                                        Geri Yükle
+                                    </button>
+
+                                    <button
+                                        data-action="delete"
+                                        data-id="${escapeHtml(item.id)}"
+                                        style="
+                                            background:#7f1d1d;
+                                            color:white;
+                                        "
+                                    >
+                                        Kalıcı Sil
+                                    </button>
+                                `
+                                : `
+                                    ${
+                                        !isPublished
+                                            ? `
+                                                <button
+                                                    data-action="publish"
+                                                    data-id="${escapeHtml(item.id)}"
+                                                >
+                                                    Yayınla
+                                                </button>
+                                            `
+                                            : ''
+                                    }
+
+                                    <button
+                                        data-action="archive"
+                                        data-id="${escapeHtml(item.id)}"
+                                    >
+                                        Arşivle
+                                    </button>
+                                `
+                        }
+
+                    </div>
+
+                </article>
+            `;
+        }).join('');
+
+    } catch (error) {
+
+        console.error('Kütüphane yükleme hatası:', error);
+
+        if (requestId !== libraryRequestId) return;
+
+        libraryList.innerHTML = `
+            <p style="color:#f87171;">
+                Kütüphane yüklenirken hata oluştu:
+                ${escapeHtml(error.message)}
+            </p>
+        `;
+
+    } finally {
+
+        // Yalnızca hâlâ geçerli olan istek loading kilidini kaldırır.
+        if (requestId === libraryRequestId) {
+            libraryLoading = false;
         }
     }
+   } 
+
 
     // ---------------------------------------------------------
     // YAYINLA
