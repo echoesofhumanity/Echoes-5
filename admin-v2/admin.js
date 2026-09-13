@@ -110,9 +110,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getSelectedCategoryId() {
-        if (!categoryInput) return null;
 
-        return categoryInput.value || null;
+    const categorySelect =
+        document.getElementById('contentCategory');
+
+    if (!categorySelect) {
+        return null;
+    }
+
+    return categorySelect.value || null;
     }
 
     function setButtonsDisabled(disabled) {
@@ -301,9 +307,12 @@ document.addEventListener('DOMContentLoaded', () => {
             fileInput.value = '';
         }
 
-        if (categoryInput) {
-            categoryInput.value = '';
-        }
+        const categorySelect =
+    document.getElementById('contentCategory');
+
+if (categorySelect) {
+    categorySelect.value = '';
+}
 
         if (typeSelect) {
             typeSelect.value = 'story';
@@ -374,20 +383,26 @@ document.addEventListener('DOMContentLoaded', () => {
             );
         }
 
-        const categoryId =
-            getSelectedCategoryId();
+     const categoryId =
+    getSelectedCategoryId();
 
-        return {
-            title: title,
-            slug: createSlug(title),
-            summary: description,
-            body: description,
-            type: typeSelect.value,
-            language: langSelect.value,
-            status: status,
-            category_id: categoryId,
-            tags: tags
-        };
+if (!categoryId) {
+    throw new Error(
+        'Lütfen bir kategori seçin.'
+    );
+}
+
+return {
+    title: title,
+    slug: createSlug(title),
+    summary: description,
+    body: description,
+    type: typeSelect.value,
+    language: langSelect.value,
+    status: status,
+    category_id: categoryId,
+    tags: tags
+};
     }
 
             // ---------------------------------------------------------
