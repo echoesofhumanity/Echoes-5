@@ -1,131 +1,1574 @@
 <!DOCTYPE html>
 <html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Echoes Admin Panel V2</title>
-  
-  <!-- Supabase CDN ve Proje Yapılandırması -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../assets/js/supabase-config.js"></script>
 
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; }
-    .container { max-width: 800px; margin: 0 auto; background: #1e293b; padding: 24px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid #334155; padding-bottom: 16px; }
-    .nav-btns { display: flex; gap: 10px; }
-    button { background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    button:hover { opacity: 0.9; }
-    .btn-secondary { background: #475569; }
-    .btn-success { background: #22c55e; }
-    .btn-warning { background: #eab308; color: #000; }
-    .btn-danger { background: #ef4444; }
-    .form-group { margin-bottom: 16px; }
-    label { display: block; margin-bottom: 6px; font-size: 0.9rem; color: #cbd5e1; }
-    input, select, textarea { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white; font-size: 0.95rem; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .alert { padding: 12px; border-radius: 6px; margin-bottom: 16px; display: none; }
-    .alert.info { background: #1e3a8a; color: #93c5fd; display: block; }
-    .alert.success { background: #14532d; color: #86efac; display: block; }
-    .alert.error { background: #7f1d1d; color: #fca5a5; display: block; }
-    .card { background: #0f172a; padding: 16px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #334155; }
-    .card-actions { display: flex; gap: 8px; margin-top: 12px; }
-    .btn-sm { padding: 4px 10px; font-size: 0.8rem; }
-  </style>
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Echoes of Humanity — Admin</title>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../assets/js/supabase-config.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            background:
+                #07111f;
+
+            color:
+                #e2e8f0;
+
+            min-height:
+                100vh;
+        }
+
+        .container {
+            width:
+                min(1200px, 94%);
+
+            margin:
+                0 auto;
+
+            padding:
+                24px 0 50px;
+        }
+
+        /* -------------------------------------------------
+           HEADER
+        ------------------------------------------------- */
+
+        .header {
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            gap:
+                18px;
+
+            flex-wrap:
+                wrap;
+
+            padding:
+                18px 20px;
+
+            margin-bottom:
+                22px;
+
+            background:
+                #0d1b2a;
+
+            border:
+                1px solid #1e3a52;
+
+            border-radius:
+                14px;
+        }
+
+        .brand {
+            flex:
+                1;
+        }
+
+        .brand h1 {
+            font-size:
+                22px;
+
+            color:
+                #38bdf8;
+
+            margin-bottom:
+                4px;
+        }
+
+        .brand p {
+            color:
+                #94a3b8;
+
+            font-size:
+                13px;
+        }
+
+        .nav-btns {
+            display:
+                flex;
+
+            gap:
+                8px;
+
+            flex-wrap:
+                wrap;
+        }
+
+        button {
+            border:
+                0;
+
+            border-radius:
+                8px;
+
+            padding:
+                10px 14px;
+
+            background:
+                #2563eb;
+
+            color:
+                white;
+
+            font-size:
+                14px;
+
+            font-weight:
+                600;
+
+            cursor:
+                pointer;
+
+            transition:
+                opacity .2s,
+                transform .2s;
+        }
+
+        button:hover {
+            opacity:
+                .88;
+
+            transform:
+                translateY(-1px);
+        }
+
+        button:disabled {
+            opacity:
+                .5;
+
+            cursor:
+                not-allowed;
+
+            transform:
+                none;
+        }
+
+        .btn-secondary {
+            background:
+                #334155;
+        }
+
+        .btn-success {
+            background:
+                #15803d;
+        }
+
+        .btn-warning {
+            background:
+                #b45309;
+        }
+
+        .btn-danger {
+            background:
+                #b91c1c;
+        }
+
+        .btn-small {
+            padding:
+                7px 10px;
+
+            font-size:
+                12px;
+        }
+
+        /* -------------------------------------------------
+           SECTIONS
+        ------------------------------------------------- */
+
+        .panel {
+            background:
+                #0d1b2a;
+
+            border:
+                1px solid #1e3a52;
+
+            border-radius:
+                14px;
+
+            padding:
+                20px;
+
+            margin-bottom:
+                20px;
+        }
+
+        .panel-header {
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            gap:
+                12px;
+
+            flex-wrap:
+                wrap;
+
+            margin-bottom:
+                18px;
+        }
+
+        .panel-header h2 {
+            color:
+                #f8fafc;
+
+            font-size:
+                20px;
+        }
+
+        .panel-header p {
+            color:
+                #94a3b8;
+
+            font-size:
+                13px;
+
+            margin-top:
+                4px;
+        }
+
+        /* -------------------------------------------------
+           DASHBOARD
+        ------------------------------------------------- */
+
+        #adminDashboard {
+            margin-bottom:
+                20px;
+        }
+
+        .stats-grid {
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(150px, 1fr)
+                );
+
+            gap:
+                12px;
+        }
+
+        .stat-card {
+            background:
+                #0d1b2a;
+
+            border:
+                1px solid #1e3a52;
+
+            border-radius:
+                12px;
+
+            padding:
+                18px;
+        }
+
+        .stat-label {
+            color:
+                #94a3b8;
+
+            font-size:
+                12px;
+
+            margin-bottom:
+                7px;
+        }
+
+        .stat-value {
+            color:
+                #38bdf8;
+
+            font-size:
+                28px;
+
+            font-weight:
+                700;
+        }
+
+        /* -------------------------------------------------
+           FORM
+        ------------------------------------------------- */
+
+        .form-grid {
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(0, 1fr)
+                );
+
+            gap:
+                16px;
+        }
+
+        .form-group {
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            gap:
+                7px;
+        }
+
+        .form-full {
+            grid-column:
+                1 / -1;
+        }
+
+        label {
+            color:
+                #cbd5e1;
+
+            font-size:
+                13px;
+
+            font-weight:
+                600;
+        }
+
+        input,
+        select,
+        textarea {
+            width:
+                100%;
+
+            border:
+                1px solid #334155;
+
+            border-radius:
+                8px;
+
+            background:
+                #081521;
+
+            color:
+                #f8fafc;
+
+            padding:
+                11px 12px;
+
+            font-size:
+                14px;
+
+            outline:
+                none;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color:
+                #38bdf8;
+        }
+
+        textarea {
+            min-height:
+                150px;
+
+            resize:
+                vertical;
+
+            line-height:
+                1.6;
+        }
+
+        input[type="file"] {
+            padding:
+                9px;
+        }
+
+        .form-actions {
+            display:
+                flex;
+
+            gap:
+                10px;
+
+            flex-wrap:
+                wrap;
+
+            margin-top:
+                20px;
+        }
+
+        /* -------------------------------------------------
+           LIBRARY
+        ------------------------------------------------- */
+
+        .library-toolbar {
+            display:
+                flex;
+
+            gap:
+                10px;
+
+            flex-wrap:
+                wrap;
+
+            margin-bottom:
+                16px;
+        }
+
+        .empty-state {
+            padding:
+                30px 15px;
+
+            text-align:
+                center;
+
+            color:
+                #94a3b8;
+
+            border:
+                1px dashed #334155;
+
+            border-radius:
+                10px;
+        }
+
+        /* -------------------------------------------------
+           RESPONSIVE
+        ------------------------------------------------- */
+
+        @media (max-width: 700px) {
+
+            .container {
+                width:
+                    94%;
+
+                padding-top:
+                    14px;
+            }
+
+            .header {
+                align-items:
+                    flex-start;
+            }
+
+            .brand h1 {
+                font-size:
+                    19px;
+            }
+
+            .nav-btns {
+                width:
+                    100%;
+            }
+
+            .nav-btns button {
+                flex:
+                    1;
+            }
+
+            .form-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .form-full {
+                grid-column:
+                    auto;
+            }
+
+            .panel {
+                padding:
+                    15px;
+            }
+
+            .form-actions button {
+                width:
+                    100%;
+            }
+        }
+
+    </style>
+
 </head>
+
 <body>
 
-<div class="container">
-  <div class="header">
-    <h2 style="color: #38bdf8;">Echoes Admin Panel V2</h2>
-    <div class="nav-btns">
-      <button id="navNewContent">Yeni İçerik</button>
-      <button id="navLibrary" class="btn-secondary">İçerik Kütüphanesi</button>
-<button onclick="try{if(typeof db!=='undefined'&amp;&amp;db.auth){db.auth.signOut();}}catch(e){} localStorage.clear(); window.location.href='login.html';" class="btn-danger" style="background:#ef4444; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">Çıkış Yap</button>
-      
-      
-    </div>
-  </div>
+    <div class="container">
 
-  <div id="statusAlert" class="alert"></div>
+        <!-- HEADER -->
 
-  <!-- Form Sekmesi -->
-  <div id="sectionForm">
-    <h3 id="formTitle" style="margin-bottom: 16px;">Yeni İçerik Ekle</h3>
-    <form id="contentForm" onsubmit="return false;">
-      <input type="hidden" id="editingId">
-      
-      <div class="form-group">
-        <label>Başlık *</label>
-        <input type="text" id="contentTitle" required placeholder="İçerik başlığı">
-      </div>
+        <header class="header">
 
-      <div class="grid-2">
-        <div class="form-group">
-          <label>Tip</label>
-          <select id="contentType">
-            <option value="story">Story</option>
-            <option value="essay">Essay</option>
-            <option value="manifesto">Manifesto</option>
-            <option value="poetry">Poetry</option>
-            <option value="audio">Audio</option>
-            <option value="visual">Visual</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Dil</label>
-          <select id="contentLanguage">
-            <option value="tr">Türkçe</option>
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
-          </select>
-        </div>
-      </div>
+            <div class="brand">
 
-      <div class="form-group">
-        <label>Kategori</label>
-        <input type="text" id="contentCategory" placeholder="Örn: general, test">
-      </div>
+                <h1>
+                    Echoes of Humanity
+                </h1>
 
-      <div class="form-group">
-        <label>Açıklama</label>
-        <textarea id="contentDescription" rows="4" placeholder="İçerik detayı..."></textarea>
-      </div>
+                <p>
+                    Global Content Management System
+                </p>
 
-      <div class="form-group">
-        <label>Etiketler (Virgülle ayırın)</label>
-        <input type="text" id="contentTags" placeholder="humanity, story, art">
-      </div>
+            </div>
 
-      <div class="form-group">
-        <label>Medya Dosyası (İsteğe Bağlı)</label>
-        <input type="file" id="contentFile">
-      </div>
+            <div class="nav-btns">
 
-      <div style="display: flex; gap: 10px; margin-top: 20px;">
-        <button type="button" id="btnClear" class="btn-secondary">Temizle</button>
-        <button type="button" id="btnSaveDraft" class="btn-warning">Taslak Kaydet</button>
-        <button type="button" id="btnPublish" class="btn-success">Yayınla</button>
-      </div>
-    </form>
-  </div>
+                <button
+                    type="button"
+                    id="navNewContent"
+                >
+                    + Yeni İçerik
+                </button>
 
-  <!-- Kütüphane Sekmesi -->
-  <div id="sectionLibrary" style="display: none;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3>Kayıtlı İçerikler</h3>
-      <button id="btnRefresh" class="btn-secondary btn-sm">Yenile</button>
-    </div>
-    <div id="libraryList">Yükleniyor...</div>
-  </div>
-</div>
+                <button
+                    type="button"
+                    id="navLibrary"
+                    class="btn-secondary"
+                >
+                    İçerik Kütüphanesi
+                </button>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../assets/js/supabase-config.js"></script>
-<script src="js/supabase-client.js"></script>
-<script src="admin.js"></script>
-<script src="js/auth.js"></script>
-  
+                <button
+                    type="button"
+                    id="btnLogout"
+                    class="btn-danger"
+                    onclick="
+                        if (window.db && window.db.auth) {
+                            window.db.auth.signOut()
+                                .then(() => {
+                                    window.location.href = 'login.html';
+                                });
+                        }
+                    "
+                >
+                    Çıkış
+                </button>
+
+            </div>
+
+        </header>
+
+        <!-- DASHBOARD BURADA DEVAM EDECEK -->
+
+              <!-- =================================================
+             DASHBOARD
+        ================================================== -->
+
+        <section
+            id="dashboardSection"
+            class="panel"
+        >
+
+            <div class="panel-header">
+
+                <div>
+                    <h2>Dashboard</h2>
+
+                    <p>
+                        Echoes of Humanity içerik durumu
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    id="btnDashboardRefresh"
+                    class="btn-secondary btn-small"
+                >
+                    Yenile
+                </button>
+
+            </div>
+
+            <div
+                id="adminDashboard"
+                class="stats-grid"
+            >
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        TOPLAM
+                    </div>
+
+                    <div
+                        id="statTotal"
+                        class="stat-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        TASLAK
+                    </div>
+
+                    <div
+                        id="statDraft"
+                        class="stat-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        İNCELEME
+                    </div>
+
+                    <div
+                        id="statReview"
+                        class="stat-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        YAYINDA
+                    </div>
+
+                    <div
+                        id="statPublished"
+                        class="stat-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        ARŞİV
+                    </div>
+
+                    <div
+                        id="statArchived"
+                        class="stat-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             YENİ İÇERİK / DÜZENLEME
+        ================================================== -->
+
+        <section
+            id="contentForm"
+            class="panel"
+        >
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2 id="contentFormTitle">
+                        Yeni İçerik
+                    </h2>
+
+                    <p>
+                        Yeni içerik oluştur veya mevcut
+                        içeriği düzenle.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <form
+                id="contentFormElement"
+                onsubmit="return false;"
+            >
+
+                <input
+                    type="hidden"
+                    id="editingId"
+                    value=""
+                >
+
+
+                <div class="form-grid">
+
+                    <!-- BAŞLIK -->
+
+                    <div class="form-group form-full">
+
+                        <label for="contentTitle">
+                            Başlık
+                        </label>
+
+                        <input
+                            type="text"
+                            id="contentTitle"
+                            required
+                            maxlength="200"
+                            placeholder="İçerik başlığı"
+                        >
+
+                    </div>
+
+
+                    <!-- TÜR -->
+
+                    <div class="form-group">
+
+                        <label for="contentType">
+                            İçerik Türü
+                        </label>
+
+                        <select id="contentType">
+
+                            <option value="story">
+                                Story
+                            </option>
+
+                            <option value="essay">
+                                Essay
+                            </option>
+
+                            <option value="manifesto">
+                                Manifesto
+                            </option>
+
+                            <option value="poetry">
+                                Poetry
+                            </option>
+
+                            <option value="audio">
+                                Audio
+                            </option>
+
+                            <option value="visual">
+                                Visual
+                            </option>
+
+                            <option value="technical">
+                                Technical
+                            </option>
+
+                            <option value="blueprint">
+                                Blueprint
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- DİL -->
+
+                    <div class="form-group">
+
+                        <label for="contentLanguage">
+                            Dil
+                        </label>
+
+                        <select id="contentLanguage">
+
+                            <option value="tr">
+                                Türkçe
+                            </option>
+
+                            <option value="en">
+                                English
+                            </option>
+
+                            <option value="de">
+                                Deutsch
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- KATEGORİ -->
+
+                    <div class="form-group form-full">
+
+                        <label for="contentCategory">
+                            Kategori
+                        </label>
+
+                        <select id="contentCategory">
+
+                            <option value="">
+                                Kategoriler yükleniyor...
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- AÇIKLAMA / İÇERİK -->
+
+                    <div class="form-group form-full">
+
+                        <label for="contentDescription">
+                            Açıklama / İçerik
+                        </label>
+
+                        <textarea
+                            id="contentDescription"
+                            rows="8"
+                            required
+                            placeholder="İçeriğinizi buraya yazın..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- ETİKETLER -->
+
+                    <div class="form-group form-full">
+
+                        <label for="contentTags">
+                            Etiketler
+                        </label>
+
+                        <input
+                            type="text"
+                            id="contentTags"
+                            placeholder="humanity, hope, story"
+                        >
+
+                        <small style="
+                            color:#64748b;
+                            font-size:12px;
+                        ">
+                            Etiketleri virgülle ayırın.
+                        </small>
+
+                    </div>
+
+
+                    <!-- MEDYA -->
+
+                    <div class="form-group form-full">
+
+                        <label for="contentFile">
+                            Medya Dosyası
+                        </label>
+
+                        <input
+                            type="file"
+                            id="contentFile"
+                            accept="image/*,audio/*,video/*"
+                        >
+
+                        <small style="
+                            color:#64748b;
+                            font-size:12px;
+                        ">
+                            Görsel, ses veya video
+                            yükleyebilirsiniz.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FORM BUTONLARI -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="button"
+                        id="btnClear"
+                        class="btn-secondary"
+                    >
+                        Temizle
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btnSaveDraft"
+                        class="btn-warning"
+                    >
+                        Taslak Kaydet
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btnPublish"
+                        class="btn-success"
+                    >
+                        Yayınla
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- =================================================
+             İÇERİK KÜTÜPHANESİ
+        ================================================== -->
+
+        <section
+            id="librarySection"
+            class="panel"
+        >
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        İçerik Kütüphanesi
+                    </h2>
+
+                    <p>
+                        Tüm içerikleri yönetin.
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="btnRefresh"
+                    class="btn-secondary"
+                >
+                    Yenile
+                </button>
+
+            </div>
+
+
+            <!-- ARAMA / FİLTRE -->
+
+            <div class="library-toolbar">
+
+                <input
+                    type="search"
+                    id="librarySearch"
+                    placeholder="İçerik ara..."
+                >
+
+                <select id="libraryStatusFilter">
+
+                    <option value="">
+                        Tüm Durumlar
+                    </option>
+
+                    <option value="draft">
+                        Taslak
+                    </option>
+
+                    <option value="review">
+                        İncelemede
+                    </option>
+
+                    <option value="published">
+                        Yayında
+                    </option>
+
+                    <option value="archived">
+                        Arşiv
+                    </option>
+
+                </select>
+
+                <select id="libraryTypeFilter">
+
+                    <option value="">
+                        Tüm Türler
+                    </option>
+
+                    <option value="story">
+                        Story
+                    </option>
+
+                    <option value="essay">
+                        Essay
+                    </option>
+
+                    <option value="manifesto">
+                        Manifesto
+                    </option>
+
+                    <option value="poetry">
+                        Poetry
+                    </option>
+
+                    <option value="audio">
+                        Audio
+                    </option>
+
+                    <option value="visual">
+                        Visual
+                    </option>
+
+                    <option value="technical">
+                        Technical
+                    </option>
+
+                    <option value="blueprint">
+                        Blueprint
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- İÇERİKLER -->
+
+            <div id="libraryList">
+
+                <div class="empty-state">
+                    İçerikler yükleniyor...
+                </div>
+
+            </div>
+
+        </section>
+
+              </div>
+
+      <!-- =====================================================
+         ALT BİLGİ / DURUM
+    ====================================================== -->
+
+    <div
+        id="statusAlert"
+        style="
+            display:none;
+            padding:12px 14px;
+            margin-bottom:20px;
+            border-radius:8px;
+            font-size:14px;
+        "
+    ></div>
+
+
+    <!-- =====================================================
+         SUPABASE + ADMIN SCRIPTS
+    ====================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../assets/js/supabase-config.js"></script>
+
+    <script src="js/supabase-client.js"></script>
+
+    <script src="admin.js"></script>
+
+    <script src="js/auth.js"></script>
+
+
+    <!-- =====================================================
+         ADMIN PANEL UI HELPERS
+    ====================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            () => {
+
+                /*
+                 * Yeni İçerik
+                 */
+
+                const newContent =
+                    document.getElementById(
+                        'navNewContent'
+                    );
+
+                if (newContent) {
+
+                    newContent.addEventListener(
+                        'click',
+                        () => {
+
+                            const form =
+                                document.getElementById(
+                                    'contentForm'
+                                );
+
+                            if (form) {
+
+                                form.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'start'
+                                });
+
+                            }
+
+                        }
+                    );
+
+                }
+
+
+                /*
+                 * Kütüphane
+                 */
+
+                const libraryButton =
+                    document.getElementById(
+                        'navLibrary'
+                    );
+
+                if (libraryButton) {
+
+                    libraryButton.addEventListener(
+                        'click',
+                        () => {
+
+                            const library =
+                                document.getElementById(
+                                    'librarySection'
+                                );
+
+                            if (library) {
+
+                                library.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'start'
+                                });
+
+                            }
+
+                        }
+                    );
+
+                }
+
+
+                /*
+                 * Dashboard
+                 */
+
+                const dashboardRefresh =
+                    document.getElementById(
+                        'btnDashboardRefresh'
+                    );
+
+                if (dashboardRefresh) {
+
+                    dashboardRefresh.addEventListener(
+                        'click',
+                        async () => {
+
+                            if (
+                                typeof loadDashboard ===
+                                'function'
+                            ) {
+                                await loadDashboard();
+                            }
+
+                            if (
+                                window.EchoesAdmin &&
+                                typeof window.EchoesAdmin
+                                    .getContentStats ===
+                                    'function'
+                            ) {
+
+                                try {
+
+                                    const stats =
+                                        await window
+                                            .EchoesAdmin
+                                            .getContentStats();
+
+                                    updateDashboardStats(
+                                        stats
+                                    );
+
+                                } catch (error) {
+
+                                    console.error(
+                                        error
+                                    );
+
+                                }
+
+                            }
+
+                        }
+                    );
+
+                }
+
+
+                /*
+                 * Dashboard istatistiklerini güncelle
+                 */
+
+                function updateDashboardStats(
+                    stats
+                ) {
+
+                    const elements = {
+
+                        statTotal:
+                            stats.total,
+
+                        statDraft:
+                            stats.draft,
+
+                        statReview:
+                            stats.review,
+
+                        statPublished:
+                            stats.published,
+
+                        statArchived:
+                            stats.archived
+
+                    };
+
+                    Object.keys(elements)
+                        .forEach(id => {
+
+                            const element =
+                                document.getElementById(
+                                    id
+                                );
+
+                            if (element) {
+
+                                element.textContent =
+                                    elements[id];
+
+                            }
+
+                        });
+
+                }
+
+
+                /*
+                 * İlk dashboard verisini al
+                 */
+
+                if (
+                    window.EchoesAdmin &&
+                    typeof window.EchoesAdmin
+                        .getContentStats ===
+                        'function'
+                ) {
+
+                    window.EchoesAdmin
+                        .getContentStats()
+                        .then(updateDashboardStats)
+                        .catch(error => {
+
+                            console.error(
+                                'Dashboard istatistikleri yüklenemedi:',
+                                error
+                            );
+
+                        });
+
+                }
+
+            }
+        );
+
+    </script>
+
+      <!-- =====================================================
+         KÜTÜPHANE ARAMA VE FİLTRELEME
+    ====================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            () => {
+
+                const searchInput =
+                    document.getElementById(
+                        'librarySearch'
+                    );
+
+                const statusFilter =
+                    document.getElementById(
+                        'libraryStatusFilter'
+                    );
+
+                const typeFilter =
+                    document.getElementById(
+                        'libraryTypeFilter'
+                    );
+
+                const libraryList =
+                    document.getElementById(
+                        'libraryList'
+                    );
+
+                if (
+                    !searchInput ||
+                    !statusFilter ||
+                    !typeFilter ||
+                    !libraryList
+                ) {
+                    return;
+                }
+
+
+                function filterLibrary() {
+
+                    const search =
+                        searchInput.value
+                            .trim()
+                            .toLowerCase();
+
+                    const status =
+                        statusFilter.value;
+
+                    const type =
+                        typeFilter.value;
+
+
+                    const statusNames = {
+
+                        draft:
+                            'Taslak',
+
+                        review:
+                            'İncelemede',
+
+                        published:
+                            'Yayında',
+
+                        archived:
+                            'Arşiv'
+
+                    };
+
+
+                    const typeNames = {
+
+                        story:
+                            'Story',
+
+                        essay:
+                            'Essay',
+
+                        manifesto:
+                            'Manifesto',
+
+                        poetry:
+                            'Poetry',
+
+                        audio:
+                            'Audio',
+
+                        visual:
+                            'Visual',
+
+                        technical:
+                            'Technical',
+
+                        blueprint:
+                            'Blueprint'
+
+                    };
+
+
+                    const articles =
+                        libraryList.querySelectorAll(
+                            'article'
+                        );
+
+
+                    let visibleCount = 0;
+
+
+                    articles.forEach(article => {
+
+                        const text =
+                            article.textContent
+                                .toLowerCase();
+
+
+                        const statusText =
+                            (
+                                statusNames[status] ||
+                                ''
+                            ).toLowerCase();
+
+
+                        const typeText =
+                            (
+                                typeNames[type] ||
+                                ''
+                            ).toLowerCase();
+
+
+                        const matchesSearch =
+                            !search ||
+                            text.includes(search);
+
+
+                        const matchesStatus =
+                            !status ||
+                            text.includes(statusText);
+
+
+                        const matchesType =
+                            !type ||
+                            text.includes(typeText);
+
+
+                        const visible =
+                            matchesSearch &&
+                            matchesStatus &&
+                            matchesType;
+
+
+                        article.style.display =
+                            visible
+                                ? ''
+                                : 'none';
+
+
+                        if (visible) {
+                            visibleCount++;
+                        }
+
+                    });
+
+
+                    const oldMessage =
+                        document.getElementById(
+                            'libraryFilterMessage'
+                        );
+
+
+                    if (oldMessage) {
+                        oldMessage.remove();
+                    }
+
+
+                    if (
+                        articles.length > 0 &&
+                        visibleCount === 0
+                    ) {
+
+                        const message =
+                            document.createElement(
+                                'div'
+                            );
+
+                        message.id =
+                            'libraryFilterMessage';
+
+                        message.className =
+                            'empty-state';
+
+                        message.textContent =
+                            'Filtreye uygun içerik bulunamadı.';
+
+                        libraryList.appendChild(
+                            message
+                        );
+                    }
+
+                }
+
+
+                searchInput.addEventListener(
+                    'input',
+                    filterLibrary
+                );
+
+
+                statusFilter.addEventListener(
+                    'change',
+                    filterLibrary
+                );
+
+
+                typeFilter.addEventListener(
+                    'change',
+                    filterLibrary
+                );
+
+
+                /*
+                 * Kütüphane yeniden yüklendiğinde
+                 * mevcut filtreleri tekrar uygula.
+                 */
+
+                const observer =
+                    new MutationObserver(
+                        () => {
+                            filterLibrary();
+                        }
+                    );
+
+
+                observer.observe(
+                    libraryList,
+                    {
+                        childList: true
+                    }
+                );
+
+            }
+        );
+
+                          </script>
+
 </body>
+
 </html>
