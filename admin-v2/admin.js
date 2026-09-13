@@ -1416,7 +1416,250 @@ return {
             );
         }
     }
+// ---------------------------------------------------------
+// SETTINGS
+// ---------------------------------------------------------
 
+async function loadSettings() {
+
+    const adminEmail =
+        document.getElementById('settingsAdminEmail');
+
+    const accountStatus =
+        document.getElementById('settingsAccountStatus');
+
+    const databaseStatus =
+        document.getElementById('settingsDatabaseStatus');
+
+    const storageStatus =
+        document.getElementById('settingsStorageStatus');
+
+    try {
+
+        // ---------------------------------------------
+        // YÖNETİCİ HESABI
+        // ---------------------------------------------
+
+        const {
+            data: userData,
+            error: userError
+        } = await db.auth.getUser();
+
+        if (userError) {
+            throw userError;
+        }
+
+        const user =
+            userData &&
+            userData.user
+                ? userData.user
+                : null;
+
+        if (adminEmail) {
+            adminEmail.textContent =
+                user && user.email
+                    ? user.email
+                    : '-';
+        }
+
+        if (accountStatus) {
+            accountStatus.textContent =
+                user
+                    ? 'Aktif'
+                    : 'Oturum bulunamadı';
+        }
+
+
+        // ---------------------------------------------
+        // DATABASE DURUMU
+        // ---------------------------------------------
+
+        const {
+            error: databaseError
+        } = await db
+            .from('content_items')
+            .select('id', {
+                count: 'exact',
+                head: true
+            });
+
+        if (databaseError) {
+            throw databaseError;
+        }
+
+        if (databaseStatus) {
+            databaseStatus.textContent =
+                'Bağlı';
+        }
+
+
+        // ---------------------------------------------
+        // STORAGE DURUMU
+        // ---------------------------------------------
+
+        const {
+            error: storageError
+        } = await db
+            .storage
+            .from('echoes-media')
+            .list('', {
+                limit: 1
+            });
+
+        if (storageError) {
+            throw storageError;
+        }
+
+        if (storageStatus) {
+            storageStatus.textContent =
+                'Bağlı';
+        }
+
+    } catch (error) {
+
+        console.error(
+            'Settings yükleme hatası:',
+            error
+        );
+
+        if (databaseStatus) {
+            databaseStatus.textContent =
+                'Kontrol edilemedi';
+        }
+
+        if (storageStatus) {
+            storageStatus.textContent =
+                'Kontrol edilemedi';
+        }
+
+        if (accountStatus) {
+            accountStatus.textContent =
+                'Kontrol edilemedi';
+        }
+    }
+}
+
+
+// ---------------------------------------------------------
+// SETTINGS NAVIGATION
+// ---------------------------------------------------------
+
+const navSettings =
+    document.getElementById('navSettings');
+
+if (navSettings) {
+
+    navSettings.addEventListener(
+        'click',
+        async () => {
+
+            const settingsSection =
+                document.getElementById(
+                    'settingsSection'
+                );
+
+            if (!settingsSection) {
+                return;
+            }
+
+            settingsSection.style.display =
+                'block';
+
+            settingsSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+
+            await loadSettings();
+        }
+    );
+}
+
+
+// ---------------------------------------------------------
+// SETTINGS REFRESH
+// ---------------------------------------------------------
+
+const btnSettingsRefresh =
+    document.getElementById(
+        'btnSettingsRefresh'
+    );
+
+if (btnSettingsRefresh) {
+
+    btnSettingsRefresh.addEventListener(
+        'click',
+        async () => {
+
+            btnSettingsRefresh.disabled =
+                true;
+
+            try {
+
+                await loadSettings();
+
+            } finally {
+
+                btnSettingsRefresh.disabled =
+                    false;
+            }
+        }
+    );
+}
+
+
+// ---------------------------------------------------------
+// SETTINGS LOGOUT
+// ---------------------------------------------------------
+
+const btnSettingsLogout =
+    document.getElementById(
+        'btnSettingsLogout'
+    );
+
+if (btnSettingsLogout) {
+
+    btnSettingsLogout.addEventListener(
+        'click',
+        async () => {
+
+            const confirmed =
+                confirm(
+                    'Oturumu kapatmak istediğinizden emin misiniz?'
+                );
+
+            if (!confirmed) {
+                return;
+            }
+
+            try {
+
+                const {
+                    error
+                } = await db.auth.signOut();
+
+                if (error) {
+                    throw error;
+                }
+
+                window.location.href =
+                    'login.html';
+
+            } catch (error) {
+
+                console.error(
+                    'Çıkış hatası:',
+                    error
+                );
+
+                alert(
+                    'Çıkış sırasında hata oluştu:\n\n' +
+                    error.message
+                );
+            }
+        }
+    );
+                }
     // ---------------------------------------------------------
     // FORM BUTONLARI
     // ---------------------------------------------------------
