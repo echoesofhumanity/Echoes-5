@@ -37,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---------------------------------------------------------
 
     let editingId = null;
+    let libraryLoading = false;
+let libraryRequestId = 0;
     let categories = [];
 
     // ---------------------------------------------------------
