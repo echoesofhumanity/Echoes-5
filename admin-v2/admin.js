@@ -1660,6 +1660,1043 @@ if (btnSettingsLogout) {
         }
     );
                 }
+
+    // ---------------------------------------------------------
+// KATEGORİ YÖNETİMİ — BÖLÜM 1
+// ---------------------------------------------------------
+
+function getCategoryChildren(parentId) {
+
+    return categories.filter(
+        category => category.parent_id === parentId
+    );
+}
+
+
+function buildCategoryOptions(selectedId = '') {
+
+    let html =
+        '<option value="">Ana kategori</option>';
+
+    const parents =
+        categories.filter(
+            category => !category.parent_id
+        );
+
+    parents.forEach(parent => {
+
+        html += `
+            <option
+                value="${escapeHtml(parent.id)}"
+                ${parent.id === selectedId ? 'selected' : ''}
+            >
+                ${escapeHtml(parent.name)}
+            </option>
+        `;
+
+        const children =
+            getCategoryChildren(parent.id);
+
+        children.forEach(child => {
+
+            html += `
+                <option
+                    value="${escapeHtml(child.id)}"
+                    ${child.id === selectedId ? 'selected' : ''}
+                >
+                    └ ${escapeHtml(child.name)}
+                </option>
+            `;
+        });
+    });
+
+    return html;
+}
+
+
+function renderCategoryManager() {
+
+    const container =
+        document.getElementById(
+            'categoryManagerList'
+        );
+
+    if (!container) {
+        return;
+    }
+
+    if (!categories.length) {
+
+        container.innerHTML = `
+            <p style="color:#94a3b8;">
+                Henüz kategori bulunmuyor.
+            </p>
+        `;
+
+        return;
+    }
+
+    const parents =
+        categories.filter(
+            category => !category.parent_id
+        );
+
+    const rows = [];
+
+    parents.forEach(parent => {
+
+        rows.push(`
+            <div
+                class="category-manager-row"
+                data-category-id="${escapeHtml(parent.id)}"
+                style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    gap:12px;
+                    padding:12px;
+                    margin-bottom:8px;
+                    border:1px solid #334155;
+                    border-radius:8px;
+                    background:#0f172a;
+                "
+            >
+
+                <div style="min-width:0;">
+
+                    <strong>
+                        ${escapeHtml(parent.name)}
+                    </strong>
+
+                    <div
+                        style="
+                            color:#64748b;
+                            font-size:12px;
+                            margin-top:4px;
+                        "
+                    >
+                        /${escapeHtml(parent.slug)}
+                        · Ana kategori
+                    </div>
+
+                </div>
+
+                <div
+                    style="
+                        display:flex;
+                        gap:6px;
+                        flex-shrink:0;
+                    "
+                >
+
+                    <button
+                        type="button"
+                        data-category-action="edit"
+                        data-category-id="${escapeHtml(parent.id)}"
+                    >
+                        Düzenle
+                    </button>
+
+                    <button
+                        type="button"
+                        data-category-action="delete"
+                        data-category-id="${escapeHtml(parent.id)}"
+                        style="
+                            background:#7f1d1d;
+                            color:white;
+                        "
+                    >
+                        Sil
+                    </button>
+
+                </div>
+
+            </div>
+        `);
+
+        const children =
+            getCategoryChildren(parent.id);
+
+        children.forEach(child => {
+
+            rows.push(`
+                <div
+                    class="category-manager-row"
+                    data-category-id="${escapeHtml(child.id)}"
+                    style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                        gap:12px;
+                        padding:12px;
+                        margin-bottom:8px;
+                        margin-left:20px;
+                        border-left:3px solid #334155;
+                        border-top:1px solid #334155;
+                        border-right:1px solid #334155;
+                        border-bottom:1px solid #334155;
+                        border-radius:8px;
+                        background:#0f172a;
+                    "
+                >
+
+                    <div style="min-width:0;">
+
+                        <strong>
+                            └ ${escapeHtml(child.name)}
+                        </strong>
+
+                        <div
+                            style="
+                                color:#64748b;
+                                font-size:12px;
+                                margin-top:4px;
+                            "
+                        >
+                            /${escapeHtml(child.slug)}
+                        </div>
+
+                    </div>
+
+                    <div
+                        style="
+                            display:flex;
+                            gap:6px;
+                            flex-shrink:0;
+                        "
+                    >
+
+                        <button
+                            type="button"
+                            data-category-action="edit"
+                            data-category-id="${escapeHtml(child.id)}"
+                        >
+                            Düzenle
+                        </button>
+
+                        <button
+                            type="button"
+                            data-category-action="delete"
+                            data-category-id="${escapeHtml(child.id)}"
+                            style="
+                                background:#7f1d1d;
+                                color:white;
+                            "
+                        >
+                            Sil
+                        </button>
+
+                    </div>
+
+                </div>
+            `);
+        });
+    });
+
+    container.innerHTML = rows.join('');
+}
+
+    // ---------------------------------------------------------
+// KATEGORİ YÖNETİMİ — BÖLÜM 2
+// ---------------------------------------------------------
+
+function openCategoryManager() {
+
+    let modal =
+        document.getElementById(
+            'categoryManagerModal'
+        );
+
+    if (!modal) {
+
+        modal =
+            document.createElement('div');
+
+        modal.id =
+            'categoryManagerModal';
+
+        modal.style.cssText = `
+            position:fixed;
+            inset:0;
+            z-index:9999;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            background:rgba(0,0,0,.75);
+        `;
+
+        modal.innerHTML = `
+            <div
+                style="
+                    width:min(700px,100%);
+                    max-height:90vh;
+                    overflow:auto;
+                    padding:22px;
+                    border:1px solid #334155;
+                    border-radius:12px;
+                    background:#020617;
+                    color:white;
+                    box-shadow:0 20px 60px rgba(0,0,0,.5);
+                "
+            >
+
+                <div
+                    style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                        gap:12px;
+                        margin-bottom:20px;
+                    "
+                >
+
+                    <h2 style="margin:0;">
+                        Kategori Yönetimi
+                    </h2>
+
+                    <button
+                        type="button"
+                        id="closeCategoryManager"
+                    >
+                        ✕
+                    </button>
+
+                </div>
+
+
+                <div
+                    style="
+                        padding:16px;
+                        margin-bottom:20px;
+                        border:1px solid #334155;
+                        border-radius:10px;
+                        background:#0f172a;
+                    "
+                >
+
+                    <h3
+                        id="categoryFormTitle"
+                        style="margin-top:0;"
+                    >
+                        Yeni Kategori
+                    </h3>
+
+                    <input
+                        type="hidden"
+                        id="categoryEditingId"
+                        value=""
+                    >
+
+                    <label>
+                        Kategori adı
+                    </label>
+
+                    <input
+                        type="text"
+                        id="categoryNameInput"
+                        placeholder="Kategori adı"
+                        style="
+                            width:100%;
+                            box-sizing:border-box;
+                            margin:6px 0 12px;
+                            padding:10px;
+                        "
+                    >
+
+                    <label>
+                        Slug
+                    </label>
+
+                    <input
+                        type="text"
+                        id="categorySlugInput"
+                        placeholder="kategori-slug"
+                        style="
+                            width:100%;
+                            box-sizing:border-box;
+                            margin:6px 0 12px;
+                            padding:10px;
+                        "
+                    >
+
+                    <label>
+                        Üst kategori
+                    </label>
+
+                    <select
+                        id="categoryParentInput"
+                        style="
+                            width:100%;
+                            box-sizing:border-box;
+                            margin:6px 0 14px;
+                            padding:10px;
+                        "
+                    ></select>
+
+                    <div
+                        style="
+                            display:flex;
+                            gap:8px;
+                            flex-wrap:wrap;
+                        "
+                    >
+
+                        <button
+                            type="button"
+                            id="saveCategoryButton"
+                        >
+                            Kategoriyi Kaydet
+                        </button>
+
+                        <button
+                            type="button"
+                            id="cancelCategoryEdit"
+                            style="display:none;"
+                        >
+                            Düzenlemeyi İptal Et
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    Mevcut Kategoriler
+                </h3>
+
+                <div id="categoryManagerList">
+                    Kategoriler yükleniyor...
+                </div>
+
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+
+        const closeButton =
+            document.getElementById(
+                'closeCategoryManager'
+            );
+
+        if (closeButton) {
+
+            closeButton.addEventListener(
+                'click',
+                closeCategoryManager
+            );
+        }
+
+
+        const cancelButton =
+            document.getElementById(
+                'cancelCategoryEdit'
+            );
+
+        if (cancelButton) {
+
+            cancelButton.addEventListener(
+                'click',
+                resetCategoryForm
+            );
+        }
+
+
+        const nameInput =
+            document.getElementById(
+                'categoryNameInput'
+            );
+
+        const slugInput =
+            document.getElementById(
+                'categorySlugInput'
+            );
+
+        if (nameInput && slugInput) {
+
+            nameInput.addEventListener(
+                'input',
+                () => {
+
+                    const editingId =
+                        document.getElementById(
+                            'categoryEditingId'
+                        )?.value;
+
+                    if (!editingId) {
+
+                        slugInput.value =
+                            createSlug(
+                                nameInput.value
+                            );
+                    }
+                }
+            );
+        }
+
+
+        const saveButton =
+            document.getElementById(
+                'saveCategoryButton'
+            );
+
+        if (saveButton) {
+
+            saveButton.addEventListener(
+                'click',
+                saveCategory
+            );
+        }
+
+
+        const list =
+            document.getElementById(
+                'categoryManagerList'
+            );
+
+        if (list) {
+
+            list.addEventListener(
+                'click',
+                event => {
+
+                    const button =
+                        event.target.closest(
+                            '[data-category-action]'
+                        );
+
+                    if (!button) {
+                        return;
+                    }
+
+                    const action =
+                        button.dataset.categoryAction;
+
+                    const id =
+                        button.dataset.categoryId;
+
+                    if (!id) {
+                        return;
+                    }
+
+                    if (action === 'edit') {
+                        editCategory(id);
+                    }
+
+                    if (action === 'delete') {
+                        deleteCategory(id);
+                    }
+                }
+            );
+        }
+    }
+
+    modal.style.display =
+        'flex';
+
+    resetCategoryForm();
+
+    renderCategoryManager();
+}
+
+
+function closeCategoryManager() {
+
+    const modal =
+        document.getElementById(
+            'categoryManagerModal'
+        );
+
+    if (modal) {
+
+        modal.style.display =
+            'none';
+    }
+}
+
+
+function resetCategoryForm() {
+
+    const editingId =
+        document.getElementById(
+            'categoryEditingId'
+        );
+
+    const nameInput =
+        document.getElementById(
+            'categoryNameInput'
+        );
+
+    const slugInput =
+        document.getElementById(
+            'categorySlugInput'
+        );
+
+    const parentInput =
+        document.getElementById(
+            'categoryParentInput'
+        );
+
+    const title =
+        document.getElementById(
+            'categoryFormTitle'
+        );
+
+    const cancelButton =
+        document.getElementById(
+            'cancelCategoryEdit'
+        );
+
+    if (editingId) {
+        editingId.value = '';
+    }
+
+    if (nameInput) {
+        nameInput.value = '';
+    }
+
+    if (slugInput) {
+        slugInput.value = '';
+    }
+
+    if (parentInput) {
+
+        parentInput.innerHTML =
+            buildCategoryOptions();
+
+        parentInput.value = '';
+    }
+
+    if (title) {
+
+        title.textContent =
+            'Yeni Kategori';
+    }
+
+    if (cancelButton) {
+
+        cancelButton.style.display =
+            'none';
+    }
+}
+
+
+function editCategory(id) {
+
+    const category =
+        categories.find(
+            item => item.id === id
+        );
+
+    if (!category) {
+        return;
+    }
+
+    const editingId =
+        document.getElementById(
+            'categoryEditingId'
+        );
+
+    const nameInput =
+        document.getElementById(
+            'categoryNameInput'
+        );
+
+    const slugInput =
+        document.getElementById(
+            'categorySlugInput'
+        );
+
+    const parentInput =
+        document.getElementById(
+            'categoryParentInput'
+        );
+
+    const title =
+        document.getElementById(
+            'categoryFormTitle'
+        );
+
+    const cancelButton =
+        document.getElementById(
+            'cancelCategoryEdit'
+        );
+
+    if (editingId) {
+
+        editingId.value =
+            category.id;
+    }
+
+    if (nameInput) {
+
+        nameInput.value =
+            category.name || '';
+    }
+
+    if (slugInput) {
+
+        slugInput.value =
+            category.slug || '';
+    }
+
+    if (parentInput) {
+
+        parentInput.innerHTML =
+            buildCategoryOptions(
+                category.parent_id || ''
+            );
+
+        const ownOption =
+            parentInput.querySelector(
+                `option[value="${CSS.escape(category.id)}"]`
+            );
+
+        if (ownOption) {
+            ownOption.remove();
+        }
+    }
+
+    if (title) {
+
+        title.textContent =
+            'Kategori Düzenle';
+    }
+
+    if (cancelButton) {
+
+        cancelButton.style.display =
+            'inline-block';
+    }
+        }
+
+    // ---------------------------------------------------------
+// KATEGORİ YÖNETİMİ — BÖLÜM 3
+// ---------------------------------------------------------
+
+async function saveCategory() {
+
+    const editingId =
+        document.getElementById(
+            'categoryEditingId'
+        )?.value || '';
+
+    const nameInput =
+        document.getElementById(
+            'categoryNameInput'
+        );
+
+    const slugInput =
+        document.getElementById(
+            'categorySlugInput'
+        );
+
+    const parentInput =
+        document.getElementById(
+            'categoryParentInput'
+        );
+
+    const saveButton =
+        document.getElementById(
+            'saveCategoryButton'
+        );
+
+    const name =
+        nameInput
+            ? nameInput.value.trim()
+            : '';
+
+    const slug =
+        slugInput
+            ? slugInput.value.trim() ||
+              createSlug(name)
+            : '';
+
+    const parentId =
+        parentInput
+            ? parentInput.value || null
+            : null;
+
+
+    if (!name) {
+
+        alert(
+            'Lütfen kategori adını girin.'
+        );
+
+        return;
+    }
+
+
+    if (!slug) {
+
+        alert(
+            'Lütfen kategori slug değerini girin.'
+        );
+
+        return;
+    }
+
+
+    if (
+        editingId &&
+        parentId === editingId
+    ) {
+
+        alert(
+            'Bir kategori kendisinin üst kategorisi olamaz.'
+        );
+
+        return;
+    }
+
+
+    if (saveButton) {
+        saveButton.disabled = true;
+    }
+
+
+    try {
+
+        if (editingId) {
+
+            const {
+                error
+            } = await db
+                .from('categories')
+                .update({
+                    name: name,
+                    slug: slug,
+                    parent_id: parentId,
+                    updated_at:
+                        new Date().toISOString()
+                })
+                .eq('id', editingId);
+
+            if (error) {
+                throw error;
+            }
+
+            alert(
+                'Kategori başarıyla güncellendi.'
+            );
+
+        } else {
+
+            const {
+                error
+            } = await db
+                .from('categories')
+                .insert([{
+                    name: name,
+                    slug: slug,
+                    parent_id: parentId
+                }]);
+
+            if (error) {
+                throw error;
+            }
+
+            alert(
+                'Kategori başarıyla oluşturuldu.'
+            );
+        }
+
+
+        await loadCategories();
+
+        resetCategoryForm();
+
+        renderCategoryManager();
+
+
+    } catch (error) {
+
+        console.error(
+            'Kategori kaydetme hatası:',
+            error
+        );
+
+        alert(
+            'Kategori kaydedilirken hata oluştu:\n\n' +
+            error.message
+        );
+
+
+    } finally {
+
+        if (saveButton) {
+            saveButton.disabled = false;
+        }
+    }
+}
+
+
+async function deleteCategory(id) {
+
+    const category =
+        categories.find(
+            item => item.id === id
+        );
+
+    if (!category) {
+        return;
+    }
+
+
+    // ---------------------------------------------
+    // İÇERİK KULLANIM KONTROLÜ
+    // ---------------------------------------------
+
+    const {
+        count: contentCount,
+        error: contentError
+    } = await db
+        .from('content_items')
+        .select('id', {
+            count: 'exact',
+            head: true
+        })
+        .eq('category_id', id);
+
+
+    if (contentError) {
+
+        alert(
+            'Kategori kullanım durumu kontrol edilemedi:\n\n' +
+            contentError.message
+        );
+
+        return;
+    }
+
+
+    // ---------------------------------------------
+    // ALT KATEGORİ KONTROLÜ
+    // ---------------------------------------------
+
+    const {
+        count: childCount,
+        error: childError
+    } = await db
+        .from('categories')
+        .select('id', {
+            count: 'exact',
+            head: true
+        })
+        .eq('parent_id', id);
+
+
+    if (childError) {
+
+        alert(
+            'Alt kategori kontrol edilemedi:\n\n' +
+            childError.message
+        );
+
+        return;
+    }
+
+
+    if (contentCount > 0) {
+
+        alert(
+            'Bu kategori silinemez.\n\n' +
+            'Bu kategoriye bağlı ' +
+            contentCount +
+            ' içerik bulunuyor.\n\n' +
+            'Önce bu içerikleri başka bir kategoriye taşımalısınız.'
+        );
+
+        return;
+    }
+
+
+    if (childCount > 0) {
+
+        alert(
+            'Bu kategori silinemez.\n\n' +
+            'Bu kategoriye bağlı alt kategoriler bulunuyor.\n\n' +
+            'Önce alt kategorileri taşımalı veya silmelisiniz.'
+        );
+
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            '"' +
+            category.name +
+            '" kategorisi kalıcı olarak silinecek.\n\n' +
+            'Devam etmek istiyor musunuz?'
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            error
+        } = await db
+            .from('categories')
+            .delete()
+            .eq('id', id);
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        alert(
+            'Kategori kalıcı olarak silindi.'
+        );
+
+
+        await loadCategories();
+
+        renderCategoryManager();
+
+
+    } catch (error) {
+
+        console.error(
+            'Kategori silme hatası:',
+            error
+        );
+
+        alert(
+            'Kategori silinirken hata oluştu:\n\n' +
+            error.message
+        );
+    }
+}
+
+
+// ---------------------------------------------------------
+// KATEGORİ YÖNETİMİ BUTONU
+// ---------------------------------------------------------
+
+const btnManageCategories =
+    document.getElementById(
+        'btnManageCategories'
+    );
+
+
+if (btnManageCategories) {
+
+    btnManageCategories.addEventListener(
+        'click',
+        openCategoryManager
+    );
+}
     // ---------------------------------------------------------
     // FORM BUTONLARI
     // ---------------------------------------------------------
