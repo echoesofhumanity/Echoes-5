@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentAdminRole = null;
 
+    let currentAdminPermissions = [];
+
     async function loadAdminRole() {
         try {
             const {
@@ -60,6 +62,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
             currentAdminRole = null;
             window.adminRole = null;
+        }
+    }
+
+        // ---------------------------------------------------------
+    // ADMIN PERMISSIONS
+    // ---------------------------------------------------------
+
+    async function loadAdminPermissions() {
+        try {
+            if (!currentAdminRole?.slug) {
+                currentAdminPermissions = [];
+                window.adminPermissions = [];
+                return;
+            }
+
+            const { data, error } = await db
+                .from('admin_role_permissions')
+                .select(`
+                    admin_permissions (
+                        name,
+                        slug
+                    )
+                `)
+                .eq(
+                    'role_id',
+                    (
+                        await db
+                            .from('admin_roles')
+                            .select('id')
+                            .eq('slug', currentAdminRole.slug)
+                            .maybeSingle()
+                    ).data?.id
+                );
+
+            if (error) throw error;
+
+            currentAdminPermissions = (data || [])
+                .map(item => item.admin_permissions)
+                .filter(Boolean);
+
+            window.adminPermissions = currentAdminPermissions;
+
+            console.log(
+                'Admin izinleri:',
+                currentAdminPermissions.map(
+                    permission => permission.slug
+                )
+            );
+
+        } catch (error) {
+            console.error(
+                'Admin izinleri yüklenemedi:',
+                error
+            );
+
+            currentAdminPermissions = [];
+            window.adminPermissions = [];
         }
     }
 
@@ -2795,9 +2854,10 @@ if (btnManageCategories) {
     async function initializeAdmin() {
         try {
 
-                    await loadAdminRole();
+        await loadAdminRole();
+await loadAdminPermissions();
 
-            await loadCategories();
+await loadCategories();
             await loadDashboard();
             await loadLibrary();
 
