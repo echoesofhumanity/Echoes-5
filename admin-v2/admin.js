@@ -12,6 +12,57 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+        // ---------------------------------------------------------
+    // ADMIN ROLE
+    // ---------------------------------------------------------
+
+    let currentAdminRole = null;
+
+    async function loadAdminRole() {
+        try {
+            const {
+                data: { user },
+                error: userError
+            } = await db.auth.getUser();
+
+            if (userError) throw userError;
+            if (!user) throw new Error('Aktif kullanıcı bulunamadı.');
+
+            const { data, error } = await db
+                .from('admin_user_roles')
+                .select(`
+                    role_id,
+                    admin_roles (
+                        name,
+                        slug
+                    )
+                `)
+                .eq('user_id', user.id)
+                .limit(1)
+                .maybeSingle();
+
+            if (error) throw error;
+
+            currentAdminRole = data?.admin_roles || null;
+
+            window.adminRole = currentAdminRole;
+
+            console.log(
+                'Admin rolü:',
+                currentAdminRole?.name || 'Rol bulunamadı'
+            );
+
+        } catch (error) {
+            console.error(
+                'Admin rolü yüklenemedi:',
+                error
+            );
+
+            currentAdminRole = null;
+            window.adminRole = null;
+        }
+    }
+
     // ---------------------------------------------------------
     // ELEMENTLER
     // ---------------------------------------------------------
@@ -2742,8 +2793,9 @@ if (btnManageCategories) {
     // ---------------------------------------------------------
 
     async function initializeAdmin() {
-
         try {
+
+                    await loadAdminRole();
 
             await loadCategories();
             await loadDashboard();
