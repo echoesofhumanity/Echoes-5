@@ -1580,47 +1580,7 @@
 
     <script src="js/supabase-client.js"></script>
 
-    <script>
-window.addEventListener('error', function (event) {
-    const box = document.createElement('div');
-
-    box.style.cssText =
-        'position:fixed;top:0;left:0;right:0;z-index:99999;' +
-        'padding:14px;background:#7f1d1d;color:#fff;' +
-        'font:14px monospace;white-space:pre-wrap;';
-
-    box.textContent =
-        'JS HATASI\n' +
-        (event.message || 'Script yükleme hatası') +
-        '\nDosya: ' +
-        (event.filename || '-') +
-        '\nSatır: ' +
-        (event.lineno || '-') +
-        '\nSütun: ' +
-        (event.colno || '-');
-
-    document.body.prepend(box);
-});
-
-window.addEventListener('unhandledrejection', function (event) {
-    const box = document.createElement('div');
-
-    box.style.cssText =
-        'position:fixed;top:0;left:0;right:0;z-index:99999;' +
-        'padding:14px;background:#92400e;color:#fff;' +
-        'font:14px monospace;white-space:pre-wrap;';
-
-    box.textContent =
-        'PROMISE HATASI\n' +
-        (
-            event.reason?.message ||
-            event.reason ||
-            'Bilinmeyen hata'
-        );
-
-    document.body.prepend(box);
-});
-</script>
+   
 
 <script src="admin.js?v=20260915-1"></script>
 
