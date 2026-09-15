@@ -122,6 +122,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+        // ---------------------------------------------------------
+    // PERMISSION CHECK
+    // ---------------------------------------------------------
+
+    function hasPermission(permissionSlug) {
+        if (!permissionSlug) {
+            return false;
+        }
+
+        return currentAdminPermissions.some(
+            permission => permission.slug === permissionSlug
+        );
+    }
+
+    window.hasAdminPermission = hasPermission;
+    
     // ---------------------------------------------------------
     // ELEMENTLER
     // ---------------------------------------------------------
