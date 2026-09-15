@@ -575,6 +575,18 @@
     type="button"
     id="navSettings"
     class="btn-secondary"
+    onclick="
+        const settingsSection =
+            document.getElementById('settingsSection');
+
+        if (settingsSection) {
+            settingsSection.style.display = 'block';
+            settingsSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    "
 >
     ⚙ Ayarlar
                 </button>
