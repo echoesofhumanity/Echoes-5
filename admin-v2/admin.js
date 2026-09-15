@@ -2903,6 +2903,18 @@ if (btnManageCategories) {
     async function initializeAdmin() {
         try {
 
+                    const roleDebug = document.createElement('div');
+        roleDebug.textContent = 'ROL TESTİ: JS ÇALIŞIYOR';
+        roleDebug.style.marginTop = '8px';
+        roleDebug.style.color = '#facc15';
+        roleDebug.style.fontSize = '12px';
+        roleDebug.style.fontWeight = '600';
+
+        const debugBrand = document.querySelector('.brand');
+        if (debugBrand) {
+            debugBrand.appendChild(roleDebug);
+        }
+
         await loadAdminRole();
 await loadAdminPermissions();
 
