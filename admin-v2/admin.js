@@ -88,14 +88,17 @@ document.addEventListener('DOMContentLoaded', () => {
             );
 
         } catch (error) {
-            console.error(
-                'Admin rolü yüklenemedi:',
-                error
-            );
+    console.error(
+        'Admin rolü yüklenemedi:',
+        error
+    );
 
-            currentAdminRole = null;
-            window.adminRole = null;
+    currentAdminRole = null;
+    window.adminRole = null;
+    window.adminRoleError =
+        error?.message || String(error);
         }
+        
     }
 
         // ---------------------------------------------------------
