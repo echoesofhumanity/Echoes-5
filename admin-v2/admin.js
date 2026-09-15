@@ -2922,9 +2922,16 @@ if (btnManageCategories) {
         }
 
         await loadAdminRole();
-                    roleDebug.textContent =
-            'ROL TESTİ: ' +
-            (window.adminRole?.name || 'ROL BULUNAMADI');
+
+roleDebug.textContent =
+    'ROL TESTİ: ' +
+    (window.adminRole?.name ||
+     'ROL BULUNAMADI') +
+    ' | UID: ' +
+    (window.roleDebugUserId || 'YOK') +
+    ' | HATA: ' +
+    (window.adminRoleError || 'YOK');
+
 await loadAdminPermissions();
 
 await loadCategories();
