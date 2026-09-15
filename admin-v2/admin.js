@@ -30,6 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (userError) throw userError;
             if (!user) throw new Error('Aktif kullanıcı bulunamadı.');
 
+           window.roleDebugUserId = user.id;
+console.log('ROLE DEBUG USER ID:', user.id); 
+
             const { data, error } = await db
                 .from('admin_user_roles')
                 .select(`
