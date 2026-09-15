@@ -49,6 +49,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
             window.adminRole = currentAdminRole;
 
+                        // -------------------------------------------------
+            // ACTIVE ADMIN ROLE DISPLAY
+            // -------------------------------------------------
+
+            const brand = document.querySelector('.brand');
+
+            if (brand) {
+                let roleBadge = document.getElementById(
+                    'activeAdminRole'
+                );
+
+                if (!roleBadge) {
+                    roleBadge = document.createElement('div');
+                    roleBadge.id = 'activeAdminRole';
+
+                    roleBadge.style.marginTop = '8px';
+                    roleBadge.style.display = 'inline-block';
+                    roleBadge.style.padding = '5px 10px';
+                    roleBadge.style.borderRadius = '999px';
+                    roleBadge.style.background = '#0f2a3d';
+                    roleBadge.style.border = '1px solid #38bdf8';
+                    roleBadge.style.color = '#38bdf8';
+                    roleBadge.style.fontSize = '12px';
+                    roleBadge.style.fontWeight = '600';
+
+                    brand.appendChild(roleBadge);
+                }
+
+                roleBadge.textContent =
+                    'Rol: ' +
+                    (currentAdminRole?.name || 'Tanımsız');
+            }
+
             console.log(
                 'Admin rolü:',
                 currentAdminRole?.name || 'Rol bulunamadı'
