@@ -2916,6 +2916,9 @@ if (btnManageCategories) {
         }
 
         await loadAdminRole();
+                    roleDebug.textContent =
+            'ROL TESTİ: ' +
+            (window.adminRole?.name || 'ROL BULUNAMADI');
 await loadAdminPermissions();
 
 await loadCategories();
