@@ -1215,6 +1215,81 @@
     </div>
 
 </section>
+    <!-- =================================================
+     YÖNETİCİ VE ROL YÖNETİMİ
+================================================== -->
+
+<div
+    id="adminRoleManagerModal"
+    style="
+        display:none;
+        position:fixed;
+        inset:0;
+        z-index:9999;
+        background:rgba(0,0,0,.75);
+        padding:20px;
+        overflow:auto;
+    "
+>
+
+    <div
+        style="
+            max-width:700px;
+            margin:40px auto;
+            padding:22px;
+            background:#0b1d2a;
+            border:1px solid #234155;
+            border-radius:14px;
+            color:white;
+        "
+    >
+
+        <div
+            style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:12px;
+                margin-bottom:20px;
+            "
+        >
+
+            <h2 style="margin:0;color:#38bdf8;">
+                Yönetici ve Roller
+            </h2>
+
+            <button
+                type="button"
+                id="closeAdminRoleManager"
+                class="btn-secondary"
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <div
+            style="
+                padding:16px;
+                background:#0f172a;
+                border:1px solid #1e3a52;
+                border-radius:10px;
+            "
+        >
+
+            <h3 style="margin-top:0;color:#38bdf8;">
+                Mevcut Yöneticiler
+            </h3>
+
+            <div id="adminRoleManagerList">
+                Yöneticiler yükleniyor...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 
         <!-- =================================================
