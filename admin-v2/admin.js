@@ -30,8 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (userError) throw userError;
             if (!user) throw new Error('Aktif kullanıcı bulunamadı.');
 
-           window.roleDebugUserId = user.id;
-console.log('ROLE DEBUG USER ID:', user.id); 
+ 
 
             const { data, error } = await db
                 .from('admin_user_roles')
@@ -98,9 +97,7 @@ console.log('ROLE DEBUG USER ID:', user.id);
 
     currentAdminRole = null;
     window.adminRole = null;
-    window.adminRoleError =
-        error?.message || String(error);
-        }
+    
         
     }
 
@@ -2908,29 +2905,10 @@ if (btnManageCategories) {
 
     async function initializeAdmin() {
         try {
-
-                    const roleDebug = document.createElement('div');
-        roleDebug.textContent = 'ROL TESTİ: JS ÇALIŞIYOR';
-        roleDebug.style.marginTop = '8px';
-        roleDebug.style.color = '#facc15';
-        roleDebug.style.fontSize = '12px';
-        roleDebug.style.fontWeight = '600';
-
-        const debugBrand = document.querySelector('.brand');
-        if (debugBrand) {
-            debugBrand.appendChild(roleDebug);
-        }
+               
 
         await loadAdminRole();
 
-roleDebug.textContent =
-    'ROL TESTİ: ' +
-    (window.adminRole?.name ||
-     'ROL BULUNAMADI') +
-    ' | UID: ' +
-    (window.roleDebugUserId || 'YOK') +
-    ' | HATA: ' +
-    (window.adminRoleError || 'YOK');
 
 await loadAdminPermissions();
 
