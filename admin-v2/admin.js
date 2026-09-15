@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     currentAdminRole = null;
     window.adminRole = null;
     
-        
+        }   
     }
 
         // ---------------------------------------------------------
