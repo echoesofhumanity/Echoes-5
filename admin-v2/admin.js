@@ -2059,6 +2059,25 @@ function renderCategoryManager() {
 }
 
     // ---------------------------------------------------------
+// ADMIN ROLE MANAGER
+// ---------------------------------------------------------
+
+function openAdminRoleManager() {
+
+    const modal =
+        document.getElementById(
+            'adminRoleManagerModal'
+        );
+
+    if (!modal) {
+        return;
+    }
+
+    modal.style.display = 'block';
+
+}
+
+    // ---------------------------------------------------------
 // KATEGORİ YÖNETİMİ — BÖLÜM 2
 // ---------------------------------------------------------
 
@@ -2858,6 +2877,20 @@ if (btnManageCategories) {
         'click',
         openCategoryManager
     );
+}
+
+    const btnManageAdmins =
+    document.getElementById(
+        'btnManageAdmins'
+    );
+
+if (btnManageAdmins) {
+
+    btnManageAdmins.addEventListener(
+        'click',
+        openAdminRoleManager
+    );
+
 }
     // ---------------------------------------------------------
     // FORM BUTONLARI
