@@ -3166,6 +3166,19 @@ if (btnManageAdmins) {
     );
 
 }
+
+    const assignAdminRoleButton =
+    document.getElementById(
+        'assignAdminRoleButton'
+    );
+
+if (assignAdminRoleButton) {
+
+    assignAdminRoleButton.addEventListener(
+        'click',
+        assignAdminRole
+    );
+}
     const closeAdminRoleManagerButton =
     document.getElementById(
         'closeAdminRoleManager'
