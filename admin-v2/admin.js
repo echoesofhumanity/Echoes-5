@@ -2130,15 +2130,21 @@ async function loadAdminRoleManager() {
             error
         } = await db
             .from('admin_user_roles')
-            .select(`
-                user_id,
-                role_id,
-                admin_roles (
-                    name,
-                    slug,
-                    description
-                )
-            `)
+.select(`
+    user_id,
+    role_id,
+    admin_roles (
+        name,
+        slug,
+        description,
+        admin_role_permissions (
+            admin_permissions (
+                name,
+                slug
+            )
+        )
+    )
+`)
             .order(
                 'created_at',
                 {
