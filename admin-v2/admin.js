@@ -2120,6 +2120,93 @@ function openAdminRoleManager() {
     modal.style.display = 'none';
 
     }
+    // ---------------------------------------------------------
+// ADMIN ROLE ASSIGNMENT
+// ---------------------------------------------------------
+
+async function assignAdminRole() {
+
+    const userIdInput =
+        document.getElementById(
+            'adminAssignmentUserId'
+        );
+
+    const roleIdInput =
+        document.getElementById(
+            'adminAssignmentRoleId'
+        );
+
+    if (!userIdInput || !roleIdInput) {
+        return;
+    }
+
+    const userId =
+        userIdInput.value.trim();
+
+    const roleId =
+        roleIdInput.value;
+
+    if (!userId) {
+        alert(
+            'Lütfen kullanıcı ID girin.'
+        );
+        return;
+    }
+
+    if (!roleId) {
+        alert(
+            'Lütfen bir yönetici rolü seçin.'
+        );
+        return;
+    }
+
+    const confirmed =
+        confirm(
+            'Bu kullanıcıya seçilen yönetici rolü atanacak.\n\n' +
+            'Devam etmek istiyor musunuz?'
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const {
+            error
+        } = await db
+            .from('admin_user_roles')
+            .insert({
+                user_id: userId,
+                role_id: roleId
+            });
+
+        if (error) {
+            throw error;
+        }
+
+        alert(
+            'Yönetici rolü başarıyla atandı.'
+        );
+
+        userIdInput.value = '';
+        roleIdInput.value = '';
+
+        await loadAdminRoleManager();
+
+    } catch (error) {
+
+        console.error(
+            'Yönetici rolü atama hatası:',
+            error
+        );
+
+        alert(
+            'Yönetici rolü atanamadı:\n\n' +
+            error.message
+        );
+    }
+}
 
     // ---------------------------------------------------------
 // ADMIN ROLE MANAGER — LOAD
