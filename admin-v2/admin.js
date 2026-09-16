@@ -2075,6 +2075,8 @@ function openAdminRoleManager() {
 
     modal.style.display = 'block';
 
+    loadAdminRoleManager();
+
 }
 
     function closeAdminRoleManager() {
@@ -2091,6 +2093,148 @@ function openAdminRoleManager() {
     modal.style.display = 'none';
 
     }
+
+    // ---------------------------------------------------------
+// ADMIN ROLE MANAGER — LOAD
+// ---------------------------------------------------------
+
+async function loadAdminRoleManager() {
+
+    const list =
+        document.getElementById(
+            'adminRoleManagerList'
+        );
+
+    if (!list) {
+        return;
+    }
+
+    list.innerHTML =
+        'Yöneticiler yükleniyor...';
+
+    try {
+
+        const {
+            data,
+            error
+        } = await db
+            .from('admin_user_roles')
+            .select(`
+                user_id,
+                role_id,
+                admin_roles (
+                    name,
+                    slug,
+                    description
+                )
+            `)
+            .order(
+                'created_at',
+                {
+                    ascending: true
+                }
+            );
+
+        if (error) {
+            throw error;
+        }
+
+        if (!data || data.length === 0) {
+
+            list.innerHTML =
+                '<p style="color:#94a3b8;">' +
+                'Henüz yönetici rolü atanmamış.' +
+                '</p>';
+
+            return;
+        }
+
+        list.innerHTML =
+            data.map(item => {
+
+                const role =
+                    item.admin_roles || {};
+
+                return `
+                    <div
+                        style="
+                            padding:14px;
+                            margin-bottom:10px;
+                            background:#0f172a;
+                            border:1px solid #334155;
+                            border-radius:10px;
+                        "
+                    >
+
+                        <div
+                            style="
+                                color:#38bdf8;
+                                font-weight:600;
+                                margin-bottom:6px;
+                            "
+                        >
+                            ${escapeHtml(
+                                role.name || 'Tanımsız Rol'
+                            )}
+                        </div>
+
+                        <div
+                            style="
+                                color:#94a3b8;
+                                font-size:13px;
+                                margin-bottom:6px;
+                            "
+                        >
+                            Rol:
+                            ${escapeHtml(
+                                role.slug || '-'
+                            )}
+                        </div>
+
+                        <div
+                            style="
+                                color:#cbd5e1;
+                                font-size:13px;
+                                margin-bottom:8px;
+                            "
+                        >
+                            ${escapeHtml(
+                                role.description || ''
+                            )}
+                        </div>
+
+                        <div
+                            style="
+                                color:#64748b;
+                                font-size:12px;
+                                word-break:break-all;
+                            "
+                        >
+                            Kullanıcı ID:
+                            ${escapeHtml(
+                                item.user_id
+                            )}
+                        </div>
+
+                    </div>
+                `;
+
+            }).join('');
+
+    } catch (error) {
+
+        console.error(
+            'Yönetici rolleri yükleme hatası:',
+            error
+        );
+
+        list.innerHTML =
+            '<p style="color:#f87171;">' +
+            'Yöneticiler yüklenemedi:<br><br>' +
+            escapeHtml(error.message) +
+            '</p>';
+    }
+}
 
     // ---------------------------------------------------------
 // KATEGORİ YÖNETİMİ — BÖLÜM 2
