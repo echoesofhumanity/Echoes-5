@@ -1765,7 +1765,6 @@ if (btnSettingsRefresh) {
         'click',
         async () => {
 
-            alert('AYARLARI YENİLE BUTONU ÇALIŞIYOR');
 
             btnSettingsRefresh.disabled =
                 true;
