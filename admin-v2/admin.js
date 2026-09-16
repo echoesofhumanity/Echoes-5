@@ -2077,6 +2077,21 @@ function openAdminRoleManager() {
 
 }
 
+    function closeAdminRoleManager() {
+
+    const modal =
+        document.getElementById(
+            'adminRoleManagerModal'
+        );
+
+    if (!modal) {
+        return;
+    }
+
+    modal.style.display = 'none';
+
+    }
+
     // ---------------------------------------------------------
 // KATEGORİ YÖNETİMİ — BÖLÜM 2
 // ---------------------------------------------------------
@@ -2889,6 +2904,19 @@ if (btnManageAdmins) {
     btnManageAdmins.addEventListener(
         'click',
         openAdminRoleManager
+    );
+
+}
+    const closeAdminRoleManagerButton =
+    document.getElementById(
+        'closeAdminRoleManager'
+    );
+
+if (closeAdminRoleManagerButton) {
+
+    closeAdminRoleManagerButton.addEventListener(
+        'click',
+        closeAdminRoleManager
     );
 
 }
