@@ -1745,13 +1745,7 @@ if (navSettings) {
 
         await loadSettings();
 
-btnSettingsRefresh.textContent =
-    'Ayarlar Güncellendi ✓';
 
-setTimeout(() => {
-    btnSettingsRefresh.textContent =
-        'Ayarları Yenile';
-}, 1500);
         }
     );
 }
@@ -1773,7 +1767,6 @@ if (btnSettingsRefresh) {
         'click',
         async () => {
 
-
             btnSettingsRefresh.disabled =
                 true;
 
@@ -1781,15 +1774,22 @@ if (btnSettingsRefresh) {
 
                 await loadSettings();
 
+                btnSettingsRefresh.textContent =
+                    'Ayarlar Güncellendi ✓';
+
             } finally {
 
-                btnSettingsRefresh.disabled =
-                    false;
+                setTimeout(() => {
+                    btnSettingsRefresh.textContent =
+                        'Ayarları Yenile';
+
+                    btnSettingsRefresh.disabled =
+                        false;
+                }, 1500);
             }
         }
     );
 }
-
 // ---------------------------------------------------------
 // SETTINGS LOGOUT
 // ---------------------------------------------------------
