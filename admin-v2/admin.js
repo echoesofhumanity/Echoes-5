@@ -3244,6 +3244,7 @@ if (closeAdminRoleManagerButton) {
 
 
 await loadAdminPermissions();
+            applyAdminPermissions();
 
 await loadCategories();
             await loadDashboard();
@@ -3255,6 +3256,40 @@ await loadCategories();
                 'Admin panel başlatma hatası:',
                 error
             );
+        }
+    }
+
+        // ---------------------------------------------------------
+    // APPLY ADMIN PERMISSIONS
+    // ---------------------------------------------------------
+
+    function applyAdminPermissions() {
+
+        const isSuperAdmin =
+            currentAdminRole?.slug === 'super_admin';
+
+        const manageAdminsButton =
+            document.getElementById('btnManageAdmins');
+
+        const settingsButton =
+            document.getElementById('navSettings');
+
+        const settingsSection =
+            document.getElementById('settingsSection');
+
+        if (!isSuperAdmin) {
+
+            if (manageAdminsButton) {
+                manageAdminsButton.style.display = 'none';
+            }
+
+            if (settingsButton) {
+                settingsButton.style.display = 'none';
+            }
+
+            if (settingsSection) {
+                settingsSection.style.display = 'none';
+            }
         }
     }
 
