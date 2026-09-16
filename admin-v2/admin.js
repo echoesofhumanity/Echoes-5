@@ -1743,7 +1743,15 @@ if (navSettings) {
                 block: 'start'
             });
 
-            await loadSettings();
+        await loadSettings();
+
+btnSettingsRefresh.textContent =
+    'Ayarlar Güncellendi ✓';
+
+setTimeout(() => {
+    btnSettingsRefresh.textContent =
+        'Ayarları Yenile';
+}, 1500);
         }
     );
 }
