@@ -173,6 +173,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.hasAdminPermission = hasPermission;
+
+    function isSuperAdmin() {
+    return currentAdminRole?.slug === 'super_admin';
+}
+
+function canManage(permissionSlug) {
+    return isSuperAdmin() || hasPermission(permissionSlug);
+}
+
+window.isSuperAdmin = isSuperAdmin;
+window.canAdminManage = canManage;
     
     // ---------------------------------------------------------
     // ELEMENTLER
