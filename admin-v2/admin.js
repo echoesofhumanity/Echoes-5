@@ -2122,7 +2122,6 @@ async function loadAdminRoleManager() {
 
     list.innerHTML =
         'Yöneticiler yükleniyor...';
-    alert('loadAdminRoleManager çalıştı');
 
     try {
 
