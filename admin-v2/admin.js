@@ -1772,12 +1772,19 @@ if (btnSettingsRefresh) {
 
             try {
 
-                await loadSettings();
+    await loadSettings();
 
-                btnSettingsRefresh.textContent =
-                    'Ayarlar Güncellendi ✓';
+    btnSettingsRefresh.textContent =
+        'Ayarlar Güncellendi ✓';
 
-            } finally {
+} catch (error) {
+
+    alert(
+        'Ayarlar yenilenirken hata oluştu:\n\n' +
+        error.message
+    );
+
+} finally {
 
                 setTimeout(() => {
                     btnSettingsRefresh.textContent =
