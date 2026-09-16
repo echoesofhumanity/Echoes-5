@@ -1757,14 +1757,7 @@ const btnSettingsRefresh =
     document.getElementById(
         'btnSettingsRefresh'
     );
-    if (btnSettingsRefresh) {
-    btnSettingsRefresh.addEventListener(
-        'click',
-        () => {
-            alert('SETTINGS_REFRESH_TEST');
-        }
-    );
-    }
+ 
 
 if (btnSettingsRefresh) {
 
