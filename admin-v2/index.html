@@ -1279,6 +1279,126 @@
             "
         >
 
+            <div
+    style="
+        padding:16px;
+        margin-bottom:18px;
+        background:#0f172a;
+        border:1px solid #1e3a52;
+        border-radius:10px;
+    "
+>
+
+    <h3 style="margin-top:0;color:#38bdf8;">
+        Yeni Yönetici Ata
+    </h3>
+
+    <p
+        style="
+            color:#94a3b8;
+            font-size:13px;
+            line-height:1.6;
+        "
+    >
+        Mevcut bir Supabase kullanıcısına yönetici rolü atayın.
+    </p>
+
+    <label
+        style="
+            display:block;
+            margin-bottom:6px;
+            color:#cbd5e1;
+        "
+    >
+        Kullanıcı ID
+    </label>
+
+    <input
+        type="text"
+        id="adminAssignmentUserId"
+        placeholder="Supabase kullanıcı UUID"
+        style="
+            width:100%;
+            box-sizing:border-box;
+            margin-bottom:14px;
+            padding:12px;
+            background:#0b1d2a;
+            border:1px solid #334155;
+            border-radius:8px;
+            color:white;
+        "
+    >
+
+    <label
+        style="
+            display:block;
+            margin-bottom:6px;
+            color:#cbd5e1;
+        "
+    >
+        Yönetici Rolü
+    </label>
+
+    <select
+        id="adminAssignmentRoleId"
+        style="
+            width:100%;
+            box-sizing:border-box;
+            margin-bottom:14px;
+            padding:12px;
+            background:#0b1d2a;
+            border:1px solid #334155;
+            border-radius:8px;
+            color:white;
+        "
+    >
+        <option value="">
+            Rol seçin
+        </option>
+
+        <option value="ea807c05-4f4c-44a3-8096-246382e74ab5">
+            Super Admin
+        </option>
+
+        <option value="da6fc928-01b9-4cf1-ad93-03eadf563e06">
+            Content Admin
+        </option>
+
+        <option value="36ab072b-81b8-4372-b014-c338c35f8545">
+            Media Admin
+        </option>
+
+        <option value="114c00c2-46e0-467c-8df1-336204f24a6b">
+            Marketplace Admin
+        </option>
+
+        <option value="b053e3d4-e08a-460c-8335-ba7511d73b9d">
+            Merchandise Admin
+        </option>
+
+        <option value="96927686-37fe-4b69-8140-02cc543813a8">
+            Operations Admin
+        </option>
+
+        <option value="4c9cb36f-8b01-48f9-8c8a-4a211b1a8846">
+            Volunteers Admin
+        </option>
+
+        <option value="6ae9223e-0e44-4c53-9a54-7b6797486d5b">
+            Academy Admin
+        </option>
+    </select>
+
+    <button
+        type="button"
+        id="assignAdminRoleButton"
+        class="btn-primary"
+    >
+        Yönetici Rolü Ata
+    </button>
+
+            </div>
+
             <h3 style="margin-top:0;color:#38bdf8;">
                 Mevcut Yöneticiler
             </h3>
