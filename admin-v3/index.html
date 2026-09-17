@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Echoes of Humanity — Admin V3</title>
+
+    <meta
+        name="description"
+        content="Echoes of Humanity Administration System"
+    >
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Existing Supabase configuration -->
+    <script src="../assets/js/supabase-config.js"></script>
+
+    <style>
+        :root {
+            --bg: #0b1220;
+            --panel: #111a2b;
+            --panel-hover: #172238;
+            --border: #26344d;
+            --text: #f4f7fb;
+            --muted: #91a0b8;
+            --accent: #39c6c8;
+            --danger: #ef6464;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .admin-app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-header {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            background: #0e1727;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .brand-version {
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .admin-layout {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+        }
+
+        .admin-sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            padding: 20px 14px;
+            background: #0d1625;
+            border-right: 1px solid var(--border);
+        }
+
+        .nav-label {
+            margin: 0 10px 10px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-button {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text);
+            text-align: left;
+            transition:
+                background 0.15s ease,
+                border-color 0.15s ease;
+        }
+
+        .nav-button:hover {
+            background: var(--panel-hover);
+            border-color: var(--border);
+        }
+
+        .nav-button.active {
+            background: var(--panel);
+            border-color: var(--border);
+            color: var(--accent);
+        }
+
+        .admin-main {
+            flex: 1;
+            min-width: 0;
+            padding: 28px;
+            overflow-y: auto;
+        }
+
+        .module {
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+        }
+
+        .module-header {
+            margin-bottom: 24px;
+        }
+
+        .module-title {
+            margin: 0 0 6px;
+            font-size: 28px;
+        }
+
+        .module-description {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .panel {
+            padding: 24px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .status {
+            margin-top: 16px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: #0d1728;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .status strong {
+            color: var(--text);
+        }
+
+        @media (max-width: 800px) {
+            .admin-layout {
+                flex-direction: column;
+            }
+
+            .admin-sidebar {
+                width: 100%;
+                border-right: 0;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .admin-nav {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .admin-main {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="admin-app">
+
+    <header class="admin-header">
+        <div class="brand">
+            <div class="brand-title">
+                Echoes of Humanity
+            </div>
+
+            <div class="brand-version">
+                Administration — V3
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-layout">
+
+        <aside class="admin-sidebar">
+
+            <div class="nav-label">
+                Administration
+            </div>
+
+            <nav
+                class="admin-nav"
+                aria-label="Admin navigation"
+            >
+
+                <button
+                    type="button"
+                    class="nav-button active"
+                    data-module="dashboard"
+                >
+                    Dashboard
+                </button>
+
+                <button
+                    type="button"
+                    class="nav-button"
+                    data-module="content"
+                >
+                    New Content
+                </button>
+
+                <button
+                    type="button"
+                    class="nav-button"
+                    data-module="library"
+                >
+                    Library
+                </button>
+
+                <button
+                    type="button"
+                    class="nav-button"
+                    data-module="media"
+                >
+                    Media
+                </button>
+
+                <button
+                    type="button"
+                    class="nav-button"
+                    data-module="categories"
+                >
+                    Categories
+                </button>
+
+                <button
+                    type="button"
+                    class="nav-button"
+                    data-module="admins"
+                >
+                    Admins
+                </button>
+
+                <button
+                    type="button"
+                    class="nav-button"
+                    data-module="settings"
+                >
+                    Settings
+                </button>
+
+            </nav>
+
+        </aside>
+
+        <main class="admin-main">
+
+            <!-- Dashboard -->
+            <section
+                id="module-dashboard"
+                class="module active"
+            >
+                <div class="module-header">
+                    <h1 class="module-title">
+                        Dashboard
+                    </h1>
+
+                    <p class="module-description">
+                        Echoes of Humanity administration dashboard.
+                    </p>
+                </div>
+
+                <div class="panel">
+                    <strong>Admin V3</strong>
+
+                    <div class="status">
+                        System shell initialized.
+                        Functional modules will be connected
+                        one at a time.
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- New Content -->
+            <section
+                id="module-content"
+                class="module"
+            >
+                <div class="module-header">
+                    <h1 class="module-title">
+                        New Content
+                    </h1>
+
+                    <p class="module-description">
+                        Create and manage multilingual content.
+                    </p>
+                </div>
+
+                <div class="panel">
+                    Content module will be connected in the
+                    next controlled stage.
+                </div>
+            </section>
+
+
+            <!-- Library -->
+            <section
+                id="module-library"
+                class="module"
+            >
+                <div class="module-header">
+                    <h1 class="module-title">
+                        Library
+                    </h1>
+
+                    <p class="module-description">
+                        Browse and manage published and draft content.
+                    </p>
+                </div>
+
+                <div class="panel">
+                    Library module will be connected in the
+                    next controlled stage.
+                </div>
+            </section>
+
+
+            <!-- Media -->
+            <section
+                id="module-media"
+                class="module"
+            >
+                <div class="module-header">
+                    <h1 class="module-title">
+                        Media
+                    </h1>
+
+                    <p class="module-description">
+                        Manage images, videos, audio and documents.
+                    </p>
+                </div>
+
+                <div class="panel">
+                    Media module will be connected in the
+                    next controlled stage.
+                </div>
+            </section>
+
+
+            <!-- Categories -->
+            <section
+                id="module-categories"
+                class="module"
+            >
+                <div class="module-header">
+                    <h1 class="module-title">
+                        Categories
+                    </h1>
+
+                    <p class="module-description">
+                        Manage the centralized content category system.
+                    </p>
+                </div>
+
+                <div class="panel">
+                    Categories module will be connected in the
+                    next controlled stage.
+                </div>
+            </section>
+
+
+            <!-- Admins -->
+            <section
+                id="module-admins"
+                class="module"
+            >
+                <div class="module-header">
+                    <h1 class="module-title">
+                        Admins
+                    </h1>
+
+                    <p class="module-description">
+                        Manage administrators, roles and access.
+                    </p>
+                </div>
+
+                <div class="panel">
+                    Admin management will be connected
+                    in the next controlled stage.
+                </div>
+            </section>
+
+
+            <!-- Settings -->
+            <section
+                id="module-settings"
+                class="module"
+            >
+                <div class="module-header">
+                    <h1 class="module-title">
+                        Settings
+                    </h1>
+
+                    <p class="module-description">
+                        Manage administration system settings.
+                    </p>
+                </div>
+
+                <div class="panel">
+                    Settings module will be connected
+                    in the next controlled stage.
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+</div>
+
+<!--
+    Admin V3 JavaScript modules will be loaded
+    in a controlled sequence.
+-->
+
+</body>
+</html>
