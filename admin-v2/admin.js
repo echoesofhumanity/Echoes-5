@@ -1557,8 +1557,8 @@ return {
 
                     const form =
                         document.getElementById(
-                            'contentForm'
-                        );
+    'contentFormElement'
+);
 
                     if (form) {
                         form.scrollIntoView({
