@@ -30,26 +30,37 @@ document.addEventListener('DOMContentLoaded', () => {
             if (userError) throw userError;
             if (!user) throw new Error('Aktif kullanıcı bulunamadı.');
 
- 
+ const { data: roleAssignment, error: roleError } =
+    await db
+        .from('admin_user_roles')
+        .select('role_id')
+        .eq('user_id', user.id)
+        .limit(1)
+        .maybeSingle();
 
-            const { data, error } = await db
-                .from('admin_user_roles')
-                .select(`
-                    role_id,
-                    admin_roles (
-                        name,
-                        slug
-                    )
-                `)
-                .eq('user_id', user.id)
-                .limit(1)
-                .maybeSingle();
+if (roleError) throw roleError;
 
-            if (error) throw error;
+if (!roleAssignment?.role_id) {
+    currentAdminRole = null;
+    window.adminRole = null;
+    return;
+}
 
-            currentAdminRole = data?.admin_roles || null;
+const { data: role, error: roleLookupError } =
+    await db
+        .from('admin_roles')
+        .select('id, name, slug')
+        .eq('id', roleAssignment.role_id)
+        .maybeSingle();
 
-            window.adminRole = currentAdminRole;
+if (roleLookupError) throw roleLookupError;
+
+currentAdminRole = role || null;
+
+window.adminRole = currentAdminRole;
+
+            
+            
 
                         // -------------------------------------------------
             // ACTIVE ADMIN ROLE DISPLAY
