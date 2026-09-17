@@ -557,10 +557,23 @@
                 </button>
 
                 <button
-                    type="button"
-                    id="navNewContent"
-                >
-                    + Yeni İçerik
+    type="button"
+    id="navNewContent"
+    onclick="
+        const contentForm =
+            document.getElementById('contentForm');
+
+        if (contentForm) {
+            contentForm.style.display = 'block';
+
+            contentForm.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    "
+>
+    + Yeni İçerik
                 </button>
 
                 <button
