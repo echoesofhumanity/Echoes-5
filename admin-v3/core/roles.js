@@ -6,9 +6,9 @@
      * Roles Module
      *
      * Responsibility:
-     * - Resolve the current authenticated admin
-     * - Verify admin membership
-     * - Load assigned roles
+     * - Resolve the current authenticated user
+     * - Resolve assigned admin roles
+     * - Determine admin status from role assignment
      * - Expose role information to other V3 modules
      *
      * This module does NOT handle:
@@ -16,7 +16,11 @@
      * - Permissions
      * - Navigation
      * - Content
-     * - UI rendering
+     * - Library
+     * - Media
+     * - Categories
+     * - Admin management
+     * - Settings
      */
 
     const db = window.db;
@@ -51,32 +55,6 @@
         }
 
         return data.user || null;
-    }
-
-    async function verifyAdminUser(userId) {
-        if (!userId) {
-            return false;
-        }
-
-        const {
-            data,
-            error
-        } = await db
-            .from("admin_users")
-            .select("user_id")
-            .eq("user_id", userId)
-            .maybeSingle();
-
-        if (error) {
-            console.error(
-                "Admin V3 Roles: Failed to verify admin user.",
-                error
-            );
-
-            return false;
-        }
-
-        return Boolean(data);
     }
 
     async function loadRolesForUser(userId) {
@@ -158,18 +136,11 @@
 
         state.userId = user.id;
 
-        state.isAdmin =
-            await verifyAdminUser(user.id);
-
-        if (!state.isAdmin) {
-            state.roles = [];
-            state.initialized = true;
-
-            return getState();
-        }
-
         state.roles =
             await loadRolesForUser(user.id);
+
+        state.isAdmin =
+            state.roles.length > 0;
 
         state.initialized = true;
 
