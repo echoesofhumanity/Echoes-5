@@ -861,6 +861,100 @@
         return true;
     }
 
+    async function checkIntegrity() {
+        requireViewPermission();
+
+        const {
+            data: assets,
+            error: assetsError
+        } = await db
+            .from("media_assets")
+            .select("id, storage_path")
+            .eq("bucket_id", BUCKET_ID);
+
+        if (assetsError) {
+            console.error(
+                "Admin V3 Media: Failed to load media metadata for integrity check.",
+                assetsError
+            );
+            throw assetsError;
+        }
+
+        const assetPaths = new Set(
+            (assets || []).map(function (item) {
+                return item.storage_path;
+            })
+        );
+
+        const storageObjects = [];
+        let offset = 0;
+        const pageSize = 1000;
+
+        while (true) {
+            const {
+                data: objects,
+                error: storageError
+            } = await db.storage
+                .from(BUCKET_ID)
+                .list("media", {
+                    limit: pageSize,
+                    offset: offset,
+                    sortBy: {
+                        column: "name",
+                        order: "asc"
+                    }
+                });
+
+            if (storageError) {
+                console.error(
+                    "Admin V3 Media: Failed to list storage objects for integrity check.",
+                    storageError
+                );
+                throw storageError;
+            }
+
+            const page = objects || [];
+
+            page.forEach(function (object) {
+                if (object && object.name) {
+                    storageObjects.push({
+                        name: object.name,
+                        storage_path: "media/" + object.name
+                    });
+                }
+            });
+
+            if (page.length < pageSize) {
+                break;
+            }
+
+            offset += pageSize;
+        }
+
+        const storagePaths = new Set(
+            storageObjects.map(function (object) {
+                return object.storage_path;
+            })
+        );
+
+        const orphanStorageObjects =
+            storageObjects.filter(function (object) {
+                return !assetPaths.has(object.storage_path);
+            });
+
+        const orphanMetadata =
+            (assets || []).filter(function (item) {
+                return !storagePaths.has(item.storage_path);
+            });
+
+        return {
+            storageObjects: storageObjects,
+            mediaAssets: assets || [],
+            orphanStorageObjects: orphanStorageObjects,
+            orphanMetadata: orphanMetadata
+        };
+    }
+
     function setCurrentItem(item) {
         state.currentItem =
             item || null;
@@ -1372,6 +1466,7 @@
         getItems,
         getCurrentItem,
         getMediaTypes,
+        checkIntegrity,
         isLoading,
         isUploading,
         getState
