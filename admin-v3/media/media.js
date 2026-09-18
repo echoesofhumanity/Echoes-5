@@ -1437,6 +1437,9 @@
         const actions =
             getMediaElement("mediaIntegrityActions");
 
+        const deleteActions =
+            getMediaElement("mediaIntegrityDeleteActions");
+
         if (!container) {
             return;
         }
@@ -1449,6 +1452,11 @@
 
         if (actions) {
             actions.hidden =
+                storageOrphans.length === 0;
+        }
+
+        if (deleteActions) {
+            deleteActions.hidden =
                 storageOrphans.length === 0;
         }
 
