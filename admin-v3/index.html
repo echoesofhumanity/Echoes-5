@@ -99,6 +99,16 @@
             text-transform: uppercase;
         }
 
+        .admin-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-header-actions a {
+            text-decoration: none;
+        }
+
         .admin-layout {
             flex: 1;
             display: flex;
@@ -441,6 +451,13 @@
             <div class="brand-version">
                 Administration — V3
             </div>
+        </div>
+
+        <div class="admin-header-actions">
+            <a href="login.html" class="action-button">Login</a>
+            <button type="button" id="adminLogoutButton" class="action-button danger">
+                Logout
+            </button>
         </div>
     </header>
 
@@ -929,6 +946,6 @@
 <script src="media/media.js?v=20260918-9"></script>
 <script src="content/content.js?v=20260918"></script>
 
-<script src="admin.js?v=20260918"></script>
+<script src="admin.js?v=20260918-2"></script>
 </body>
 </html>
