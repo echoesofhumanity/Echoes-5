@@ -66,7 +66,8 @@
         loading: false,
         uploading: false,
         searchTerm: "",
-        filterType: "all"
+        filterType: "all",
+        sortBy: "newest"
     };
 
     if (!db) {
@@ -1320,6 +1321,24 @@
             return haystack.includes(searchTerm);
         });
 
+        items.sort(function (a, b) {
+            if (state.sortBy === "oldest") {
+                return new Date(a.created_at || 0) - new Date(b.created_at || 0);
+            }
+
+            if (state.sortBy === "name") {
+                const aName = (a.display_name || a.title || a.original_name || "").toLowerCase();
+                const bName = (b.display_name || b.title || b.original_name || "").toLowerCase();
+                return aName.localeCompare(bName);
+            }
+
+            if (state.sortBy === "size") {
+                return (Number(b.file_size) || 0) - (Number(a.file_size) || 0);
+            }
+
+            return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+        });
+
         if (items.length === 0) {
             container.innerHTML =
                 '<div class="media-empty">No media assets found.</div>';
@@ -1782,6 +1801,7 @@
             getMediaElement("mediaIntegrityDeleteButton");
         const searchInput = getMediaElement("mediaSearch");
         const filterSelect = getMediaElement("mediaFilterType");
+        const sortSelect = getMediaElement("mediaSort");
 
         if (uploadButton) {
             uploadButton.addEventListener(
@@ -1846,6 +1866,13 @@
         if (filterSelect) {
             filterSelect.addEventListener("change", function () {
                 state.filterType = filterSelect.value || "all";
+                renderMediaList();
+            });
+        }
+
+        if (sortSelect) {
+            sortSelect.addEventListener("change", function () {
+                state.sortBy = sortSelect.value || "newest";
                 renderMediaList();
             });
         }
