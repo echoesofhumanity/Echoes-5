@@ -35,6 +35,32 @@
      * - Settings
      */
 
+    function showBootstrapError(stage, error) {
+        console.error("Admin V3: Bootstrap failed at " + stage + ".", error);
+
+        const main = document.querySelector(".admin-main");
+
+        if (!main) {
+            return;
+        }
+
+        const existing = document.getElementById("admin-v3-bootstrap-error");
+
+        if (existing) {
+            existing.remove();
+        }
+
+        const panel = document.createElement("div");
+        panel.id = "admin-v3-bootstrap-error";
+        panel.style.cssText = "margin:24px;padding:20px;border:1px solid #ef6464;border-radius:10px;background:#21141a;color:#f4f7fb;font-family:inherit;";
+        panel.innerHTML = "<strong>Admin V3 initialization error</strong><br><br>Stage: " +
+            String(stage) + "<br>Error: " +
+            String(error && error.message ? error.message : error);
+
+        main.prepend(panel);
+    }
+
+
     async function initializeAdminV3() {
 
         /*
@@ -111,8 +137,13 @@
          * Resolve roles
          */
 
-        const roleState =
-            await window.EchoesAdminRoles.initialize();
+        let roleState;
+        try {
+            roleState = await window.EchoesAdminRoles.initialize();
+        } catch (error) {
+            showBootstrapError("ROLES", error);
+            return;
+        }
 
         if (!roleState.isAdmin) {
             console.error(
@@ -130,8 +161,13 @@
          * Resolve permissions
          */
 
-        const permissionState =
-            await window.EchoesAdminPermissions.initialize();
+        let permissionState;
+        try {
+            permissionState = await window.EchoesAdminPermissions.initialize();
+        } catch (error) {
+            showBootstrapError("PERMISSIONS", error);
+            return;
+        }
 
 
         /*
@@ -139,8 +175,13 @@
          * Apply navigation access
          */
 
-        const navigationState =
-            window.EchoesAdminNavigation.initialize();
+        let navigationState;
+        try {
+            navigationState = window.EchoesAdminNavigation.initialize();
+        } catch (error) {
+            showBootstrapError("NAVIGATION", error);
+            return;
+        }
 
 
         /*
