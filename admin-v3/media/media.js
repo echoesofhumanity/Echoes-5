@@ -1130,6 +1130,63 @@
         }
     }
 
+    async function showMediaPreview(item) {
+        const preview = getMediaElement("mediaPreview");
+        const image = getMediaElement("mediaPreviewImage");
+
+        if (!preview || !image) {
+            return;
+        }
+
+        preview.hidden = true;
+        image.removeAttribute("src");
+        image.alt = "";
+
+        if (
+            !item ||
+            item.media_type !== "image" ||
+            !item.storage_path
+        ) {
+            return;
+        }
+
+        try {
+            const { data, error } = await db.storage
+                .from(BUCKET_ID)
+                .createSignedUrl(item.storage_path, 3600);
+
+            if (error) {
+                console.error(
+                    "Admin V3 Media: Failed to create preview URL.",
+                    error
+                );
+                return;
+            }
+
+            if (
+                !state.currentItem ||
+                state.currentItem.id !== item.id ||
+                !data ||
+                !data.signedUrl
+            ) {
+                return;
+            }
+
+            image.src = data.signedUrl;
+            image.alt =
+                item.alt_text ||
+                item.title ||
+                item.original_name ||
+                "Media preview";
+            preview.hidden = false;
+        } catch (error) {
+            console.error(
+                "Admin V3 Media: Preview failed.",
+                error
+            );
+        }
+    }
+
     function fillMediaForm(item) {
         const values = {
             mediaDisplayName: item.display_name || "",
@@ -1170,6 +1227,8 @@
         if (deleteButton) {
             deleteButton.disabled = false;
         }
+
+        showMediaPreview(item);
     }
 
     function renderMediaList() {
