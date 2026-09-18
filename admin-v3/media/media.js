@@ -1222,6 +1222,7 @@
             } else if (item.media_type === "audio") {
                 audio.src = data.signedUrl;
                 audio.hidden = false;
+                audio.load();
             } else {
                 documentFrame.src = data.signedUrl;
                 documentFrame.hidden = false;
