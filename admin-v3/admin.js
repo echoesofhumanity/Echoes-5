@@ -61,6 +61,35 @@
     }
 
 
+    function bindAdminHeaderActions() {
+        const logoutButton =
+            document.getElementById("adminLogoutButton");
+
+        if (!logoutButton) {
+            return;
+        }
+
+        logoutButton.addEventListener(
+            "click",
+            async function () {
+                logoutButton.disabled = true;
+                logoutButton.textContent = "Logging Out...";
+
+                try {
+                    await window.EchoesAdminAuth.logout();
+                } catch (error) {
+                    console.error(
+                        "Admin V3: Logout failed.",
+                        error
+                    );
+
+                    logoutButton.disabled = false;
+                    logoutButton.textContent = "Logout";
+                }
+            }
+        );
+    }
+
     async function initializeAdminV3() {
 
         /*
@@ -232,6 +261,8 @@
     document.addEventListener(
         "DOMContentLoaded",
         function () {
+
+            bindAdminHeaderActions();
 
             initializeAdminV3().catch(function (error) {
 
