@@ -213,6 +213,136 @@
         }
 
 
+        .library-toolbar {
+            display: grid;
+            grid-template-columns: minmax(180px, 2fr) repeat(5, minmax(120px, 1fr));
+            gap: 12px;
+            align-items: end;
+            margin-bottom: 18px;
+        }
+
+        .library-toolbar-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .library-stats {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .library-stat {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #0d1728;
+        }
+
+        .library-stat strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 18px;
+        }
+
+        .library-stat span {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .library-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .library-item {
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #0d1728;
+        }
+
+        .library-item-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .library-item-title {
+            margin: 0 0 5px;
+            font-size: 16px;
+        }
+
+        .library-item-subtitle,
+        .library-item-meta,
+        .library-empty,
+        .library-message {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .library-item-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 14px;
+            margin-top: 10px;
+        }
+
+        .library-item-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .library-detail {
+            margin-top: 18px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #0d1728;
+        }
+
+        .library-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px 18px;
+        }
+
+        .library-detail-row strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .library-detail-row span {
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 1100px) {
+            .library-toolbar {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 800px) {
+            .library-toolbar,
+            .library-stats,
+            .library-detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .library-item-header {
+                flex-direction: column;
+            }
+        }
+
         .media-layout {
             display: grid;
             grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
@@ -697,13 +827,100 @@
                     </h1>
 
                     <p class="module-description">
-                        Browse and manage published and draft content.
+                        Browse, filter and manage content records.
                     </p>
                 </div>
 
                 <div class="panel">
-                    Library module will be connected in the
-                    next controlled stage.
+                    <div class="library-toolbar">
+                        <div class="field">
+                            <label for="librarySearch">Search</label>
+                            <input
+                                id="librarySearch"
+                                type="search"
+                                placeholder="Search title, slug or text"
+                                autocomplete="off"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label for="libraryStatus">Status</label>
+                            <select id="libraryStatus">
+                                <option value="">All Statuses</option>
+                                <option value="draft">Draft</option>
+                                <option value="review">Review</option>
+                                <option value="published">Published</option>
+                                <option value="archived">Archived</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="libraryType">Type</label>
+                            <select id="libraryType">
+                                <option value="">All Types</option>
+                                <option value="story">Story</option>
+                                <option value="essay">Essay</option>
+                                <option value="manifesto">Manifesto</option>
+                                <option value="poetry">Poetry</option>
+                                <option value="audio">Audio</option>
+                                <option value="visual">Visual</option>
+                                <option value="technical">Technical</option>
+                                <option value="blueprint">Blueprint</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="libraryLanguage">Language</label>
+                            <select id="libraryLanguage">
+                                <option value="">All Languages</option>
+                                <option value="en">English</option>
+                                <option value="tr">Turkish</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="ru">Russian</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="libraryCategory">Category</label>
+                            <select id="libraryCategory">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="libraryFeatured">Featured</label>
+                            <select id="libraryFeatured">
+                                <option value="">All</option>
+                                <option value="true">Featured</option>
+                                <option value="false">Not Featured</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="library-toolbar-actions">
+                        <button type="button" id="libraryApplyFiltersButton" class="action-button primary">
+                            Apply Filters
+                        </button>
+                        <button type="button" id="libraryClearFiltersButton" class="action-button">
+                            Clear Filters
+                        </button>
+                        <button type="button" id="libraryRefreshButton" class="action-button">
+                            Refresh
+                        </button>
+                    </div>
+
+                    <div id="libraryStats" class="library-stats"></div>
+                    <div id="libraryMessage" class="library-message" role="status"></div>
+
+                    <div id="libraryList" class="library-list">
+                        <div class="library-empty">
+                            Loading content...
+                        </div>
+                    </div>
+
+                    <div id="libraryDetail" class="library-detail" hidden></div>
                 </div>
             </section>
 
@@ -1023,6 +1240,7 @@
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js"></script>
 <script src="media/media.js?v=20260918-12"></script>
 <script src="content/content.js?v=20260918"></script>
+<script src="content/library.js?v=20260918"></script>
 
 <script src="admin.js?v=20260918-2"></script>
 </body>
