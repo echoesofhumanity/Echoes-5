@@ -87,10 +87,13 @@
             categoryId: source.categoryId || "",
 
             featured:
-                source.featured === undefined ||
-                source.featured === ""
-                    ? null
-                    : Boolean(source.featured)
+                source.featured === true ||
+                source.featured === "true"
+                    ? true
+                    : source.featured === false ||
+                      source.featured === "false"
+                        ? false
+                        : null
         };
     }
 
