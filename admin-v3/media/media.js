@@ -1398,6 +1398,32 @@
         });
     }
 
+    async function handleMediaIntegrity() {
+        setMediaBusy(true);
+        showMediaMessage("Checking media integrity...");
+
+        try {
+            const result = await checkIntegrity();
+
+            showMediaMessage(
+                "Integrity check complete. " +
+                result.orphanStorageObjects.length +
+                " orphan storage object(s), " +
+                result.orphanMetadata.length +
+                " orphan metadata record(s)."
+            );
+        } catch (error) {
+            showMediaMessage(
+                error && error.message
+                    ? error.message
+                    : String(error),
+                true
+            );
+        } finally {
+            setMediaBusy(false);
+        }
+    }
+
     function bindMediaUI() {
         const form = getMediaElement("mediaForm");
 
@@ -1410,6 +1436,7 @@
         const uploadButton = getMediaElement("mediaUploadButton");
         const saveButton = getMediaElement("mediaSaveButton");
         const deleteButton = getMediaElement("mediaDeleteButton");
+        const integrityButton = getMediaElement("mediaIntegrityButton");
 
         if (uploadButton) {
             uploadButton.addEventListener(
@@ -1432,6 +1459,13 @@
                 handleMediaDelete
             );
             deleteButton.disabled = true;
+        }
+
+        if (integrityButton) {
+            integrityButton.addEventListener(
+                "click",
+                handleMediaIntegrity
+            );
         }
 
         bindMediaDropzone();
