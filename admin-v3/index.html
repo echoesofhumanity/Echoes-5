@@ -1294,13 +1294,84 @@
                     </h1>
 
                     <p class="module-description">
-                        Manage administration system settings.
+                        Administration system status and configuration reference.
                     </p>
                 </div>
 
-                <div class="panel">
-                    Settings module will be connected
-                    in the next controlled stage.
+                <div class="media-layout">
+                    <div class="panel">
+                        <h2 class="panel-title">Administration Access</h2>
+
+                        <div id="settingsAccessStatus" class="status">
+                            Loading access status...
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h2 class="panel-title">System Status</h2>
+
+                        <div id="settingsDatabaseStatus" class="status">
+                            Loading database status...
+                        </div>
+
+                        <div id="settingsStorageStatus" class="status">
+                            Loading storage status...
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h2 class="panel-title">Supported Content Types</h2>
+
+                        <div id="settingsContentTypes" class="library-list">
+                            <div class="library-empty">
+                                Loading content types...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h2 class="panel-title">Supported Languages</h2>
+
+                        <div id="settingsLanguages" class="library-list">
+                            <div class="library-empty">
+                                Loading languages...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h2 class="panel-title">Supported Statuses</h2>
+
+                        <div id="settingsStatuses" class="library-list">
+                            <div class="library-empty">
+                                Loading statuses...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h2 class="panel-title">Storage</h2>
+
+                        <div id="settingsBucket" class="status">
+                            Loading storage configuration...
+                        </div>
+
+                        <div class="form-actions">
+                            <button
+                                type="button"
+                                id="settingsRefreshButton"
+                                class="action-button primary"
+                            >
+                                Refresh Status
+                            </button>
+                        </div>
+
+                        <div
+                            id="settingsMessage"
+                            class="form-message"
+                            role="status"
+                        ></div>
+                    </div>
                 </div>
             </section>
 
@@ -1321,6 +1392,7 @@
 <script src="core/permissions.js?v=20260918"></script>
 <script src="core/navigation.js?v=20260918"></script>
 <script src="categories/categories.js?v=20260919"></script>
+<script src="settings/settings.js?v=20260919"></script>
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js"></script>
 <script src="media/media.js?v=20260918-12"></script>
 <script src="content/content.js?v=20260918"></script>
