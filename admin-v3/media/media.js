@@ -1537,6 +1537,80 @@
         }
     }
 
+    async function handleMediaIntegrityDelete() {
+        const checkboxes =
+            Array.from(
+                document.querySelectorAll(
+                    ".media-integrity-storage-item:checked"
+                )
+            );
+
+        const paths =
+            checkboxes
+                .map(function (checkbox) {
+                    return checkbox.dataset.storagePath;
+                })
+                .filter(Boolean);
+
+        if (paths.length === 0) {
+            showMediaMessage(
+                "Select at least one orphan storage file first.",
+                true
+            );
+            return;
+        }
+
+        const confirmed = window.confirm(
+            "Delete " +
+            paths.length +
+            " selected orphan storage file(s) from Echoes of Humanity?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        setMediaBusy(true);
+        showMediaMessage("Deleting selected orphan storage files...");
+
+        try {
+            const { error } = await db.storage
+                .from(BUCKET_ID)
+                .remove(paths);
+
+            if (error) {
+                console.error(
+                    "Admin V3 Media: Failed to delete selected orphan storage files.",
+                    error
+                );
+                throw error;
+            }
+
+            const result = await checkIntegrity();
+
+            renderIntegrityResults(result);
+
+            showMediaMessage(
+                "Orphan cleanup complete. " +
+                paths.length +
+                " storage file(s) deleted. " +
+                result.orphanStorageObjects.length +
+                " orphan storage object(s), " +
+                result.orphanMetadata.length +
+                " orphan metadata record(s) remain."
+            );
+        } catch (error) {
+            showMediaMessage(
+                error && error.message
+                    ? error.message
+                    : String(error),
+                true
+            );
+        } finally {
+            setMediaBusy(false);
+        }
+    }
+
     function bindMediaUI() {
         const form = getMediaElement("mediaForm");
 
@@ -1552,6 +1626,8 @@
         const integrityButton = getMediaElement("mediaIntegrityButton");
         const integritySelectButton =
             getMediaElement("mediaIntegritySelectButton");
+        const integrityDeleteButton =
+            getMediaElement("mediaIntegrityDeleteButton");
 
         if (uploadButton) {
             uploadButton.addEventListener(
@@ -1596,6 +1672,13 @@
                         checkbox.checked = true;
                     });
                 }
+            );
+        }
+
+        if (integrityDeleteButton) {
+            integrityDeleteButton.addEventListener(
+                "click",
+                handleMediaIntegrityDelete
             );
         }
 
