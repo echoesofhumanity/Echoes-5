@@ -13,6 +13,7 @@
     const state = {
         items: [],
         currentItem: null,
+        editing: false,
         initialized: false,
         loading: false
     };
@@ -476,7 +477,8 @@
             items: state.items.slice(),
             currentItem: state.currentItem,
             initialized: state.initialized,
-            loading: state.loading
+            loading: state.loading,
+            editing: state.editing
         };
     }
 
@@ -589,42 +591,140 @@
         };
     }
 
-    function setButtonsDisabled(disabled) {
-        const draft =
+    function setEditMode(enabled) {
+        const title = document.querySelector(
+            "#module-content .module-title"
+        );
+
+        const draftButton =
             getFormElement("saveDraftButton");
 
-        const publish =
+        const publishButton =
             getFormElement("publishButton");
 
-        if (draft) {
-            draft.disabled = disabled;
+        state.editing = Boolean(enabled);
+
+        if (title) {
+            title.textContent = state.editing
+                ? "Edit Content"
+                : "New Content";
         }
 
-        if (publish) {
-            publish.disabled = disabled;
+        if (draftButton) {
+            draftButton.textContent = state.editing
+                ? "Save Changes"
+                : "Save Draft";
+        }
+
+        if (publishButton) {
+            publishButton.textContent = "Publish";
         }
     }
 
-    async function createFromForm(status) {
+    function fillForm(item) {
+        if (!item) {
+            return;
+        }
+
+        getFormElement("contentTitle").value =
+            item.title || "";
+        getFormElement("contentSlug").value =
+            item.slug || "";
+        getFormElement("contentSubtitle").value =
+            item.subtitle || "";
+        getFormElement("contentType").value =
+            item.type || "story";
+        getFormElement("contentLanguage").value =
+            item.language || "en";
+        getFormElement("contentRegion").value =
+            item.region_code || "EU";
+        getFormElement("contentCategory").value =
+            item.category_id || "";
+        getFormElement("contentTags").value =
+            Array.isArray(item.tags)
+                ? item.tags.join(", ")
+                : "";
+        getFormElement("contentSummary").value =
+            item.summary || "";
+        getFormElement("contentBody").value =
+            item.body || "";
+        getFormElement("contentCover").value =
+            item.cover_image_url || "";
+        getFormElement("contentFile").value =
+            item.file_path || "";
+        getFormElement("contentFeatured").checked =
+            Boolean(item.featured);
+    }
+
+    async function enterEditMode(item) {
+        if (!item) {
+            throw new Error(
+                "Admin V3 Content: Content item is required for editing."
+            );
+        }
+
+        await loadCategoryOptions();
+        fillForm(item);
+        setEditMode(true);
+        showFormMessage(
+            "Editing content record.",
+            false
+        );
+    }
+
+    function exitEditMode() {
+        state.currentItem = null;
+        setEditMode(false);
+
+        const form = getFormElement("contentForm");
+
+        if (form) {
+            form.reset();
+        }
+
+        getFormElement("contentRegion").value = "EU";
+    }
+
+    async function saveForm(status) {
         showFormMessage("", false);
         setButtonsDisabled(true);
 
         try {
             const data = readFormData();
-
             data.status = status;
 
-            await createContent(data);
+            if (state.editing && state.currentItem) {
+                await updateContent(
+                    state.currentItem.id,
+                    data
+                );
 
-            showFormMessage(
-                status === "published"
-                    ? "Content published successfully."
-                    : "Draft saved successfully.",
-                false
-            );
+                showFormMessage(
+                    status === "published"
+                        ? "Content published successfully."
+                        : "Content updated successfully.",
+                    false
+                );
 
-            getFormElement("contentForm").reset();
-            getFormElement("contentRegion").value = "EU";
+                exitEditMode();
+            } else {
+                await createContent(data);
+
+                showFormMessage(
+                    status === "published"
+                        ? "Content published successfully."
+                        : "Draft saved successfully.",
+                    false
+                );
+
+                const form = getFormElement("contentForm");
+
+                if (form) {
+                    form.reset();
+                }
+
+                getFormElement("contentRegion").value = "EU";
+            }
         } catch (error) {
             console.error(
                 "Admin V3 Content: Form submission failed.",
@@ -641,6 +741,22 @@
         }
     }
 
+    function setButtonsDisabled(disabled) {
+        const draft =
+            getFormElement("saveDraftButton");
+
+        const publish =
+            getFormElement("publishButton");
+
+        if (draft) {
+            draft.disabled = disabled;
+        }
+
+        if (publish) {
+            publish.disabled = disabled;
+        }
+    }
+
     function bindContentForm() {
         const form =
             getFormElement("contentForm");
@@ -653,12 +769,16 @@
 
         getFormElement("saveDraftButton")
             .addEventListener("click", function () {
-                createFromForm("draft");
+                saveForm(
+                    state.editing && state.currentItem
+                        ? state.currentItem.status
+                        : "draft"
+                );
             });
 
         getFormElement("publishButton")
             .addEventListener("click", function () {
-                createFromForm("published");
+                saveForm("published");
             });
     }
 
@@ -683,6 +803,27 @@
         isLoading,
         getState
     };
+
+    document.addEventListener(
+        "echoes-admin-edit-content",
+        function (event) {
+            const item =
+                event.detail && event.detail.item;
+
+            enterEditMode(item).catch(function (error) {
+                console.error(
+                    "Admin V3 Content: Edit mode initialization failed.",
+                    error
+                );
+
+                showFormMessage(
+                    error.message ||
+                        "Content could not be opened for editing.",
+                    true
+                );
+            });
+        }
+    );
 
     document.addEventListener("echoes-admin-ready", function () {
         initializeContentUI().catch(function (error) {
