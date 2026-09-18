@@ -1153,8 +1153,11 @@
         const preview = getMediaElement("mediaPreview");
         const image = getMediaElement("mediaPreviewImage");
         const video = getMediaElement("mediaPreviewVideo");
+        const audio = getMediaElement("mediaPreviewAudio");
+        const documentFrame = getMediaElement("mediaPreviewDocument");
+        const openLink = getMediaElement("mediaPreviewOpen");
 
-        if (!preview || !image || !video) {
+        if (!preview || !image || !video || !audio || !documentFrame || !openLink) {
             return;
         }
 
@@ -1166,12 +1169,19 @@
         video.pause();
         video.removeAttribute("src");
         video.load();
+        audio.hidden = true;
+        audio.pause();
+        audio.removeAttribute("src");
+        audio.load();
+        documentFrame.hidden = true;
+        documentFrame.removeAttribute("src");
+        openLink.hidden = true;
+        openLink.removeAttribute("href");
 
         if (
             !item ||
             !item.storage_path ||
-            (item.media_type !== "image" &&
-                item.media_type !== "video")
+            !["image", "video", "audio", "document"].includes(item.media_type)
         ) {
             return;
         }
@@ -1206,11 +1216,20 @@
                     item.original_name ||
                     "Media preview";
                 image.hidden = false;
-            } else {
+            } else if (item.media_type === "video") {
                 video.src = data.signedUrl;
                 video.hidden = false;
+            } else if (item.media_type === "audio") {
+                audio.src = data.signedUrl;
+                audio.hidden = false;
+            } else {
+                documentFrame.src = data.signedUrl;
+                documentFrame.hidden = false;
             }
 
+            openLink.href = data.signedUrl;
+            openLink.textContent = "Open file in new tab";
+            openLink.hidden = false;
             preview.hidden = false;
         } catch (error) {
             console.error(
