@@ -31,17 +31,19 @@
         {
             id: "categories",
             label: "Categories",
-            permission: "categories.view"
+            permission: "content.manage"
         },
         {
             id: "admins",
             label: "Admins",
-            permission: "admins.view"
+            permission: null,
+            superAdminOnly: true
         },
         {
             id: "settings",
             label: "Settings",
-            permission: "settings.view"
+            permission: null,
+            superAdminOnly: true
         }
     ];
 
@@ -54,6 +56,17 @@
     function canAccessModule(module) {
         if (module.alwaysVisible) {
             return true;
+        }
+
+        if (module.superAdminOnly) {
+            if (!window.EchoesAdminRoles) {
+                console.error(
+                    "Admin V3 Navigation: Roles module is not available."
+                );
+                return false;
+            }
+
+            return window.EchoesAdminRoles.isSuperAdmin();
         }
 
         if (!module.permission) {
@@ -120,10 +133,14 @@
     }
 
     function initialize() {
-        if (!window.EchoesAdminPermissions) {
+        if (
+            !window.EchoesAdminPermissions ||
+            !window.EchoesAdminRoles
+        ) {
             console.error(
-                "Admin V3 Navigation: Permissions module is not available."
+                "Admin V3 Navigation: Required security modules are not available."
             );
+
             return getState();
         }
 
@@ -136,12 +153,13 @@
 
     function getState() {
         return {
-            modules: state.modules.map(function (
-                module
-            ) {
-                return Object.assign({}, module);
-            }),
-            initialized: state.initialized
+            modules:
+                state.modules.map(function (module) {
+                    return Object.assign({}, module);
+                }),
+
+            initialized:
+                state.initialized
         };
     }
 
