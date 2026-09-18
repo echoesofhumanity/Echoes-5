@@ -851,6 +851,31 @@
 
                     <div class="panel">
                         <h2 class="panel-title">Media Library</h2>
+
+                        <div class="content-grid">
+                            <div class="field">
+                                <label for="mediaSearch">Search Media</label>
+                                <input
+                                    id="mediaSearch"
+                                    type="search"
+                                    placeholder="Search by name or title"
+                                    autocomplete="off"
+                                >
+                            </div>
+
+                            <div class="field">
+                                <label for="mediaFilterType">Media Type</label>
+                                <select id="mediaFilterType">
+                                    <option value="all">All Types</option>
+                                    <option value="image">Image</option>
+                                    <option value="video">Video</option>
+                                    <option value="audio">Audio</option>
+                                    <option value="document">Document</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div id="mediaList" class="media-list">
                             <div class="media-empty">
                                 Loading media...
@@ -943,7 +968,7 @@
 <script src="core/permissions.js?v=20260918"></script>
 <script src="core/navigation.js?v=20260918"></script>
 <script src="categories/categories.js?v=20260918"></script>
-<script src="media/media.js?v=20260918-9"></script>
+<script src="media/media.js?v=20260918-10"></script>
 <script src="content/content.js?v=20260918"></script>
 
 <script src="admin.js?v=20260918-2"></script>
