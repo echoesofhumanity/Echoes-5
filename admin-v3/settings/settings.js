@@ -307,6 +307,154 @@
         return getState();
     }
 
+    function getElement(id) {
+        return document.getElementById(id);
+    }
+
+    function renderList(elementId, items) {
+        const element = getElement(elementId);
+
+        if (!element) {
+            return;
+        }
+
+        element.innerHTML = items
+            .map(function (item) {
+                const row = document.createElement("div");
+                row.className = "library-item";
+                row.textContent = item;
+                return row.outerHTML;
+            })
+            .join("");
+    }
+
+    function renderStatus() {
+        const access = getElement("settingsAccessStatus");
+        const database = getElement("settingsDatabaseStatus");
+        const storage = getElement("settingsStorageStatus");
+        const bucket = getElement("settingsBucket");
+        const message = getElement("settingsMessage");
+
+        if (access) {
+            access.innerHTML =
+                "<strong>Access:</strong> " +
+                (state.isSuperAdmin
+                    ? "Super Admin"
+                    : "Not authorized");
+        }
+
+        if (database) {
+            database.innerHTML =
+                "<strong>Database:</strong> " +
+                (state.database.connected && state.database.accessible
+                    ? "Connected and accessible"
+                    : "Unavailable") +
+                " · Content items: " +
+                (typeof state.database.contentCount === "number"
+                    ? state.database.contentCount
+                    : "—");
+        }
+
+        if (storage) {
+            storage.innerHTML =
+                "<strong>Storage:</strong> " +
+                (state.storage.accessible
+                    ? "Accessible"
+                    : "Unavailable");
+        }
+
+        if (bucket) {
+            bucket.innerHTML =
+                "<strong>Bucket:</strong> " +
+                state.storage.bucket;
+        }
+
+        if (message) {
+            if (state.error) {
+                message.textContent = state.error;
+                message.className = "form-message error";
+            } else {
+                message.textContent = "System status loaded successfully.";
+                message.className = "form-message success";
+            }
+        }
+    }
+
+    function renderStaticSettings() {
+        renderList("settingsContentTypes", getSupportedTypes());
+        renderList("settingsLanguages", getSupportedLanguages());
+        renderList("settingsStatuses", getSupportedStatuses());
+        renderStatus();
+    }
+
+    async function loadAndRender() {
+        const refreshButton = getElement("settingsRefreshButton");
+
+        if (refreshButton) {
+            refreshButton.disabled = true;
+        }
+
+        try {
+            await loadSettings();
+            renderStaticSettings();
+        } catch (error) {
+            renderStatus();
+        } finally {
+            if (refreshButton) {
+                refreshButton.disabled = false;
+            }
+        }
+    }
+
+    function bindSettingsUI() {
+        const refreshButton = getElement("settingsRefreshButton");
+
+        if (!refreshButton || refreshButton.dataset.bound === "true") {
+            return;
+        }
+
+        refreshButton.dataset.bound = "true";
+
+        refreshButton.addEventListener("click", function () {
+            loadAndRender();
+        });
+
+        document.addEventListener(
+            "echoes-admin-module-change",
+            function (event) {
+                if (
+                    event.detail &&
+                    event.detail.moduleId === "settings"
+                ) {
+                    loadAndRender();
+                }
+            }
+        );
+    }
+
+    function initializeUI() {
+        bindSettingsUI();
+
+        document.addEventListener(
+            "echoes-admin-ready",
+            function () {
+                if (
+                    window.EchoesAdminRoles &&
+                    window.EchoesAdminRoles.isSuperAdmin()
+                ) {
+                    loadAndRender();
+                }
+            }
+        );
+
+        if (
+            window.EchoesAdminRoles &&
+            window.EchoesAdminRoles.isSuperAdmin()
+        ) {
+            loadAndRender();
+        }
+    }
+
     window.EchoesAdminSettings = {
         initialize,
         loadSettings,
