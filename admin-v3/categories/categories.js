@@ -394,6 +394,478 @@
         };
     }
 
+
+    function getCategoryElement(id) {
+        return document.getElementById(id);
+    }
+
+    function showCategoryMessage(message, type) {
+        const element = getCategoryElement("categoryFormMessage");
+
+        if (!element) {
+            return;
+        }
+
+        element.textContent = message || "";
+        element.className = "form-message";
+
+        if (type) {
+            element.classList.add(type);
+        }
+    }
+
+    function setCategoryBusy(isBusy) {
+        const saveButton = getCategoryElement("categorySaveButton");
+        const cancelButton = getCategoryElement("categoryCancelButton");
+
+        if (saveButton) {
+            saveButton.disabled = Boolean(isBusy);
+        }
+
+        if (cancelButton) {
+            cancelButton.disabled = Boolean(isBusy);
+        }
+    }
+
+    function resetCategoryForm() {
+        const form = getCategoryElement("categoryForm");
+
+        if (!form) {
+            return;
+        }
+
+        form.reset();
+
+        const icon = getCategoryElement("categoryIcon");
+
+        if (icon) {
+            icon.value = "folder";
+        }
+
+        const parent = getCategoryElement("categoryParent");
+
+        if (parent) {
+            parent.value = "";
+        }
+
+        state.currentItem = null;
+
+        const saveButton = getCategoryElement("categorySaveButton");
+        const cancelButton = getCategoryElement("categoryCancelButton");
+
+        if (saveButton) {
+            saveButton.textContent = "Save Category";
+        }
+
+        if (cancelButton) {
+            cancelButton.hidden = true;
+        }
+    }
+
+    function fillCategoryForm(item) {
+        if (!item) {
+            return;
+        }
+
+        const name = getCategoryElement("categoryName");
+        const slug = getCategoryElement("categorySlug");
+        const parent = getCategoryElement("categoryParent");
+        const description = getCategoryElement("categoryDescription");
+        const icon = getCategoryElement("categoryIcon");
+
+        if (name) {
+            name.value = item.name || "";
+        }
+
+        if (slug) {
+            slug.value = item.slug || "";
+        }
+
+        if (parent) {
+            parent.value = item.parent_id || "";
+        }
+
+        if (description) {
+            description.value = item.description || "";
+        }
+
+        if (icon) {
+            icon.value = item.icon || "folder";
+        }
+
+        const saveButton = getCategoryElement("categorySaveButton");
+        const cancelButton = getCategoryElement("categoryCancelButton");
+
+        if (saveButton) {
+            saveButton.textContent = "Save Changes";
+        }
+
+        if (cancelButton) {
+            cancelButton.hidden = false;
+        }
+    }
+
+    function renderParentOptions() {
+        const select = getCategoryElement("categoryParent");
+
+        if (!select) {
+            return;
+        }
+
+        const currentId = state.currentItem
+            ? state.currentItem.id
+            : null;
+
+        const previousValue = select.value;
+
+        select.innerHTML = "";
+
+        const emptyOption = document.createElement("option");
+        emptyOption.value = "";
+        emptyOption.textContent = "No parent";
+        select.appendChild(emptyOption);
+
+        state.items
+            .filter(function (item) {
+                return item.id !== currentId;
+            })
+            .sort(function (a, b) {
+                return a.name.localeCompare(b.name);
+            })
+            .forEach(function (item) {
+                const option = document.createElement("option");
+                option.value = item.id;
+                option.textContent = item.name;
+                select.appendChild(option);
+            });
+
+        if (
+            previousValue &&
+            state.items.some(function (item) {
+                return item.id === previousValue &&
+                    item.id !== currentId;
+            })
+        ) {
+            select.value = previousValue;
+        } else if (
+            state.currentItem &&
+            state.currentItem.parent_id
+        ) {
+            select.value = state.currentItem.parent_id;
+        } else {
+            select.value = "";
+        }
+    }
+
+    function getParentName(parentId) {
+        if (!parentId) {
+            return "No parent";
+        }
+
+        const parent = state.items.find(function (item) {
+            return item.id === parentId;
+        });
+
+        return parent ? parent.name : "Unknown";
+    }
+
+    function renderCategoryList() {
+        const list = getCategoryElement("categoryList");
+
+        if (!list) {
+            return;
+        }
+
+        if (!state.items.length) {
+            list.innerHTML =
+                '<div class="library-empty">No categories found.</div>';
+            return;
+        }
+
+        list.innerHTML = state.items
+            .slice()
+            .sort(function (a, b) {
+                return a.name.localeCompare(b.name);
+            })
+            .map(function (item) {
+                const childCount = getChildrenCount(item.id);
+
+                return (
+                    '<div class="library-item">' +
+                        '<div class="library-item-main">' +
+                            '<div class="library-item-title">' +
+                                escapeCategoryHtml(item.name) +
+                            '</div>' +
+                            '<div class="library-item-meta">' +
+                                'Slug: ' +
+                                escapeCategoryHtml(item.slug) +
+                                ' · Parent: ' +
+                                escapeCategoryHtml(getParentName(item.parent_id)) +
+                                ' · Children: ' +
+                                childCount +
+                            '</div>' +
+                            '<div class="library-item-description">' +
+                                escapeCategoryHtml(item.description || "No description") +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="library-item-actions">' +
+                            '<button type="button" class="action-button" data-category-edit="' +
+                                escapeCategoryHtml(item.id) +
+                                '">Edit</button>' +
+                            '<button type="button" class="action-button danger" data-category-delete="' +
+                                escapeCategoryHtml(item.id) +
+                                '">Delete</button>' +
+                        '</div>' +
+                    '</div>'
+                );
+            })
+            .join("");
+    }
+
+    function escapeCategoryHtml(value) {
+        return String(value == null ? "" : value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function readCategoryForm() {
+        return {
+            name: getCategoryElement("categoryName")
+                ? getCategoryElement("categoryName").value
+                : "",
+            slug: getCategoryElement("categorySlug")
+                ? getCategoryElement("categorySlug").value
+                : "",
+            parent_id: getCategoryElement("categoryParent")
+                ? getCategoryElement("categoryParent").value || null
+                : null,
+            description: getCategoryElement("categoryDescription")
+                ? getCategoryElement("categoryDescription").value
+                : "",
+            icon: getCategoryElement("categoryIcon")
+                ? getCategoryElement("categoryIcon").value
+                : "folder"
+        };
+    }
+
+    async function handleCategorySubmit(event) {
+        event.preventDefault();
+
+        if (!window.EchoesAdminPermissions ||
+            !window.EchoesAdminPermissions.hasPermission("content.manage")) {
+            showCategoryMessage(
+                "Manage permission is required.",
+                "error"
+            );
+            return;
+        }
+
+        setCategoryBusy(true);
+        showCategoryMessage("");
+
+        try {
+            const data = readCategoryForm();
+            let saved;
+
+            if (state.currentItem) {
+                saved = await updateCategory(
+                    state.currentItem.id,
+                    data
+                );
+
+                showCategoryMessage(
+                    "Category updated successfully.",
+                    "success"
+                );
+            } else {
+                saved = await createCategory(data);
+
+                showCategoryMessage(
+                    "Category created successfully.",
+                    "success"
+                );
+            }
+
+            await loadCategories();
+
+            state.currentItem = saved;
+            renderParentOptions();
+            renderCategoryList();
+
+            if (saved) {
+                fillCategoryForm(saved);
+            }
+        } catch (error) {
+            console.error(
+                "Admin V3 Categories: Category save failed.",
+                error
+            );
+
+            showCategoryMessage(
+                error && error.message
+                    ? error.message
+                    : "Failed to save category.",
+                "error"
+            );
+        } finally {
+            setCategoryBusy(false);
+        }
+    }
+
+    function handleCategoryListClick(event) {
+        const editButton = event.target.closest(
+            "[data-category-edit]"
+        );
+
+        if (editButton) {
+            const item = state.items.find(function (category) {
+                return category.id === editButton.dataset.categoryEdit;
+            });
+
+            if (item) {
+                state.currentItem = item;
+                renderParentOptions();
+                fillCategoryForm(item);
+                showCategoryMessage("");
+            }
+
+            return;
+        }
+
+        const deleteButton = event.target.closest(
+            "[data-category-delete]"
+        );
+
+        if (!deleteButton) {
+            return;
+        }
+
+        const item = state.items.find(function (category) {
+            return category.id === deleteButton.dataset.categoryDelete;
+        });
+
+        if (!item) {
+            return;
+        }
+
+        if (!window.confirm(
+            'Delete category "' + item.name + '"?'
+        )) {
+            return;
+        }
+
+        handleCategoryDelete(item.id);
+    }
+
+    async function handleCategoryDelete(id) {
+        setCategoryBusy(true);
+        showCategoryMessage("");
+
+        try {
+            await deleteCategory(id);
+
+            showCategoryMessage(
+                "Category deleted successfully.",
+                "success"
+            );
+
+            resetCategoryForm();
+            await loadCategories();
+            renderParentOptions();
+            renderCategoryList();
+        } catch (error) {
+            console.error(
+                "Admin V3 Categories: Category delete failed.",
+                error
+            );
+
+            showCategoryMessage(
+                error && error.message
+                    ? error.message
+                    : "Failed to delete category.",
+                "error"
+            );
+        } finally {
+            setCategoryBusy(false);
+        }
+    }
+
+    async function initializeCategoryUI() {
+        const form = getCategoryElement("categoryForm");
+        const list = getCategoryElement("categoryList");
+        const cancelButton = getCategoryElement("categoryCancelButton");
+
+        if (!form || form.dataset.bound === "true") {
+            return;
+        }
+
+        form.dataset.bound = "true";
+        form.addEventListener("submit", handleCategorySubmit);
+
+        if (list) {
+            list.addEventListener(
+                "click",
+                handleCategoryListClick
+            );
+        }
+
+        if (cancelButton) {
+            cancelButton.addEventListener(
+                "click",
+                function () {
+                    resetCategoryForm();
+                    renderParentOptions();
+                    showCategoryMessage("");
+                }
+            );
+        }
+
+        try {
+            await loadCategories();
+            renderParentOptions();
+            renderCategoryList();
+        } catch (error) {
+            console.error(
+                "Admin V3 Categories: Initial category load failed.",
+                error
+            );
+
+            showCategoryMessage(
+                error && error.message
+                    ? error.message
+                    : "Failed to load categories.",
+                "error"
+            );
+
+            if (list) {
+                list.innerHTML =
+                    '<div class="library-empty">Failed to load categories.</div>';
+            }
+        }
+    }
+
+    document.addEventListener(
+        "echoes-admin-ready",
+        function () {
+            initializeCategoryUI();
+        }
+    );
+
+    document.addEventListener(
+        "echoes-admin-module-change",
+        function (event) {
+            if (
+                event.detail &&
+                event.detail.moduleId === "categories"
+            ) {
+                initializeCategoryUI();
+            }
+        }
+    );
+
     async function initialize() {
         if (state.initialized) {
             return getState();
