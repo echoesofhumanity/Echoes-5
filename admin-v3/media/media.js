@@ -1421,12 +1421,85 @@
         });
     }
 
+    function escapeIntegrityText(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function renderIntegrityResults(result) {
+        const container =
+            getMediaElement("mediaIntegrityResults");
+
+        if (!container) {
+            return;
+        }
+
+        const storageOrphans =
+            result.orphanStorageObjects || [];
+
+        const metadataOrphans =
+            result.orphanMetadata || [];
+
+        if (
+            storageOrphans.length === 0 &&
+            metadataOrphans.length === 0
+        ) {
+            container.hidden = false;
+            container.innerHTML =
+                "<strong>Integrity status</strong>" +
+                "<p>No orphan objects or metadata records found.</p>";
+            return;
+        }
+
+        let html =
+            "<strong>Integrity findings</strong>";
+
+        if (storageOrphans.length > 0) {
+            html += "<p>Orphan storage objects:</p><ul>";
+
+            storageOrphans.forEach(function (item) {
+                html +=
+                    "<li>" +
+                    escapeIntegrityText(
+                        item.storage_path
+                    ) +
+                    "</li>";
+            });
+
+            html += "</ul>";
+        }
+
+        if (metadataOrphans.length > 0) {
+            html += "<p>Orphan metadata records:</p><ul>";
+
+            metadataOrphans.forEach(function (item) {
+                html +=
+                    "<li>" +
+                    escapeIntegrityText(
+                        item.storage_path
+                    ) +
+                    "</li>";
+            });
+
+            html += "</ul>";
+        }
+
+        container.hidden = false;
+        container.innerHTML = html;
+    }
+
     async function handleMediaIntegrity() {
         setMediaBusy(true);
         showMediaMessage("Checking media integrity...");
 
         try {
             const result = await checkIntegrity();
+
+            renderIntegrityResults(result);
 
             showMediaMessage(
                 "Integrity check complete. " +
