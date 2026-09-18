@@ -861,6 +861,71 @@
         return true;
     }
 
+    async function listStorageObjects(prefix) {
+        const storageObjects = [];
+        const pageSize = 1000;
+        let offset = 0;
+
+        while (true) {
+            const {
+                data: objects,
+                error: storageError
+            } = await db.storage
+                .from(BUCKET_ID)
+                .list(prefix, {
+                    limit: pageSize,
+                    offset: offset,
+                    sortBy: {
+                        column: "name",
+                        order: "asc"
+                    }
+                });
+
+            if (storageError) {
+                console.error(
+                    "Admin V3 Media: Failed to list storage objects.",
+                    storageError
+                );
+                throw storageError;
+            }
+
+            const page = objects || [];
+
+            for (const object of page) {
+                if (!object || !object.name) {
+                    continue;
+                }
+
+                const objectPath = prefix
+                    ? prefix + "/" + object.name
+                    : object.name;
+
+                if (object.id) {
+                    storageObjects.push({
+                        name: object.name,
+                        storage_path: objectPath
+                    });
+                    continue;
+                }
+
+                const nestedObjects =
+                    await listStorageObjects(objectPath);
+
+                storageObjects.push(
+                    ...nestedObjects
+                );
+            }
+
+            if (page.length < pageSize) {
+                break;
+            }
+
+            offset += pageSize;
+        }
+
+        return storageObjects;
+    }
+
     async function checkIntegrity() {
         requireViewPermission();
 
@@ -886,50 +951,8 @@
             })
         );
 
-        const storageObjects = [];
-        let offset = 0;
-        const pageSize = 1000;
-
-        while (true) {
-            const {
-                data: objects,
-                error: storageError
-            } = await db.storage
-                .from(BUCKET_ID)
-                .list("media", {
-                    limit: pageSize,
-                    offset: offset,
-                    sortBy: {
-                        column: "name",
-                        order: "asc"
-                    }
-                });
-
-            if (storageError) {
-                console.error(
-                    "Admin V3 Media: Failed to list storage objects for integrity check.",
-                    storageError
-                );
-                throw storageError;
-            }
-
-            const page = objects || [];
-
-            page.forEach(function (object) {
-                if (object && object.name) {
-                    storageObjects.push({
-                        name: object.name,
-                        storage_path: "media/" + object.name
-                    });
-                }
-            });
-
-            if (page.length < pageSize) {
-                break;
-            }
-
-            offset += pageSize;
-        }
+        const storageObjects =
+            await listStorageObjects("media");
 
         const storagePaths = new Set(
             storageObjects.map(function (object) {
