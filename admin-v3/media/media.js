@@ -1133,19 +1133,26 @@
     async function showMediaPreview(item) {
         const preview = getMediaElement("mediaPreview");
         const image = getMediaElement("mediaPreviewImage");
+        const video = getMediaElement("mediaPreviewVideo");
 
-        if (!preview || !image) {
+        if (!preview || !image || !video) {
             return;
         }
 
         preview.hidden = true;
+        image.hidden = true;
         image.removeAttribute("src");
         image.alt = "";
+        video.hidden = true;
+        video.pause();
+        video.removeAttribute("src");
+        video.load();
 
         if (
             !item ||
-            item.media_type !== "image" ||
-            !item.storage_path
+            !item.storage_path ||
+            (item.media_type !== "image" &&
+                item.media_type !== "video")
         ) {
             return;
         }
@@ -1172,12 +1179,19 @@
                 return;
             }
 
-            image.src = data.signedUrl;
-            image.alt =
-                item.alt_text ||
-                item.title ||
-                item.original_name ||
-                "Media preview";
+            if (item.media_type === "image") {
+                image.src = data.signedUrl;
+                image.alt =
+                    item.alt_text ||
+                    item.title ||
+                    item.original_name ||
+                    "Media preview";
+                image.hidden = false;
+            } else {
+                video.src = data.signedUrl;
+                video.hidden = false;
+            }
+
             preview.hidden = false;
         } catch (error) {
             console.error(
