@@ -296,7 +296,8 @@
             background: #0d1728;
         }
 
-        .media-preview img {
+        .media-preview img,
+        .media-preview video {
             display: block;
             width: 100%;
             max-height: 260px;
@@ -750,6 +751,13 @@
 
                             <div id="mediaPreview" class="media-preview" hidden>
                                 <img id="mediaPreviewImage" alt="" loading="lazy">
+                                <video
+                                    id="mediaPreviewVideo"
+                                    controls
+                                    preload="metadata"
+                                    playsinline
+                                    hidden
+                                ></video>
                             </div>
 
                             <div id="mediaFormMessage" class="form-message" role="status"></div>
@@ -918,7 +926,7 @@
 <script src="core/permissions.js?v=20260918"></script>
 <script src="core/navigation.js?v=20260918"></script>
 <script src="categories/categories.js?v=20260918"></script>
-<script src="media/media.js?v=20260918-8"></script>
+<script src="media/media.js?v=20260918-9"></script>
 <script src="content/content.js?v=20260918"></script>
 
 <script src="admin.js?v=20260918"></script>
