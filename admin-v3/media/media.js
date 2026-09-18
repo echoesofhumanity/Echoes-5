@@ -64,7 +64,9 @@
         currentItem: null,
         initialized: false,
         loading: false,
-        uploading: false
+        uploading: false,
+        searchTerm: "",
+        filterType: "all"
     };
 
     if (!db) {
@@ -1252,7 +1254,34 @@
             return;
         }
 
-        const items = getItems();
+        const allItems = getItems();
+        const searchTerm = state.searchTerm.trim().toLowerCase();
+        const filterType = state.filterType;
+
+        const items = allItems.filter(function (item) {
+            const matchesType =
+                filterType === "all" ||
+                (item.media_type || "other") === filterType;
+
+            if (!matchesType) {
+                return false;
+            }
+
+            if (!searchTerm) {
+                return true;
+            }
+
+            const haystack = [
+                item.display_name,
+                item.title,
+                item.original_name
+            ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase();
+
+            return haystack.includes(searchTerm);
+        });
 
         if (items.length === 0) {
             container.innerHTML =
@@ -1709,6 +1738,8 @@
             getMediaElement("mediaIntegritySelectButton");
         const integrityDeleteButton =
             getMediaElement("mediaIntegrityDeleteButton");
+        const searchInput = getMediaElement("mediaSearch");
+        const filterSelect = getMediaElement("mediaFilterType");
 
         if (uploadButton) {
             uploadButton.addEventListener(
@@ -1761,6 +1792,20 @@
                 "click",
                 handleMediaIntegrityDelete
             );
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener("input", function () {
+                state.searchTerm = searchInput.value || "";
+                renderMediaList();
+            });
+        }
+
+        if (filterSelect) {
+            filterSelect.addEventListener("change", function () {
+                state.filterType = filterSelect.value || "all";
+                renderMediaList();
+            });
         }
 
         bindMediaDropzone();
