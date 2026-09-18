@@ -387,6 +387,9 @@
                                 '<button type="button" class="action-button" data-library-action="details" data-content-id="' +
                                     escapeHtml(item.id) +
                                 '">View Details</button>' +
+                                '<button type="button" class="action-button" data-library-action="edit" data-content-id="' +
+                                    escapeHtml(item.id) +
+                                '">Edit</button>' +
                                 '<button type="button" class="action-button" data-library-action="review" data-content-id="' +
                                     escapeHtml(item.id) +
                                 '">Move to Review</button>' +
@@ -542,6 +545,54 @@
                     error && error.message
                         ? error.message
                         : "Content details could not be loaded.",
+                    true
+                );
+            }
+
+            return;
+        }
+
+        if (action === "edit") {
+            if (!canManage()) {
+                showMessage(
+                    "Content management permission is required.",
+                    true
+                );
+
+                return;
+            }
+
+            try {
+                const item = await openItem(id);
+
+                if (window.EchoesAdminContent) {
+                    window.EchoesAdminContent.setCurrentItem(item);
+                }
+
+                if (
+                    window.EchoesAdminNavigation &&
+                    typeof window.EchoesAdminNavigation.openModule === "function"
+                ) {
+                    window.EchoesAdminNavigation.openModule("content");
+                }
+
+                document.dispatchEvent(
+                    new CustomEvent("echoes-admin-edit-content", {
+                        detail: {
+                            item: item
+                        }
+                    })
+                );
+            } catch (error) {
+                console.error(
+                    "Admin V3 Library: Edit action failed.",
+                    error
+                );
+
+                showMessage(
+                    error && error.message
+                        ? error.message
+                        : "Content could not be opened for editing.",
                     true
                 );
             }
