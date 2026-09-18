@@ -683,18 +683,31 @@
         isLoading,
         getState
     };
-})();
-
 
     document.addEventListener("echoes-admin-ready", function () {
         initializeContentUI().catch(function (error) {
-            console.error("Admin V3 Content: UI initialization failed.", error);
-            showFormMessage(error.message || "Content UI initialization failed.", true);
+            console.error(
+                "Admin V3 Content: UI initialization failed.",
+                error
+            );
+
+            showFormMessage(
+                error.message ||
+                    "Content UI initialization failed.",
+                true
+            );
         });
     });
 
-    document.addEventListener("echoes-admin-module-change", function (event) {
-        if (event.detail && event.detail.moduleId === "content") {
-            loadCategoryOptions();
+    document.addEventListener(
+        "echoes-admin-module-change",
+        function (event) {
+            if (
+                event.detail &&
+                event.detail.moduleId === "content"
+            ) {
+                loadCategoryOptions();
+            }
         }
-    });
+    );
+})();
