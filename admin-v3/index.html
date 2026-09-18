@@ -359,8 +359,87 @@
                 </div>
 
                 <div class="panel">
-                    Content module will be connected in the
-                    next controlled stage.
+                    <form id="contentForm" class="content-form">
+                        <div class="content-grid">
+                            <div class="field full">
+                                <label for="contentTitle">Title</label>
+                                <input id="contentTitle" name="title" type="text" required>
+                            </div>
+                            <div class="field">
+                                <label for="contentSlug">Slug</label>
+                                <input id="contentSlug" name="slug" type="text" required>
+                            </div>
+                            <div class="field">
+                                <label for="contentSubtitle">Subtitle</label>
+                                <input id="contentSubtitle" name="subtitle" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="contentType">Content Type</label>
+                                <select id="contentType" name="type">
+                                    <option value="story">Story</option>
+                                    <option value="essay">Essay</option>
+                                    <option value="manifesto">Manifesto</option>
+                                    <option value="poetry">Poetry</option>
+                                    <option value="audio">Audio</option>
+                                    <option value="visual">Visual</option>
+                                    <option value="technical">Technical</option>
+                                    <option value="blueprint">Blueprint</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="contentLanguage">Language</label>
+                                <select id="contentLanguage" name="language">
+                                    <option value="en">English</option>
+                                    <option value="tr">Turkish</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="ru">Russian</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="contentRegion">Region</label>
+                                <input id="contentRegion" name="region_code" type="text" value="EU">
+                            </div>
+                            <div class="field">
+                                <label for="contentCategory">Category</label>
+                                <select id="contentCategory" name="category_id">
+                                    <option value="">No category</option>
+                                </select>
+                            </div>
+                            <div class="field full">
+                                <label for="contentTags">Tags</label>
+                                <input id="contentTags" name="tags" type="text" placeholder="humanity, hope, dignity">
+                            </div>
+                            <div class="field full">
+                                <label for="contentSummary">Summary</label>
+                                <textarea id="contentSummary" name="summary"></textarea>
+                            </div>
+                            <div class="field full">
+                                <label for="contentBody">Body</label>
+                                <textarea id="contentBody" name="body"></textarea>
+                            </div>
+                            <div class="field">
+                                <label for="contentCover">Cover Image URL</label>
+                                <input id="contentCover" name="cover_image_url" type="url">
+                            </div>
+                            <div class="field">
+                                <label for="contentFile">File Path</label>
+                                <input id="contentFile" name="file_path" type="text">
+                            </div>
+                            <div class="field full">
+                                <label class="check-field">
+                                    <input id="contentFeatured" name="featured" type="checkbox">
+                                    Featured content
+                                </label>
+                            </div>
+                        </div>
+                        <div id="contentFormMessage" class="form-message" role="status"></div>
+                        <div class="form-actions">
+                            <button type="button" id="saveDraftButton" class="action-button">Save Draft</button>
+                            <button type="button" id="publishButton" class="action-button primary">Publish</button>
+                        </div>
+                    </form>
                 </div>
             </section>
 
@@ -490,6 +569,8 @@
 <script src="core/roles.js?v=20260918"></script>
 <script src="core/permissions.js?v=20260918"></script>
 <script src="core/navigation.js?v=20260918"></script>
+<script src="categories/categories.js?v=20260918"></script>
+<script src="content/content.js?v=20260918"></script>
 
 <script src="admin.js?v=20260918"></script>
 </body>
