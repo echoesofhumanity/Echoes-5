@@ -1072,6 +1072,23 @@
         return (bytes / (1024 * 1024 * 1024)).toFixed(1) + " GB";
     }
 
+    function formatMediaDate(value) {
+        if (!value) {
+            return "—";
+        }
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return "—";
+        }
+
+        return date.toLocaleString("en-GB", {
+            dateStyle: "medium",
+            timeStyle: "short"
+        });
+    }
+
     function showMediaMessage(message, isError) {
         const element = getMediaElement("mediaFormMessage");
 
@@ -1310,6 +1327,11 @@
                             escapeHtml(item.media_type || "other") +
                             ' · ' +
                             escapeHtml(formatFileSize(item.file_size)) +
+                        '</span>' +
+                        '<span>' +
+                            escapeHtml(item.mime_type || "MIME type unavailable") +
+                            ' · Uploaded ' +
+                            escapeHtml(formatMediaDate(item.created_at)) +
                         '</span>' +
                     '</span>' +
                     '<span class="media-item-name">' +
