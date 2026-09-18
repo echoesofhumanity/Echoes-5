@@ -396,6 +396,9 @@
                                 '<button type="button" class="action-button primary" data-library-action="publish" data-content-id="' +
                                     escapeHtml(item.id) +
                                 '">Publish</button>' +
+                                '<button type="button" class="action-button" data-library-action="archive" data-content-id="' +
+                                    escapeHtml(item.id) +
+                                '">Archive</button>' +
                                 '<button type="button" class="action-button danger" data-library-action="delete" data-content-id="' +
                                     escapeHtml(item.id) +
                                 '">Delete</button>' +
@@ -614,6 +617,8 @@
                 await content.updateStatus(id, "review");
             } else if (action === "publish") {
                 await content.updateStatus(id, "published");
+            } else if (action === "archive") {
+                await content.updateStatus(id, "archived");
             } else if (action === "delete") {
                 if (
                     !window.confirm(
