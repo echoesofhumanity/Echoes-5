@@ -415,11 +415,20 @@
             font-size: 12px;
         }
 
-        .media-item-name {
+.media-item-name {
             max-width: 45%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        .media-item-name span {
+            display: block;
+            margin-top: 4px;
+            font-size: 11px;
+            color: var(--muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         @media (max-width: 1000px) {
@@ -905,6 +914,16 @@
                                     <option value="audio">Audio</option>
                                     <option value="document">Document</option>
                                     <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="field">
+                                <label for="mediaSort">Sort</label>
+                                <select id="mediaSort">
+                                    <option value="newest">Newest first</option>
+                                    <option value="oldest">Oldest first</option>
+                                    <option value="name">Name A–Z</option>
+                                    <option value="size">Largest first</option>
                                 </select>
                             </div>
                         </div>
