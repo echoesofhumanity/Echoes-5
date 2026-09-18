@@ -1170,9 +1170,93 @@
                     </p>
                 </div>
 
-                <div class="panel">
-                    Categories module will be connected in the
-                    next controlled stage.
+                <div class="media-layout">
+                    <div class="panel">
+                        <h2 class="panel-title">Category</h2>
+
+                        <form id="categoryForm">
+                            <div class="content-grid">
+                                <div class="field full">
+                                    <label for="categoryName">Name</label>
+                                    <input
+                                        id="categoryName"
+                                        name="name"
+                                        type="text"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="field">
+                                    <label for="categorySlug">Slug</label>
+                                    <input
+                                        id="categorySlug"
+                                        name="slug"
+                                        type="text"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="field">
+                                    <label for="categoryParent">Parent Category</label>
+                                    <select
+                                        id="categoryParent"
+                                        name="parent_id"
+                                    >
+                                        <option value="">No parent</option>
+                                    </select>
+                                </div>
+
+                                <div class="field full">
+                                    <label for="categoryDescription">Description</label>
+                                    <textarea
+                                        id="categoryDescription"
+                                        name="description"
+                                    ></textarea>
+                                </div>
+
+                                <div class="field">
+                                    <label for="categoryIcon">Icon</label>
+                                    <input
+                                        id="categoryIcon"
+                                        name="icon"
+                                        type="text"
+                                        value="folder"
+                                    >
+                                </div>
+                            </div>
+
+                            <div id="categoryFormMessage" class="form-message" role="status"></div>
+
+                            <div class="form-actions">
+                                <button
+                                    type="submit"
+                                    id="categorySaveButton"
+                                    class="action-button primary"
+                                >
+                                    Save Category
+                                </button>
+
+                                <button
+                                    type="button"
+                                    id="categoryCancelButton"
+                                    class="action-button"
+                                    hidden
+                                >
+                                    Cancel Edit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="panel">
+                        <h2 class="panel-title">Category List</h2>
+
+                        <div id="categoryList" class="library-list">
+                            <div class="library-empty">
+                                Loading categories...
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
