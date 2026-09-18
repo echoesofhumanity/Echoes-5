@@ -499,7 +499,12 @@
     async function uploadFile(file, metadata) {
         requireManagePermission();
 
-        validateFile(file);
+        validateFile(
+            file,
+            metadata && metadata.media_type
+                ? metadata.media_type
+                : null
+        );
 
         state.uploading = true;
 
