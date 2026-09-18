@@ -496,6 +496,177 @@
         return getState();
     }
 
+    function getFormElement(id) {
+        return document.getElementById(id);
+    }
+
+    function showFormMessage(message, isError) {
+        const box = getFormElement("contentFormMessage");
+
+        if (!box) {
+            return;
+        }
+
+        box.textContent = message || "";
+        box.classList.toggle("visible", Boolean(message));
+        box.classList.toggle("error", Boolean(isError));
+    }
+
+    async function loadCategoryOptions() {
+        const select = getFormElement("contentCategory");
+
+        if (!select || !window.EchoesAdminCategories) {
+            return;
+        }
+
+        try {
+            await window.EchoesAdminCategories.loadCategories();
+
+            const categories =
+                window.EchoesAdminCategories.getItems();
+
+            select.innerHTML =
+                '<option value="">No category</option>';
+
+            categories.forEach(function (category) {
+                const option =
+                    document.createElement("option");
+
+                option.value = category.id;
+                option.textContent = category.name;
+
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error(
+                "Admin V3 Content: Failed to load category options.",
+                error
+            );
+
+            showFormMessage(
+                "Categories could not be loaded.",
+                true
+            );
+        }
+    }
+
+    function readFormData() {
+        const tagsValue =
+            getFormElement("contentTags").value;
+
+        return {
+            title:
+                getFormElement("contentTitle").value.trim(),
+            slug:
+                getFormElement("contentSlug").value.trim(),
+            subtitle:
+                getFormElement("contentSubtitle").value.trim(),
+            summary:
+                getFormElement("contentSummary").value.trim(),
+            body:
+                getFormElement("contentBody").value,
+            type:
+                getFormElement("contentType").value,
+            language:
+                getFormElement("contentLanguage").value,
+            region_code:
+                getFormElement("contentRegion").value.trim() || "EU",
+            category_id:
+                getFormElement("contentCategory").value || null,
+            tags:
+                tagsValue
+                    .split(",")
+                    .map(function (tag) {
+                        return tag.trim();
+                    })
+                    .filter(Boolean),
+            cover_image_url:
+                getFormElement("contentCover").value.trim(),
+            file_path:
+                getFormElement("contentFile").value.trim(),
+            featured:
+                getFormElement("contentFeatured").checked
+        };
+    }
+
+    function setButtonsDisabled(disabled) {
+        const draft =
+            getFormElement("saveDraftButton");
+
+        const publish =
+            getFormElement("publishButton");
+
+        if (draft) {
+            draft.disabled = disabled;
+        }
+
+        if (publish) {
+            publish.disabled = disabled;
+        }
+    }
+
+    async function createFromForm(status) {
+        showFormMessage("", false);
+        setButtonsDisabled(true);
+
+        try {
+            const data = readFormData();
+
+            data.status = status;
+
+            await createContent(data);
+
+            showFormMessage(
+                status === "published"
+                    ? "Content published successfully."
+                    : "Draft saved successfully.",
+                false
+            );
+
+            getFormElement("contentForm").reset();
+            getFormElement("contentRegion").value = "EU";
+        } catch (error) {
+            console.error(
+                "Admin V3 Content: Form submission failed.",
+                error
+            );
+
+            showFormMessage(
+                error.message ||
+                    "Unable to save content.",
+                true
+            );
+        } finally {
+            setButtonsDisabled(false);
+        }
+    }
+
+    function bindContentForm() {
+        const form =
+            getFormElement("contentForm");
+
+        if (!form || form.dataset.bound === "true") {
+            return;
+        }
+
+        form.dataset.bound = "true";
+
+        getFormElement("saveDraftButton")
+            .addEventListener("click", function () {
+                createFromForm("draft");
+            });
+
+        getFormElement("publishButton")
+            .addEventListener("click", function () {
+                createFromForm("published");
+            });
+    }
+
+    async function initializeContentUI() {
+        bindContentForm();
+        await loadCategoryOptions();
+    }
+
     window.EchoesAdminContent = {
         initialize,
         loadContent,
@@ -513,3 +684,17 @@
         getState
     };
 })();
+
+
+    document.addEventListener("echoes-admin-ready", function () {
+        initializeContentUI().catch(function (error) {
+            console.error("Admin V3 Content: UI initialization failed.", error);
+            showFormMessage(error.message || "Content UI initialization failed.", true);
+        });
+    });
+
+    document.addEventListener("echoes-admin-module-change", function (event) {
+        if (event.detail && event.detail.moduleId === "content") {
+            loadCategoryOptions();
+        }
+    });
