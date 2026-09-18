@@ -780,6 +780,448 @@
         return getState();
     }
 
+
+    function getMediaElement(id) {
+        return document.getElementById(id);
+    }
+
+    function escapeHtml(value) {
+        return String(value == null ? "" : value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function formatFileSize(bytes) {
+        if (typeof bytes !== "number" || bytes < 0) {
+            return "—";
+        }
+
+        if (bytes < 1024) {
+            return bytes + " B";
+        }
+
+        if (bytes < 1024 * 1024) {
+            return (bytes / 1024).toFixed(1) + " KB";
+        }
+
+        if (bytes < 1024 * 1024 * 1024) {
+            return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+        }
+
+        return (bytes / (1024 * 1024 * 1024)).toFixed(1) + " GB";
+    }
+
+    function showMediaMessage(message, isError) {
+        const element = getMediaElement("mediaFormMessage");
+
+        if (!element) {
+            return;
+        }
+
+        element.textContent = message || "";
+        element.classList.toggle("error", Boolean(isError));
+        element.classList.toggle("success", !isError && Boolean(message));
+    }
+
+    function setMediaBusy(busy) {
+        [
+            "mediaUploadButton",
+            "mediaSaveButton",
+            "mediaDeleteButton"
+        ].forEach(function (id) {
+            const element = getMediaElement(id);
+
+            if (element) {
+                element.disabled = busy;
+            }
+        });
+    }
+
+    function resetMediaForm() {
+        const form = getMediaElement("mediaForm");
+
+        if (form) {
+            form.reset();
+        }
+
+        const type = getMediaElement("mediaType");
+
+        if (type) {
+            type.value = "auto";
+        }
+
+        setCurrentItem(null);
+        showMediaMessage("");
+        const selected = getMediaElement("mediaSelectedName");
+
+        if (selected) {
+            selected.textContent = "No media selected";
+        }
+
+        const deleteButton = getMediaElement("mediaDeleteButton");
+
+        if (deleteButton) {
+            deleteButton.disabled = true;
+        }
+
+        const saveButton = getMediaElement("mediaSaveButton");
+
+        if (saveButton) {
+            saveButton.disabled = true;
+        }
+    }
+
+    function fillMediaForm(item) {
+        const values = {
+            mediaDisplayName: item.display_name || "",
+            mediaTitle: item.title || "",
+            mediaAltText: item.alt_text || "",
+            mediaDescription: item.description || ""
+        };
+
+        Object.keys(values).forEach(function (id) {
+            const element = getMediaElement(id);
+
+            if (element) {
+                element.value = values[id];
+            }
+        });
+
+        const type = getMediaElement("mediaType");
+
+        if (type) {
+            type.value = item.media_type || "other";
+        }
+
+        const selected = getMediaElement("mediaSelectedName");
+
+        if (selected) {
+            selected.textContent =
+                item.original_name || "Selected media";
+        }
+
+        const saveButton = getMediaElement("mediaSaveButton");
+
+        if (saveButton) {
+            saveButton.disabled = false;
+        }
+
+        const deleteButton = getMediaElement("mediaDeleteButton");
+
+        if (deleteButton) {
+            deleteButton.disabled = false;
+        }
+    }
+
+    function renderMediaList() {
+        const container = getMediaElement("mediaList");
+
+        if (!container) {
+            return;
+        }
+
+        const items = getItems();
+
+        if (items.length === 0) {
+            container.innerHTML =
+                '<div class="media-empty">No media assets found.</div>';
+            return;
+        }
+
+        container.innerHTML = items.map(function (item) {
+            const selected =
+                getCurrentItem() &&
+                getCurrentItem().id === item.id;
+
+            return (
+                '<button type="button" class="media-item' +
+                (selected ? ' selected' : '') +
+                '" data-media-id="' + escapeHtml(item.id) + '">' +
+                    '<span class="media-item-main">' +
+                        '<strong>' +
+                            escapeHtml(
+                                item.display_name ||
+                                item.title ||
+                                item.original_name
+                            ) +
+                        '</strong>' +
+                        '<span>' +
+                            escapeHtml(item.media_type || "other") +
+                            ' · ' +
+                            escapeHtml(formatFileSize(item.file_size)) +
+                        '</span>' +
+                    '</span>' +
+                    '<span class="media-item-name">' +
+                        escapeHtml(item.original_name) +
+                    '</span>' +
+                '</button>'
+            );
+        }).join("");
+
+        container.querySelectorAll("[data-media-id]").forEach(
+            function (element) {
+                element.addEventListener("click", async function () {
+                    const id = element.getAttribute("data-media-id");
+
+                    try {
+                        const item = await getMediaById(id);
+                        fillMediaForm(item);
+                        renderMediaList();
+                        showMediaMessage("");
+                    } catch (error) {
+                        showMediaMessage(
+                            error && error.message
+                                ? error.message
+                                : String(error),
+                            true
+                        );
+                    }
+                });
+            }
+        );
+    }
+
+    function readMediaMetadata() {
+        const type = getMediaElement("mediaType");
+
+        return {
+            media_type:
+                type && type.value !== "auto"
+                    ? type.value
+                    : undefined,
+            display_name:
+                getMediaElement("mediaDisplayName")?.value || "",
+            title:
+                getMediaElement("mediaTitle")?.value || "",
+            alt_text:
+                getMediaElement("mediaAltText")?.value || "",
+            description:
+                getMediaElement("mediaDescription")?.value || ""
+        };
+    }
+
+    async function handleMediaUpload() {
+        const input = getMediaElement("mediaFile");
+
+        if (!input || !input.files || !input.files[0]) {
+            showMediaMessage("Please select a file first.", true);
+            return;
+        }
+
+        setMediaBusy(true);
+        showMediaMessage("Uploading media...");
+
+        try {
+            const created = await uploadFile(
+                input.files[0],
+                readMediaMetadata()
+            );
+
+            fillMediaForm(created);
+            input.value = "";
+            renderMediaList();
+            showMediaMessage("Media uploaded successfully.");
+        } catch (error) {
+            showMediaMessage(
+                error && error.message
+                    ? error.message
+                    : String(error),
+                true
+            );
+        } finally {
+            setMediaBusy(false);
+
+            const selected = getCurrentItem();
+
+            const saveButton = getMediaElement("mediaSaveButton");
+            const deleteButton = getMediaElement("mediaDeleteButton");
+
+            if (saveButton) {
+                saveButton.disabled = !selected;
+            }
+
+            if (deleteButton) {
+                deleteButton.disabled = !selected;
+            }
+        }
+    }
+
+    async function handleMediaSave() {
+        const item = getCurrentItem();
+
+        if (!item) {
+            showMediaMessage("Select a media asset first.", true);
+            return;
+        }
+
+        setMediaBusy(true);
+        showMediaMessage("Saving metadata...");
+
+        try {
+            const updated = await updateMetadata(
+                item.id,
+                readMediaMetadata()
+            );
+
+            fillMediaForm(updated);
+            renderMediaList();
+            showMediaMessage("Metadata saved successfully.");
+        } catch (error) {
+            showMediaMessage(
+                error && error.message
+                    ? error.message
+                    : String(error),
+                true
+            );
+        } finally {
+            setMediaBusy(false);
+        }
+    }
+
+    async function handleMediaDelete() {
+        const item = getCurrentItem();
+
+        if (!item) {
+            showMediaMessage("Select a media asset first.", true);
+            return;
+        }
+
+        const confirmed = window.confirm(
+            "Delete this media asset from Echoes of Humanity?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        setMediaBusy(true);
+        showMediaMessage("Deleting media...");
+
+        try {
+            await deleteMedia(item.id);
+            resetMediaForm();
+            renderMediaList();
+            showMediaMessage("Media deleted successfully.");
+        } catch (error) {
+            showMediaMessage(
+                error && error.message
+                    ? error.message
+                    : String(error),
+                true
+            );
+        } finally {
+            setMediaBusy(false);
+        }
+    }
+
+    function bindMediaDropzone() {
+        const dropzone = getMediaElement("mediaDropzone");
+        const input = getMediaElement("mediaFile");
+
+        if (!dropzone || !input) {
+            return;
+        }
+
+        ["dragenter", "dragover"].forEach(function (eventName) {
+            dropzone.addEventListener(eventName, function (event) {
+                event.preventDefault();
+                dropzone.classList.add("dragging");
+            });
+        });
+
+        ["dragleave", "drop"].forEach(function (eventName) {
+            dropzone.addEventListener(eventName, function (event) {
+                event.preventDefault();
+                dropzone.classList.remove("dragging");
+            });
+        });
+
+        dropzone.addEventListener("drop", function (event) {
+            const files = event.dataTransfer &&
+                event.dataTransfer.files;
+
+            if (files && files.length) {
+                input.files = files;
+                const name = getMediaElement("mediaSelectedFile");
+
+                if (name) {
+                    name.textContent = files[0].name;
+                }
+            }
+        });
+
+        input.addEventListener("change", function () {
+            const name = getMediaElement("mediaSelectedFile");
+
+            if (name) {
+                name.textContent =
+                    input.files && input.files[0]
+                        ? input.files[0].name
+                        : "No file selected";
+            }
+        });
+    }
+
+    function bindMediaUI() {
+        const form = getMediaElement("mediaForm");
+
+        if (!form || form.dataset.bound === "true") {
+            return;
+        }
+
+        form.dataset.bound = "true";
+
+        const uploadButton = getMediaElement("mediaUploadButton");
+        const saveButton = getMediaElement("mediaSaveButton");
+        const deleteButton = getMediaElement("mediaDeleteButton");
+
+        if (uploadButton) {
+            uploadButton.addEventListener(
+                "click",
+                handleMediaUpload
+            );
+        }
+
+        if (saveButton) {
+            saveButton.addEventListener(
+                "click",
+                handleMediaSave
+            );
+            saveButton.disabled = true;
+        }
+
+        if (deleteButton) {
+            deleteButton.addEventListener(
+                "click",
+                handleMediaDelete
+            );
+            deleteButton.disabled = true;
+        }
+
+        bindMediaDropzone();
+    }
+
+    async function initializeMediaUI() {
+        bindMediaUI();
+        renderMediaList();
+
+        try {
+            await initialize();
+            await loadMedia();
+            renderMediaList();
+        } catch (error) {
+            showMediaMessage(
+                error && error.message
+                    ? error.message
+                    : String(error),
+                true
+            );
+        }
+    }
+
     window.EchoesAdminMedia = {
         initialize,
         loadMedia,
@@ -795,4 +1237,24 @@
         isUploading,
         getState
     };
+
+    document.addEventListener(
+        "echoes-admin-ready",
+        function () {
+            initializeMediaUI();
+        }
+    );
+
+    document.addEventListener(
+        "echoes-admin-module-change",
+        function (event) {
+            if (
+                event.detail &&
+                event.detail.moduleId === "media"
+            ) {
+                initializeMediaUI();
+            }
+        }
+    );
+
 })();
