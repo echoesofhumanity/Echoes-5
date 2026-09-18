@@ -499,6 +499,194 @@
         return data;
     }
 
+    async function uploadToStorage(storagePath, file) {
+        if (
+            file.size <= 6 * 1024 * 1024
+        ) {
+            const {
+                error
+            } = await db.storage
+                .from(BUCKET_ID)
+                .upload(
+                    storagePath,
+                    file,
+                    {
+                        cacheControl: "3600",
+                        upsert: false,
+                        contentType:
+                            file.type || undefined
+                    }
+                );
+
+            if (error) {
+                throw error;
+            }
+
+            return;
+        }
+
+        if (
+            typeof tus === "undefined" ||
+            typeof tus.Upload !== "function"
+        ) {
+            throw new Error(
+                "Admin V3 Media: Resumable upload support is unavailable. Please refresh and try again."
+            );
+        }
+
+        const {
+            data: sessionData,
+            error: sessionError
+        } = await db.auth.getSession();
+
+        if (sessionError) {
+            throw sessionError;
+        }
+
+        const accessToken =
+            sessionData &&
+            sessionData.session
+                ? sessionData.session.access_token
+                : null;
+
+        if (!accessToken) {
+            throw new Error(
+                "Admin V3 Media: An active session is required for large-file uploads."
+            );
+        }
+
+        const projectUrl =
+            typeof window.ECHOES_SUPABASE_URL === "string"
+                ? window.ECHOES_SUPABASE_URL
+                : "";
+
+        const projectHost =
+            projectUrl
+                .replace(/^https:\/\//, "")
+                .replace(/\/$/, "");
+
+        if (!projectHost) {
+            throw new Error(
+                "Admin V3 Media: Supabase project URL is unavailable."
+            );
+        }
+
+        const storageHost =
+            projectHost.endsWith(".supabase.co")
+                ? projectHost.replace(
+                      ".supabase.co",
+                      ".storage.supabase.co"
+                  )
+                : projectHost;
+
+        await new Promise(function (resolve, reject) {
+            const upload =
+                new tus.Upload(
+                    file,
+                    {
+                        endpoint:
+                            "https://" +
+                            storageHost +
+                            "/storage/v1/upload/resumable",
+
+                        retryDelays: [
+                            0,
+                            3000,
+                            5000,
+                            10000,
+                            20000
+                        ],
+
+                        headers: {
+                            authorization:
+                                "Bearer " +
+                                accessToken,
+                            "x-upsert": "false"
+                        },
+
+                        uploadDataDuringCreation:
+                            true,
+
+                        removeFingerprintOnSuccess:
+                            true,
+
+                        chunkSize:
+                            6 * 1024 * 1024,
+
+                        metadata: {
+                            bucketName:
+                                BUCKET_ID,
+                            objectName:
+                                storagePath,
+                            contentType:
+                                file.type ||
+                                "application/octet-stream",
+                            cacheControl:
+                                "3600"
+                        },
+
+                        onError:
+                            function (error) {
+                                reject(error);
+                            },
+
+                        onProgress:
+                            function (
+                                bytesUploaded,
+                                bytesTotal
+                            ) {
+                                const percent =
+                                    bytesTotal > 0
+                                        ? Math.round(
+                                              (
+                                                  bytesUploaded /
+                                                  bytesTotal
+                                              ) *
+                                              100
+                                          )
+                                        : 0;
+
+                                showMediaMessage(
+                                    "Uploading " +
+                                        percent +
+                                        "% (" +
+                                        formatFileSize(
+                                            bytesUploaded
+                                        ) +
+                                        " / " +
+                                        formatFileSize(
+                                            bytesTotal
+                                        ) +
+                                        ")"
+                                );
+                            },
+
+                        onSuccess:
+                            function () {
+                                resolve();
+                            }
+                    }
+                );
+
+            upload
+                .findPreviousUploads()
+                .then(function (
+                    previousUploads
+                ) {
+                    if (
+                        previousUploads.length
+                    ) {
+                        upload.resumeFromPreviousUpload(
+                            previousUploads[0]
+                        );
+                    }
+
+                    upload.start();
+                })
+                .catch(reject);
+        });
+    }
+
     async function uploadFile(file, metadata) {
         requireManagePermission();
 
@@ -519,30 +707,10 @@
                     file.name
                 );
 
-            const {
-                error: uploadError
-            } = await db.storage
-                .from(BUCKET_ID)
-                .upload(
-                    storagePath,
-                    file,
-                    {
-                        cacheControl:
-                            "3600",
-                        upsert: false,
-                        contentType:
-                            file.type || undefined
-                    }
-                );
-
-            if (uploadError) {
-                console.error(
-                    "Admin V3 Media: Storage upload failed.",
-                    uploadError
-                );
-
-                throw uploadError;
-            }
+            await uploadToStorage(
+                storagePath,
+                file
+            );
 
             const normalizedMetadata =
                 validateMetadata(
