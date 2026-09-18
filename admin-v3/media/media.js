@@ -13,6 +13,52 @@
         "other"
     ];
 
+    const MEDIA_POLICY = {
+        image: {
+            maxBytes: 20 * 1024 * 1024,
+            extensions: [".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"],
+            mimeTypes: [
+                "image/jpeg",
+                "image/png",
+                "image/webp",
+                "image/gif",
+                "image/avif"
+            ]
+        },
+        video: {
+            maxBytes: 500 * 1024 * 1024,
+            extensions: [".mp4", ".webm", ".mov"],
+            mimeTypes: [
+                "video/mp4",
+                "video/webm",
+                "video/quicktime"
+            ]
+        },
+        audio: {
+            maxBytes: 100 * 1024 * 1024,
+            extensions: [".mp3", ".wav", ".ogg", ".m4a"],
+            mimeTypes: [
+                "audio/mpeg",
+                "audio/wav",
+                "audio/ogg",
+                "audio/mp4",
+                "audio/x-m4a"
+            ]
+        },
+        document: {
+            maxBytes: 50 * 1024 * 1024,
+            extensions: [".pdf", ".docx", ".xlsx", ".pptx", ".txt", ".csv"],
+            mimeTypes: [
+                "application/pdf",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "text/plain",
+                "text/csv"
+            ]
+        }
+    };
+
     const state = {
         items: [],
         currentItem: null,
@@ -116,7 +162,24 @@
         return "other";
     }
 
-    function validateFile(file) {
+    function getFileExtension(fileName) {
+        const value =
+            typeof fileName === "string"
+                ? fileName.trim().toLowerCase()
+                : "";
+
+        const lastDot = value.lastIndexOf(".");
+
+        return lastDot >= 0
+            ? value.slice(lastDot)
+            : "";
+    }
+
+    function getMediaPolicy(mediaType) {
+        return MEDIA_POLICY[mediaType] || null;
+    }
+
+    function validateFile(file, requestedMediaType) {
         if (!file) {
             throw new Error(
                 "Admin V3 Media: A file is required."
@@ -134,10 +197,81 @@
 
         if (
             typeof file.size !== "number" ||
+            !Number.isFinite(file.size) ||
             file.size < 0
         ) {
             throw new Error(
                 "Admin V3 Media: Invalid file size."
+            );
+        }
+
+        const mimeType =
+            typeof file.type === "string"
+                ? file.type.trim().toLowerCase()
+                : "";
+
+        if (!mimeType) {
+            throw new Error(
+                "Admin V3 Media: The file type could not be detected. Please choose a supported file."
+            );
+        }
+
+        const detectedType =
+            detectMediaType(mimeType);
+
+        if (detectedType === "other") {
+            throw new Error(
+                "Admin V3 Media: This file format is not supported."
+            );
+        }
+
+        if (
+            requestedMediaType &&
+            requestedMediaType !== "auto" &&
+            requestedMediaType !== detectedType
+        ) {
+            throw new Error(
+                "Admin V3 Media: The selected media type does not match the file type."
+            );
+        }
+
+        const policy =
+            getMediaPolicy(detectedType);
+
+        if (!policy) {
+            throw new Error(
+                "Admin V3 Media: No upload policy exists for this file type."
+            );
+        }
+
+        if (!policy.mimeTypes.includes(mimeType)) {
+            throw new Error(
+                "Admin V3 Media: This MIME type is not allowed."
+            );
+        }
+
+        const extension =
+            getFileExtension(file.name);
+
+        if (
+            !extension ||
+            !policy.extensions.includes(extension)
+        ) {
+            throw new Error(
+                "Admin V3 Media: This file extension is not allowed for the detected file type."
+            );
+        }
+
+        if (file.size > policy.maxBytes) {
+            const maxMb =
+                policy.maxBytes / (1024 * 1024);
+
+            throw new Error(
+                "Admin V3 Media: File is too large. Maximum size for " +
+                detectedType +
+                " files is " +
+                maxMb +
+                " MB."
             );
         }
 
