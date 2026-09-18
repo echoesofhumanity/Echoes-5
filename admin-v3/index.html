@@ -202,6 +202,188 @@
             color: var(--text);
         }
 
+
+        .media-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+            gap: 20px;
+        }
+
+        .panel-title {
+            margin: 0 0 18px;
+            font-size: 18px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #0d1728;
+            color: var(--text);
+        }
+
+        .field textarea {
+            min-height: 96px;
+            resize: vertical;
+        }
+
+        .media-dropzone {
+            min-height: 150px;
+            margin-bottom: 20px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            background: #0d1728;
+            text-align: center;
+        }
+
+        .media-dropzone.dragging {
+            border-color: var(--accent);
+            background: var(--panel-hover);
+        }
+
+        .media-dropzone span,
+        .media-dropzone small {
+            color: var(--muted);
+        }
+
+        .media-dropzone label {
+            margin: 4px 0;
+        }
+
+        .media-selected-name {
+            margin-top: 16px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .form-message {
+            min-height: 20px;
+            margin-top: 14px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .form-message.success {
+            color: var(--accent);
+        }
+
+        .form-message.error {
+            color: var(--danger);
+        }
+
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .action-button {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--panel-hover);
+            color: var(--text);
+        }
+
+        .action-button.primary {
+            background: #12333b;
+            border-color: #235d65;
+        }
+
+        .action-button.danger {
+            background: #28171c;
+            border-color: #5a2932;
+        }
+
+        .action-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .media-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .media-item {
+            width: 100%;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #0d1728;
+            color: var(--text);
+            text-align: left;
+        }
+
+        .media-item:hover,
+        .media-item.selected {
+            border-color: var(--accent);
+        }
+
+        .media-item-main {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .media-item-main span,
+        .media-item-name,
+        .media-empty {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .media-item-name {
+            max-width: 45%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 1000px) {
+            .media-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 800px) {
             .admin-layout {
                 flex-direction: column;
@@ -477,13 +659,111 @@
                     </h1>
 
                     <p class="module-description">
-                        Manage images, videos, audio and documents.
+                        Upload and manage images, videos, audio and documents.
                     </p>
                 </div>
 
-                <div class="panel">
-                    Media module will be connected in the
-                    next controlled stage.
+                <div class="media-layout">
+                    <div class="panel media-upload-panel">
+                        <h2 class="panel-title">Upload Media</h2>
+
+                        <form id="mediaForm" class="media-form">
+                            <div
+                                id="mediaDropzone"
+                                class="media-dropzone"
+                            >
+                                <input
+                                    id="mediaFile"
+                                    type="file"
+                                    hidden
+                                >
+                                <strong>Drop a file here</strong>
+                                <span>or</span>
+                                <label
+                                    for="mediaFile"
+                                    class="action-button"
+                                >
+                                    Choose File
+                                </label>
+                                <small id="mediaSelectedFile">
+                                    No file selected
+                                </small>
+                            </div>
+
+                            <div class="content-grid">
+                                <div class="field">
+                                    <label for="mediaType">Media Type</label>
+                                    <select id="mediaType">
+                                        <option value="auto">Auto-detect</option>
+                                        <option value="image">Image</option>
+                                        <option value="video">Video</option>
+                                        <option value="audio">Audio</option>
+                                        <option value="document">Document</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="field">
+                                    <label for="mediaDisplayName">Display Name</label>
+                                    <input id="mediaDisplayName" type="text">
+                                </div>
+
+                                <div class="field">
+                                    <label for="mediaTitle">Title</label>
+                                    <input id="mediaTitle" type="text">
+                                </div>
+
+                                <div class="field">
+                                    <label for="mediaAltText">Alt Text</label>
+                                    <input id="mediaAltText" type="text">
+                                </div>
+
+                                <div class="field full">
+                                    <label for="mediaDescription">Description</label>
+                                    <textarea id="mediaDescription"></textarea>
+                                </div>
+                            </div>
+
+                            <div id="mediaSelectedName" class="media-selected-name">
+                                No media selected
+                            </div>
+
+                            <div id="mediaFormMessage" class="form-message" role="status"></div>
+
+                            <div class="form-actions">
+                                <button
+                                    type="button"
+                                    id="mediaUploadButton"
+                                    class="action-button primary"
+                                >
+                                    Upload
+                                </button>
+                                <button
+                                    type="button"
+                                    id="mediaSaveButton"
+                                    class="action-button"
+                                >
+                                    Save Metadata
+                                </button>
+                                <button
+                                    type="button"
+                                    id="mediaDeleteButton"
+                                    class="action-button danger"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="panel">
+                        <h2 class="panel-title">Media Library</h2>
+                        <div id="mediaList" class="media-list">
+                            <div class="media-empty">
+                                Loading media...
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -570,6 +850,7 @@
 <script src="core/permissions.js?v=20260918"></script>
 <script src="core/navigation.js?v=20260918"></script>
 <script src="categories/categories.js?v=20260918"></script>
+<script src="media/media.js?v=20260918"></script>
 <script src="content/content.js?v=20260918"></script>
 
 <script src="admin.js?v=20260918"></script>
