@@ -1434,6 +1434,9 @@
         const container =
             getMediaElement("mediaIntegrityResults");
 
+        const actions =
+            getMediaElement("mediaIntegrityActions");
+
         if (!container) {
             return;
         }
@@ -1443,6 +1446,11 @@
 
         const metadataOrphans =
             result.orphanMetadata || [];
+
+        if (actions) {
+            actions.hidden =
+                storageOrphans.length === 0;
+        }
 
         if (
             storageOrphans.length === 0 &&
@@ -1459,18 +1467,27 @@
             "<strong>Integrity findings</strong>";
 
         if (storageOrphans.length > 0) {
-            html += "<p>Orphan storage objects:</p><ul>";
+            html +=
+                "<p>Orphan storage objects:</p>" +
+                "<div class=\"media-integrity-list\">";
 
-            storageOrphans.forEach(function (item) {
+            storageOrphans.forEach(function (item, index) {
                 html +=
-                    "<li>" +
+                    "<label>" +
+                    "<input type=\"checkbox\" " +
+                    "class=\"media-integrity-storage-item\" " +
+                    "data-storage-path=\"" +
                     escapeIntegrityText(
                         item.storage_path
                     ) +
-                    "</li>";
+                    "\"> " +
+                    escapeIntegrityText(
+                        item.storage_path
+                    ) +
+                    "</label>";
             });
 
-            html += "</ul>";
+            html += "</div>";
         }
 
         if (metadataOrphans.length > 0) {
@@ -1533,6 +1550,8 @@
         const saveButton = getMediaElement("mediaSaveButton");
         const deleteButton = getMediaElement("mediaDeleteButton");
         const integrityButton = getMediaElement("mediaIntegrityButton");
+        const integritySelectButton =
+            getMediaElement("mediaIntegritySelectButton");
 
         if (uploadButton) {
             uploadButton.addEventListener(
@@ -1561,6 +1580,22 @@
             integrityButton.addEventListener(
                 "click",
                 handleMediaIntegrity
+            );
+        }
+
+        if (integritySelectButton) {
+            integritySelectButton.addEventListener(
+                "click",
+                function () {
+                    const checkboxes =
+                        document.querySelectorAll(
+                            ".media-integrity-storage-item"
+                        );
+
+                    checkboxes.forEach(function (checkbox) {
+                        checkbox.checked = true;
+                    });
+                }
             );
         }
 
