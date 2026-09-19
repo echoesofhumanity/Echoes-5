@@ -675,6 +675,9 @@
         const saveButton = getElement("adminSaveRolesButton");
         const clearButton = getElement("adminClearSelectionButton");
 
+        const authSearchInput = getElement("adminAuthUserSearch");
+        const authSearchButton = getElement("adminAuthUserSearchButton");
+
         if (!details || !roleList) {
             return;
         }
@@ -831,6 +834,130 @@
         renderAdminDetails();
     }
 
+    function renderAuthUserResults(users) {
+        const list = getElement("adminAuthUserList");
+
+        if (!list) {
+            return;
+        }
+
+        list.innerHTML = "";
+
+        if (!Array.isArray(users) || users.length === 0) {
+            const empty = document.createElement("div");
+            empty.className = "library-empty";
+            empty.textContent = "No Auth users found.";
+            list.appendChild(empty);
+            return;
+        }
+
+        users.forEach(function (user) {
+            const item = document.createElement("div");
+            item.className = "library-item";
+
+            const main = document.createElement("div");
+            main.className = "library-item-main";
+
+            const title = document.createElement("div");
+            title.className = "library-item-title";
+            title.textContent = user.email || "No email address";
+
+            const userId = document.createElement("div");
+            userId.className = "library-item-meta";
+            userId.textContent = "User ID: " + String(user.id || "");
+
+            const roles = document.createElement("div");
+            roles.className = "library-item-meta";
+            roles.textContent =
+                "Roles: " +
+                (Array.isArray(user.roles) && user.roles.length > 0
+                    ? user.roles.map(function (role) {
+                        return role.name;
+                    }).join(", ")
+                    : "None");
+
+            main.appendChild(title);
+            main.appendChild(userId);
+            main.appendChild(roles);
+            item.appendChild(main);
+            list.appendChild(item);
+        });
+    }
+
+    async function searchAuthUsersFromUI() {
+        const input = getElement("adminAuthUserSearch");
+        const button = getElement("adminAuthUserSearchButton");
+        const message = getElement("adminAuthUserMessage");
+        const list = getElement("adminAuthUserList");
+
+        const search = input
+            ? input.value.trim()
+            : "";
+
+        if (!search) {
+            if (message) {
+                message.textContent = "Enter an email address or User ID."; 
+            }
+
+            if (list) {
+                list.innerHTML =
+                    '<div class="library-empty">Enter a search value to begin.</div>';
+            }
+
+            return;
+        }
+
+        if (button) {
+            button.disabled = true;
+            button.textContent = "Searching...";
+        }
+
+        if (message) {
+            message.textContent = "";
+        }
+
+        try {
+            const result = await searchAuthUsers(search, 1);
+            const users = result && Array.isArray(result.users)
+                ? result.users
+                : [];
+
+            renderAuthUserResults(users);
+
+            if (message) {
+                message.textContent =
+                    users.length === 0
+                        ? "No Auth users found."
+                        : users.length + " Auth user" +
+                          (users.length === 1 ? "" : "s") + " found.";
+            }
+        } catch (error) {
+            console.error(
+                "Admin V3 Admins: Failed to search Auth users from UI.",
+                error
+            );
+
+            if (message) {
+                message.textContent =
+                    String(
+                        error && error.message
+                            ? error.message
+                            : error
+                    );
+            }
+
+            if (list) {
+                list.innerHTML =
+                    '<div class="library-empty">Unable to load Auth users.</div>';
+            }
+        } finally {
+            if (button) {
+                button.disabled = false;
+                button.textContent = "Search Users";
+            }
+        }
+    }
+
     async function initializeUI() {
         const searchInput = getElement("adminSearch");
         const saveButton = getElement("adminSaveRolesButton");
@@ -855,6 +982,31 @@
 
             clearButton.addEventListener("click", function () {
                 clearAdminSelection();
+            });
+        }
+
+        if (
+            authSearchButton &&
+            authSearchButton.dataset.bound !== "true"
+        ) {
+            authSearchButton.dataset.bound = "true";
+
+            authSearchButton.addEventListener("click", function () {
+                searchAuthUsersFromUI();
+            });
+        }
+
+        if (
+            authSearchInput &&
+            authSearchInput.dataset.bound !== "true"
+        ) {
+            authSearchInput.dataset.bound = "true";
+
+            authSearchInput.addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    searchAuthUsersFromUI();
+                }
             });
         }
 
