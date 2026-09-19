@@ -937,13 +937,37 @@
                 error
             );
 
-            if (message) {
-                message.textContent =
-                    String(
-                        error && error.message
-                            ? error.message
-                            : error
+            let errorMessage =
+                error && error.message
+                    ? error.message
+                    : String(error);
+
+            if (
+                error &&
+                error.context &&
+                typeof error.context.json === "function"
+            ) {
+                try {
+                    const responseBody =
+                        await error.context.json();
+
+                    if (
+                        responseBody &&
+                        typeof responseBody.error === "string"
+                    ) {
+                        errorMessage =
+                            responseBody.error;
+                    }
+                } catch (bodyError) {
+                    console.error(
+                        "Admin V3 Admins: Failed to read Auth directory error response.",
+                        bodyError
                     );
+                }
+            }
+
+            if (message) {
+                message.textContent = errorMessage;
             }
 
             if (list) {
