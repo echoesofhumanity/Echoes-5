@@ -20,6 +20,8 @@
      *   ↓
      * NAVIGATION
      *   ↓
+     * DASHBOARD
+     *   ↓
      * ADMIN READY
      *
      * This file does NOT handle:
@@ -215,6 +217,29 @@
 
         /*
          * STEP 9
+         * Initialize Dashboard data layer
+         */
+
+        if (!window.EchoesAdminDashboard) {
+            showBootstrapError(
+                "DASHBOARD_MODULE",
+                new Error("Dashboard module is not available.")
+            );
+            return;
+        }
+
+        let dashboardState;
+        try {
+            dashboardState =
+                await window.EchoesAdminDashboard.initialize();
+        } catch (error) {
+            showBootstrapError("DASHBOARD", error);
+            return;
+        }
+
+
+        /*
+         * STEP 10
          * Confirm successful core initialization
          */
 
@@ -237,9 +262,14 @@
             navigationState.modules
         );
 
+        console.info(
+            "Admin V3: Dashboard data loaded.",
+            dashboardState
+        );
+
 
         /*
-         * STEP 10
+         * STEP 11
          * Notify the rest of Admin V3
          */
 
@@ -250,7 +280,8 @@
                     detail: {
                         roles: roleState,
                         permissions: permissionState,
-                        navigation: navigationState
+                        navigation: navigationState,
+                        dashboard: dashboardState
                     }
                 }
             )
