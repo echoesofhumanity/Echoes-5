@@ -455,6 +455,8 @@
         }
     }
 
+    initializeUI();
+
     window.EchoesAdminSettings = {
         initialize,
         loadSettings,
