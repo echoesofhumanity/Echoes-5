@@ -567,30 +567,6 @@
     function renderAdminList() {
         const list = getElement("adminList");
         const searchInput = getElement("adminSearch");
-        const saveButton = getElement("adminSaveRolesButton");
-        const clearButton = getElement("adminClearSelectionButton");
-
-        if (
-            saveButton &&
-            saveButton.dataset.bound !== "true"
-        ) {
-            saveButton.dataset.bound = "true";
-
-            saveButton.addEventListener("click", function () {
-                saveSelectedRoles();
-            });
-        }
-
-        if (
-            clearButton &&
-            clearButton.dataset.bound !== "true"
-        ) {
-            clearButton.dataset.bound = "true";
-
-            clearButton.addEventListener("click", function () {
-                clearAdminSelection();
-            });
-        }
 
         if (!list) {
             return;
@@ -810,6 +786,30 @@
 
     async function initializeUI() {
         const searchInput = getElement("adminSearch");
+        const saveButton = getElement("adminSaveRolesButton");
+        const clearButton = getElement("adminClearSelectionButton");
+
+        if (
+            saveButton &&
+            saveButton.dataset.bound !== "true"
+        ) {
+            saveButton.dataset.bound = "true";
+
+            saveButton.addEventListener("click", function () {
+                saveSelectedRoles();
+            });
+        }
+
+        if (
+            clearButton &&
+            clearButton.dataset.bound !== "true"
+        ) {
+            clearButton.dataset.bound = "true";
+
+            clearButton.addEventListener("click", function () {
+                clearAdminSelection();
+            });
+        }
 
         if (
             searchInput &&
