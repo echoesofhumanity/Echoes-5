@@ -1298,6 +1298,38 @@
                     </div>
 
                     <div class="panel">
+                        <h2 class="panel-title">Find Auth User</h2>
+
+                        <div class="field">
+                            <label for="adminAuthUserSearch">Search Auth User</label>
+                            <input
+                                id="adminAuthUserSearch"
+                                type="search"
+                                placeholder="Search by email or User ID"
+                                autocomplete="off"
+                            >
+                        </div>
+
+                        <div class="form-actions">
+                            <button
+                                type="button"
+                                id="adminAuthUserSearchButton"
+                                class="action-button primary"
+                            >
+                                Search Users
+                            </button>
+                        </div>
+
+                        <div id="adminAuthUserMessage" class="form-message" role="status"></div>
+
+                        <div id="adminAuthUserList" class="library-list">
+                            <div class="library-empty">
+                                Search for an Auth user to begin.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
                         <h2 class="panel-title">Administrator Details</h2>
 
                         <div id="adminDetails" class="status">
