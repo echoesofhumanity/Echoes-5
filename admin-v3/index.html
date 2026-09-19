@@ -334,8 +334,27 @@
         @media (max-width: 800px) {
             .library-toolbar,
             .library-stats,
-            .library-detail-grid {
+            .library-detail-grid,
+            .content-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .content-form {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .content-form .content-grid {
+                gap: 14px;
+            }
+
+            .content-form .form-actions {
+                margin-top: 0;
+            }
+
+            .content-form .form-actions .action-button {
+                flex: 1 1 100%;
             }
 
             .library-item-header {
