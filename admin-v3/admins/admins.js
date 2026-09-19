@@ -613,6 +613,7 @@
             item.addEventListener("click", function () {
                 setCurrentAdmin(admin);
                 renderAdminList();
+                renderAdminDetails();
             });
 
             if (
@@ -624,6 +625,74 @@
 
             list.appendChild(item);
         });
+    }
+
+    function renderAdminDetails() {
+        const details = getElement("adminDetails");
+        const roleList = getElement("adminRoleList");
+        const saveButton = getElement("adminSaveRolesButton");
+        const clearButton = getElement("adminClearSelectionButton");
+
+        if (!details || !roleList) {
+            return;
+        }
+
+        if (!state.currentAdmin) {
+            details.textContent =
+                "Select an administrator to manage roles.";
+
+            roleList.innerHTML =
+                '<div class="library-empty">' +
+                "No administrator selected." +
+                "</div>";
+
+            if (saveButton) {
+                saveButton.disabled = true;
+            }
+
+            if (clearButton) {
+                clearButton.disabled = true;
+            }
+
+            return;
+        }
+
+        details.textContent =
+            "User ID: " + state.currentAdmin.user_id;
+
+        const assignedRoleIds =
+            state.currentAdmin.roles.map(function (role) {
+                return role.id;
+            });
+
+        roleList.innerHTML = "";
+
+        state.roles.forEach(function (role) {
+            const label = document.createElement("label");
+            label.className = "library-item";
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = role.id;
+            checkbox.checked =
+                assignedRoleIds.includes(role.id);
+            checkbox.dataset.adminRole = "true";
+
+            const text = document.createElement("span");
+            text.textContent = role.name;
+
+            label.appendChild(checkbox);
+            label.appendChild(text);
+            roleList.appendChild(label);
+        });
+
+        if (saveButton) {
+            saveButton.disabled = false;
+        }
+
+        if (clearButton) {
+            clearButton.disabled = false;
+        }
     }
 
     async function initializeUI() {
@@ -646,6 +715,7 @@
                 try {
                     await initialize();
                     renderAdminList();
+                    renderAdminDetails();
                 } catch (error) {
                     const list = getElement("adminList");
 
@@ -674,6 +744,7 @@
                         await initialize();
 
                         renderAdminList();
+                        renderAdminDetails();
                     } catch (error) {
                         const list = getElement("adminList");
 
