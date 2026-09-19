@@ -461,6 +461,48 @@
         }
     }
 
+    async function searchAuthUsers(search, page) {
+        requireSuperAdmin();
+
+        const normalizedSearch =
+            typeof search === "string"
+                ? search.trim().slice(0, 100)
+                : "";
+
+        const requestedPage =
+            Number.isInteger(page) && page > 0
+                ? page
+                : 1;
+
+        const {
+            data,
+            error
+        } = await db.functions.invoke(
+            "admin-user-directory",
+            {
+                body: {
+                    search: normalizedSearch,
+                    page: requestedPage
+                }
+            }
+        );
+
+        if (error) {
+            console.error(
+                "Admin V3 Admins: Failed to search Auth users.",
+                error
+            );
+
+            throw error;
+        }
+
+        return data || {
+            users: [],
+            count: 0,
+            page: requestedPage
+        };
+    }
+
     async function initialize() {
         if (state.initialized) {
             return getState();
@@ -888,6 +930,7 @@
         initialize,
         loadRoles,
         loadAdmins,
+        searchAuthUsers,
         getAdminByUserId,
         assignRole,
         removeRole,
