@@ -752,6 +752,11 @@
                 message.textContent =
                     "Administrator roles saved successfully.";
             }
+
+            if (saveButton) {
+                saveButton.disabled = false;
+                saveButton.textContent = "Save Roles";
+            }
         } catch (error) {
             console.error(
                 "Admin V3 Admins: Failed to save roles.",
