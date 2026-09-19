@@ -197,6 +197,297 @@
         };
     }
 
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function formatDate(value) {
+        if (!value) {
+            return "—";
+        }
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return "—";
+        }
+
+        return date.toLocaleString();
+    }
+
+    function formatFileSize(value) {
+        const bytes = Number(value || 0);
+
+        if (!bytes) {
+            return "—";
+        }
+
+        const units = ["B", "KB", "MB", "GB"];
+        let size = bytes;
+        let index = 0;
+
+        while (size >= 1024 && index < units.length - 1) {
+            size /= 1024;
+            index += 1;
+        }
+
+        return size.toFixed(index === 0 ? 0 : 1) + " " + units[index];
+    }
+
+    function statCard(label, value) {
+        return (
+            '<div class="library-stat">' +
+                '<strong>' + escapeHtml(value) + '</strong>' +
+                '<span>' + escapeHtml(label) + '</span>' +
+            '</div>'
+        );
+    }
+
+    function renderContentOverview(content) {
+        if (!content) {
+            return "";
+        }
+
+        return (
+            '<div class="panel">' +
+                '<h2 class="panel-title">Content Overview</h2>' +
+                '<div class="library-stats">' +
+                    statCard("Total Content", content.total) +
+                    statCard("Draft", content.statuses.draft) +
+                    statCard("Review", content.statuses.review) +
+                    statCard("Published", content.statuses.published) +
+                    statCard("Archived", content.statuses.archived) +
+                '</div>' +
+            '</div>'
+        );
+    }
+
+    function renderMediaOverview(media) {
+        if (!media) {
+            return "";
+        }
+
+        return (
+            '<div class="panel">' +
+                '<h2 class="panel-title">Media Overview</h2>' +
+                '<div class="library-stats">' +
+                    statCard("Total Media", media.total) +
+                    statCard("Images", media.types.image) +
+                    statCard("Videos", media.types.video) +
+                    statCard("Audio", media.types.audio) +
+                    statCard("Documents", media.types.document) +
+                '</div>' +
+            '</div>'
+        );
+    }
+
+    function renderSystemOverview(system) {
+        if (!system) {
+            return "";
+        }
+
+        return (
+            '<div class="panel">' +
+                '<h2 class="panel-title">System Overview</h2>' +
+                '<div class="library-stats">' +
+                    statCard("Categories", system.categories) +
+                    statCard("Administrators", system.administrators) +
+                    statCard("Roles", system.roles) +
+                '</div>' +
+            '</div>'
+        );
+    }
+
+    function renderRecentContent(content) {
+        if (!content) {
+            return "";
+        }
+
+        const rows = content.recent || [];
+
+        const items = rows.length
+            ? rows.map(function (item) {
+                return (
+                    '<div class="library-item">' +
+                        '<div class="library-item-header">' +
+                            '<div>' +
+                                '<h3 class="library-item-title">' +
+                                    escapeHtml(item.title || "Untitled") +
+                                '</h3>' +
+                                '<div class="library-item-subtitle">' +
+                                    escapeHtml(item.type || "—") +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="library-item-meta">' +
+                            '<span>Status: ' +
+                                escapeHtml(item.status || "—") +
+                            '</span>' +
+                            '<span>Language: ' +
+                                escapeHtml(item.language || "—") +
+                            '</span>' +
+                            '<span>Updated: ' +
+                                escapeHtml(formatDate(item.updated_at)) +
+                            '</span>' +
+                        '</div>' +
+                    '</div>'
+                );
+            }).join("")
+            : '<div class="library-empty">No recent content.</div>';
+
+        return (
+            '<div class="panel">' +
+                '<h2 class="panel-title">Recent Content</h2>' +
+                '<div class="library-list">' +
+                    items +
+                '</div>' +
+            '</div>'
+        );
+    }
+
+    function renderRecentMedia(media) {
+        if (!media) {
+            return "";
+        }
+
+        const rows = media.recent || [];
+
+        const items = rows.length
+            ? rows.map(function (item) {
+                const name =
+                    item.display_name ||
+                    item.original_name ||
+                    "Unnamed media";
+
+                return (
+                    '<div class="library-item">' +
+                        '<div class="library-item-header">' +
+                            '<div>' +
+                                '<h3 class="library-item-title">' +
+                                    escapeHtml(name) +
+                                '</h3>' +
+                                '<div class="library-item-subtitle">' +
+                                    escapeHtml(item.media_type || "—") +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="library-item-meta">' +
+                            '<span>Size: ' +
+                                escapeHtml(formatFileSize(item.file_size)) +
+                            '</span>' +
+                            '<span>Type: ' +
+                                escapeHtml(item.mime_type || "—") +
+                            '</span>' +
+                            '<span>Added: ' +
+                                escapeHtml(formatDate(item.created_at)) +
+                            '</span>' +
+                        '</div>' +
+                    '</div>'
+                );
+            }).join("")
+            : '<div class="library-empty">No recent media.</div>';
+
+        return (
+            '<div class="panel">' +
+                '<h2 class="panel-title">Recent Media</h2>' +
+                '<div class="library-list">' +
+                    items +
+                '</div>' +
+            '</div>'
+        );
+    }
+
+    function renderSystemHealth() {
+        const session =
+            window.EchoesAdminAuth &&
+            typeof window.EchoesAdminAuth.getSession === "function"
+                ? window.EchoesAdminAuth.getSession()
+                : null;
+
+        const hasSession = Boolean(session);
+        const rolesReady = Boolean(
+            window.EchoesAdminRoles &&
+            window.EchoesAdminRoles.getState &&
+            window.EchoesAdminRoles.getState().initialized
+        );
+        const permissionsReady = Boolean(
+            window.EchoesAdminPermissions &&
+            window.EchoesAdminPermissions.getState &&
+            window.EchoesAdminPermissions.getState().initialized
+        );
+
+        return (
+            '<div class="panel">' +
+                '<h2 class="panel-title">System Health</h2>' +
+                '<div class="library-list">' +
+                    '<div class="status"><strong>Database</strong><br>Connected and dashboard queries completed.</div>' +
+                    '<div class="status"><strong>Authentication</strong><br>' +
+                        (hasSession ? "Active session." : "No active session.") +
+                    '</div>' +
+                    '<div class="status"><strong>Authorization</strong><br>' +
+                        (rolesReady && permissionsReady
+                            ? "Roles and permissions loaded."
+                            : "Authorization state is not fully initialized.") +
+                    '</div>' +
+                    '<div class="status"><strong>Storage</strong><br>Private bucket: echoes-media.</div>' +
+                '</div>' +
+            '</div>'
+        );
+    }
+
+    function renderDashboard(data) {
+        const section = document.getElementById("module-dashboard");
+
+        if (!section) {
+            throw new Error(
+                "Admin V3 Dashboard: Dashboard module element was not found."
+            );
+        }
+
+        const content = data && data.content;
+        const media = data && data.media;
+        const system = data && data.system;
+
+        const overviewColumns = (
+            '<div class="media-layout">' +
+                renderContentOverview(content) +
+                renderMediaOverview(media) +
+            '</div>'
+        );
+
+        const recentColumns = (
+            '<div class="media-layout">' +
+                renderRecentContent(content) +
+                renderRecentMedia(media) +
+            '</div>'
+        );
+
+        const systemSection = renderSystemOverview(system);
+
+        const healthSection = renderSystemHealth();
+
+        const body = section.querySelector(".panel");
+
+        if (!body) {
+            throw new Error(
+                "Admin V3 Dashboard: Dashboard render container was not found."
+            );
+        }
+
+        body.innerHTML =
+            '<div class="dashboard-content">' +
+                overviewColumns +
+                systemSection +
+                recentColumns +
+                healthSection +
+            '</div>';
+    }
+
     async function loadDashboardData() {
         if (state.loading) {
             return state.data;
@@ -235,7 +526,9 @@
     }
 
     async function initialize() {
-        return loadDashboardData();
+        const data = await loadDashboardData();
+        renderDashboard(data);
+        return data;
     }
 
     window.EchoesAdminDashboard = {
