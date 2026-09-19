@@ -560,6 +560,141 @@
         };
     }
 
+    function getElement(id) {
+        return document.getElementById(id);
+    }
+
+    function renderAdminList() {
+        const list = getElement("adminList");
+        const searchInput = getElement("adminSearch");
+
+        if (!list) {
+            return;
+        }
+
+        const query = searchInput
+            ? searchInput.value.trim().toLowerCase()
+            : "";
+
+        const filtered = state.admins.filter(function (admin) {
+            return admin.user_id
+                .toLowerCase()
+                .includes(query);
+        });
+
+        if (filtered.length === 0) {
+            list.innerHTML =
+                '<div class="library-empty">No administrators found.</div>';
+            return;
+        }
+
+        list.innerHTML = "";
+
+        filtered.forEach(function (admin) {
+            const item = document.createElement("div");
+            item.className = "library-item";
+
+            const roles = admin.roles.length > 0
+                ? admin.roles.map(function (role) {
+                    return role.name;
+                }).join(", ")
+                : "No roles";
+
+            item.innerHTML =
+                '<div class="library-item-main">' +
+                    '<div class="library-item-title">' +
+                        admin.user_id +
+                    '</div>' +
+                    '<div class="library-item-meta">' +
+                        'Roles: ' + roles +
+                    '</div>' +
+                '</div>';
+
+            item.addEventListener("click", function () {
+                setCurrentAdmin(admin);
+                renderAdminList();
+            });
+
+            if (
+                state.currentAdmin &&
+                state.currentAdmin.user_id === admin.user_id
+            ) {
+                item.classList.add("active");
+            }
+
+            list.appendChild(item);
+        });
+    }
+
+    async function initializeUI() {
+        const searchInput = getElement("adminSearch");
+
+        if (
+            searchInput &&
+            searchInput.dataset.bound !== "true"
+        ) {
+            searchInput.dataset.bound = "true";
+
+            searchInput.addEventListener("input", function () {
+                renderAdminList();
+            });
+        }
+
+        document.addEventListener(
+            "echoes-admin-ready",
+            async function () {
+                try {
+                    await initialize();
+                    renderAdminList();
+                } catch (error) {
+                    const list = getElement("adminList");
+
+                    if (list) {
+                        list.innerHTML =
+                            '<div class="library-empty">' +
+                            String(
+                                error && error.message
+                                    ? error.message
+                                    : error
+                            ) +
+                            '</div>';
+                    }
+                }
+            }
+        );
+
+        document.addEventListener(
+            "echoes-admin-module-change",
+            async function (event) {
+                if (
+                    event.detail &&
+                    event.detail.moduleId === "admins"
+                ) {
+                    try {
+                        await initialize();
+
+                        renderAdminList();
+                    } catch (error) {
+                        const list = getElement("adminList");
+
+                        if (list) {
+                            list.innerHTML =
+                                '<div class="library-empty">' +
+                                String(
+                                    error && error.message
+                                        ? error.message
+                                        : error
+                                ) +
+                                '</div>';
+                        }
+                    }
+                }
+            }
+        );
+    }
+
+    initializeUI();
+
     window.EchoesAdminAdmins = {
         initialize,
         loadRoles,
