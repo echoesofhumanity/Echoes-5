@@ -409,15 +409,22 @@
     function bindSettingsUI() {
         const refreshButton = getElement("settingsRefreshButton");
 
-        if (!refreshButton || refreshButton.dataset.bound === "true") {
+        if (
+            refreshButton &&
+            refreshButton.dataset.bound !== "true"
+        ) {
+            refreshButton.dataset.bound = "true";
+
+            refreshButton.addEventListener("click", function () {
+                loadAndRender();
+            });
+        }
+
+        if (document.documentElement.dataset.settingsEventsBound === "true") {
             return;
         }
 
-        refreshButton.dataset.bound = "true";
-
-        refreshButton.addEventListener("click", function () {
-            loadAndRender();
-        });
+        document.documentElement.dataset.settingsEventsBound = "true";
 
         document.addEventListener(
             "echoes-admin-module-change",
@@ -430,22 +437,17 @@
                 }
             }
         );
-    }
-
-    function initializeUI() {
-        bindSettingsUI();
 
         document.addEventListener(
             "echoes-admin-ready",
             function () {
-                if (
-                    window.EchoesAdminRoles &&
-                    window.EchoesAdminRoles.isSuperAdmin()
-                ) {
-                    loadAndRender();
-                }
+                loadAndRender();
             }
         );
+    }
+
+    function initializeUI() {
+        bindSettingsUI();
 
         if (
             window.EchoesAdminRoles &&
