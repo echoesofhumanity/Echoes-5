@@ -962,6 +962,8 @@
         const searchInput = getElement("adminSearch");
         const saveButton = getElement("adminSaveRolesButton");
         const clearButton = getElement("adminClearSelectionButton");
+        const authSearchInput = getElement("adminAuthUserSearch");
+        const authSearchButton = getElement("adminAuthUserSearchButton");
 
         if (
             saveButton &&
