@@ -161,35 +161,63 @@ export default {
     const rolesByUser = new Map<string, PublicUser["roles"]>();
 
     if (userIds.length > 0) {
-      const { data: assignments, error: rolesError } =
+      const { data: assignments, error: assignmentsError } =
         await ctx.supabaseAdmin
           .from("admin_user_roles")
-          .select("user_id, role:admin_roles(id, name, slug)")
+          .select("user_id, role_id")
           .in("user_id", userIds);
 
-      if (rolesError) {
-        console.error("Admin role lookup failed:", rolesError);
+      if (assignmentsError) {
+        console.error(
+          "Admin role assignment lookup failed:",
+          assignmentsError,
+        );
         return Response.json(
-          { error: "Administrator role lookup failed." },
+          { error: "Administrator role assignment lookup failed." },
           { status: 500 },
         );
       }
 
-      for (const assignment of assignments ?? []) {
-        const userId = assignment.user_id as string;
-        const role = assignment.role as
-          | { id: string; name: string; slug: string }
-          | null;
+      const roleIds = (assignments ?? [])
+        .map((assignment) => assignment.role_id as string)
+        .filter(Boolean);
 
-        if (!role) continue;
+      if (roleIds.length > 0) {
+        const { data: roles, error: rolesError } =
+          await ctx.supabaseAdmin
+            .from("admin_roles")
+            .select("id, name, slug")
+            .in("id", roleIds);
 
-        const current = rolesByUser.get(userId) ?? [];
-        current.push({
-          id: role.id,
-          name: role.name,
-          slug: role.slug,
-        });
-        rolesByUser.set(userId, current);
+        if (rolesError) {
+          console.error("Admin role lookup failed:", rolesError);
+          return Response.json(
+            { error: "Administrator role lookup failed." },
+            { status: 500 },
+          );
+        }
+
+        const rolesById = new Map(
+          (roles ?? []).map((role) => [
+            String(role.id),
+            {
+              id: String(role.id),
+              name: String(role.name),
+              slug: String(role.slug),
+            },
+          ]),
+        );
+
+        for (const assignment of assignments ?? []) {
+          const userId = assignment.user_id as string;
+          const role = rolesById.get(String(assignment.role_id));
+
+          if (!role) continue;
+
+          const current = rolesByUser.get(userId) ?? [];
+          current.push(role);
+          rolesByUser.set(userId, current);
+        }
       }
     }
 
