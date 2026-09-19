@@ -793,6 +793,223 @@
         }
     }
 
+    function EchoesAdminCategoriesVisualStyle() {
+        if (document.getElementById("echoes-admin-categories-visual-style")) {
+            return;
+        }
+
+        const style = document.createElement("style");
+        style.id = "echoes-admin-categories-visual-style";
+        style.textContent = `
+            #module-categories .media-layout {
+                grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
+                gap: 20px;
+            }
+
+            #module-categories .panel {
+                background: linear-gradient(
+                    180deg,
+                    rgba(17, 26, 43, 0.98) 0%,
+                    rgba(14, 23, 39, 0.98) 100%
+                );
+                border-color: rgba(57, 198, 200, 0.16);
+                box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+            }
+
+            #module-categories .panel-title {
+                margin-bottom: 20px;
+                font-size: 19px;
+                font-weight: 700;
+                letter-spacing: -0.01em;
+            }
+
+            #module-categories .content-grid {
+                gap: 18px;
+            }
+
+            #module-categories .field {
+                gap: 8px;
+            }
+
+            #module-categories .field label {
+                color: #a8b5c9;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+            }
+
+            #module-categories .field input,
+            #module-categories .field select,
+            #module-categories .field textarea {
+                padding: 12px 13px;
+                border-radius: 10px;
+                background: rgba(10, 19, 34, 0.88);
+                border-color: #2a3a56;
+                transition:
+                    border-color 0.18s ease,
+                    box-shadow 0.18s ease,
+                    background 0.18s ease;
+            }
+
+            #module-categories .field input:focus,
+            #module-categories .field select:focus,
+            #module-categories .field textarea:focus {
+                outline: none;
+                border-color: rgba(57, 198, 200, 0.72);
+                background: #0d1728;
+                box-shadow: 0 0 0 3px rgba(57, 198, 200, 0.10);
+            }
+
+            #module-categories .field textarea {
+                min-height: 112px;
+                line-height: 1.55;
+            }
+
+            #module-categories .form-actions {
+                margin-top: 20px;
+                gap: 10px;
+            }
+
+            #module-categories .form-actions .action-button {
+                min-height: 42px;
+                padding: 10px 16px;
+                border-radius: 10px;
+                font-weight: 650;
+            }
+
+            #module-categories .form-actions .action-button.primary {
+                box-shadow: 0 8px 20px rgba(57, 198, 200, 0.10);
+            }
+
+            #module-categories #categoryCancelButton {
+                background: rgba(23, 34, 56, 0.72);
+            }
+
+            #module-categories #categoryList {
+                gap: 12px;
+            }
+
+            #module-categories #categoryList .library-item {
+                padding: 17px 18px;
+                border-radius: 13px;
+                background: linear-gradient(
+                    145deg,
+                    rgba(13, 23, 40, 0.98) 0%,
+                    rgba(15, 27, 47, 0.92) 100%
+                );
+                border-color: #293954;
+                box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+                transition:
+                    transform 0.18s ease,
+                    border-color 0.18s ease,
+                    box-shadow 0.18s ease;
+            }
+
+            #module-categories #categoryList .library-item:hover {
+                transform: translateY(-1px);
+                border-color: rgba(57, 198, 200, 0.46);
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.20);
+            }
+
+            #module-categories #categoryList .library-item-main {
+                min-width: 0;
+            }
+
+            #module-categories #categoryList .library-item-title {
+                margin-bottom: 8px;
+                color: #f4f7fb;
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 1.3;
+                letter-spacing: -0.01em;
+            }
+
+            #module-categories #categoryList .library-item-meta {
+                margin-top: 0;
+                color: #91a0b8;
+                font-size: 12px;
+                line-height: 1.55;
+            }
+
+            #module-categories #categoryList .library-item-description {
+                margin-top: 10px;
+                color: #d9e0ea;
+                font-size: 14px;
+                line-height: 1.55;
+            }
+
+            #module-categories #categoryList .library-item-actions {
+                margin-top: 15px;
+                gap: 9px;
+            }
+
+            #module-categories #categoryList .library-item-actions .action-button {
+                min-width: 104px;
+                min-height: 40px;
+                padding: 9px 14px;
+                border-radius: 10px;
+                font-weight: 650;
+            }
+
+            #module-categories #categoryList .library-item-actions .action-button:not(.danger) {
+                background: rgba(23, 34, 56, 0.90);
+                border-color: #2c3d5b;
+            }
+
+            #module-categories #categoryList .library-item-actions .action-button:not(.danger):hover {
+                border-color: rgba(57, 198, 200, 0.58);
+                color: #f4f7fb;
+            }
+
+            #module-categories #categoryList .library-item-actions .action-button.danger {
+                background: rgba(40, 23, 28, 0.74);
+                border-color: rgba(239, 100, 100, 0.34);
+            }
+
+            #module-categories #categoryList .library-item-actions .action-button.danger:hover {
+                border-color: rgba(239, 100, 100, 0.62);
+            }
+
+            #module-categories #categoryFormMessage {
+                line-height: 1.5;
+            }
+
+            @media (max-width: 1000px) {
+                #module-categories .media-layout {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            @media (max-width: 800px) {
+                #module-categories .panel {
+                    padding: 20px;
+                    border-radius: 14px;
+                }
+
+                #module-categories .content-grid {
+                    gap: 14px;
+                }
+
+                #module-categories #categoryList .library-item {
+                    padding: 16px;
+                }
+
+                #module-categories #categoryList .library-item-actions {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                #module-categories #categoryList .library-item-actions .action-button {
+                    width: 100%;
+                    min-width: 0;
+                }
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
     async function initializeCategoryUI() {
         const form = getCategoryElement("categoryForm");
         const list = getCategoryElement("categoryList");
