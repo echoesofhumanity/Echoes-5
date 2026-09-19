@@ -62,7 +62,7 @@ export default {
     }
 
     const { data: isSuperAdmin, error: authorizationError } =
-      await ctx.supabaseAdmin.rpc("is_super_admin");
+      await ctx.supabase.rpc("is_super_admin");
 
     if (authorizationError) {
       console.error("Authorization check failed:", authorizationError);
