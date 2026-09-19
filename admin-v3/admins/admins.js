@@ -567,6 +567,30 @@
     function renderAdminList() {
         const list = getElement("adminList");
         const searchInput = getElement("adminSearch");
+        const saveButton = getElement("adminSaveRolesButton");
+        const clearButton = getElement("adminClearSelectionButton");
+
+        if (
+            saveButton &&
+            saveButton.dataset.bound !== "true"
+        ) {
+            saveButton.dataset.bound = "true";
+
+            saveButton.addEventListener("click", function () {
+                saveSelectedRoles();
+            });
+        }
+
+        if (
+            clearButton &&
+            clearButton.dataset.bound !== "true"
+        ) {
+            clearButton.dataset.bound = "true";
+
+            clearButton.addEventListener("click", function () {
+                clearAdminSelection();
+            });
+        }
 
         if (!list) {
             return;
@@ -693,6 +717,95 @@
         if (clearButton) {
             clearButton.disabled = false;
         }
+    }
+
+    async function saveSelectedRoles() {
+        const message = getElement("adminFormMessage");
+
+        if (!state.currentAdmin) {
+            if (message) {
+                message.textContent =
+                    "Select an administrator first.";
+            }
+            return;
+        }
+
+        const checkboxes = document.querySelectorAll(
+            '#adminRoleList input[data-admin-role="true"]'
+        );
+
+        const roleIds = Array.from(checkboxes)
+            .filter(function (checkbox) {
+                return checkbox.checked;
+            })
+            .map(function (checkbox) {
+                return checkbox.value;
+            });
+
+        if (roleIds.length === 0) {
+            if (message) {
+                message.textContent =
+                    "At least one role must remain assigned.";
+            }
+            return;
+        }
+
+        const saveButton = getElement("adminSaveRolesButton");
+
+        if (saveButton) {
+            saveButton.disabled = true;
+            saveButton.textContent = "Saving...";
+        }
+
+        if (message) {
+            message.textContent = "";
+        }
+
+        try {
+            const updated = await setRoles(
+                state.currentAdmin.user_id,
+                roleIds
+            );
+
+            state.currentAdmin = updated;
+
+            renderAdminList();
+            renderAdminDetails();
+
+            if (message) {
+                message.textContent =
+                    "Administrator roles saved successfully.";
+            }
+        } catch (error) {
+            console.error(
+                "Admin V3 Admins: Failed to save roles.",
+                error
+            );
+
+            if (message) {
+                message.textContent =
+                    String(
+                        error && error.message
+                            ? error.message
+                            : error
+                    );
+            }
+
+            renderAdminDetails();
+        }
+    }
+
+    function clearAdminSelection() {
+        setCurrentAdmin(null);
+
+        const message = getElement("adminFormMessage");
+
+        if (message) {
+            message.textContent = "";
+        }
+
+        renderAdminList();
+        renderAdminDetails();
     }
 
     async function initializeUI() {
