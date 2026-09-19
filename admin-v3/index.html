@@ -1276,9 +1276,62 @@
                     </p>
                 </div>
 
-                <div class="panel">
-                    Admin management will be connected
-                    in the next controlled stage.
+                <div class="media-layout">
+                    <div class="panel">
+                        <h2 class="panel-title">Administrator List</h2>
+
+                        <div class="field">
+                            <label for="adminSearch">Search Administrator</label>
+                            <input
+                                id="adminSearch"
+                                type="search"
+                                placeholder="Search by User ID"
+                                autocomplete="off"
+                            >
+                        </div>
+
+                        <div id="adminList" class="library-list">
+                            <div class="library-empty">
+                                Loading administrators...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h2 class="panel-title">Administrator Details</h2>
+
+                        <div id="adminDetails" class="status">
+                            Select an administrator to manage roles.
+                        </div>
+
+                        <div id="adminRoleList" class="library-list">
+                            <div class="library-empty">
+                                No administrator selected.
+                            </div>
+                        </div>
+
+                        <div id="adminFormMessage" class="form-message" role="status"></div>
+
+                        <div class="form-actions">
+                            <button
+                                type="button"
+                                id="adminSaveRolesButton"
+                                class="action-button primary"
+                                disabled
+                            >
+                                Save Roles
+                            </button>
+
+                            <button
+                                type="button"
+                                id="adminClearSelectionButton"
+                                class="action-button"
+                                disabled
+                            >
+                                Clear Selection
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </section>
 
