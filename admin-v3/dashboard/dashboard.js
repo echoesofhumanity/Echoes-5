@@ -241,7 +241,7 @@
 
     function statCard(label, value) {
         return (
-            '<div class="library-stat">' +
+            '<div class="dashboard-stat">' +
                 '<strong>' + escapeHtml(value) + '</strong>' +
                 '<span>' + escapeHtml(label) + '</span>' +
             '</div>'
@@ -256,7 +256,7 @@
         return (
             '<div class="panel">' +
                 '<h2 class="panel-title">Content Overview</h2>' +
-                '<div class="library-stats">' +
+                '<div class="dashboard-stat-grid">' +
                     statCard("Total Content", content.total) +
                     statCard("Draft", content.statuses.draft) +
                     statCard("Review", content.statuses.review) +
@@ -275,7 +275,7 @@
         return (
             '<div class="panel">' +
                 '<h2 class="panel-title">Media Overview</h2>' +
-                '<div class="library-stats">' +
+                '<div class="dashboard-stat-grid">' +
                     statCard("Total Media", media.total) +
                     statCard("Images", media.types.image) +
                     statCard("Videos", media.types.video) +
@@ -294,7 +294,7 @@
         return (
             '<div class="panel">' +
                 '<h2 class="panel-title">System Overview</h2>' +
-                '<div class="library-stats">' +
+                '<div class="dashboard-stat-grid">' +
                     statCard("Categories", system.categories) +
                     statCard("Administrators", system.administrators) +
                     statCard("Roles", system.roles) +
@@ -454,14 +454,14 @@
         const system = data && data.system;
 
         const overviewColumns = (
-            '<div class="media-layout">' +
+            '<div class="dashboard-overview-grid">' +
                 renderContentOverview(content) +
                 renderMediaOverview(media) +
             '</div>'
         );
 
         const recentColumns = (
-            '<div class="media-layout">' +
+            '<div class="dashboard-recent-grid">' +
                 renderRecentContent(content) +
                 renderRecentMedia(media) +
             '</div>'
