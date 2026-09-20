@@ -62,8 +62,11 @@
     return code;
   };
 
-  const getNestedValue = (source, key) =>
-    key.split(".").reduce((value, part) => value && value[part], source);
+  const getTranslationValue = (source, key) => {
+    if (!source || typeof source !== "object") return undefined;
+    if (Object.prototype.hasOwnProperty.call(source, key)) return source[key];
+    return key.split(".").reduce((value, part) => value && value[part], source);
+  };
 
   const loadDictionary = async (language, page) => {
     const response = await fetch("locales/" + language + "/pages/" + page + ".json", { cache: "no-store" });
@@ -91,7 +94,7 @@
     }
     document.querySelectorAll("[data-i18n]").forEach((element) => {
       const key = element.dataset.i18n;
-      const value = getNestedValue(selected, key) || getNestedValue(fallback, key);
+      const value = getTranslationValue(selected, key) || getTranslationValue(fallback, key);
       if (typeof value === "string") element.textContent = value;
     });
   };
