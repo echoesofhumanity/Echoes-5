@@ -62,7 +62,44 @@
     return code;
   };
 
+  const getNestedValue = (source, key) =>
+    key.split(".").reduce((value, part) => value && value[part], source);
+
+  const loadDictionary = async (language, page) => {
+    const response = await fetch("locales/" + language + "/pages/" + page + ".json", { cache: "no-store" });
+    if (!response.ok) throw new Error("Translation unavailable: " + language + "/" + page);
+    return response.json();
+  };
+
+  const translatePage = async (language = getLanguage()) => {
+    const page = document.body && document.body.dataset.page;
+    if (!page) return;
+    const code = isActive(language) ? normalizeLanguage(language) : DEFAULT_LANGUAGE;
+    let fallback = {};
+    try {
+      fallback = await loadDictionary(DEFAULT_LANGUAGE, page);
+    } catch (error) {
+      return;
+    }
+    let selected = fallback;
+    if (code !== DEFAULT_LANGUAGE) {
+      try {
+        selected = await loadDictionary(code, page);
+      } catch (error) {
+        selected = fallback;
+      }
+    }
+    document.querySelectorAll("[data-i18n]").forEach((element) => {
+      const key = element.dataset.i18n;
+      const value = getNestedValue(selected, key) || getNestedValue(fallback, key);
+      if (typeof value === "string") element.textContent = value;
+    });
+  };
+
   const init = () => applyDocumentLanguage(getLanguage());
+
+  document.addEventListener("echoes:layout-ready", () => translatePage());
+  document.addEventListener("echoes:language-change", (event) => translatePage(event.detail.language));
 
   window.EchoesI18n = Object.freeze({
     defaultLanguage: DEFAULT_LANGUAGE,
@@ -71,7 +108,8 @@
     setLanguage,
     isSupported,
     isActive,
-    init
+    init,
+    translatePage
   });
 
   if (document.readyState === "loading") {
