@@ -74,6 +74,12 @@
     return response.json();
   };
 
+  const loadComponentDictionary = async (language, component) => {
+    const response = await fetch("locales/" + language + "/components/" + component + ".json", { cache: "no-store" });
+    if (!response.ok) return {};
+    return response.json();
+  };
+
   const translatePage = async (language = getLanguage()) => {
     const page = document.body && document.body.dataset.page;
     if (!page) return;
@@ -92,9 +98,15 @@
         selected = fallback;
       }
     }
+    const componentFallback = await loadComponentDictionary(DEFAULT_LANGUAGE, "header");
+    const componentSelected = code === DEFAULT_LANGUAGE
+      ? componentFallback
+      : await loadComponentDictionary(code, "header");
+    const fallbackSource = Object.assign({}, fallback, componentFallback);
+    const selectedSource = Object.assign({}, selected, componentSelected);
     document.querySelectorAll("[data-i18n]").forEach((element) => {
       const key = element.dataset.i18n;
-      const value = getTranslationValue(selected, key) || getTranslationValue(fallback, key);
+      const value = getTranslationValue(selectedSource, key) || getTranslationValue(fallbackSource, key);
       if (typeof value === "string") element.textContent = value;
     });
   };
