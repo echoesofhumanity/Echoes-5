@@ -491,9 +491,9 @@ body::after {
   grid-template-columns:
     repeat(2, minmax(0, 1fr));
 
-  gap: 1.2rem;
+  gap: var(--echoes-card-gap);
 
-  margin-top: 4rem;
+  margin-top: var(--echoes-space-grid);
 }
 
 .cinematic-card {
@@ -722,7 +722,6 @@ body::after {
   .portal-grid {
     grid-template-columns: 1fr;
 
-    margin-top: 2.5rem;
   }
 }
 
