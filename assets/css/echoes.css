@@ -348,9 +348,9 @@ body::after {
 
   color: var(--turquoise-300);
 
-  font-size: 0.72rem;
+  font-size: var(--echoes-meta);
   font-weight: 700;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
 }
 
@@ -358,14 +358,10 @@ body::after {
   max-width: 900px;
   margin: 0 auto;
 
-  font-size: clamp(
-    3rem,
-    8vw,
-    6.8rem
-  );
+  font-size: var(--echoes-h1);
 
-  line-height: 0.98;
-  letter-spacing: -0.045em;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
   font-weight: 700;
 }
 
@@ -375,11 +371,7 @@ body::after {
 
   color: var(--text-secondary);
 
-  font-size: clamp(
-    1rem,
-    2vw,
-    1.25rem
-  );
+  font-size: var(--echoes-lead);
 
   line-height: 1.8;
 }
@@ -472,14 +464,10 @@ body::after {
 
   margin: 0;
 
-  font-size: clamp(
-    2.4rem,
-    5vw,
-    4.6rem
-  );
+  font-size: var(--echoes-h2);
 
-  line-height: 1.05;
-  letter-spacing: -0.035em;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
 }
 
 .portal-section > .section-inner > p {
@@ -489,7 +477,7 @@ body::after {
 
   color: var(--text-secondary);
 
-  font-size: 1.05rem;
+  font-size: var(--echoes-body);
 }
 
 
@@ -583,7 +571,7 @@ body::after {
 
   color: rgba(94, 234, 212, 0.45);
 
-  font-size: 0.75rem;
+  font-size: var(--echoes-meta);
   font-weight: 700;
   letter-spacing: 0.14em;
 }
@@ -593,7 +581,8 @@ body::after {
 
   margin: 0;
 
-  font-size: 1.6rem;
+  font-size: var(--echoes-h3);
+  line-height: 1.2;
 }
 
 .cinematic-card p {
@@ -606,7 +595,7 @@ body::after {
 
   color: var(--text-secondary);
 
-  font-size: 0.95rem;
+  font-size: var(--echoes-body);
 }
 
 
@@ -715,13 +704,6 @@ body::after {
       80px;
   }
 
-  .hero h1 {
-    font-size: clamp(
-      2.8rem,
-      14vw,
-      5rem
-    );
-  }
 
   .hero-actions {
     flex-direction: column;
@@ -767,3 +749,5 @@ body::after {
     transition-duration: 0.01ms !important;
   }
 }
+
+html[dir="rtl"] .hero h1,html[dir="rtl"] .portal-section h2{letter-spacing:0}
