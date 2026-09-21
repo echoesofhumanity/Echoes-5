@@ -499,9 +499,9 @@ body::after {
 .cinematic-card {
   position: relative;
 
-  min-height: 270px;
+  min-height: var(--echoes-card-min-height);
 
-  padding: 2rem;
+  padding: var(--echoes-card-padding);
 
   display: flex;
   flex-direction: column;
@@ -723,10 +723,6 @@ body::after {
     grid-template-columns: 1fr;
 
     margin-top: 2.5rem;
-  }
-
-  .cinematic-card {
-    min-height: 230px;
   }
 }
 
