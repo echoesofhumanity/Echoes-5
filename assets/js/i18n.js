@@ -98,12 +98,18 @@
         selected = fallback;
       }
     }
-    const componentFallback = await loadComponentDictionary(DEFAULT_LANGUAGE, "header");
-    const componentSelected = code === DEFAULT_LANGUAGE
-      ? componentFallback
-      : await loadComponentDictionary(code, "header");
-    const fallbackSource = Object.assign({}, fallback, componentFallback);
-    const selectedSource = Object.assign({}, selected, componentSelected);
+    const [headerFallback, footerFallback] = await Promise.all([
+      loadComponentDictionary(DEFAULT_LANGUAGE, "header"),
+      loadComponentDictionary(DEFAULT_LANGUAGE, "footer")
+    ]);
+    const [headerSelected, footerSelected] = code === DEFAULT_LANGUAGE
+      ? [headerFallback, footerFallback]
+      : await Promise.all([
+          loadComponentDictionary(code, "header"),
+          loadComponentDictionary(code, "footer")
+        ]);
+    const fallbackSource = Object.assign({}, fallback, headerFallback, footerFallback);
+    const selectedSource = Object.assign({}, selected, headerSelected, footerSelected);
     document.querySelectorAll("[data-i18n]").forEach((element) => {
       const key = element.dataset.i18n;
       const value = getTranslationValue(selectedSource, key) || getTranslationValue(fallbackSource, key);
