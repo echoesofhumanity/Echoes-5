@@ -698,7 +698,403 @@ Ask:
 
 If the answer is no, the element should be reconsidered.
 
-# END
+# 29. ECHOES VISUAL GRAMMAR
+
+The ecosystem must not become a collection of identical pages.
+
+Its rule is:
+
+> **One universe. Different worlds. One humanity.**
+
+The atmosphere, visual physics and interaction language remain consistent while each page preserves its own purpose and personality.
+
+The global visual grammar governs:
+
+- typography hierarchy
+- heading and eyebrow behavior
+- spacing rhythm
+- surface geometry
+- card families
+- icon language
+- interaction states
+- motion timing
+- atmospheric depth
+- light behavior
+
+Consistency must come from shared rules, not from making every page look the same.
+
+# 30. ATMOSPHERIC DEPTH SYSTEM
+
+The Echoes atmosphere should be constructed as a layered spatial environment:
+
+```text
+DEEP SPACE
+    ↓
+ATMOSPHERIC CLOUDS
+    ↓
+ORBITAL FIELD
+    ↓
+CONTENT WORLD
+    ↓
+HUMAN LIGHT
+```
+
+**Deep Space** creates scale and silence.  
+**Atmospheric Clouds** create depth and gradual color.  
+**Orbital Field** expresses connection and movement.  
+**Content World** carries information without breaking the atmosphere.  
+**Human Light** introduces warmth, dignity and hope.
+
+No layer should dominate the others.
+
+# 31. LIGHT LANGUAGE
+
+Light has meaning within Echoes.
+
+- Restrained turquoise — connection and living systems
+- Soft blue — knowledge and discovery
+- Sage — balance and nature
+- Muted gold — human warmth and value
+- Warm ivory — clarity and hope
+
+These colors are atmospheric signals rather than rigid page themes.
+
+Individual pages may emphasize different signals, but they remain within the same universe.
+
+# 32. SPATIAL RHYTHM
+
+Whitespace is part of the experience.
+
+The interface should not attempt to fill every area with cards, text or effects.
+
+Spacing should follow a shared rhythm ranging from compact functional spacing to broad cinematic breathing space.
+
+Section boundaries should preferably be communicated through:
+
+- space
+- light intensity
+- atmospheric change
+- orbit position
+- composition
+
+rather than repetitive divider lines or abrupt background blocks.
+
+Silence is a design element.
+
+# 33. TYPOGRAPHIC SYSTEM
+
+A shared responsive type hierarchy must govern the ecosystem:
+
+- Display
+- Hero H1
+- Section H2
+- Card H3
+- Lead
+- Body
+- Meta / Eyebrow
+
+Typography should scale fluidly across devices and remain resilient across English, Turkish, Arabic and future languages.
+
+Arabic typography must receive proper optical spacing and composition rather than merely inheriting Latin measurements.
+
+## Eyebrows
+
+Eyebrows and section labels must use a consistent visual grammar.
+
+They may use selective uppercase, restrained letter spacing and atmospheric accent color, but should never resemble loud badges pasted above headings.
+
+They should feel like quiet coordinates within the environment.
+
+# 34. SURFACE AND CARD SYSTEM
+
+Cards belong to one visual family but do not all need the same size or purpose.
+
+Primary families:
+
+- Compact Card — navigation and concise information
+- Standard Card — primary content
+- Feature Card — stories, projects, media and emphasized content
+
+Shared characteristics include:
+
+- related radius logic
+- atmospheric glass
+- thin restrained borders
+- controlled shadow
+- subtle internal illumination
+- consistent padding rhythm
+
+Cards should not jump dramatically on hover.
+
+Interaction should be expressed primarily through changes in light, border clarity and subtle depth.
+
+Large scale transformations and exaggerated vertical movement should be avoided.
+
+A card may move by only a minimal amount, or remain spatially stable while its light responds.
+
+# 35. ICON LANGUAGE
+
+Icons must belong to a single Echoes visual family.
+
+Where icons are appropriate they should share:
+
+- stroke character
+- optical weight
+- geometry
+- sizing logic
+- surrounding space
+- illumination behavior
+
+Emoji must not serve as the primary icon system.
+
+Not every card requires an icon.
+
+Photography, media, portraiture or another meaningful visual anchor may replace an icon where appropriate.
+
+> **The absence of an icon is not a flaw. The absence of visual hierarchy is.**
+
+# 36. GEOMETRY AND CONTROL SYSTEM
+
+Radius, button and control geometry must follow a limited shared scale.
+
+Use distinct but related geometry for:
+
+- controls
+- cards
+- feature panels
+- pill-shaped selectors where semantically appropriate
+
+CTA hierarchy should be limited and understandable:
+
+- Primary
+- Secondary
+- Quiet
+
+Even primary actions should feel illuminated rather than aggressively colored.
+
+# 37. GLOBAL MOTION PHYSICS
+
+Echoes uses three principal forms of motion:
+
+## Arrival
+
+Content enters the atmosphere through a very small downward settling movement, increasing opacity and optional blur reduction.
+
+## Reveal
+
+Information unfolds progressively as the visitor moves through the page.
+
+Text, content, cards, media and CTA elements should not all appear simultaneously.
+
+## Breathing
+
+Continuous motion belongs primarily to the living environment:
+
+- orbital structures
+- atmospheric clouds
+- selected points of light
+- identity elements where meaningful
+- the final Echoes logo mark
+
+The governing principle is:
+
+> **The world breathes. Identity breathes with it. The interface remains calm.**
+
+Cards, headings and buttons should not continuously pulse merely to demonstrate animation.
+
+# 38. HEADER AND NAVIGATION LANGUAGE
+
+The Header should remain visually stable while the environment lives behind and around it.
+
+The hamburger menu, language control and Symphony control must behave as members of the same interaction family.
+
+Panels must not snap open.
+
+Opening behavior should use a calm combination of:
+
+- opacity
+- subtle blur resolution
+- very small positional settling
+- soft easing
+
+Closing may be slightly faster while retaining the same character.
+
+The hamburger should use a refined geometric icon rather than a text glyph.
+
+The navigation layer should feel like an extension of the Echoes atmosphere, not a conventional dropdown placed above it.
+
+# 39. LANGUAGE AND CULTURAL IDENTITY
+
+Languages are not merely settings within Echoes.
+
+They represent cultural identities living within a shared digital homeland.
+
+The language globe should therefore use a refined geometric symbol rather than an emoji-style control.
+
+When the language environment opens, flags and language identities should emerge gently rather than appearing instantly.
+
+Flags may carry an extremely subtle breathing pulse.
+
+The pulse must be:
+
+- slow
+- low amplitude
+- calm
+- non-distracting
+- independent of comprehension
+
+The selected language should be indicated through restrained light or an orbital halo rather than a loud border or scale change.
+
+The conceptual hierarchy is:
+
+```text
+ECHOES
+shared identity
+    ↓
+LANGUAGE / CULTURE
+sub-identity
+    ↓
+CONTENT
+the voice of that identity
+```
+
+As more languages are added, this system must remain scalable and culturally respectful.
+
+# 40. SYMPHONY CONTROL
+
+The Symphony control belongs to the Echoes identity system.
+
+Its final icon should be a refined visual symbol rather than a typographic music-note glyph.
+
+When active, it may use a very slow and restrained pulse or atmospheric response.
+
+Audio must never begin automatically.
+
+The control must remain understandable and accessible without relying on animation.
+
+# 41. LOGO MOTION PRINCIPLE
+
+The final Echoes logo design is reserved for a later governance decision.
+
+Until the final mark is approved, the visual system must not prematurely define its final geometry.
+
+Its motion principle, however, is established:
+
+- calm
+- slow
+- subtle
+- living
+- atmospheric
+
+The final mark may breathe with extremely restrained changes in light, opacity or optical scale.
+
+It must never bounce, spin rapidly or behave like an attention-seeking loading indicator.
+
+The logo is the shared identity of the ecosystem and should feel alive without demanding attention.
+
+# 42. PAGE PERSONALITY SYSTEM
+
+Pages should not receive arbitrary independent themes.
+
+Instead, each page may have an atmospheric signature within the shared universe.
+
+Examples may include:
+
+- knowledge-oriented spaces with slightly stronger soft-blue presence
+- human stories with restrained ivory and muted-gold warmth
+- humanitarian action with deeper, quieter spatial weight
+- marketplace environments with cleaner structural clarity
+
+These are shifts of atmosphere, not separate design systems.
+
+> **Same world. Different rooms.**
+
+# 43. HUMAN VISUAL LANGUAGE
+
+Human photography and visual storytelling should introduce warmth without turning people into decoration.
+
+Preferred imagery should feel:
+
+- documentary
+- authentic
+- culturally respectful
+- quiet
+- individual
+- emotionally honest
+
+Pain must never be used as visual spectacle.
+
+The image treatment should integrate photography into the atmospheric world through restrained contrast, considered cropping and gentle surface treatment rather than promotional overlays.
+
+# 44. RESPONSIVE MOTION AND CULTURAL COMPOSITION
+
+Mobile must preserve the emotional experience rather than reproduce desktop effects at smaller dimensions.
+
+On smaller devices:
+
+- atmospheric layers may be reduced
+- orbit geometry may simplify
+- blur should be restrained
+- touch targets remain generous
+- animation distances remain minimal
+- content readability takes precedence
+
+RTL must be compositionally considered, including directional spacing, alignment, icon relationships and motion where direction has semantic meaning.
+
+# 45. REDUCED MOTION
+
+When a visitor requests reduced motion:
+
+- continuous orbit movement should stop or become static
+- flag breathing should stop
+- logo breathing should stop
+- decorative particle motion should stop
+- content must remain fully visible and understandable
+- selection and state must remain clear through static visual cues
+
+No essential information may depend on animation.
+
+# 46. PERFORMANCE BUDGET PRINCIPLE
+
+Atmosphere must never compromise the feeling of immediacy.
+
+Prefer shared CSS systems, gradients, pseudo-elements and GPU-friendly transforms.
+
+Repeated heavy blur, excessive DOM particles, large background video and unnecessary JavaScript animation should be avoided.
+
+Mobile performance has priority over ornamental complexity.
+
+# 47. FUTURE LIVING NETWORK
+
+The orbit system may eventually evolve beyond decoration.
+
+In future phases it may represent meaningful relationships among:
+
+- people
+- stories
+- projects
+- knowledge
+- Academy
+- Media
+- communities
+- cultures
+
+The present visual language should therefore be designed so it can grow into a living network without requiring a new identity.
+
+# 48. ECHOES MOTION AND IDENTITY PRINCIPLE
+
+The relationship between atmosphere and interface is summarized as:
+
+> **The world breathes. Identity breathes with it. The interface remains calm.**
+
+The relationship between the ecosystem and its pages is:
+
+> **One universe. Different worlds. One humanity.**
+
+And the governing principle remains:
+
+> **Do not shout. Reveal.**
+
 
 Echoes of Humanity is not simply a website.
 
