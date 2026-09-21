@@ -510,18 +510,17 @@ body::after {
   overflow: hidden;
 
   background:
-    linear-gradient(
-      145deg,
-      rgba(15, 23, 42, 0.72),
-      rgba(7, 12, 25, 0.54)
-    );
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(95, 208, 197, 0.09),
+      transparent 38%
+    ),
+    var(--echoes-card-surface);
 
-  border: 1px solid var(--border);
-  border-radius: var(--radius-card);
+  border: 1px solid var(--echoes-card-border);
+  border-radius: var(--echoes-card-radius);
 
-  box-shadow:
-    0 20px 60px
-    rgba(0, 0, 0, 0.28);
+  box-shadow: var(--echoes-card-shadow);
 
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -529,39 +528,24 @@ body::after {
   transition:
     transform var(--transition),
     border-color var(--transition),
+    background var(--transition),
     box-shadow var(--transition);
 }
 
-.cinematic-card::before {
-  content: "";
+.cinematic-card:hover {
+  transform: translateY(-5px);
 
-  position: absolute;
-  inset: 0;
+  border-color: var(--echoes-card-border-active);
 
   background:
     radial-gradient(
       circle at 85% 15%,
-      rgba(45, 212, 191, 0.12),
-      transparent 34%
-    );
+      rgba(95, 208, 197, 0.13),
+      transparent 42%
+    ),
+    var(--echoes-card-surface-elevated);
 
-  opacity: 0.8;
-
-  transition: opacity var(--transition);
-}
-
-.cinematic-card:hover {
-  transform: translateY(-7px);
-
-  border-color: var(--border-strong);
-
-  box-shadow:
-    0 28px 70px
-    rgba(0, 0, 0, 0.38);
-}
-
-.cinematic-card:hover::before {
-  opacity: 1;
+  box-shadow: var(--echoes-card-shadow-active);
 }
 
 .card-number {
