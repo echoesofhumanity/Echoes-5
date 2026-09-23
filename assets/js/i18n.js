@@ -115,6 +115,11 @@
       const value = getTranslationValue(selectedSource, key) || getTranslationValue(fallbackSource, key);
       if (typeof value === "string") element.textContent = value;
     });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+      const key = element.dataset.i18nPlaceholder;
+      const value = getTranslationValue(selectedSource, key) || getTranslationValue(fallbackSource, key);
+      if (typeof value === "string") element.setAttribute("placeholder", value);
+    });
   };
 
   const init = () => applyDocumentLanguage(getLanguage());
