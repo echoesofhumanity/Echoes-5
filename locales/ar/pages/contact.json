@@ -78,5 +78,9 @@
   "cta.text077": "شارك السؤال أو القصة أو الفكرة التي جئت بها.",
   "cta.text078": "لا تحتاج إلى معرفة كل جزء من Echoes. ابدأ بصوتك؛ وينبغي للنظام أن يساعد المحادثة على إيجاد طريقها.",
   "cta.text079": "ابدأ محادثة",
-  "cta.text080": "استكشف طرق الانضمام"
+  "cta.text080": "استكشف طرق الانضمام",
+  "section02.placeholder_name": "اسمك",
+  "section02.placeholder_email": "بريدك الإلكتروني",
+  "section02.placeholder_subject": "الموضوع",
+  "section02.placeholder_message": "اكتب رسالتك..."
 }
