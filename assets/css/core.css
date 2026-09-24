@@ -78,7 +78,7 @@ html[dir="rtl"] body[data-page="contact"] .contact-form textarea{text-align:righ
 .cinematic-btn::after{content:"";position:absolute;left:5%;right:5%;bottom:-48%;height:88%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(var(--echoes-button-rgb),.30) 0%,rgba(var(--echoes-button-rgb),.13) 44%,rgba(var(--echoes-button-rgb),.04) 64%,transparent 82%);opacity:0;pointer-events:none;transition:opacity 900ms var(--echoes-ease),transform 900ms var(--echoes-ease);transform:translateY(10px)}
 @media(hover:hover) and (pointer:fine){.cinematic-btn:hover{transform:translateY(-2px);border-color:rgba(var(--echoes-button-rgb),.52);box-shadow:0 14px 34px rgba(0,0,0,.18),0 18px 30px -20px rgba(var(--echoes-button-rgb),.32)}.cinematic-btn:hover::after{opacity:1;transform:translateY(0)}}
 @media(hover:none) and (pointer:coarse){.cinematic-btn:active{transform:translateY(-2px) scale(1.008);border-color:rgba(var(--echoes-button-rgb),.62);box-shadow:0 16px 38px rgba(0,0,0,.18),0 24px 40px -14px rgba(var(--echoes-button-rgb),.52),0 34px 54px -28px rgba(var(--echoes-button-rgb),.28);transition-duration:900ms}.cinematic-btn:active::after{opacity:1;transform:translateY(-7px) scale(1.14);transition-duration:900ms}}
-@media(prefers-reduced-motion:reduce){.cinematic-btn,.cinematic-btn::after{transition:none}.cinematic-btn:hover,.cinematic-btn:active{transform:none}}
+@media(prefers-reduced-motion:reduce){.cinematic-btn,.cinematic-btn::after{transition:none}.cinematic-btn:hover,.cinematic-btn:active,.cinematic-btn.is-activating{transform:none}}
 
 /* ECHOES GLOBAL SECTION RHYTHM */
 .page-section{padding-block:clamp(88px,11vw,120px)}
