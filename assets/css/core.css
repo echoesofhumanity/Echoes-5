@@ -60,6 +60,13 @@ html[dir="rtl"] body[data-page="contact"] .contact-form textarea{text-align:righ
 .cinematic-btn-secondary{border-color:rgba(243,239,229,.16);background:rgba(7,13,25,.62);color:var(--echoes-ivory)}
 .hero-actions .cinematic-btn{margin-top:0}
 
+/* ECHOES CALM BUTTON MOTION */
+.cinematic-btn{transition:transform 900ms var(--echoes-ease),border-color 900ms var(--echoes-ease),background 900ms var(--echoes-ease),box-shadow 900ms var(--echoes-ease),color 900ms var(--echoes-ease)}
+.cinematic-btn::after{content:"";position:absolute;left:12%;right:12%;bottom:-42%;height:68%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(var(--echoes-card-accent-rgb),.20) 0%,rgba(var(--echoes-card-accent-rgb),.07) 42%,transparent 74%);opacity:0;pointer-events:none;transition:opacity 900ms var(--echoes-ease),transform 900ms var(--echoes-ease);transform:translateY(10px)}
+@media(hover:hover) and (pointer:fine){.cinematic-btn:hover{transform:translateY(-2px);border-color:rgba(var(--echoes-card-accent-rgb),.52);box-shadow:0 14px 34px rgba(0,0,0,.18),0 18px 30px -20px rgba(var(--echoes-card-accent-rgb),.32)}.cinematic-btn:hover::after{opacity:1;transform:translateY(0)}}
+@media(hover:none) and (pointer:coarse){.cinematic-btn:active{transform:translateY(-1px);border-color:rgba(var(--echoes-card-accent-rgb),.48);box-shadow:0 12px 30px rgba(0,0,0,.16),0 16px 28px -20px rgba(var(--echoes-card-accent-rgb),.28);transition-duration:420ms}.cinematic-btn:active::after{opacity:.88;transform:translateY(0);transition-duration:420ms}}
+@media(prefers-reduced-motion:reduce){.cinematic-btn,.cinematic-btn::after{transition:none}.cinematic-btn:hover,.cinematic-btn:active{transform:none}}
+
 /* ECHOES GLOBAL SECTION RHYTHM */
 .page-section{padding-block:clamp(88px,11vw,120px)}
 .page-section .card-grid{margin-top:clamp(48px,7vw,64px)}
