@@ -54,6 +54,13 @@ html[dir="rtl"] body[data-page="contact"] .contact-form textarea{text-align:righ
 .section-label{display:inline-flex;width:auto;max-width:min(100%,760px);height:auto;min-height:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:rgba(var(--echoes-card-accent-rgb),.82);font-size:var(--echoes-meta);font-weight:700;line-height:1.5;letter-spacing:.18em;text-transform:uppercase}
 .page-section>.section-label{margin:0 0 24px}
 
+/* ECHOES GLOBAL SECTION RHYTHM */
+.page-section{padding-block:clamp(88px,11vw,120px)}
+.page-section .card-grid{margin-top:clamp(48px,7vw,64px)}
+.page-section .card-grid+h2{margin-top:clamp(88px,12vw,128px)}
+.page-section .card-grid+h2+p{margin-top:24px}
+@media(max-width:699px){.page-section{padding-block:88px}.page-section .card-grid{margin-top:56px}.page-section .card-grid+h2{margin-top:104px}}
+
 /* ECHOES GLOBAL CONTENT ALIGNMENT */
 .page-section,
 .page-content,
