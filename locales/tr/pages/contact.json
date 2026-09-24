@@ -78,5 +78,9 @@
   "cta.text077": "Yanında Getirdiğin Soruyu, Hikâyeyi veya Fikri Paylaş.",
   "cta.text078": "Echoes'un her bölümünü bilmen gerekmiyor. Sesinle başla; sistem görüşmenin yolunu bulmasına yardımcı olmalı.",
   "cta.text079": "Bir Görüşme Başlat",
-  "cta.text080": "Katılım Yollarını Keşfet"
+  "cta.text080": "Katılım Yollarını Keşfet",
+  "section02.placeholder_name": "Adınız",
+  "section02.placeholder_email": "E-posta adresiniz",
+  "section02.placeholder_subject": "Konu",
+  "section02.placeholder_message": "Mesajınızı yazın..."
 }
