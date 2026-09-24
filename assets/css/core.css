@@ -63,9 +63,10 @@ html[dir="rtl"] body[data-page="contact"] .contact-form textarea{text-align:righ
 /* ECHOES GLOBAL SECTION RHYTHM */
 .page-section{padding-block:clamp(88px,11vw,120px)}
 .page-section .card-grid{margin-top:clamp(48px,7vw,64px)}
-.page-section .card-grid+h2{margin-top:clamp(88px,12vw,128px)}
-.page-section .card-grid+h2+p{margin-top:24px}
-@media(max-width:699px){.page-section{padding-block:88px}.page-section .card-grid{margin-top:56px}.page-section .card-grid+h2{margin-top:104px}}
+.page-section>.card-grid+h2{margin-top:clamp(112px,14vw,152px)}
+.page-section>.card-grid+h2+p{margin-top:32px}
+.page-section>.card-grid:last-child{margin-bottom:0}
+@media(max-width:699px){.page-section{padding-block:88px}.page-section .card-grid{margin-top:56px}.page-section>.card-grid+h2{margin-top:136px}.page-section>.card-grid+h2+p{margin-top:32px}}
 
 /* ECHOES GLOBAL CONTENT ALIGNMENT */
 .page-section,
