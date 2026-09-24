@@ -78,5 +78,9 @@
   "cta.text077": "Bring the Question, Story or Idea You Came With.",
   "cta.text078": "You do not need to know every part of Echoes. Start with your voice; the system should help the conversation find its way.",
   "cta.text079": "Start a Conversation",
-  "cta.text080": "Explore Ways to Join"
+  "cta.text080": "Explore Ways to Join",
+  "section02.placeholder_name": "Your name",
+  "section02.placeholder_email": "Your email",
+  "section02.placeholder_subject": "Subject",
+  "section02.placeholder_message": "Write your message..."
 }
