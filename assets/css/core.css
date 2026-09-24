@@ -61,6 +61,9 @@ html[dir="rtl"] body[data-page="contact"] .contact-form textarea{text-align:righ
 .hero-actions .cinematic-btn{margin-top:0}
 @media(max-width:699px){.hero-actions .cinematic-btn{width:100%;min-height:60px;border-radius:18px}}
 
+/* ECHOES BUTTON TEXT CENTERING */
+.cinematic-btn>span{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:100%;min-height:inherit;margin:0;padding:0;line-height:1.2;text-align:center}
+
 /* ECHOES CALM BUTTON MOTION */
 .cinematic-btn{transition:transform 900ms var(--echoes-ease),border-color 900ms var(--echoes-ease),background 900ms var(--echoes-ease),box-shadow 900ms var(--echoes-ease),color 900ms var(--echoes-ease)}
 .cinematic-btn::after{content:"";position:absolute;left:12%;right:12%;bottom:-42%;height:68%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(var(--echoes-card-accent-rgb),.20) 0%,rgba(var(--echoes-card-accent-rgb),.07) 42%,transparent 74%);opacity:0;pointer-events:none;transition:opacity 900ms var(--echoes-ease),transform 900ms var(--echoes-ease);transform:translateY(10px)}
