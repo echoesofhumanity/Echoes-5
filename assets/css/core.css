@@ -66,7 +66,7 @@ html[dir="rtl"] body[data-page="contact"] .contact-form textarea{text-align:righ
 @media(max-width:699px){.hero-actions .cinematic-btn{width:100%;min-height:60px;border-radius:18px}}
 
 /* ECHOES BRAND BUTTON COLOR */
-.cinematic-btn{--echoes-button-rgb:95,208,197;border-color:rgba(var(--echoes-button-rgb),.38)}
+.cinematic-btn{--echoes-button-rgb:var(--echoes-card-accent-rgb);border-color:rgba(var(--echoes-button-rgb),.38)}body[data-page="academy"] .cinematic-btn{--echoes-button-rgb:125,164,189}
 .cinematic-btn-primary{background:linear-gradient(145deg,rgba(var(--echoes-button-rgb),.28),rgba(var(--echoes-button-rgb),.12))}
 .cinematic-btn-secondary{border-color:rgba(243,239,229,.16);background:linear-gradient(145deg,rgba(15,27,46,.78),rgba(6,13,25,.92))}
 
