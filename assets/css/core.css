@@ -54,6 +54,12 @@ html[dir="rtl"] body[data-page="contact"] .contact-form textarea{text-align:righ
 .section-label{display:inline-flex;width:auto;max-width:min(100%,760px);height:auto;min-height:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:rgba(var(--echoes-card-accent-rgb),.82);font-size:var(--echoes-meta);font-weight:700;line-height:1.5;letter-spacing:.18em;text-transform:uppercase}
 .page-section>.section-label{margin:0 0 24px}
 
+/* ECHOES CINEMATIC BUTTON SYSTEM */
+.cinematic-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:60px;padding:0 32px;border:1px solid rgba(var(--echoes-card-accent-rgb),.38);border-radius:999px;color:var(--core-text);font-size:13px;font-weight:700;line-height:1.2;letter-spacing:.10em;text-align:center;text-transform:uppercase;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.cinematic-btn-primary{background:linear-gradient(180deg,rgba(var(--echoes-card-accent-rgb),.24),rgba(var(--echoes-card-accent-rgb),.12))}
+.cinematic-btn-secondary{border-color:rgba(243,239,229,.16);background:rgba(7,13,25,.62);color:var(--echoes-ivory)}
+.hero-actions .cinematic-btn{margin-top:0}
+
 /* ECHOES GLOBAL SECTION RHYTHM */
 .page-section{padding-block:clamp(88px,11vw,120px)}
 .page-section .card-grid{margin-top:clamp(48px,7vw,64px)}
