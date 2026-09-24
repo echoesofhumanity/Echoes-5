@@ -47,7 +47,7 @@
   "section02.text046": "Prepare Message",
   "section02.text047": "Current status:",
   "section02.text048": "this form prepares the public contact experience but is not yet connected to message delivery. No message should be considered sent until the backend communication layer is activated.",
-  "section02.text049": "What Happens When Communication Goes Live?",
+  "section02.text049": "How Communication Is Handled",
   "section02.text050": "Receive",
   "section02.text051": "A message enters the communication system through a defined contact pathway.",
   "section02.text052": "Route",
