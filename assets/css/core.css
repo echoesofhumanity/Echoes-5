@@ -54,11 +54,14 @@ html[dir="rtl"] body[data-page="contact"] .contact-form textarea{text-align:righ
 .page-section,
 .page-content,
 .page-cta{text-align:center}
+.page-section>h2,
+.page-content>h2,
+.page-cta>h2{max-width:900px;margin-inline:auto}
 .page-section>.page-section-lead,
 .page-section>p,
 .page-content>p,
-.page-cta>p{max-width:760px;margin-inline:auto;line-height:1.7}
-.cinematic-card{align-items:center;text-align:center}
+.page-cta>p{max-width:760px;margin:24px auto 0;line-height:1.7}
+.cinematic-card{align-items:center;justify-content:center;text-align:center}
 .cinematic-card h3,
 .cinematic-card p{text-align:center}
 .cinematic-card .card-link{align-self:center}
