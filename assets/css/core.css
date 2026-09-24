@@ -48,3 +48,17 @@ html[dir="rtl"] body[data-page="contact"] .contact-form label,
 html[dir="rtl"] body[data-page="contact"] .contact-form input,
 html[dir="rtl"] body[data-page="contact"] .contact-form select,
 html[dir="rtl"] body[data-page="contact"] .contact-form textarea{text-align:right}
+
+
+/* ECHOES GLOBAL CONTENT ALIGNMENT */
+.page-section,
+.page-content,
+.page-cta{text-align:center}
+.page-section>.page-section-lead,
+.page-section>p,
+.page-content>p,
+.page-cta>p{max-width:760px;margin-inline:auto;line-height:1.7}
+.cinematic-card{align-items:center;text-align:center}
+.cinematic-card h3,
+.cinematic-card p{text-align:center}
+.cinematic-card .card-link{align-self:center}
