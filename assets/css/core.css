@@ -29,3 +29,22 @@ html[dir="rtl"] .page-hero h1,html[dir="rtl"] .home-hero h1,html[dir="rtl"] .pag
 
 /* MARKETPLACE GLOBAL SEARCH */
 .marketplace-search{padding:var(--echoes-space-section) 0;border-bottom:1px solid var(--core-border)}.marketplace-search>h2{margin:0;font-size:var(--echoes-h2);line-height:1.08;letter-spacing:-.025em}.marketplace-search>.section-label{margin:0 0 16px}.marketplace-search .page-section-lead{max-width:760px;color:var(--core-muted);line-height:1.7}.marketplace-search-form{margin-top:clamp(32px,5vw,48px)}.marketplace-search-label{display:block;margin-bottom:12px;color:var(--core-text);font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.marketplace-search-control{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:stretch;padding:10px;border:1px solid rgba(var(--echoes-card-accent-rgb),.24);border-radius:999px;background:linear-gradient(145deg,rgba(15,27,46,.88),rgba(6,13,25,.96));box-shadow:0 18px 54px rgba(0,0,0,.16),0 0 34px rgba(var(--echoes-card-accent-rgb),.055);transition:border-color 600ms var(--echoes-ease),box-shadow 600ms var(--echoes-ease)}.marketplace-search-control:focus-within{border-color:rgba(var(--echoes-card-accent-rgb),.52);box-shadow:0 20px 58px rgba(0,0,0,.2),0 0 38px rgba(var(--echoes-card-accent-rgb),.10)}.marketplace-search-control input{-webkit-appearance:none;appearance:none;display:block;width:100%;min-width:0;padding:0 22px;border:0;outline:0;background:transparent;color:var(--core-text);font:inherit;font-size:16px;border-radius:0}.marketplace-search-control input::placeholder{color:rgba(170,181,197,.72)}.marketplace-search-control .cinematic-btn{min-width:150px;border-color:rgba(var(--echoes-card-accent-rgb),.42);color:var(--core-text);cursor:pointer}.marketplace-search-note{max-width:760px;margin:20px 0 0;color:var(--core-muted);font-size:14px;line-height:1.6}@media(max-width:699px){.marketplace-search{padding:var(--echoes-space-section-mobile) 0}.marketplace-search-control{grid-template-columns:minmax(0,1fr);gap:10px;padding:10px;border-radius:26px}.marketplace-search-control input{min-height:56px;padding:0 16px;border:1px solid rgba(var(--echoes-card-accent-rgb),.12);border-radius:18px;background:rgba(5,10,20,.42)}.marketplace-search-control .cinematic-btn{width:100%;min-width:0}.marketplace-search-note{margin-top:18px}}
+
+
+/* CONTACT FORM */
+body[data-page="contact"] .contact-form-wrap{margin-top:var(--echoes-space-grid)}
+body[data-page="contact"] .contact-form{display:grid;gap:22px;margin-top:32px}
+body[data-page="contact"] .contact-form label{display:grid;gap:10px;color:var(--core-text);font-weight:600}
+body[data-page="contact"] .contact-form input,
+body[data-page="contact"] .contact-form select,
+body[data-page="contact"] .contact-form textarea{display:block;width:100%;min-width:0;padding:14px 16px;border:1px solid var(--echoes-card-border);border-radius:var(--echoes-radius-control);background:var(--echoes-card-surface);color:var(--core-text);font:inherit;line-height:1.5;outline:0}
+body[data-page="contact"] .contact-form textarea{resize:vertical;min-height:180px}
+body[data-page="contact"] .contact-form input:focus,
+body[data-page="contact"] .contact-form select:focus,
+body[data-page="contact"] .contact-form textarea:focus{border-color:rgba(var(--echoes-card-accent-rgb),.52);box-shadow:0 0 0 3px rgba(var(--echoes-card-accent-rgb),.08)}
+body[data-page="contact"] .contact-form select option{background:var(--core-panel);color:var(--core-text)}
+body[data-page="contact"] .contact-form .cinematic-btn{width:100%;cursor:pointer}
+html[dir="rtl"] body[data-page="contact"] .contact-form label,
+html[dir="rtl"] body[data-page="contact"] .contact-form input,
+html[dir="rtl"] body[data-page="contact"] .contact-form select,
+html[dir="rtl"] body[data-page="contact"] .contact-form textarea{text-align:right}
