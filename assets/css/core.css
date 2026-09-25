@@ -186,3 +186,29 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
 .echoes-path-03{--path-near:rgba(185,160,111,.075);--path-mid:rgba(185,160,111,.03);--path-far:rgba(185,160,111,.006)}
 .echoes-path-02::before,.echoes-path-03::before,.echoes-path-02::after,.echoes-path-03::after{border:0}
 @media(max-width:699px){.echoes-path::before{inset:-24px;filter:blur(16px)}.echoes-path::after{inset:-7px;filter:blur(3.5px)}}
+
+
+/* ECHOES FIELD DEPTH — DISTANT AND MID PLANES */
+.echoes-field-path{position:absolute;border-radius:50%;pointer-events:none;transform-origin:center}
+.echoes-field-path::before{content:"";position:absolute;inset:-22px;border-radius:inherit;border:12px solid rgba(105,183,183,.035);filter:blur(11px);box-shadow:0 0 28px rgba(69,139,151,.025)}
+.echoes-field-path-far{opacity:.34;filter:blur(1.4px)}
+.echoes-field-path-far::before{border-width:9px;border-color:rgba(95,151,164,.026);filter:blur(15px)}
+.echoes-field-path-mid{opacity:.52}
+.echoes-field-path-mid::before{border-color:rgba(104,184,177,.043)}
+.echoes-field-path-01{width:172vw;height:72vw;left:-104vw;top:-5vh;transform:rotate(-11deg)}
+.echoes-field-path-02{width:118vw;height:46vw;right:-73vw;top:34vh;transform:rotate(19deg)}
+.echoes-field-path-03{width:184vw;height:78vw;right:-118vw;top:4vh;transform:rotate(15deg)}
+.echoes-field-path-04{width:126vw;height:52vw;left:-78vw;top:46vh;transform:rotate(-23deg)}
+.echoes-field-path-05{width:168vw;height:70vw;left:-106vw;top:12vh;transform:rotate(-16deg)}
+.echoes-field-path-06{width:122vw;height:48vw;right:-76vw;top:48vh;transform:rotate(21deg)}
+@media(max-width:699px){
+.echoes-field-path-far{opacity:.30;filter:blur(1.8px)}
+.echoes-field-path-mid{opacity:.46}
+.echoes-field-path::before{inset:-18px;border-width:10px;filter:blur(12px)}
+.echoes-field-path-01{width:260vw;height:116vw;left:-190vw;top:2vh}
+.echoes-field-path-02{width:196vw;height:82vw;right:-145vw;top:38vh}
+.echoes-field-path-03{width:270vw;height:120vw;right:-205vw;top:8vh}
+.echoes-field-path-04{width:204vw;height:88vw;left:-151vw;top:44vh}
+.echoes-field-path-05{width:250vw;height:108vw;left:-184vw;top:9vh}
+.echoes-field-path-06{width:198vw;height:84vw;right:-146vw;top:46vh}
+}
