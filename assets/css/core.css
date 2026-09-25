@@ -121,3 +121,7 @@ body>main{position:relative;z-index:0;background:transparent}
 radial-gradient(ellipse 118% 62% at 14% 10%,rgba(36,78,99,.13) 0%,rgba(20,48,67,.055) 36%,transparent 70%),
 radial-gradient(ellipse 112% 68% at 90% 52%,rgba(63,91,82,.075) 0%,rgba(32,58,57,.035) 40%,transparent 74%),
 linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
+
+
+/* ECHOES CONTINUOUS UNIVERSE — NO PAGE DIVIDERS */
+.page-hero,.page-content,.page-section,.page-cta,.marketplace-search{border-bottom:0}
