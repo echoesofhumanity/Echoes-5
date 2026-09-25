@@ -461,10 +461,10 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
 .page-cta>*{position:relative;z-index:2}
 
 
-/* ECHOES CTA CLEARANCE — LIFT LOWER PATHS ABOVE CONTROLS */
-.echoes-field-path-04{top:31vh}
-.echoes-field-path-06{top:30vh}
+/* ECHOES CTA CLEARANCE — TARGET THIRD-FIELD CTA PATH */
+.echoes-field-path-04{top:46vh}
+.echoes-field-path-06{top:8vh}
 @media(max-width:699px){
-  .echoes-field-path-04{top:24vh}
-  .echoes-field-path-06{top:25vh}
+  .echoes-field-path-04{top:39vh}
+  .echoes-field-path-06{top:4vh}
 }
