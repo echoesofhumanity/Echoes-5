@@ -343,3 +343,80 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
   .echoes-field-path-far{opacity:.56}
   .echoes-field-path-mid{opacity:.88}
 }
+
+
+/* ECHOES FIELD DEPTH — SCULPTED ELLIPTICAL VOLUME */
+.echoes-field-path{
+  overflow:visible;
+  background:radial-gradient(ellipse at 50% 50%,
+    transparent 0 61%,
+    rgba(19,48,58,.025) 66%,
+    rgba(47,104,112,.07) 72%,
+    rgba(101,177,173,.13) 77%,
+    rgba(184,228,217,.18) 80%,
+    rgba(89,159,159,.105) 84%,
+    rgba(35,82,93,.045) 89%,
+    transparent 95%);
+}
+.echoes-field-path::before{
+  inset:-7%;
+  background:conic-gradient(from 218deg,
+    transparent 0 8%,
+    rgba(43,96,106,.025) 14%,
+    rgba(94,174,170,.11) 23%,
+    rgba(196,233,222,.20) 31%,
+    rgba(111,190,182,.12) 39%,
+    rgba(47,105,113,.045) 49%,
+    transparent 61% 100%);
+  -webkit-mask:radial-gradient(ellipse at center,
+    transparent 0 65%,#000 70%,#000 88%,transparent 95%);
+  mask:radial-gradient(ellipse at center,
+    transparent 0 65%,#000 70%,#000 88%,transparent 95%);
+  filter:blur(13px);
+  opacity:.92;
+}
+.echoes-field-path::after{
+  inset:2%;
+  background:conic-gradient(from 32deg,
+    transparent 0 18%,
+    rgba(28,69,80,.02) 26%,
+    rgba(87,160,160,.075) 38%,
+    rgba(216,242,233,.16) 47%,
+    rgba(104,184,178,.095) 56%,
+    rgba(35,83,93,.025) 66%,
+    transparent 75% 100%);
+  -webkit-mask:radial-gradient(ellipse at center,
+    transparent 0 70%,#000 75%,#000 88%,transparent 94%);
+  mask:radial-gradient(ellipse at center,
+    transparent 0 70%,#000 75%,#000 88%,transparent 94%);
+  filter:blur(5px);
+  opacity:.92;
+}
+.echoes-field-path-far{opacity:.56}
+.echoes-field-path-mid{opacity:.88}
+
+@media(max-width:699px){
+  .echoes-field-path{
+    background:radial-gradient(ellipse at 50% 50%,
+      transparent 0 57%,
+      rgba(20,52,62,.035) 63%,
+      rgba(51,111,118,.09) 70%,
+      rgba(108,187,181,.16) 76%,
+      rgba(194,233,222,.22) 80%,
+      rgba(94,168,165,.13) 84%,
+      rgba(37,88,98,.055) 90%,
+      transparent 96%);
+  }
+  .echoes-field-path::before{
+    inset:-6%;
+    filter:blur(10px);
+    opacity:1;
+  }
+  .echoes-field-path::after{
+    inset:1%;
+    filter:blur(4px);
+    opacity:1;
+  }
+  .echoes-field-path-far{opacity:.62}
+  .echoes-field-path-mid{opacity:.96}
+}
