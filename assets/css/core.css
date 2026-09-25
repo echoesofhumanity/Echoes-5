@@ -420,3 +420,8 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
   .echoes-field-path-far{opacity:.62}
   .echoes-field-path-mid{opacity:.96}
 }
+
+
+/* ECHOES CONTENT PLANE — ATMOSPHERE STAYS BEHIND INTERACTION */
+.page-hero,.page-content,.page-section,.page-cta,.marketplace-search{position:relative;z-index:1}
+.cinematic-card,.cinematic-btn{position:relative;z-index:2}
