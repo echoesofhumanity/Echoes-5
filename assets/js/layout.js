@@ -24,7 +24,13 @@
       const atmosphere=document.createElement("div");
       atmosphere.className="echoes-atmosphere";
       atmosphere.setAttribute("aria-hidden","true");
-      atmosphere.innerHTML='<div class="echoes-depth"></div><div class="echoes-cloud echoes-cloud-01"></div><div class="echoes-cloud echoes-cloud-02"></div><div class="echoes-path echoes-path-01"></div><div class="echoes-path echoes-path-02"></div><div class="echoes-path echoes-path-03"></div><div class="echoes-human-light-field"></div>';
+      atmosphere.innerHTML='<div class="echoes-depth"></div><div class="echoes-cloud echoes-cloud-01"></div><div class="echoes-cloud echoes-cloud-02"></div>';
+
+      const journey=document.createElement("div");
+      journey.className="echoes-journey";
+      journey.setAttribute("aria-hidden","true");
+      journey.innerHTML='<div class="echoes-journey-field echoes-journey-field-01"><div class="echoes-path echoes-path-01"></div></div><div class="echoes-journey-field echoes-journey-field-02"><div class="echoes-path echoes-path-02"></div></div><div class="echoes-journey-field echoes-journey-field-03"><div class="echoes-path echoes-path-03"></div></div><div class="echoes-human-light-field"></div>';
+      document.body.prepend(journey);
       document.body.prepend(atmosphere);
 
       await loadScript("assets/js/i18n.js");
