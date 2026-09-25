@@ -453,3 +453,9 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
 @media(prefers-reduced-motion:reduce){
   .echoes-field-path{animation:none}
 }
+
+
+/* ECHOES INTERACTION PLANE — PATHS REMAIN BEHIND CTA CONTROLS */
+.page-cta{isolation:isolate}
+.page-cta::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:rgba(5,10,20,.12)}
+.page-cta>*{position:relative;z-index:2}
