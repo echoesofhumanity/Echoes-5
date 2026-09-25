@@ -66,46 +66,70 @@ The interface should feel less like navigating a website and more like entering 
 
 All pages of Echoes of Humanity belong to the same visual universe.
 
-Individual pages may have different content structures, cards, layouts and purposes.
+This universe is not outer space. It is the **Echoes universe** — an abstract, living environment of human possibility, connection, compassion, love, knowledge, hope and belonging.
 
-However, the atmospheric language must remain consistent.
+Individual pages may have different content structures, cards, layouts and purposes. However, the atmospheric language must remain consistent.
 
 The shared atmosphere consists of:
 
-1. Deep night navy
-2. Vast spatial depth
-3. Subtle orbital structures
-4. Soft atmospheric color clouds
-5. Sparse points of light
+1. Deep Echoes depth
+2. Vast spatial breathing room
+3. Elliptical Echo Paths
+4. Soft atmospheric color fields
+5. Sparse Human Lights
 6. Gradual illumination
-7. Warm human accents
+7. Warm human presence
 8. Slow cinematic movement
 
-The atmosphere should feel like a vast space surrounding the content rather than a decorative background placed behind it.
+The atmosphere should feel like a living world surrounding the content rather than a decorative background placed behind it.
+
+> **Echoes is not a universe of stars and planets. It is a universe of human possibility. Its paths are connection. Its warmth is compassion. Its light is hope. And its destination is belonging.**
 
 ---
 
 # 4. ATMOSPHERIC JOURNEY
 
-The visual environment should evolve gradually from darkness toward light.
+The visual environment should evolve gradually from unknown depth toward human belonging.
 
-The general emotional progression is:
+The emotional journey is:
 
 ```text
-DEEP NIGHT
+CURIOSITY
     ↓
-SPATIAL DEPTH
+PRESENCE
     ↓
-ORBIT
+CONNECTION
     ↓
-SOFT COLOR
+COMPASSION
+    ↓
+LOVE
+    ↓
+HOPE
+    ↓
+BELONGING
+```
+
+Its atmospheric expression is:
+
+```text
+ECHOES DEPTH
+    ↓
+FIRST ECHO
+    ↓
+ELLIPTICAL CONNECTION
     ↓
 HUMAN WARMTH
     ↓
-LIGHT
+HUMAN LIGHT
     ↓
 HOPE
+    ↓
+HOME
 ```
+
+Darkness does not represent outer space. It represents what has not yet been discovered, understood or connected.
+
+The destination is not brightness for its own sake. It is the feeling of arriving somewhere human: **Home.**
 
 Avoid:
 
@@ -157,9 +181,11 @@ Never allow the visual system to become:
 
 Color should breathe.
 
-# 6. THE NIGHT SKY
+# 6. ECHOES DEPTH
 
 The deepest parts of the interface should use a sophisticated night-navy environment.
+
+This depth must never be treated as a night sky, outer space or astronomical scene. It is the quiet, not-yet-revealed depth of the Echoes universe.
 
 The background should not be pure black.
 
@@ -175,40 +201,37 @@ These variations should be perceived more than consciously noticed.
 
 The background should feel alive without becoming distracting.
 
-# 7. THE ORBIT SYSTEM
+# 7. THE ELLIPTICAL ECHO PATH SYSTEM
 
-Orbit structures are a core element of the Echoes visual identity.
+Echo Paths are a core element of the Echoes visual identity.
 
-They represent:
+They are not planetary orbits. They represent the continuing paths through which people, knowledge, stories, communities, ideas and acts of care can encounter one another.
 
-- connection
-- movement
-- humanity
-- knowledge
-- communities
-- civilizations
-- the idea of a world without borders
+Echo Paths should be:
 
-Orbits should be:
-
-- large
+- elliptical rather than circular
+- very large
 - thin
 - low opacity
 - softly illuminated
-- partially outside the viewport
+- shown only in fragments
+- substantially outside the viewport
+- allowed to disappear into atmosphere and re-emerge elsewhere
 - slowly animated
 
-The orbital system should never resemble a decorative diagram.
+A complete ellipse should rarely, if ever, be visible. The visitor should sense that a path continues beyond the visible composition.
 
-It should feel as though an invisible planetary system exists behind the interface.
+The system must never resemble rings drawn onto a background, a technical network diagram, or objects suspended in empty space.
+
+Paths may approach, overlap or cross. Where they meet, the response should be a subtle change in warmth or illumination rather than a neon intersection effect.
 
 ## Motion
 
-Orbit movement must be extremely slow.
+Echo Path movement must be extremely slow.
 
-The user should not immediately notice that the orbit is moving.
+Avoid simple continuous 360-degree rotation as the primary behavior. Prefer restrained drift, minute perspective change and opacity breathing.
 
-The movement should become perceptible only after spending time within the page.
+The user should not immediately notice that a path is moving. Movement should become perceptible only after spending time within the environment.
 
 Avoid fast rotation.
 Avoid dramatic movement.
@@ -236,36 +259,47 @@ No visible shapes.
 No obvious gradients.
 No sudden transitions.
 
-# 9. LIGHT PARTICLES
+# 9. HUMAN LIGHTS
 
-Small points of light may appear throughout the atmosphere.
+Small points of living light may appear throughout the atmosphere.
 
-They represent:
+These are **Human Lights**. Each one represents a human presence within the Echoes universe.
 
-- people
-- ideas
-- knowledge
-- connection
-- possibility
-- hope
+Human Lights are not stars, glitter, interface notifications or decorative particles.
 
-Particles should be:
+They should be:
 
 - sparse
 - small
 - soft
 - irregular
-- slowly appearing and disappearing
+- individually timed
+- distributed with natural variation
+- slowly appearing, breathing, fading and returning
+- sometimes close to an Echo Path and sometimes beyond it
 
-Avoid excessive particles.
-Avoid star-field clichés.
-Avoid flashing effects.
+No two Human Lights need to share the same size, intensity or rhythm. Human beings are not uniform data points.
 
-A particle should feel like a distant light, not an interface notification.
+Their illumination must never use a mechanical blink. Avoid synchronized on/off behavior and avoid simple 0-to-100 flashing. Each light should breathe through restrained, irregular changes of opacity and halo over long, differing durations.
 
-# 10. HOPE AS LIGHT
+A Human Light may carry an extremely subtle ivory, sage, turquoise or muted-gold halo. It must never use a star shape, lens flare or glitter effect.
 
-Hope should not be represented through visual clichés.
+Human Lights may acquire meaning through proximity:
+
+- one light — human presence
+- nearby lights — encounter
+- an Echo Path — possibility of connection
+- approaching paths — shared direction
+- gently interacting halos — care, solidarity or love
+- distant lights becoming perceptible — hope
+
+These meanings should be felt rather than diagrammed.
+
+> **Human beings are not points in a network. Human Lights are traces of presence within a shared world.**
+
+# 10. COMPASSION, LOVE AND HOPE AS LIGHT
+
+Compassion, love and hope should not be represented through visual clichés.
 
 Do not use:
 
@@ -275,13 +309,21 @@ Do not use:
 - excessive heart symbolism
 - sentimental humanitarian stock photography
 
-Instead, hope should emerge through light.
+Instead, these emotions should emerge through relationships between depth, warmth, paths and Human Lights.
 
-The environment begins in deep night.
+**Compassion** is expressed as a gentle protective warmth around human presence. It does not shine over another person; it creates light around them.
 
-As the user moves through the experience, subtle warmth and illumination gradually appear.
+> **Compassion does not shine over another human. It creates light around them.**
 
-Hope is therefore experienced rather than illustrated.
+**Love** is expressed through mutual influence. When Human Lights or atmospheric fields approach, their restrained halos may create a third, warmer presence. Love is not represented by hearts or sentimental effects. It is experienced as two presences making one another more visible.
+
+**Hope** emerges as the environment reveals that darkness was never emptiness. As the journey progresses, distant Human Lights and continuing Echo Paths become gradually perceptible.
+
+> **Hope is not the disappearance of darkness. It is the moment a path becomes visible within it.**
+
+> **More light does not mean a brighter screen. It means discovering that we were never alone in the darkness.**
+
+The page should not simply become brighter as the visitor progresses. It should become more human.
 
 # 11. TYPOGRAPHY
 
@@ -546,7 +588,8 @@ Mobile is not a reduced desktop version.
 
 On mobile:
 
-- orbit scale may decrease
+- Echo Path scale and complexity may decrease
+- Human Light count may decrease
 - atmospheric effects may become simpler
 - text must remain readable
 - spacing must breathe
@@ -597,13 +640,15 @@ Future pages must not independently invent their own background language.
 The shared system should provide reusable components such as:
 
 - echoes-atmosphere
-- echoes-orbit
-- echoes-orbit-1
-- echoes-orbit-2
-- echoes-orbit-3
-- echoes-orbit-4
+- echoes-depth
 - echoes-cloud
-- echoes-sparkle
+- echoes-path
+- echoes-path-01
+- echoes-path-02
+- echoes-path-03
+- echoes-path-04
+- echoes-human-light
+- echoes-human-light-field
 - echoes-content
 
 Individual pages may control:
@@ -675,10 +720,13 @@ The entire visual system can be reduced to one principle:
 
 **Do not shout. Reveal.**
 
-Let the darkness create depth.
-Let the orbit create movement.
-Let the light create hope.
+Let the depth create curiosity.
+Let the Echo Paths reveal connection.
+Let Human Lights reveal presence.
+Let warmth reveal compassion and love.
+Let light reveal hope.
 Let the content create meaning.
+Let belonging feel like arriving home.
 Let people discover the beauty themselves.
 
 # 28. DESIGN STANDARD
@@ -728,22 +776,25 @@ Consistency must come from shared rules, not from making every page look the sam
 The Echoes atmosphere should be constructed as a layered spatial environment:
 
 ```text
-DEEP SPACE
+ECHOES DEPTH
     ↓
-ATMOSPHERIC CLOUDS
+ATMOSPHERIC BREATH
     ↓
-ORBITAL FIELD
+ELLIPTICAL ECHO PATHS
+    ↓
+HUMAN LIGHTS
     ↓
 CONTENT WORLD
     ↓
-HUMAN LIGHT
+HUMAN WARMTH
 ```
 
-**Deep Space** creates scale and silence.  
-**Atmospheric Clouds** create depth and gradual color.  
-**Orbital Field** expresses connection and movement.  
+**Echoes Depth** creates scale, silence and undiscovered possibility.  
+**Atmospheric Breath** creates depth and gradual color.  
+**Elliptical Echo Paths** express connection, continuity and movement without astronomical imagery.  
+**Human Lights** introduce individual presence and the possibility of encounter.  
 **Content World** carries information without breaking the atmosphere.  
-**Human Light** introduces warmth, dignity and hope.
+**Human Warmth** allows compassion, love, hope and belonging to emerge.
 
 No layer should dominate the others.
 
@@ -774,7 +825,8 @@ Section boundaries should preferably be communicated through:
 - space
 - light intensity
 - atmospheric change
-- orbit position
+- Echo Path position
+- Human Light density and warmth
 - composition
 
 rather than repetitive divider lines or abrupt background blocks.
@@ -890,9 +942,9 @@ Text, content, cards, media and CTA elements should not all appear simultaneousl
 
 Continuous motion belongs primarily to the living environment:
 
-- orbital structures
+- elliptical Echo Paths
 - atmospheric clouds
-- selected points of light
+- selected Human Lights
 - identity elements where meaningful
 - the final Echoes logo mark
 
@@ -1045,7 +1097,8 @@ RTL must be compositionally considered, including directional spacing, alignment
 
 When a visitor requests reduced motion:
 
-- continuous orbit movement should stop or become static
+- continuous Echo Path movement should stop or become static
+- Human Light breathing should stop while the lights remain visible
 - flag breathing should stop
 - logo breathing should stop
 - decorative particle motion should stop
@@ -1066,7 +1119,7 @@ Mobile performance has priority over ornamental complexity.
 
 # 47. FUTURE LIVING NETWORK
 
-The orbit system may eventually evolve beyond decoration.
+The Echo Path and Human Light system may eventually evolve beyond atmosphere.
 
 In future phases it may represent meaningful relationships among:
 
@@ -1079,9 +1132,46 @@ In future phases it may represent meaningful relationships among:
 - communities
 - cultures
 
-The present visual language should therefore be designed so it can grow into a living network without requiring a new identity.
+The present visual language should therefore be designed so it can grow into a living network without requiring a new identity. Human Lights must never become a visual ranking of human worth, popularity or status.
 
-# 48. ECHOES MOTION AND IDENTITY PRINCIPLE
+# 48. THE ECHOES HUMAN JOURNEY
+
+The global atmosphere should support a gradual human journey without turning pages into rigid emotional stages.
+
+The shared progression is:
+
+```text
+CURIOSITY
+    ↓
+CONNECTION
+    ↓
+COMPASSION
+    ↓
+LOVE
+    ↓
+HOPE
+    ↓
+BELONGING
+```
+
+Different pages may emphasize different moments within this journey while remaining part of one continuous world.
+
+- Knowledge and discovery may carry slightly stronger soft-blue presence.
+- Connection may reveal more Echo Path relationships.
+- Human stories and humanitarian spaces may carry greater ivory, sage and muted-gold warmth.
+- Collaboration may allow nearby Human Lights and paths to influence one another subtly.
+- Hope may reveal distant paths and Human Lights that were previously almost imperceptible.
+- Belonging should feel calm and resolved rather than visually triumphant.
+
+The destination is not spectacle.
+
+The destination is the feeling:
+
+> **You are not looking at Echoes anymore. You are inside it.**
+
+---
+
+# 49. ECHOES MOTION AND IDENTITY PRINCIPLE
 
 The relationship between atmosphere and interface is summarized as:
 
