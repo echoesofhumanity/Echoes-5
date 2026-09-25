@@ -428,10 +428,10 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
 
 
 /* ECHOES FIELD MOTION — LIVING ELLIPTICAL DRIFT */
-.echoes-field-path-01,.echoes-field-path-05{animation:echoes-field-drift-left 22s ease-in-out infinite alternate}
-.echoes-field-path-02,.echoes-field-path-06{animation:echoes-field-drift-right 18s ease-in-out infinite alternate}
-.echoes-field-path-03{animation:echoes-field-drift-right 25s ease-in-out infinite alternate-reverse}
-.echoes-field-path-04{animation:echoes-field-drift-left 20s ease-in-out infinite alternate-reverse}
+.echoes-field-path-01,.echoes-field-path-05{animation:echoes-field-drift-left 29.33s ease-in-out infinite alternate}
+.echoes-field-path-02,.echoes-field-path-06{animation:echoes-field-drift-right 24s ease-in-out infinite alternate}
+.echoes-field-path-03{animation:echoes-field-drift-right 33.33s ease-in-out infinite alternate-reverse}
+.echoes-field-path-04{animation:echoes-field-drift-left 26.67s ease-in-out infinite alternate-reverse}
 
 @keyframes echoes-field-drift-left{
   0%{transform:translate3d(-2.5%,-1%,0) rotate(-17deg) scale(.98)}
@@ -445,10 +445,10 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
 }
 
 @media(max-width:699px){
-  .echoes-field-path-01,.echoes-field-path-05{animation-duration:18s}
-  .echoes-field-path-02,.echoes-field-path-06{animation-duration:15s}
-  .echoes-field-path-03{animation-duration:21s}
-  .echoes-field-path-04{animation-duration:17s}
+  .echoes-field-path-01,.echoes-field-path-05{animation-duration:24s}
+  .echoes-field-path-02,.echoes-field-path-06{animation-duration:20s}
+  .echoes-field-path-03{animation-duration:28s}
+  .echoes-field-path-04{animation-duration:22.67s}
 }
 @media(prefers-reduced-motion:reduce){
   .echoes-field-path{animation:none}
