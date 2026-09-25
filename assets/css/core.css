@@ -148,3 +148,11 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
 @keyframes echoes-path-drift-03{0%{transform:translate3d(-1%,2%,0) rotate(-11deg);opacity:.38}100%{transform:translate3d(2.5%,-2%,0) rotate(-9.5deg);opacity:.62}}
 @media(max-width:699px){.echoes-path{opacity:.58}.echoes-path-01{width:210vw;height:94vw;left:-145vw;top:18vh}.echoes-path-02{width:230vw;height:102vw;right:-174vw;top:52vh}.echoes-path-03{width:190vw;height:82vw;left:22vw;bottom:-54vw}}
 @media(prefers-reduced-motion:reduce){.echoes-path{animation:none}.echoes-path-01{transform:rotate(-18deg)}.echoes-path-02{transform:rotate(24deg)}.echoes-path-03{transform:rotate(-11deg)}}
+
+
+/* ECHOES JOURNEY — VIEWPORT CONTAINMENT */
+.echoes-journey{position:absolute;inset:0;width:100%;max-width:100%;overflow:hidden;pointer-events:none;z-index:-1}
+.echoes-journey-field{position:absolute;left:0;width:100%;max-width:100%;overflow:hidden}
+.echoes-journey-field-01{top:0;height:100vh}
+.echoes-journey-field-02{top:100vh;height:100vh}
+.echoes-journey-field-03{top:200vh;height:100vh}
