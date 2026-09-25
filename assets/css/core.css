@@ -135,3 +135,16 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
 @keyframes echoes-cloud-breathe-02{0%{transform:translate3d(3%,4%,0) scale(1.04);opacity:.22}100%{transform:translate3d(-7%,-5%,0) scale(.97);opacity:.34}}
 @media(max-width:699px){.echoes-cloud{width:128vw;height:86vh;filter:blur(52px);opacity:.26}.echoes-cloud-01{left:-62%;top:-18%}.echoes-cloud-02{right:-72%;bottom:-22%}}
 @media(prefers-reduced-motion:reduce){.echoes-cloud{animation:none}.echoes-cloud-01{opacity:.30}.echoes-cloud-02{opacity:.26}}
+
+
+/* ECHOES ELLIPTICAL PATHS */
+.echoes-path{position:absolute;border:1px solid rgba(95,208,197,.075);border-radius:50%;opacity:.72;will-change:transform,opacity;transform-origin:center}
+.echoes-path::after{content:"";position:absolute;inset:-1px;border-radius:inherit;border:1px solid transparent;box-shadow:0 0 34px rgba(95,208,197,.028),inset 0 0 42px rgba(125,164,189,.018)}
+.echoes-path-01{width:128vw;height:54vw;left:-62vw;top:12vh;transform:rotate(-18deg);animation:echoes-path-drift-01 58s ease-in-out infinite alternate}
+.echoes-path-02{width:142vw;height:62vw;right:-92vw;top:39vh;border-color:rgba(143,169,154,.065);transform:rotate(24deg);animation:echoes-path-drift-02 71s ease-in-out infinite alternate}
+.echoes-path-03{width:116vw;height:48vw;left:8vw;bottom:-31vw;border-color:rgba(185,160,111,.052);transform:rotate(-11deg);animation:echoes-path-drift-03 83s ease-in-out infinite alternate}
+@keyframes echoes-path-drift-01{0%{transform:translate3d(-1.5%,0,0) rotate(-18deg);opacity:.54}100%{transform:translate3d(3%,2%,0) rotate(-16.5deg);opacity:.78}}
+@keyframes echoes-path-drift-02{0%{transform:translate3d(2%,-1%,0) rotate(24deg);opacity:.46}100%{transform:translate3d(-3%,2.5%,0) rotate(22.5deg);opacity:.70}}
+@keyframes echoes-path-drift-03{0%{transform:translate3d(-1%,2%,0) rotate(-11deg);opacity:.38}100%{transform:translate3d(2.5%,-2%,0) rotate(-9.5deg);opacity:.62}}
+@media(max-width:699px){.echoes-path{opacity:.58}.echoes-path-01{width:210vw;height:94vw;left:-145vw;top:18vh}.echoes-path-02{width:230vw;height:102vw;right:-174vw;top:52vh}.echoes-path-03{width:190vw;height:82vw;left:22vw;bottom:-54vw}}
+@media(prefers-reduced-motion:reduce){.echoes-path{animation:none}.echoes-path-01{transform:rotate(-18deg)}.echoes-path-02{transform:rotate(24deg)}.echoes-path-03{transform:rotate(-11deg)}}
