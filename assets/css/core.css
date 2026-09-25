@@ -478,3 +478,8 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
 @keyframes echoes-depth-plane-far{0%{transform:translate3d(3%,4%,0) scale(1.04)}100%{transform:translate3d(-6%,-4%,0) scale(.97)}}
 @media(max-width:699px){.echoes-depth::before{width:132vw;height:58vh;left:-72vw;top:22vh;filter:blur(30px);opacity:.54}.echoes-depth::after{width:126vw;height:52vh;right:-74vw;bottom:12vh;filter:blur(36px);opacity:.42}}
 @media(prefers-reduced-motion:reduce){.echoes-depth::before,.echoes-depth::after{animation:none}}
+
+
+/* ECHOES CTA JOURNEY FIELD — MOTION SAFE AREA */
+.echoes-journey-field-03{overflow:visible}
+.echoes-journey-field-03 .echoes-field-path{clip-path:inset(-18% -8% -18% -8%)}
