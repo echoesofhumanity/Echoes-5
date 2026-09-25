@@ -90,7 +90,7 @@ html[dir="rtl"] body[data-page="contact"] .contact-form textarea{text-align:righ
 @media(max-width:699px){.page-section{padding-block:88px}.page-section .card-grid{margin-top:56px}.page-section>.card-grid+h2{margin-top:136px}.page-section>.card-grid+h2+p{margin-top:32px}}
 
 /* ECHOES GLOBAL CONTENT ALIGNMENT */
-.page-hero{text-align:center}.page-hero>.section-label{color:rgba(var(--echoes-card-accent-rgb),.9);font-size:var(--echoes-meta);font-weight:700;line-height:1.5;letter-spacing:.18em}.page-hero>h1{max-width:900px;margin-inline:auto}.page-hero>p{max-width:760px;margin-inline:auto;line-height:1.7}
+.page-hero{text-align:center}.page-hero>.section-label{color:rgba(95,208,197,.82);font-size:var(--echoes-meta);font-weight:700;line-height:1.5;letter-spacing:.18em}.page-hero>h1{max-width:900px;margin-inline:auto}.page-hero>p{max-width:760px;margin-inline:auto;line-height:1.7}
 
 .page-section,
 .page-content,
