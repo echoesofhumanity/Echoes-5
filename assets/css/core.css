@@ -156,3 +156,10 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
 .echoes-journey-field-01{top:0;height:100vh}
 .echoes-journey-field-02{top:100vh;height:100vh}
 .echoes-journey-field-03{top:200vh;height:100vh}
+
+
+/* ECHOES PATH PRESENCE — CINEMATIC VISIBILITY */
+.echoes-path{border-color:rgba(95,208,197,.13);opacity:.82;box-shadow:0 0 30px rgba(95,208,197,.035)}
+.echoes-path-02{border-color:rgba(143,169,154,.12)}
+.echoes-path-03{border-color:rgba(185,160,111,.095)}
+@media(max-width:699px){.echoes-path{opacity:.76;border-color:rgba(95,208,197,.16);box-shadow:0 0 26px rgba(95,208,197,.04)}.echoes-path-02{border-color:rgba(143,169,154,.145)}.echoes-path-03{border-color:rgba(185,160,111,.12)}}
