@@ -176,3 +176,13 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
 .echoes-path-03::after{border-color:rgba(207,187,145,.044)}
 @media(max-width:699px){.echoes-path{opacity:.74}.echoes-path::before{inset:-14px;border-width:14px;filter:blur(12px)}.echoes-path::after{inset:-4px;border-width:4px;filter:blur(2.5px)}}
 @media(prefers-reduced-motion:reduce){.echoes-path::before,.echoes-path::after{will-change:auto}}
+
+
+/* ECHOES VOLUMETRIC PATH — PERSPECTIVE DEPTH */
+.echoes-path{--path-near:rgba(95,208,197,.105);--path-mid:rgba(95,208,197,.042);--path-far:rgba(95,208,197,.008)}
+.echoes-path::before{inset:-30px;border:0;filter:blur(18px);background:conic-gradient(from 205deg,transparent 0 7%,var(--path-far) 13%,var(--path-mid) 23%,var(--path-near) 34%,var(--path-mid) 46%,var(--path-far) 57%,transparent 66% 100%);-webkit-mask:radial-gradient(ellipse at center,transparent calc(100% - 42px),#000 calc(100% - 39px),#000 calc(100% - 8px),transparent 100%);mask:radial-gradient(ellipse at center,transparent calc(100% - 42px),#000 calc(100% - 39px),#000 calc(100% - 8px),transparent 100%);box-shadow:none}
+.echoes-path::after{inset:-8px;border:0;filter:blur(4px);background:conic-gradient(from 205deg,transparent 0 10%,rgba(201,239,232,.012) 17%,rgba(177,231,222,.075) 30%,rgba(211,244,238,.13) 36%,rgba(154,216,207,.055) 46%,rgba(139,196,190,.012) 58%,transparent 67% 100%);-webkit-mask:radial-gradient(ellipse at center,transparent calc(100% - 12px),#000 calc(100% - 10px),#000 calc(100% - 3px),transparent 100%);mask:radial-gradient(ellipse at center,transparent calc(100% - 12px),#000 calc(100% - 10px),#000 calc(100% - 3px),transparent 100%);box-shadow:none}
+.echoes-path-02{--path-near:rgba(143,169,154,.09);--path-mid:rgba(143,169,154,.036);--path-far:rgba(143,169,154,.007)}
+.echoes-path-03{--path-near:rgba(185,160,111,.075);--path-mid:rgba(185,160,111,.03);--path-far:rgba(185,160,111,.006)}
+.echoes-path-02::before,.echoes-path-03::before,.echoes-path-02::after,.echoes-path-03::after{border:0}
+@media(max-width:699px){.echoes-path::before{inset:-24px;filter:blur(16px)}.echoes-path::after{inset:-7px;filter:blur(3.5px)}}
