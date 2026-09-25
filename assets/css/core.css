@@ -106,3 +106,18 @@ html[dir="rtl"] body[data-page="contact"] .contact-form textarea{text-align:righ
 .cinematic-card h3,
 .cinematic-card p{text-align:center}
 .cinematic-card .card-link{align-self:center}
+
+
+/* ECHOES GLOBAL ATMOSPHERE — DEPTH FOUNDATION */
+body{position:relative;isolation:isolate;background:#050a14}
+.echoes-atmosphere{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none;background:#050a14}
+.echoes-depth{position:absolute;inset:-12%;background:
+radial-gradient(ellipse 92% 72% at 18% 8%,rgba(36,78,99,.16) 0%,rgba(20,48,67,.07) 34%,transparent 68%),
+radial-gradient(ellipse 86% 68% at 84% 34%,rgba(63,91,82,.10) 0%,rgba(32,58,57,.045) 38%,transparent 72%),
+radial-gradient(ellipse 110% 88% at 48% 96%,rgba(67,58,45,.075) 0%,rgba(26,35,43,.035) 42%,transparent 74%),
+linear-gradient(180deg,#050a14 0%,#06101a 44%,#071019 72%,#071018 100%)}
+body>main{position:relative;z-index:0;background:transparent}
+@media(max-width:699px){.echoes-depth{inset:-8%;background:
+radial-gradient(ellipse 118% 62% at 14% 10%,rgba(36,78,99,.13) 0%,rgba(20,48,67,.055) 36%,transparent 70%),
+radial-gradient(ellipse 112% 68% at 90% 52%,rgba(63,91,82,.075) 0%,rgba(32,58,57,.035) 40%,transparent 74%),
+linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
