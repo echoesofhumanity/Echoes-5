@@ -46,6 +46,22 @@
       }
       await load("[data-section=\"cta\"]","sections/"+page+"/cta.html");
       await load("[data-component=\"footer\"]","components/footer/footer.html");
+
+      const journeyTargets=[
+        document.querySelector("[data-section=\"hero\"]"),
+        document.querySelector("[data-section=\"section-02\"]")||document.querySelector("[data-section=\"featured\"]")||document.querySelector("[data-section=\"products\"]"),
+        document.querySelector("[data-section=\"cta\"]")
+      ];
+      journey.querySelectorAll(".echoes-journey-field").forEach((field,index)=>{
+        const target=journeyTargets[index];
+        if(!target)return;
+        const top=target.offsetTop;
+        const height=Math.max(target.offsetHeight,window.innerHeight);
+        field.style.top=top+"px";
+        field.style.height=height+"px";
+      });
+      journey.style.height=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight)+"px";
+
       document.dispatchEvent(new CustomEvent("echoes:layout-ready"));
     }catch(error){
       console.error("Echoes layout error:",error);
