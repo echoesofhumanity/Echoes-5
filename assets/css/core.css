@@ -468,3 +468,13 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
   .echoes-field-path-04{top:39vh}
   .echoes-field-path-06{top:4vh}
 }
+
+
+/* ECHOES DEPTH DIMENSION — ATMOSPHERIC PLANES */
+.echoes-depth::before,.echoes-depth::after{content:"";position:absolute;pointer-events:none;border-radius:50%}
+.echoes-depth::before{width:82vw;height:64vh;left:-28vw;top:18vh;background:radial-gradient(ellipse at center,rgba(48,104,118,.075) 0%,rgba(30,71,85,.035) 38%,transparent 72%);filter:blur(34px);opacity:.62;animation:echoes-depth-plane-near 36s ease-in-out infinite alternate}
+.echoes-depth::after{width:76vw;height:58vh;right:-30vw;bottom:8vh;background:radial-gradient(ellipse at center,rgba(185,160,111,.045) 0%,rgba(83,101,91,.025) 40%,transparent 74%);filter:blur(42px);opacity:.48;animation:echoes-depth-plane-far 48s ease-in-out infinite alternate}
+@keyframes echoes-depth-plane-near{0%{transform:translate3d(-2%,-2%,0) scale(.96)}100%{transform:translate3d(7%,5%,0) scale(1.07)}}
+@keyframes echoes-depth-plane-far{0%{transform:translate3d(3%,4%,0) scale(1.04)}100%{transform:translate3d(-6%,-4%,0) scale(.97)}}
+@media(max-width:699px){.echoes-depth::before{width:132vw;height:58vh;left:-72vw;top:22vh;filter:blur(30px);opacity:.54}.echoes-depth::after{width:126vw;height:52vh;right:-74vw;bottom:12vh;filter:blur(36px);opacity:.42}}
+@media(prefers-reduced-motion:reduce){.echoes-depth::before,.echoes-depth::after{animation:none}}
