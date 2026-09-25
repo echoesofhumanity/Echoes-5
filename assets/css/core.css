@@ -125,3 +125,13 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
 
 /* ECHOES CONTINUOUS UNIVERSE — NO PAGE DIVIDERS */
 .page-hero,.page-content,.page-section,.page-cta,.marketplace-search{border-bottom:0}
+
+
+/* ECHOES ATMOSPHERIC BREATH */
+.echoes-cloud{position:absolute;width:clamp(520px,86vw,1180px);height:clamp(420px,72vw,900px);border-radius:50%;filter:blur(64px);opacity:.34;will-change:transform,opacity}
+.echoes-cloud-01{left:-38%;top:-14%;background:radial-gradient(ellipse at center,rgba(67,118,132,.16) 0%,rgba(71,112,103,.075) 38%,transparent 72%);animation:echoes-cloud-breathe-01 34s ease-in-out infinite alternate}
+.echoes-cloud-02{right:-46%;bottom:-18%;background:radial-gradient(ellipse at center,rgba(143,169,154,.10) 0%,rgba(185,160,111,.045) 38%,transparent 72%);animation:echoes-cloud-breathe-02 42s ease-in-out infinite alternate}
+@keyframes echoes-cloud-breathe-01{0%{transform:translate3d(-2%,-1%,0) scale(.98);opacity:.26}100%{transform:translate3d(7%,5%,0) scale(1.06);opacity:.38}}
+@keyframes echoes-cloud-breathe-02{0%{transform:translate3d(3%,4%,0) scale(1.04);opacity:.22}100%{transform:translate3d(-7%,-5%,0) scale(.97);opacity:.34}}
+@media(max-width:699px){.echoes-cloud{width:128vw;height:86vh;filter:blur(52px);opacity:.26}.echoes-cloud-01{left:-62%;top:-18%}.echoes-cloud-02{right:-72%;bottom:-22%}}
+@media(prefers-reduced-motion:reduce){.echoes-cloud{animation:none}.echoes-cloud-01{opacity:.30}.echoes-cloud-02{opacity:.26}}
