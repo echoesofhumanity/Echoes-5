@@ -214,3 +214,78 @@ linear-gradient(180deg,#050a14 0%,#06101a 50%,#071018 100%)}}
 .echoes-field-path-05{width:206vw;height:90vw;left:-138vw;top:10vh}
 .echoes-field-path-06{width:156vw;height:68vw;right:-98vw;top:40vh}
 }
+
+
+/* ECHOES FIELD DEPTH — VOLUMETRIC ELLIPTICAL BODIES */
+.echoes-field-path{
+  background:radial-gradient(ellipse at center,
+    transparent 0 70%,
+    rgba(16,43,54,.018) 73%,
+    rgba(73,137,143,.055) 79%,
+    rgba(125,190,185,.085) 84%,
+    rgba(47,99,108,.045) 89%,
+    transparent 94%);
+  box-shadow:
+    inset 0 0 34px rgba(128,202,194,.025),
+    0 0 42px rgba(45,104,116,.018);
+}
+.echoes-field-path::before{
+  inset:-28px;
+  border:0;
+  background:radial-gradient(ellipse at center,
+    transparent 0 72%,
+    rgba(39,83,94,.018) 75%,
+    rgba(91,161,160,.075) 81%,
+    rgba(154,211,201,.095) 84%,
+    rgba(67,127,134,.045) 88%,
+    transparent 94%);
+  filter:blur(13px);
+  box-shadow:none;
+}
+.echoes-field-path::after{
+  content:"";
+  position:absolute;
+  inset:5%;
+  border-radius:inherit;
+  background:radial-gradient(ellipse at 46% 42%,
+    transparent 0 74%,
+    rgba(190,229,220,.055) 79%,
+    rgba(93,166,162,.075) 82%,
+    rgba(24,57,68,.025) 87%,
+    transparent 92%);
+  filter:blur(4px);
+  opacity:.72;
+}
+.echoes-field-path-far{opacity:.42;filter:blur(1.8px)}
+.echoes-field-path-mid{opacity:.68}
+.echoes-field-path-far::after{opacity:.42;filter:blur(6px)}
+.echoes-field-path-mid::after{opacity:.78}
+
+@media(max-width:699px){
+  .echoes-field-path{
+    background:radial-gradient(ellipse at center,
+      transparent 0 67%,
+      rgba(18,48,58,.025) 71%,
+      rgba(69,137,142,.075) 78%,
+      rgba(132,199,191,.105) 83%,
+      rgba(48,103,111,.055) 88%,
+      transparent 94%);
+    box-shadow:inset 0 0 28px rgba(128,202,194,.03),0 0 36px rgba(45,104,116,.022);
+  }
+  .echoes-field-path::before{
+    inset:-24px;
+    border:0;
+    background:radial-gradient(ellipse at center,
+      transparent 0 69%,
+      rgba(42,91,100,.024) 73%,
+      rgba(94,166,163,.09) 80%,
+      rgba(158,216,205,.115) 84%,
+      rgba(67,130,135,.05) 89%,
+      transparent 95%);
+    filter:blur(11px);
+  }
+  .echoes-field-path::after{inset:4%;opacity:.82;filter:blur(3.5px)}
+  .echoes-field-path-far{opacity:.46;filter:blur(1.6px)}
+  .echoes-field-path-mid{opacity:.74}
+  .echoes-field-path-far::after{opacity:.46}
+}
