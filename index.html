@@ -18,11 +18,33 @@
     body[data-page="home"] .echoes-human-light-07{top:715vh}
     body[data-page="home"] .echoes-human-light-08{top:825vh}
     body[data-page="home"] .echoes-human-light-09{top:935vh}
+
+    body[data-page="home"] main{position:relative}
+    body[data-page="home"] .echoes-pulse-light{
+      position:absolute;
+      z-index:0;
+      pointer-events:none;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(94,234,212,.22) 0%,rgba(94,234,212,.08) 32%,rgba(94,234,212,0) 72%);
+      opacity:.28;
+      transform:translate(-50%,-50%) scale(.88);
+      animation:echoesAtmosphericPulse 7s ease-in-out infinite;
+    }
+    body[data-page="home"] .echoes-pulse-light-01{width:54px;height:54px;left:13%;top:335vh;animation-delay:-1.5s}
+    body[data-page="home"] .echoes-pulse-light-02{width:82px;height:82px;left:84%;top:570vh;animation-delay:-4s}
+    body[data-page="home"] .echoes-pulse-light-03{width:42px;height:42px;left:20%;top:790vh;animation-delay:-2.5s}
+    @keyframes echoesAtmosphericPulse{
+      0%,100%{opacity:.16;transform:translate(-50%,-50%) scale(.82)}
+      50%{opacity:.42;transform:translate(-50%,-50%) scale(1.12)}
+    }
   </style>
 </head>
 <body data-page="home">
   <div data-component="header"></div>
   <main>
+    <span class="echoes-pulse-light echoes-pulse-light-01" aria-hidden="true"></span>
+    <span class="echoes-pulse-light echoes-pulse-light-02" aria-hidden="true"></span>
+    <span class="echoes-pulse-light echoes-pulse-light-03" aria-hidden="true"></span>
     <section data-section="hero"></section>
     <div data-section="section-01"></div>
     <div data-section="section-02"></div>
