@@ -19,10 +19,15 @@
     body[data-page="home"] .echoes-human-light-08{top:825vh}
     body[data-page="home"] .echoes-human-light-09{top:935vh}
 
-    body[data-page="home"] main{position:relative}
-    body[data-page="home"] .echoes-pulse-light{
+    body[data-page="home"] .echoes-pulse-light{display:none}
+    body[data-page="home"] [data-i18n="section02.text39"],
+    body[data-page="home"] [data-i18n="section03.text47"],
+    body[data-page="home"] [data-i18n="section03.text68"]{position:relative;z-index:1}
+    body[data-page="home"] [data-i18n="section02.text39"]::before,
+    body[data-page="home"] [data-i18n="section03.text47"]::before,
+    body[data-page="home"] [data-i18n="section03.text68"]::before{
+      content:"";
       position:absolute;
-      z-index:2;
       pointer-events:none;
       border-radius:50%;
       background:radial-gradient(circle,rgba(95,208,197,.34) 0%,rgba(95,208,197,.13) 24%,rgba(95,208,197,.038) 49%,rgba(95,208,197,0) 76%);
@@ -30,10 +35,11 @@
       opacity:.22;
       transform:translate(-50%,-50%) scale(.88);
       animation:echoesAtmosphericPulse 11s ease-in-out infinite;
+      z-index:-1;
     }
-    body[data-page="home"] .echoes-pulse-light-01{width:88px;height:88px;right:8%;left:auto;top:430vh;animation-delay:-1.5s}
-    body[data-page="home"] .echoes-pulse-light-02{width:112px;height:112px;left:12%;top:735vh;animation-delay:-4s}
-    body[data-page="home"] .echoes-pulse-light-03{width:72px;height:72px;right:10%;left:auto;top:950vh;animation-delay:-2.5s}
+    body[data-page="home"] [data-i18n="section02.text39"]::before{width:88px;height:88px;left:8%;top:-72px;animation-delay:-1.5s}
+    body[data-page="home"] [data-i18n="section03.text47"]::before{width:112px;height:112px;left:104%;top:-46px;animation-delay:-4s}
+    body[data-page="home"] [data-i18n="section03.text68"]::before{width:72px;height:72px;left:50%;top:-58px;animation-delay:-2.5s}
     @keyframes echoesAtmosphericPulse{
       0%,100%{opacity:.13;transform:translate(-50%,-50%) scale(.86);filter:blur(1.8px)}
       50%{opacity:.40;transform:translate(-50%,-50%) scale(1.08);filter:blur(.8px)}
