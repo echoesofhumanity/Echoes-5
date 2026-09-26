@@ -59,7 +59,13 @@
         let height=Math.max(target.offsetHeight,window.innerHeight);
         if(index===0){
           const firstSection=document.querySelector("[data-section=\"section-01\"]");
-          if(firstSection){height=Math.max(height,(firstSection.offsetTop+firstSection.offsetHeight)-top);}
+          if(firstSection){
+            height=Math.max(height,(firstSection.offsetTop+firstSection.offsetHeight)-top);
+            const oneHumanityOrbit=field.querySelector(".echoes-field-path-02");
+            if(oneHumanityOrbit){
+              oneHumanityOrbit.style.top=((firstSection.offsetTop-top)+(firstSection.offsetHeight*.18))+"px";
+            }
+          }
         }
         field.style.top=top+"px";
         field.style.height=height+"px";
