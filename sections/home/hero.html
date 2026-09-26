@@ -1,4 +1,34 @@
 <section class="hero page-hero cinematic-page-hero">
+  <style>
+    body[data-page="home"] .cinematic-page-hero .hero-content > .eyebrow,
+    body[data-page="home"] .cinematic-page-hero .hero-content > h1,
+    body[data-page="home"] .cinematic-page-hero .hero-content > .hero-lead,
+    body[data-page="home"] .cinematic-page-hero .hero-content > .hero-actions {
+      opacity: 0;
+      transform: translateY(-22px);
+      animation: echoesHeroReveal 900ms var(--echoes-ease) forwards;
+    }
+    body[data-page="home"] .cinematic-page-hero .hero-content > .eyebrow { animation-delay: 120ms; }
+    body[data-page="home"] .cinematic-page-hero .hero-content > h1 { animation-delay: 300ms; }
+    body[data-page="home"] .cinematic-page-hero .hero-content > .hero-lead { animation-delay: 480ms; }
+    body[data-page="home"] .cinematic-page-hero .hero-content > .hero-actions { animation-delay: 660ms; }
+
+    @keyframes echoesHeroReveal {
+      from { opacity: 0; transform: translateY(-22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body[data-page="home"] .cinematic-page-hero .hero-content > .eyebrow,
+      body[data-page="home"] .cinematic-page-hero .hero-content > h1,
+      body[data-page="home"] .cinematic-page-hero .hero-content > .hero-lead,
+      body[data-page="home"] .cinematic-page-hero .hero-content > .hero-actions {
+        opacity: 1;
+        transform: none;
+        animation: none;
+      }
+    }
+  </style>
   <div class="hero-content">
     <span class="eyebrow"><span data-i18n="hero.text01">ECHOES OF HUMANITY</span></span>
     <h1><span data-i18n="hero.text02">Welcome to the Global Home of Humanity.</span></h1>
