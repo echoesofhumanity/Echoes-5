@@ -56,7 +56,11 @@
         const target=journeyTargets[index];
         if(!target)return;
         const top=target.offsetTop;
-        const height=Math.max(target.offsetHeight,window.innerHeight);
+        let height=Math.max(target.offsetHeight,window.innerHeight);
+        if(index===0){
+          const firstSection=document.querySelector("[data-section=\"section-01\"]");
+          if(firstSection){height=Math.max(height,(firstSection.offsetTop+firstSection.offsetHeight)-top);}
+        }
         field.style.top=top+"px";
         field.style.height=height+"px";
       });
