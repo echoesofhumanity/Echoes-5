@@ -63,6 +63,12 @@
             height=Math.max(height,(firstSection.offsetTop+firstSection.offsetHeight)-top);
             const oneHumanityOrbit=field.querySelector(".echoes-field-path-02");
             if(oneHumanityOrbit){
+              if(page==="home"){
+                const heroOrbit=oneHumanityOrbit.cloneNode(true);
+                heroOrbit.classList.add("echoes-hero-orbit");
+                heroOrbit.style.top="31vh";
+                field.appendChild(heroOrbit);
+              }
               oneHumanityOrbit.style.top=((firstSection.offsetTop-top)+(firstSection.offsetHeight*.18))+"px";
             }
           }
