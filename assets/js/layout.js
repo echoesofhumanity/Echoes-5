@@ -24,7 +24,7 @@
       const atmosphere=document.createElement("div");
       atmosphere.className="echoes-atmosphere";
       atmosphere.setAttribute("aria-hidden","true");
-      atmosphere.innerHTML='<div class="echoes-depth"></div><div class="echoes-cloud echoes-cloud-01"></div><div class="echoes-cloud echoes-cloud-02"></div>';
+      atmosphere.innerHTML='<div class="echoes-depth-far" style="position:absolute;inset:-18%;pointer-events:none;opacity:.72;filter:blur(34px);background:radial-gradient(ellipse 58% 42% at 12% 22%,rgba(31,70,91,.13) 0%,rgba(18,43,61,.055) 42%,transparent 76%),radial-gradient(ellipse 52% 38% at 88% 68%,rgba(92,79,61,.075) 0%,rgba(53,57,52,.032) 44%,transparent 78%),radial-gradient(ellipse 46% 34% at 54% 92%,rgba(40,83,86,.06) 0%,transparent 74%)"></div><div class="echoes-depth"></div><div class="echoes-cloud echoes-cloud-01"></div><div class="echoes-cloud echoes-cloud-02"></div>';
 
       const journey=document.createElement("div");
       journey.className="echoes-journey";
