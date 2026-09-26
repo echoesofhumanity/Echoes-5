@@ -25,17 +25,18 @@
       z-index:2;
       pointer-events:none;
       border-radius:50%;
-      background:radial-gradient(circle,rgba(94,234,212,.22) 0%,rgba(94,234,212,.08) 32%,rgba(94,234,212,0) 72%);
-      opacity:.28;
-      transform:translate(-50%,-50%) scale(.88);
-      animation:echoesAtmosphericPulse 7s ease-in-out infinite;
+      background:radial-gradient(circle,rgba(95,208,197,.58) 0%,rgba(95,208,197,.24) 24%,rgba(95,208,197,.08) 48%,rgba(95,208,197,0) 76%);
+      box-shadow:0 0 28px rgba(95,208,197,.12);
+      opacity:.34;
+      transform:translate(-50%,-50%) scale(.78);
+      animation:echoesAtmosphericPulse 8s ease-in-out infinite;
     }
-    body[data-page="home"] .echoes-pulse-light-01{width:54px;height:54px;left:13%;top:335vh;animation-delay:-1.5s}
-    body[data-page="home"] .echoes-pulse-light-02{width:82px;height:82px;left:84%;top:570vh;animation-delay:-4s}
-    body[data-page="home"] .echoes-pulse-light-03{width:42px;height:42px;left:20%;top:790vh;animation-delay:-2.5s}
+    body[data-page="home"] .echoes-pulse-light-01{width:92px;height:92px;left:14%;top:335vh;animation-delay:-1.5s}
+    body[data-page="home"] .echoes-pulse-light-02{width:132px;height:132px;left:82%;top:570vh;animation-delay:-4s}
+    body[data-page="home"] .echoes-pulse-light-03{width:74px;height:74px;left:18%;top:790vh;animation-delay:-2.5s}
     @keyframes echoesAtmosphericPulse{
-      0%,100%{opacity:.16;transform:translate(-50%,-50%) scale(.82)}
-      50%{opacity:.42;transform:translate(-50%,-50%) scale(1.12)}
+      0%,100%{opacity:.20;transform:translate(-50%,-50%) scale(.76);filter:blur(1.2px)}
+      50%{opacity:.72;transform:translate(-50%,-50%) scale(1.18);filter:blur(.2px)}
     }
   </style>
 </head>
