@@ -80,6 +80,13 @@
       if(humanLightField){
         humanLightField.style.top="0px";
         humanLightField.style.height=journeyHeight+"px";
+        humanLightField.style.zIndex="0";
+        humanLightField.style.filter="none";
+        const lights=humanLightField.querySelectorAll(".echoes-human-light");
+        const positions=[.09,.19,.30,.41,.52,.63,.74,.85,.94];
+        lights.forEach((light,index)=>{
+          light.style.top=Math.round(journeyHeight*positions[index])+"px";
+        });
       }
 
       document.dispatchEvent(new CustomEvent("echoes:layout-ready"));
