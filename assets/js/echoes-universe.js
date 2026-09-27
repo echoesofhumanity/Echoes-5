@@ -35,6 +35,14 @@
     {x:94,y:94,size:78,tone:"sage",delay:-17,duration:27}
   ];
 
+  const haloField=[
+    {x:52,y:10,w:320,h:118,tone:"turquoise",delay:-6,duration:31},
+    {x:18,y:31,w:230,h:92,tone:"cyan",delay:-17,duration:37},
+    {x:79,y:52,w:360,h:136,tone:"sage",delay:-11,duration:43},
+    {x:31,y:73,w:270,h:104,tone:"warm",delay:-23,duration:39},
+    {x:72,y:91,w:300,h:112,tone:"turquoise",delay:-14,duration:35}
+  ];
+
   const getDocumentHeight=(universe)=>{
     const previousHeight=universe.style.height;
     universe.style.height="0px";
@@ -74,9 +82,28 @@
     });
   };
 
+  const mountHaloField=(universe,documentHeight)=>{
+    const layer=universe.querySelector('[data-universe-layer="halos"]');
+    if(!layer||layer.childElementCount)return;
+
+    haloField.forEach((halo,index)=>{
+      const node=document.createElement("span");
+      node.className="universe-halo universe-halo--"+halo.tone;
+      node.dataset.halo=index+1;
+      node.style.setProperty("--halo-x",halo.x+"%");
+      node.style.setProperty("--halo-y",Math.round(documentHeight*(halo.y/100))+"px");
+      node.style.setProperty("--halo-w",halo.w+"px");
+      node.style.setProperty("--halo-h",halo.h+"px");
+      node.style.setProperty("--halo-delay",halo.delay+"s");
+      node.style.setProperty("--halo-duration",halo.duration+"s");
+      layer.appendChild(node);
+    });
+  };
+
   const finalizeUniverse=(universe)=>{
     const documentHeight=sizeUniverse(universe);
     mountLightField(universe,documentHeight);
+    mountHaloField(universe,documentHeight);
   };
 
   const finalizeAfterLayout=(universe)=>{
