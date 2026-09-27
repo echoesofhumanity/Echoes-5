@@ -39,6 +39,27 @@
       }
     }
 
+    @media (max-width: 699px) {
+      body[data-page="home"] .cinematic-page-hero {
+        min-height: calc(100svh - 68px);
+        padding: 42px 14px 32px;
+      }
+
+      body[data-page="home"] .cinematic-page-hero .eyebrow {
+        margin-bottom: 0.8rem;
+      }
+
+      body[data-page="home"] .cinematic-page-hero .hero-lead {
+        margin-top: 1.35rem;
+        line-height: 1.55;
+      }
+
+      body[data-page="home"] .cinematic-page-hero .hero-actions {
+        margin-top: 1.65rem;
+        gap: 0.65rem;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       body[data-page="home"] .cinematic-page-hero .hero-content > .eyebrow,
       body[data-page="home"] .cinematic-page-hero .hero-content > h1,
