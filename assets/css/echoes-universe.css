@@ -81,10 +81,44 @@
   will-change:transform,opacity;
 }
 
+/* Shared light field: small points of hope distributed through document-space. */
+.universe-light{
+  --light-rgb:var(--universe-turquoise);
+  left:var(--light-x);
+  top:var(--light-y);
+  width:var(--light-size);
+  height:var(--light-size);
+  border-radius:50%;
+  transform:translate(-50%,-50%) scale(.82);
+  background:radial-gradient(circle,
+    rgba(var(--light-rgb),.88) 0%,
+    rgba(var(--light-rgb),.42) 13%,
+    rgba(var(--light-rgb),.16) 34%,
+    rgba(var(--light-rgb),.045) 58%,
+    transparent 76%);
+  box-shadow:
+    0 0 calc(var(--light-size) * .75) rgba(var(--light-rgb),.20),
+    0 0 calc(var(--light-size) * 1.8) rgba(var(--light-rgb),.08);
+  opacity:.34;
+  animation:echoesUniverseLightBreathe var(--light-duration) ease-in-out var(--light-delay) infinite alternate;
+}
+
+.universe-light--turquoise{--light-rgb:var(--universe-turquoise)}
+.universe-light--cyan{--light-rgb:var(--universe-cyan)}
+.universe-light--sage{--light-rgb:var(--universe-sage)}
+.universe-light--warm{--light-rgb:var(--universe-warm)}
+
 @keyframes echoesUniverseFarBreathe{
   0%{opacity:.58;transform:scale(1)}
   50%{opacity:.76;transform:scale(1.012)}
   100%{opacity:.64;transform:scale(1.006)}
+}
+
+@keyframes echoesUniverseLightBreathe{
+  0%{opacity:.20;transform:translate(-50%,-50%) scale(.76)}
+  38%{opacity:.48;transform:translate(-50%,-50%) scale(1.03)}
+  72%{opacity:.31;transform:translate(-50%,-50%) scale(.90)}
+  100%{opacity:.56;transform:translate(-50%,-50%) scale(1.12)}
 }
 
 @media(prefers-reduced-motion:reduce){
