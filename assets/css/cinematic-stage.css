@@ -57,49 +57,19 @@
 }
 
 /* ---------------------------------------------------------
-   LEGACY DEPTH BRIDGE — PHASE 2
-   The existing atmosphere DOM now obeys the new stage order.
-   This bridge is intentionally limited to depth/color/clouds.
+   LEGACY ATMOSPHERE RETIREMENT
+   The old depth/color/cloud plane has been superseded by the
+   document-space Echoes Universe. Keep the DOM inert during
+   migration so rollback remains deterministic.
    --------------------------------------------------------- */
 .echoes-atmosphere {
-  z-index: var(--echoes-stage-base) !important;
-  isolation: isolate;
-}
-
-.echoes-atmosphere > .echoes-depth-far {
-  z-index: var(--echoes-stage-depth-far);
-}
-
-.echoes-atmosphere > .echoes-depth-middle {
-  z-index: var(--echoes-stage-depth-middle);
-}
-
-.echoes-atmosphere > .echoes-depth-near {
-  z-index: var(--echoes-stage-depth-near);
-}
-
-.echoes-atmosphere > .echoes-depth {
-  z-index: var(--echoes-stage-color);
-}
-
-.echoes-atmosphere > .echoes-cloud {
-  z-index: var(--echoes-stage-clouds);
-}
-
-.echoes-atmosphere > .echoes-depth-far,
-.echoes-atmosphere > .echoes-depth-middle,
-.echoes-atmosphere > .echoes-depth-near,
-.echoes-atmosphere > .echoes-depth,
-.echoes-atmosphere > .echoes-cloud {
-  position: absolute;
-  pointer-events: none;
+  display: none !important;
 }
 
 /* ---------------------------------------------------------
-   ATMOSPHERIC LIGHT PLANE — PHASE 3
-   Three independent lights are contained by the viewport and
-   deliberately occupy negative space rather than text/CTA zones.
-   Legacy section-derived inline top values are neutralized here.
+   ATMOSPHERIC LIGHT PLANE — LEGACY BRIDGE
+   Lights remain temporarily active until their Universe layer
+   replacement is introduced and visually verified.
    --------------------------------------------------------- */
 .echoes-journey {
   z-index: var(--echoes-stage-base) !important;
@@ -113,7 +83,6 @@
   pointer-events: none;
 }
 
-/* Mobile composition: clear of hero heading, halo centre and CTA stack. */
 .echoes-global-pulse-01 {
   top: 35svh !important;
   left: 7vw !important;
