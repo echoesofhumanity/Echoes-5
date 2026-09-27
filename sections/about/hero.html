@@ -1,5 +1,15 @@
 <section class="about-hero">
   <style>
+    body[data-page="about"] .about-hero {
+      min-height: calc(100svh - 76px);
+      padding: clamp(56px, 8vw, 96px) 0;
+    }
+
+    body[data-page="about"] .about-hero .about-hero-content {
+      width: min(100%, 900px);
+      margin-inline: auto;
+    }
+
     body[data-page="about"] .about-hero .about-hero-content > .about-eyebrow,
     body[data-page="about"] .about-hero .about-hero-content > h1,
     body[data-page="about"] .about-hero .about-hero-content > p {
@@ -14,10 +24,15 @@
     }
 
     body[data-page="about"] .about-hero .about-hero-content > h1 {
+      max-width: 900px;
+      margin: 32px auto 0;
       animation-delay: 2150ms;
     }
 
     body[data-page="about"] .about-hero .about-hero-content > p {
+      max-width: 760px;
+      margin: 28px auto 0;
+      line-height: 1.7;
       animation-delay: 2550ms;
     }
 
