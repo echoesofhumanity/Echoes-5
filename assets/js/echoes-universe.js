@@ -1,7 +1,7 @@
 /* =========================================================
    ECHOES OF HUMANITY — SHARED UNIVERSE MOUNT
    One DOM contract for every public page.
-   Visual objects are added only after their legacy counterparts retire.
+   Universe geometry lives in document-space, never viewport-space.
    ========================================================= */
 
 (function(){
@@ -19,6 +19,18 @@
     ["orbits-near","echoes-universe-orbits-near"],
     ["humans","echoes-universe-humans"]
   ];
+
+  const getDocumentHeight=()=>Math.max(
+    document.documentElement.scrollHeight,
+    document.documentElement.offsetHeight,
+    document.body.scrollHeight,
+    document.body.offsetHeight,
+    window.innerHeight
+  );
+
+  const sizeUniverse=(universe)=>{
+    universe.style.height=getDocumentHeight()+"px";
+  };
 
   const mount=()=>{
     if(document.getElementById(UNIVERSE_ID))return;
@@ -39,6 +51,14 @@
 
     universe.appendChild(fragment);
     document.body.prepend(universe);
+    sizeUniverse(universe);
+
+    const resizeObserver=new ResizeObserver(()=>sizeUniverse(universe));
+    resizeObserver.observe(document.body);
+    resizeObserver.observe(document.documentElement);
+
+    window.addEventListener("load",()=>sizeUniverse(universe),{once:true});
+    window.addEventListener("resize",()=>sizeUniverse(universe),{passive:true});
   };
 
   if(document.readyState==="loading"){
