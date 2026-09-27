@@ -1,60 +1,42 @@
 <section class="hero page-hero cinematic-page-hero">
   <style>
-    body[data-page="home"] .cinematic-page-hero .hero-content > .eyebrow {
+    body[data-page="home"] .cinematic-page-hero .hero-content > .eyebrow,
+    body[data-page="home"] .cinematic-page-hero .hero-content > h1,
+    body[data-page="home"] .cinematic-page-hero .hero-content > .hero-lead,
+    body[data-page="home"] .cinematic-page-hero .hero-content > .hero-actions {
       opacity: 0;
-      transform: translateY(-8px);
-      animation: echoesHeroEyebrow 1100ms var(--echoes-ease) 140ms forwards;
+      transform: translateY(18px);
+      filter: blur(5px);
+      animation: echoesHeroContentReveal 1100ms ease-out forwards;
     }
 
-    body[data-page="home"] .cinematic-page-hero .hero-content > h1,
-    body[data-page="home"] .cinematic-page-hero .hero-content > .hero-lead {
-      opacity: 0;
-      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 58%, transparent 100%);
-      mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 58%, transparent 100%);
-      -webkit-mask-size: 100% 240%;
-      mask-size: 100% 240%;
-      -webkit-mask-position: 0 100%;
-      mask-position: 0 100%;
-      -webkit-mask-repeat: no-repeat;
-      mask-repeat: no-repeat;
+    body[data-page="home"] .cinematic-page-hero .hero-content > .eyebrow {
+      animation-delay: 1900ms;
     }
 
     body[data-page="home"] .cinematic-page-hero .hero-content > h1 {
-      animation: echoesHeroLineReveal 1900ms var(--echoes-ease) 420ms forwards;
+      animation-delay: 2150ms;
     }
 
     body[data-page="home"] .cinematic-page-hero .hero-content > .hero-lead {
-      animation: echoesHeroLineReveal 2400ms var(--echoes-ease) 1500ms forwards;
+      animation-delay: 2550ms;
     }
 
     body[data-page="home"] .cinematic-page-hero .hero-content > .hero-actions {
-      opacity: 0;
-      transform: translateY(-8px);
-      animation: echoesHeroActions 1100ms var(--echoes-ease) 3300ms forwards;
+      animation-delay: 3250ms;
     }
 
-    @keyframes echoesHeroEyebrow {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes echoesHeroLineReveal {
-      0% {
+    @keyframes echoesHeroContentReveal {
+      from {
         opacity: 0;
-        -webkit-mask-position: 0 100%;
-        mask-position: 0 100%;
+        transform: translateY(18px);
+        filter: blur(5px);
       }
-      12% { opacity: 1; }
-      100% {
+      to {
         opacity: 1;
-        -webkit-mask-position: 0 0;
-        mask-position: 0 0;
+        transform: translateY(0);
+        filter: blur(0);
       }
-    }
-
-    @keyframes echoesHeroActions {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -64,9 +46,8 @@
       body[data-page="home"] .cinematic-page-hero .hero-content > .hero-actions {
         opacity: 1;
         transform: none;
+        filter: none;
         animation: none;
-        -webkit-mask-image: none;
-        mask-image: none;
       }
     }
   </style>
