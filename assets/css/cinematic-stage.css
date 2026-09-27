@@ -59,8 +59,7 @@
 /* ---------------------------------------------------------
    LEGACY DEPTH BRIDGE — PHASE 2
    The existing atmosphere DOM now obeys the new stage order.
-   This bridge is intentionally limited to depth/color/clouds;
-   journey orbits, halo, pulses and human lights are untouched.
+   This bridge is intentionally limited to depth/color/clouds.
    --------------------------------------------------------- */
 .echoes-atmosphere {
   z-index: var(--echoes-stage-base) !important;
@@ -94,6 +93,20 @@
 .echoes-atmosphere > .echoes-cloud {
   position: absolute;
   pointer-events: none;
+}
+
+/* ---------------------------------------------------------
+   ATMOSPHERIC LIGHT BRIDGE — PHASE 3
+   The active three-point pulse system gets one explicit plane.
+   Geometry/anchors/animation remain unchanged in this phase.
+   --------------------------------------------------------- */
+.echoes-journey {
+  z-index: var(--echoes-stage-base) !important;
+  isolation: isolate;
+}
+
+.echoes-global-pulse {
+  z-index: var(--echoes-stage-lights) !important;
 }
 
 body > main {
