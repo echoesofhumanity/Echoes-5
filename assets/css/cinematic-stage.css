@@ -1,0 +1,68 @@
+/* =========================================================
+   ECHOES OF HUMANITY — CINEMATIC BACKGROUND STAGE CONTRACT
+   Phase 1: architecture foundation only.
+   No legacy visual object is migrated by this file yet.
+   ========================================================= */
+
+:root {
+  --echoes-stage-base: 0;
+  --echoes-stage-depth-far: 1;
+  --echoes-stage-depth-middle: 2;
+  --echoes-stage-depth-near: 3;
+  --echoes-stage-color: 4;
+  --echoes-stage-clouds: 5;
+  --echoes-stage-lights: 6;
+  --echoes-stage-halo: 7;
+  --echoes-stage-orbits-far: 8;
+  --echoes-stage-orbits-mid: 9;
+  --echoes-stage-human-lights: 10;
+  --echoes-stage-content: 20;
+  --echoes-stage-ui: 30;
+}
+
+.echoes-background-stage {
+  position: fixed;
+  inset: 0;
+  z-index: var(--echoes-stage-base);
+  isolation: isolate;
+  overflow: clip;
+  pointer-events: none;
+  contain: layout paint;
+}
+
+.echoes-background-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.echoes-layer-depth-far { z-index: var(--echoes-stage-depth-far); }
+.echoes-layer-depth-middle { z-index: var(--echoes-stage-depth-middle); }
+.echoes-layer-depth-near { z-index: var(--echoes-stage-depth-near); }
+.echoes-layer-color { z-index: var(--echoes-stage-color); }
+.echoes-layer-clouds { z-index: var(--echoes-stage-clouds); }
+.echoes-layer-lights { z-index: var(--echoes-stage-lights); }
+.echoes-layer-halo { z-index: var(--echoes-stage-halo); }
+.echoes-layer-orbits-far { z-index: var(--echoes-stage-orbits-far); }
+.echoes-layer-orbits-mid { z-index: var(--echoes-stage-orbits-mid); }
+.echoes-layer-human-lights { z-index: var(--echoes-stage-human-lights); }
+
+.echoes-content-stage {
+  position: relative;
+  z-index: var(--echoes-stage-content);
+}
+
+.echoes-ui-stage {
+  position: relative;
+  z-index: var(--echoes-stage-ui);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .echoes-background-stage *,
+  .echoes-background-stage *::before,
+  .echoes-background-stage *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
