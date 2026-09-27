@@ -1,0 +1,75 @@
+/* =========================================================
+   ECHOES OF HUMANITY — SHARED UNIVERSE FOUNDATION
+   One deterministic cinematic world for every public page.
+   This file is intentionally inert until the Universe DOM is mounted.
+   ========================================================= */
+
+:root{
+  --universe-bg-deep:#06111d;
+  --universe-bg-mid:#0a1b2a;
+  --universe-bg-hope:#102b38;
+  --universe-turquoise:95,208,197;
+  --universe-cyan:125,190,204;
+  --universe-sage:143,169,154;
+  --universe-warm:200,184,159;
+
+  --universe-depth-far:1;
+  --universe-depth-color:2;
+  --universe-depth-haze:3;
+  --universe-depth-light:4;
+  --universe-depth-halo:5;
+  --universe-depth-orbit-far:6;
+  --universe-depth-orbit-near:7;
+  --universe-depth-human:8;
+  --universe-content:20;
+  --universe-ui:30;
+}
+
+/* The Universe owns the whole document background but never document width. */
+.echoes-universe{
+  position:absolute;
+  inset:0;
+  width:100%;
+  min-height:100%;
+  overflow:hidden;
+  overflow:clip;
+  pointer-events:none;
+  isolation:isolate;
+  contain:paint;
+  background:
+    radial-gradient(ellipse 86% 34% at 50% 7%,rgba(var(--universe-cyan),.075),transparent 68%),
+    linear-gradient(180deg,var(--universe-bg-mid) 0%,var(--universe-bg-deep) 32%,#071521 66%,var(--universe-bg-mid) 100%);
+}
+
+.echoes-universe-layer{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.echoes-universe-far{z-index:var(--universe-depth-far)}
+.echoes-universe-color{z-index:var(--universe-depth-color)}
+.echoes-universe-haze{z-index:var(--universe-depth-haze)}
+.echoes-universe-lights{z-index:var(--universe-depth-light)}
+.echoes-universe-halos{z-index:var(--universe-depth-halo)}
+.echoes-universe-orbits-far{z-index:var(--universe-depth-orbit-far)}
+.echoes-universe-orbits-near{z-index:var(--universe-depth-orbit-near)}
+.echoes-universe-humans{z-index:var(--universe-depth-human)}
+
+/* All future Universe objects are clipped optically and can never capture input. */
+.echoes-universe :where(.universe-color,.universe-haze,.universe-light,.universe-halo,.universe-orbit,.universe-human-light){
+  position:absolute;
+  pointer-events:none;
+  user-select:none;
+  transform-origin:center;
+  will-change:transform,opacity;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .echoes-universe *{
+    animation:none!important;
+  }
+}
