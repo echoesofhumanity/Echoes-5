@@ -35,17 +35,24 @@
     {x:94,y:94,size:78,tone:"sage",delay:-17,duration:27}
   ];
 
-  const getDocumentHeight=()=>Math.max(
-    document.documentElement.scrollHeight,
-    document.documentElement.offsetHeight,
-    document.body.scrollHeight,
-    document.body.offsetHeight,
-    window.innerHeight,
-    window.visualViewport ? window.visualViewport.height + window.scrollY : 0
-  );
+  const getDocumentHeight=(universe)=>{
+    const previousHeight=universe.style.height;
+    universe.style.height="0px";
+
+    const height=Math.max(
+      document.documentElement.scrollHeight,
+      document.documentElement.offsetHeight,
+      document.body.scrollHeight,
+      document.body.offsetHeight,
+      window.innerHeight
+    );
+
+    universe.style.height=previousHeight;
+    return height;
+  };
 
   const sizeUniverse=(universe)=>{
-    universe.style.height=getDocumentHeight()+"px";
+    universe.style.height=getDocumentHeight(universe)+"px";
   };
 
   const mountLightField=(universe)=>{
@@ -93,10 +100,6 @@
 
     window.addEventListener("load",()=>sizeUniverse(universe),{once:true});
     window.addEventListener("resize",()=>sizeUniverse(universe),{passive:true});
-
-    if(window.visualViewport){
-      window.visualViewport.addEventListener("resize",()=>sizeUniverse(universe),{passive:true});
-    }
   };
 
   if(document.readyState==="loading"){
