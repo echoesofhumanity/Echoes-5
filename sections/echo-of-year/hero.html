@@ -1,1 +1,116 @@
-<section class="hero page-hero cinematic-page-hero"><div class="hero-content"><span class="eyebrow"><span data-i18n="hero.text001">ECHO OF THE YEAR · HUMANITY REMEMBERS</span></span><h1><span data-i18n="hero.text002">Some Echoes Should Travel Beyond a Year.</span></h1><p class="hero-lead"><span data-i18n="hero.text003">Echo of the Year gives lasting annual visibility to human stories whose meaning continues to resonate. It is not the winner of a contest. It is an act of collective remembrance.</span></p><div class="hero-actions"><a class="cinematic-btn cinematic-btn-primary" href="#yearly-honour"><span data-i18n="hero.text004">Explore Yearly Honours</span></a><a class="cinematic-btn cinematic-btn-secondary" href="echoes.html#humanity-archive"><span data-i18n="hero.text005">Enter Humanity Archive</span></a></div></div></section>
+<section class="hero page-hero cinematic-page-hero echo-year-hero">
+  <style>
+    body[data-page="echo-of-year"] .echo-year-hero {
+      min-height: calc(100svh - 76px);
+      padding: clamp(56px, 8vw, 96px) 0;
+    }
+
+    body[data-page="echo-of-year"] .echo-year-hero .hero-content {
+      width: min(100%, 900px);
+      margin-inline: auto;
+    }
+
+    body[data-page="echo-of-year"] .echo-year-hero .hero-content > .eyebrow,
+    body[data-page="echo-of-year"] .echo-year-hero .hero-content > h1,
+    body[data-page="echo-of-year"] .echo-year-hero .hero-content > .hero-lead,
+    body[data-page="echo-of-year"] .echo-year-hero .hero-content > .hero-actions {
+      opacity: 0;
+      transform: translateY(18px);
+      filter: blur(5px);
+      animation: echoesYearHeroContentReveal 1100ms ease-out forwards;
+    }
+
+    body[data-page="echo-of-year"] .echo-year-hero .hero-content > .eyebrow {
+      animation-delay: 1900ms;
+    }
+
+    body[data-page="echo-of-year"] .echo-year-hero .hero-content > h1 {
+      max-width: 900px;
+      margin-inline: auto;
+      animation-delay: 2150ms;
+    }
+
+    body[data-page="echo-of-year"] .echo-year-hero .hero-content > .hero-lead {
+      max-width: 760px;
+      margin: 24px auto 0;
+      line-height: 1.7;
+      animation-delay: 2550ms;
+    }
+
+    body[data-page="echo-of-year"] .echo-year-hero .hero-content > .hero-actions {
+      margin-top: 28px;
+      animation-delay: 3200ms;
+    }
+
+    @keyframes echoesYearHeroContentReveal {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+        filter: blur(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    @media (max-width: 699px) {
+      body[data-page="echo-of-year"] .echo-year-hero {
+        min-height: calc(100svh - 68px);
+        box-sizing: border-box;
+        padding: 42px 14px 10px;
+      }
+
+      body[data-page="echo-of-year"] .echo-year-hero .hero-content {
+        width: min(100%, 560px);
+      }
+
+      body[data-page="echo-of-year"] .echo-year-hero .eyebrow {
+        margin-bottom: 0.45rem;
+      }
+
+      body[data-page="echo-of-year"] .echo-year-hero .hero-content > h1 {
+        font-size: clamp(2.35rem, 10.4vw, 3.05rem);
+        line-height: 0.99;
+      }
+
+      body[data-page="echo-of-year"] .echo-year-hero .hero-lead {
+        margin-top: 0.8rem;
+        font-size: clamp(0.98rem, 4.3vw, 1.16rem);
+        line-height: 1.34;
+      }
+
+      body[data-page="echo-of-year"] .echo-year-hero .hero-actions {
+        margin-top: 0.85rem;
+        gap: 0.38rem;
+      }
+
+      body[data-page="echo-of-year"] .echo-year-hero .hero-actions .cinematic-btn {
+        min-height: 44px;
+        padding-block: 0.54rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body[data-page="echo-of-year"] .echo-year-hero .hero-content > .eyebrow,
+      body[data-page="echo-of-year"] .echo-year-hero .hero-content > h1,
+      body[data-page="echo-of-year"] .echo-year-hero .hero-content > .hero-lead,
+      body[data-page="echo-of-year"] .echo-year-hero .hero-content > .hero-actions {
+        opacity: 1;
+        transform: none;
+        filter: none;
+        animation: none;
+      }
+    }
+  </style>
+  <div class="hero-content">
+    <span class="eyebrow"><span data-i18n="hero.text001">ECHO OF THE YEAR · HUMANITY REMEMBERS</span></span>
+    <h1><span data-i18n="hero.text002">Some Echoes Should Travel Beyond a Year.</span></h1>
+    <p class="hero-lead"><span data-i18n="hero.text003">Echo of the Year gives lasting annual visibility to human stories whose meaning continues to resonate. It is not the winner of a contest. It is an act of collective remembrance.</span></p>
+    <div class="hero-actions">
+      <a class="cinematic-btn cinematic-btn-primary" href="#yearly-honour"><span data-i18n="hero.text004">Explore Yearly Honours</span></a>
+      <a class="cinematic-btn cinematic-btn-secondary" href="echoes.html#humanity-archive"><span data-i18n="hero.text005">Enter Humanity Archive</span></a>
+    </div>
+  </div>
+</section>
