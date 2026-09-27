@@ -1,48 +1,48 @@
 /* ECHOES HERO HALO — INDEPENDENT L7 STAGE PRESENCE
-   Halo is rendered by the hero surface itself. It no longer restyles or owns an orbit. */
-[data-section="hero"]{
-  position:relative;
-  isolation:isolate;
-}
-[data-section="hero"]::before{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:28vh;
-  width:min(92vw,1080px);
-  height:min(38vw,450px);
-  pointer-events:none;
-  z-index:var(--echoes-stage-halo,7);
-  border-radius:50%;
+   The halo is a real DOM object mounted by layout.js.
+   Optical contract: soft volume, no hard ring, measurable contrast on the dark stage. */
+
+.echoes-stage-halo-object{
   background:radial-gradient(ellipse at center,
-    transparent 0 58%,
-    rgba(54,118,125,.018) 66%,
-    rgba(102,180,176,.055) 73%,
-    rgba(185,224,214,.075) 78%,
-    rgba(87,157,158,.035) 83%,
-    transparent 91%);
-  box-shadow:0 0 46px rgba(102,180,176,.025);
-  filter:blur(2px);
-  transform-origin:50% 50%;
-  animation:echoesHeroHaloBreathe 14s ease-in-out infinite;
+    transparent 0 52%,
+    rgba(54,118,125,.055) 61%,
+    rgba(102,180,176,.13) 70%,
+    rgba(185,224,214,.22) 77%,
+    rgba(87,157,158,.10) 84%,
+    rgba(54,118,125,.025) 89%,
+    transparent 94%)!important;
+  box-shadow:0 0 54px rgba(102,180,176,.045)!important;
+  filter:blur(3px)!important;
+  animation:echoesHeroHaloBreathe 15s ease-in-out infinite!important;
 }
+
+/* Retire the former hero pseudo-element renderer. */
+[data-section="hero"]::before{
+  content:none!important;
+}
+
 @keyframes echoesHeroHaloBreathe{
-  0%,100%{transform:translateX(-50%) scale(.985);opacity:.18}
-  50%{transform:translateX(-50%) scale(1.018);opacity:.27}
-}
-@media(max-width:699px){
-  [data-section="hero"]::before{
-    top:30vh;
-    width:132vw;
-    height:66vw;
-    filter:blur(2.6px);
-    animation-duration:15s;
+  0%,100%{
+    transform:translateX(-50%) scale(.985);
+    opacity:.28;
+  }
+  50%{
+    transform:translateX(-50%) scale(1.018);
+    opacity:.38;
   }
 }
+
+@media(min-width:700px){
+  .echoes-stage-halo-object{
+    filter:blur(2.5px)!important;
+    animation-duration:14s!important;
+  }
+}
+
 @media(prefers-reduced-motion:reduce){
-  [data-section="hero"]::before{
-    animation:none;
-    transform:translateX(-50%) scale(1);
-    opacity:.20;
+  .echoes-stage-halo-object{
+    animation:none!important;
+    transform:translateX(-50%) scale(1)!important;
+    opacity:.32!important;
   }
 }
