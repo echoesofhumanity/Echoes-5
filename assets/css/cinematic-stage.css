@@ -1,7 +1,6 @@
 /* =========================================================
    ECHOES OF HUMANITY — CINEMATIC BACKGROUND STAGE CONTRACT
-   Phase 1: architecture foundation only.
-   No legacy visual object is migrated by this file yet.
+   Deterministic optical planes. No negative stacking.
    ========================================================= */
 
 :root {
@@ -53,6 +52,56 @@
 }
 
 .echoes-ui-stage {
+  position: relative;
+  z-index: var(--echoes-stage-ui);
+}
+
+/* ---------------------------------------------------------
+   LEGACY DEPTH BRIDGE — PHASE 2
+   The existing atmosphere DOM now obeys the new stage order.
+   This bridge is intentionally limited to depth/color/clouds;
+   journey orbits, halo, pulses and human lights are untouched.
+   --------------------------------------------------------- */
+.echoes-atmosphere {
+  z-index: var(--echoes-stage-base) !important;
+  isolation: isolate;
+}
+
+.echoes-atmosphere > .echoes-depth-far {
+  z-index: var(--echoes-stage-depth-far);
+}
+
+.echoes-atmosphere > .echoes-depth-middle {
+  z-index: var(--echoes-stage-depth-middle);
+}
+
+.echoes-atmosphere > .echoes-depth-near {
+  z-index: var(--echoes-stage-depth-near);
+}
+
+.echoes-atmosphere > .echoes-depth {
+  z-index: var(--echoes-stage-color);
+}
+
+.echoes-atmosphere > .echoes-cloud {
+  z-index: var(--echoes-stage-clouds);
+}
+
+.echoes-atmosphere > .echoes-depth-far,
+.echoes-atmosphere > .echoes-depth-middle,
+.echoes-atmosphere > .echoes-depth-near,
+.echoes-atmosphere > .echoes-depth,
+.echoes-atmosphere > .echoes-cloud {
+  position: absolute;
+  pointer-events: none;
+}
+
+body > main {
+  position: relative;
+  z-index: var(--echoes-stage-content);
+}
+
+body > [data-component="header"] {
   position: relative;
   z-index: var(--echoes-stage-ui);
 }
