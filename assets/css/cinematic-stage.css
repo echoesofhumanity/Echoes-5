@@ -97,9 +97,9 @@
 
 /* ---------------------------------------------------------
    ATMOSPHERIC LIGHT PLANE — PHASE 3
-   Three independent lights are contained by the viewport.
-   Legacy section-derived inline top values are neutralized here
-   so no light can drift outside the visible cinematic frame.
+   Three independent lights are contained by the viewport and
+   deliberately occupy negative space rather than text/CTA zones.
+   Legacy section-derived inline top values are neutralized here.
    --------------------------------------------------------- */
 .echoes-journey {
   z-index: var(--echoes-stage-base) !important;
@@ -113,25 +113,26 @@
   pointer-events: none;
 }
 
+/* Mobile composition: clear of hero heading, halo centre and CTA stack. */
 .echoes-global-pulse-01 {
-  top: 27svh !important;
-  left: 16vw !important;
+  top: 35svh !important;
+  left: 7vw !important;
 }
 
 .echoes-global-pulse-02 {
-  top: 51svh !important;
-  left: 82vw !important;
+  top: 43svh !important;
+  left: 93vw !important;
 }
 
 .echoes-global-pulse-03 {
-  top: 76svh !important;
-  left: 31vw !important;
+  top: 88svh !important;
+  left: 12vw !important;
 }
 
 @media (min-width: 700px) {
-  .echoes-global-pulse-01 { top: 25vh !important; left: 18vw !important; }
-  .echoes-global-pulse-02 { top: 49vh !important; left: 80vw !important; }
-  .echoes-global-pulse-03 { top: 74vh !important; left: 36vw !important; }
+  .echoes-global-pulse-01 { top: 32vh !important; left: 9vw !important; }
+  .echoes-global-pulse-02 { top: 46vh !important; left: 91vw !important; }
+  .echoes-global-pulse-03 { top: 86vh !important; left: 14vw !important; }
 }
 
 body > main {
