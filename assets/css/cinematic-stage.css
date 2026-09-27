@@ -96,9 +96,10 @@
 }
 
 /* ---------------------------------------------------------
-   ATMOSPHERIC LIGHT BRIDGE — PHASE 3
-   The active three-point pulse system gets one explicit plane.
-   Geometry/anchors/animation remain unchanged in this phase.
+   ATMOSPHERIC LIGHT PLANE — PHASE 3
+   Three independent lights are contained by the viewport.
+   Legacy section-derived inline top values are neutralized here
+   so no light can drift outside the visible cinematic frame.
    --------------------------------------------------------- */
 .echoes-journey {
   z-index: var(--echoes-stage-base) !important;
@@ -106,7 +107,31 @@
 }
 
 .echoes-global-pulse {
+  position: fixed !important;
   z-index: var(--echoes-stage-lights) !important;
+  margin: 0 !important;
+  pointer-events: none;
+}
+
+.echoes-global-pulse-01 {
+  top: 27svh !important;
+  left: 16vw !important;
+}
+
+.echoes-global-pulse-02 {
+  top: 51svh !important;
+  left: 82vw !important;
+}
+
+.echoes-global-pulse-03 {
+  top: 76svh !important;
+  left: 31vw !important;
+}
+
+@media (min-width: 700px) {
+  .echoes-global-pulse-01 { top: 25vh !important; left: 18vw !important; }
+  .echoes-global-pulse-02 { top: 49vh !important; left: 80vw !important; }
+  .echoes-global-pulse-03 { top: 74vh !important; left: 36vw !important; }
 }
 
 body > main {
