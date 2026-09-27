@@ -1,67 +1,48 @@
-/* ECHOES HERO HALO — GLOBAL SOFT PRESENCE
-   One shared hero halo: fixed composition, soft light, minimal breathing. */
-.echoes-hero-orbit{
-  left:50%!important;
-  right:auto!important;
-  top:28vh!important;
-  width:min(92vw,1080px)!important;
-  height:min(38vw,450px)!important;
-  opacity:.24!important;
-  filter:blur(2px)!important;
+/* ECHOES HERO HALO — INDEPENDENT L7 STAGE PRESENCE
+   Halo is rendered by the hero surface itself. It no longer restyles or owns an orbit. */
+[data-section="hero"]{
+  position:relative;
+  isolation:isolate;
+}
+[data-section="hero"]::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:28vh;
+  width:min(92vw,1080px);
+  height:min(38vw,450px);
+  pointer-events:none;
+  z-index:var(--echoes-stage-halo,7);
+  border-radius:50%;
   background:radial-gradient(ellipse at center,
     transparent 0 58%,
     rgba(54,118,125,.018) 66%,
     rgba(102,180,176,.055) 73%,
     rgba(185,224,214,.075) 78%,
     rgba(87,157,158,.035) 83%,
-    transparent 91%)!important;
-  box-shadow:none!important;
-  transform-origin:50% 50%!important;
-  animation:echoesHeroHaloBreathe 14s ease-in-out infinite!important;
-}
-.echoes-hero-orbit::before{
-  inset:-5%!important;
-  border:0!important;
-  background:radial-gradient(ellipse at center,
-    transparent 0 64%,
-    rgba(76,150,151,.018) 72%,
-    rgba(168,216,207,.045) 78%,
-    rgba(70,137,143,.018) 84%,
-    transparent 92%)!important;
-  filter:blur(16px)!important;
-  opacity:.62!important;
-  box-shadow:none!important;
-  -webkit-mask:none!important;
-  mask:none!important;
-}
-.echoes-hero-orbit::after{
-  inset:3%!important;
-  background:radial-gradient(ellipse at center,
-    transparent 0 68%,
-    rgba(193,230,220,.028) 76%,
-    rgba(93,170,166,.038) 81%,
-    transparent 90%)!important;
-  filter:blur(8px)!important;
-  opacity:.54!important;
-  -webkit-mask:none!important;
-  mask:none!important;
+    transparent 91%);
+  box-shadow:0 0 46px rgba(102,180,176,.025);
+  filter:blur(2px);
+  transform-origin:50% 50%;
+  animation:echoesHeroHaloBreathe 14s ease-in-out infinite;
 }
 @keyframes echoesHeroHaloBreathe{
   0%,100%{transform:translateX(-50%) scale(.985);opacity:.18}
   50%{transform:translateX(-50%) scale(1.018);opacity:.27}
 }
 @media(max-width:699px){
-  .echoes-hero-orbit{
-    top:30vh!important;
-    width:132vw!important;
-    height:66vw!important;
-    opacity:.20!important;
-    filter:blur(2.6px)!important;
-    animation-duration:15s!important;
+  [data-section="hero"]::before{
+    top:30vh;
+    width:132vw;
+    height:66vw;
+    filter:blur(2.6px);
+    animation-duration:15s;
   }
-  .echoes-hero-orbit::before{filter:blur(18px)!important;opacity:.55!important}
-  .echoes-hero-orbit::after{filter:blur(9px)!important;opacity:.48!important}
 }
 @media(prefers-reduced-motion:reduce){
-  .echoes-hero-orbit{animation:none!important;transform:translateX(-50%) scale(1)!important;opacity:.20!important}
+  [data-section="hero"]::before{
+    animation:none;
+    transform:translateX(-50%) scale(1);
+    opacity:.20;
+  }
 }
