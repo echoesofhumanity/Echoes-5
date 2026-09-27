@@ -1,20 +1,59 @@
 <section class="hero page-hero cinematic-page-hero">
   <style>
-    body[data-page="home"] .cinematic-page-hero .hero-content > .eyebrow,
+    body[data-page="home"] .cinematic-page-hero .hero-content > .eyebrow {
+      opacity: 0;
+      transform: translateY(-8px);
+      animation: echoesHeroEyebrow 1100ms var(--echoes-ease) 140ms forwards;
+    }
+
     body[data-page="home"] .cinematic-page-hero .hero-content > h1,
-    body[data-page="home"] .cinematic-page-hero .hero-content > .hero-lead,
+    body[data-page="home"] .cinematic-page-hero .hero-content > .hero-lead {
+      opacity: 0;
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 58%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 58%, transparent 100%);
+      -webkit-mask-size: 100% 240%;
+      mask-size: 100% 240%;
+      -webkit-mask-position: 0 100%;
+      mask-position: 0 100%;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+    }
+
+    body[data-page="home"] .cinematic-page-hero .hero-content > h1 {
+      animation: echoesHeroLineReveal 1900ms var(--echoes-ease) 420ms forwards;
+    }
+
+    body[data-page="home"] .cinematic-page-hero .hero-content > .hero-lead {
+      animation: echoesHeroLineReveal 2400ms var(--echoes-ease) 1500ms forwards;
+    }
+
     body[data-page="home"] .cinematic-page-hero .hero-content > .hero-actions {
       opacity: 0;
-      transform: translateY(-22px);
-      animation: echoesHeroReveal 900ms var(--echoes-ease) forwards;
+      transform: translateY(-8px);
+      animation: echoesHeroActions 1100ms var(--echoes-ease) 3300ms forwards;
     }
-    body[data-page="home"] .cinematic-page-hero .hero-content > .eyebrow { animation-delay: 120ms; }
-    body[data-page="home"] .cinematic-page-hero .hero-content > h1 { animation-delay: 300ms; }
-    body[data-page="home"] .cinematic-page-hero .hero-content > .hero-lead { animation-delay: 480ms; }
-    body[data-page="home"] .cinematic-page-hero .hero-content > .hero-actions { animation-delay: 660ms; }
 
-    @keyframes echoesHeroReveal {
-      from { opacity: 0; transform: translateY(-22px); }
+    @keyframes echoesHeroEyebrow {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes echoesHeroLineReveal {
+      0% {
+        opacity: 0;
+        -webkit-mask-position: 0 100%;
+        mask-position: 0 100%;
+      }
+      12% { opacity: 1; }
+      100% {
+        opacity: 1;
+        -webkit-mask-position: 0 0;
+        mask-position: 0 0;
+      }
+    }
+
+    @keyframes echoesHeroActions {
+      from { opacity: 0; transform: translateY(-8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -26,6 +65,8 @@
         opacity: 1;
         transform: none;
         animation: none;
+        -webkit-mask-image: none;
+        mask-image: none;
       }
     }
   </style>
