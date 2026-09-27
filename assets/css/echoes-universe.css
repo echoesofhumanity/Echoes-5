@@ -108,6 +108,60 @@
 .universe-light--sage{--light-rgb:var(--universe-sage)}
 .universe-light--warm{--light-rgb:var(--universe-warm)}
 
+/* Shared halo field: luminous atmosphere, never a hard ellipse or border. */
+.universe-halo{
+  --halo-rgb:var(--universe-turquoise);
+  left:var(--halo-x);
+  top:var(--halo-y);
+  width:var(--halo-w);
+  height:var(--halo-h);
+  border-radius:50%;
+  transform:translate(-50%,-50%) scale(.96);
+  background:radial-gradient(ellipse at center,
+    transparent 0%,
+    transparent 42%,
+    rgba(var(--halo-rgb),.018) 51%,
+    rgba(var(--halo-rgb),.075) 61%,
+    rgba(var(--halo-rgb),.035) 69%,
+    rgba(var(--halo-rgb),.010) 77%,
+    transparent 88%);
+  filter:blur(5px);
+  opacity:.54;
+  animation:echoesUniverseHaloBreathe var(--halo-duration) ease-in-out var(--halo-delay) infinite alternate;
+}
+
+.universe-halo::before,
+.universe-halo::after{
+  content:"";
+  position:absolute;
+  inset:7%;
+  border-radius:inherit;
+  pointer-events:none;
+}
+
+.universe-halo::before{
+  background:radial-gradient(ellipse at center,
+    transparent 50%,
+    rgba(var(--halo-rgb),.050) 64%,
+    rgba(var(--halo-rgb),.018) 72%,
+    transparent 84%);
+  filter:blur(9px);
+}
+
+.universe-halo::after{
+  inset:-9%;
+  background:radial-gradient(ellipse at center,
+    transparent 54%,
+    rgba(var(--halo-rgb),.022) 68%,
+    transparent 84%);
+  filter:blur(15px);
+}
+
+.universe-halo--turquoise{--halo-rgb:var(--universe-turquoise)}
+.universe-halo--cyan{--halo-rgb:var(--universe-cyan)}
+.universe-halo--sage{--halo-rgb:var(--universe-sage)}
+.universe-halo--warm{--halo-rgb:var(--universe-warm)}
+
 @keyframes echoesUniverseFarBreathe{
   0%{opacity:.58;transform:scale(1)}
   50%{opacity:.76;transform:scale(1.012)}
@@ -119,6 +173,12 @@
   38%{opacity:.48;transform:translate(-50%,-50%) scale(1.03)}
   72%{opacity:.31;transform:translate(-50%,-50%) scale(.90)}
   100%{opacity:.56;transform:translate(-50%,-50%) scale(1.12)}
+}
+
+@keyframes echoesUniverseHaloBreathe{
+  0%{opacity:.34;transform:translate(-50%,-50%) scale(.94)}
+  46%{opacity:.60;transform:translate(-50%,-50%) scale(1.025)}
+  100%{opacity:.43;transform:translate(-50%,-50%) scale(.985)}
 }
 
 @media(prefers-reduced-motion:reduce){
