@@ -45,7 +45,13 @@
       }
 
       body[data-page="academy"] .academy-hero .academy-hero-content {
+        min-height: calc(100svh - 142px);
+        box-sizing: border-box;
         padding-top: 0;
+        padding-bottom: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
 
       body[data-page="academy"] .academy-hero .academy-hero-content > .eyebrow {
@@ -72,6 +78,10 @@
         min-height: 48px;
         padding-top: 0.65rem;
         padding-bottom: 0.65rem;
+      }
+
+      body[data-page="academy"] .academy-hero .academy-card-grid {
+        margin-top: 0;
       }
     }
 
