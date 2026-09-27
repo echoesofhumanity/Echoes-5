@@ -1,7 +1,6 @@
 /* =========================================================
    ECHOES OF HUMANITY — SHARED UNIVERSE FOUNDATION
    One deterministic cinematic world for every public page.
-   This file is intentionally inert until the Universe DOM is mounted.
    ========================================================= */
 
 :root{
@@ -59,6 +58,20 @@
 .echoes-universe-orbits-near{z-index:var(--universe-depth-orbit-near)}
 .echoes-universe-humans{z-index:var(--universe-depth-human)}
 
+/* First live Universe layer: broad depth and hope, never a hero-only effect. */
+.echoes-universe-far{
+  background:
+    radial-gradient(ellipse 94% 15% at 18% 9%,rgba(var(--universe-cyan),.075),transparent 72%),
+    radial-gradient(ellipse 82% 14% at 86% 24%,rgba(var(--universe-sage),.052),transparent 74%),
+    radial-gradient(ellipse 96% 16% at 26% 43%,rgba(var(--universe-turquoise),.047),transparent 76%),
+    radial-gradient(ellipse 88% 15% at 82% 61%,rgba(var(--universe-warm),.035),transparent 75%),
+    radial-gradient(ellipse 92% 17% at 20% 79%,rgba(var(--universe-cyan),.052),transparent 76%),
+    radial-gradient(ellipse 90% 14% at 78% 94%,rgba(var(--universe-sage),.043),transparent 75%);
+  opacity:.72;
+  animation:echoesUniverseFarBreathe 42s ease-in-out infinite alternate;
+  transform-origin:50% 50%;
+}
+
 /* All future Universe objects are clipped optically and can never capture input. */
 .echoes-universe :where(.universe-color,.universe-haze,.universe-light,.universe-halo,.universe-orbit,.universe-human-light){
   position:absolute;
@@ -66,6 +79,12 @@
   user-select:none;
   transform-origin:center;
   will-change:transform,opacity;
+}
+
+@keyframes echoesUniverseFarBreathe{
+  0%{opacity:.58;transform:scale(1)}
+  50%{opacity:.76;transform:scale(1.012)}
+  100%{opacity:.64;transform:scale(1.006)}
 }
 
 @media(prefers-reduced-motion:reduce){
