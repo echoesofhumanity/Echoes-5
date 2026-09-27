@@ -1,8 +1,18 @@
 /* ECHOES HERO HALO — INDEPENDENT L7 STAGE PRESENCE
-   The halo is a real DOM object mounted by layout.js.
-   Optical contract: soft volume, no hard ring, measurable contrast on the dark stage. */
+   Transitional renderer: geometry and optical rules now live in CSS.
+   layout.js still mounts the DOM object until the new shared Universe renderer replaces it. */
 
 .echoes-stage-halo-object{
+  position:fixed;
+  left:50%;
+  top:30svh;
+  width:132vw;
+  height:66vw;
+  max-width:none;
+  pointer-events:none;
+  z-index:var(--echoes-stage-halo,7);
+  border-radius:50%;
+  transform-origin:50% 50%;
   background:radial-gradient(ellipse at center,
     transparent 0 52%,
     rgba(54,118,125,.055) 61%,
@@ -29,6 +39,9 @@
 
 @media(min-width:700px){
   .echoes-stage-halo-object{
+    top:28vh;
+    width:min(92vw,1080px);
+    height:min(38vw,450px);
     filter:blur(2.5px)!important;
     animation-duration:14s!important;
   }
