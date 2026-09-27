@@ -66,7 +66,7 @@
               const heroOrbit=oneHumanityOrbit.cloneNode(true);
               heroOrbit.classList.add("echoes-hero-orbit");
               heroOrbit.style.top="31vh";
-              field.appendChild(heroOrbit);
+              journey.appendChild(heroOrbit);
               oneHumanityOrbit.style.top=((firstSection.offsetTop-top)+(firstSection.offsetHeight*.18))+"px";
             }
           }
