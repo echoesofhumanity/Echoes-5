@@ -21,18 +21,18 @@
   ];
 
   const lightField=[
-    {x:12,y:7,size:14,tone:"turquoise",delay:-2,duration:17},
-    {x:82,y:13,size:9,tone:"warm",delay:-8,duration:21},
-    {x:28,y:20,size:20,tone:"cyan",delay:-5,duration:24},
-    {x:91,y:29,size:15,tone:"sage",delay:-12,duration:19},
-    {x:8,y:37,size:10,tone:"warm",delay:-4,duration:23},
-    {x:63,y:44,size:18,tone:"turquoise",delay:-15,duration:26},
-    {x:19,y:53,size:12,tone:"cyan",delay:-9,duration:20},
-    {x:86,y:61,size:22,tone:"sage",delay:-6,duration:28},
-    {x:42,y:69,size:9,tone:"warm",delay:-13,duration:18},
-    {x:7,y:78,size:17,tone:"turquoise",delay:-10,duration:25},
-    {x:72,y:86,size:13,tone:"cyan",delay:-3,duration:22},
-    {x:94,y:94,size:19,tone:"sage",delay:-17,duration:27}
+    {x:12,y:7,size:58,tone:"turquoise",delay:-2,duration:17},
+    {x:82,y:13,size:42,tone:"warm",delay:-8,duration:21},
+    {x:28,y:20,size:76,tone:"cyan",delay:-5,duration:24},
+    {x:91,y:29,size:62,tone:"sage",delay:-12,duration:19},
+    {x:8,y:37,size:46,tone:"warm",delay:-4,duration:23},
+    {x:63,y:44,size:72,tone:"turquoise",delay:-15,duration:26},
+    {x:19,y:53,size:52,tone:"cyan",delay:-9,duration:20},
+    {x:86,y:61,size:84,tone:"sage",delay:-6,duration:28},
+    {x:42,y:69,size:40,tone:"warm",delay:-13,duration:18},
+    {x:7,y:78,size:68,tone:"turquoise",delay:-10,duration:25},
+    {x:72,y:86,size:54,tone:"cyan",delay:-3,duration:22},
+    {x:94,y:94,size:78,tone:"sage",delay:-17,duration:27}
   ];
 
   const getDocumentHeight=()=>Math.max(
