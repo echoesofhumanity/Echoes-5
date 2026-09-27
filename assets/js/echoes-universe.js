@@ -79,6 +79,28 @@
     mountLightField(universe,documentHeight);
   };
 
+  const finalizeAfterLayout=(universe)=>{
+    const footerHost=document.querySelector('[data-component="footer"]');
+
+    if(!footerHost){
+      requestAnimationFrame(()=>finalizeUniverse(universe));
+      return;
+    }
+
+    if(footerHost.childElementCount){
+      requestAnimationFrame(()=>requestAnimationFrame(()=>finalizeUniverse(universe)));
+      return;
+    }
+
+    const layoutObserver=new MutationObserver(()=>{
+      if(!footerHost.childElementCount)return;
+      layoutObserver.disconnect();
+      requestAnimationFrame(()=>requestAnimationFrame(()=>finalizeUniverse(universe)));
+    });
+
+    layoutObserver.observe(footerHost,{childList:true});
+  };
+
   const mount=()=>{
     if(document.getElementById(UNIVERSE_ID))return;
 
@@ -99,18 +121,9 @@
     universe.appendChild(fragment);
     document.body.prepend(universe);
 
-    /*
-      Layout content is injected asynchronously by layout.js. Do not place
-      document-space objects against the temporary DOMContentLoaded height.
-      Wait for the completed page, then lock their Y coordinates in pixels.
-    */
-    if(document.readyState==="complete"){
-      requestAnimationFrame(()=>finalizeUniverse(universe));
-    }else{
-      window.addEventListener("load",()=>{
-        requestAnimationFrame(()=>requestAnimationFrame(()=>finalizeUniverse(universe)));
-      },{once:true});
-    }
+    /* layout.js loads the footer last. Its arrival is the deterministic signal
+       that the page sections already exist and document-space can be locked. */
+    finalizeAfterLayout(universe);
 
     const resizeObserver=new ResizeObserver(()=>sizeUniverse(universe));
     resizeObserver.observe(document.body);
