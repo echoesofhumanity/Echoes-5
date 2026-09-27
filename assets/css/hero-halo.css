@@ -16,11 +16,6 @@
   animation:echoesHeroHaloBreathe 15s ease-in-out infinite!important;
 }
 
-/* Retire the former hero pseudo-element renderer. */
-[data-section="hero"]::before{
-  content:none!important;
-}
-
 @keyframes echoesHeroHaloBreathe{
   0%,100%{
     transform:translateX(-50%) scale(.985);
