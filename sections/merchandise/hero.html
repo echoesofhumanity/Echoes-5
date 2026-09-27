@@ -1,4 +1,86 @@
-<section class="page-hero">
+<section class="page-hero merchandise-hero">
+  <style>
+    body[data-page="merchandise"] .merchandise-hero {
+      min-height: calc(100svh - 76px);
+      padding: clamp(56px, 8vw, 96px) 0;
+    }
+
+    body[data-page="merchandise"] .merchandise-hero > .section-label,
+    body[data-page="merchandise"] .merchandise-hero > h1,
+    body[data-page="merchandise"] .merchandise-hero > p:not(.section-label) {
+      opacity: 0;
+      transform: translateY(18px);
+      filter: blur(5px);
+      animation: echoesMerchandiseHeroContentReveal 1100ms ease-out forwards;
+    }
+
+    body[data-page="merchandise"] .merchandise-hero > .section-label {
+      animation-delay: 1900ms;
+    }
+
+    body[data-page="merchandise"] .merchandise-hero > h1 {
+      max-width: 900px;
+      margin-inline: auto;
+      animation-delay: 2150ms;
+    }
+
+    body[data-page="merchandise"] .merchandise-hero > p:not(.section-label) {
+      max-width: 760px;
+      margin: 28px auto 0;
+      line-height: 1.7;
+      animation-delay: 2550ms;
+    }
+
+    @keyframes echoesMerchandiseHeroContentReveal {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+        filter: blur(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    @media (max-width: 699px) {
+      body[data-page="merchandise"] .merchandise-hero {
+        min-height: calc(100svh - 68px);
+        box-sizing: border-box;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      body[data-page="merchandise"] .merchandise-hero > .section-label {
+        margin-bottom: 0.65rem;
+      }
+
+      body[data-page="merchandise"] .merchandise-hero > h1 {
+        font-size: clamp(2.45rem, 10.8vw, 3.2rem);
+        line-height: 0.99;
+      }
+
+      body[data-page="merchandise"] .merchandise-hero > p:not(.section-label) {
+        margin-top: 1rem;
+        font-size: clamp(1rem, 4.65vw, 1.28rem);
+        line-height: 1.38;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body[data-page="merchandise"] .merchandise-hero > .section-label,
+      body[data-page="merchandise"] .merchandise-hero > h1,
+      body[data-page="merchandise"] .merchandise-hero > p:not(.section-label) {
+        opacity: 1;
+        transform: none;
+        filter: none;
+        animation: none;
+      }
+    }
+  </style>
   <p class="section-label"><span data-i18n="hero.text001">ECHOES OF HUMANITY</span></p>
   <h1><span data-i18n="hero.text002">Echoes Collections</span></h1>
   <p><span data-i18n="hero.text003">Physical expressions of the ideas, stories and human values that shape the Echoes of Humanity ecosystem.</span></p>
