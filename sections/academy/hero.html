@@ -1,1 +1,68 @@
-<section class="academy-hero"><div class="academy-hero-content"><span class="eyebrow"><span data-i18n="hero.text01">ECHOES ACADEMY</span></span><h1><span data-i18n="hero.text02">Humanity Learning From Humanity.</span></h1><p><span data-i18n="hero.text03">Learn something that makes you more human.</span><br><span data-i18n="hero.text04">Share something that makes humanity stronger.</span></p><div class="academy-actions"><a class="academy-button academy-button-primary" href="#learn"><span data-i18n="hero.text05">Start Learning</span></a><a class="academy-button academy-button-secondary" href="#share"><span data-i18n="hero.text06">Share What You Know</span></a></div></div><div class="academy-card-grid"><a class="academy-card" href="#learn"><span class="card-icon" aria-hidden="true">✦</span><h2><span data-i18n="hero.text07">Learn</span></h2><p><span data-i18n="hero.text08">Understand humanity, protection, digital life, culture and the skills that help people act responsibly.</span></p></a><a class="academy-card" href="#prepare"><span class="card-icon" aria-hidden="true">◎</span><h2><span data-i18n="hero.text09">Prepare</span></h2><p><span data-i18n="hero.text10">Build the knowledge and readiness required for meaningful volunteer and humanitarian roles.</span></p></a><a class="academy-card" href="#share"><span class="card-icon" aria-hidden="true">↗</span><h2><span data-i18n="hero.text11">Share</span></h2><p><span data-i18n="hero.text12">Help useful knowledge travel between people, professions, communities, cultures and generations.</span></p></a></div></section>
+<section class="academy-hero">
+  <style>
+    body[data-page="academy"] .academy-hero .academy-hero-content > .eyebrow,
+    body[data-page="academy"] .academy-hero .academy-hero-content > h1,
+    body[data-page="academy"] .academy-hero .academy-hero-content > p,
+    body[data-page="academy"] .academy-hero .academy-hero-content > .academy-actions {
+      opacity: 0;
+      transform: translateY(18px);
+      filter: blur(5px);
+      animation: echoesAcademyHeroContentReveal 1100ms ease-out forwards;
+    }
+
+    body[data-page="academy"] .academy-hero .academy-hero-content > .eyebrow {
+      animation-delay: 1900ms;
+    }
+
+    body[data-page="academy"] .academy-hero .academy-hero-content > h1 {
+      animation-delay: 2150ms;
+    }
+
+    body[data-page="academy"] .academy-hero .academy-hero-content > p {
+      animation-delay: 2550ms;
+    }
+
+    body[data-page="academy"] .academy-hero .academy-hero-content > .academy-actions {
+      animation-delay: 3250ms;
+    }
+
+    @keyframes echoesAcademyHeroContentReveal {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+        filter: blur(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body[data-page="academy"] .academy-hero .academy-hero-content > .eyebrow,
+      body[data-page="academy"] .academy-hero .academy-hero-content > h1,
+      body[data-page="academy"] .academy-hero .academy-hero-content > p,
+      body[data-page="academy"] .academy-hero .academy-hero-content > .academy-actions {
+        opacity: 1;
+        transform: none;
+        filter: none;
+        animation: none;
+      }
+    }
+  </style>
+  <div class="academy-hero-content">
+    <span class="eyebrow"><span data-i18n="hero.text01">ECHOES ACADEMY</span></span>
+    <h1><span data-i18n="hero.text02">Humanity Learning From Humanity.</span></h1>
+    <p><span data-i18n="hero.text03">Learn something that makes you more human.</span><br><span data-i18n="hero.text04">Share something that makes humanity stronger.</span></p>
+    <div class="academy-actions">
+      <a class="academy-button academy-button-primary" href="#learn"><span data-i18n="hero.text05">Start Learning</span></a>
+      <a class="academy-button academy-button-secondary" href="#share"><span data-i18n="hero.text06">Share What You Know</span></a>
+    </div>
+  </div>
+  <div class="academy-card-grid">
+    <a class="academy-card" href="#learn"><span class="card-icon" aria-hidden="true">✦</span><h2><span data-i18n="hero.text07">Learn</span></h2><p><span data-i18n="hero.text08">Understand humanity, protection, digital life, culture and the skills that help people act responsibly.</span></p></a>
+    <a class="academy-card" href="#prepare"><span class="card-icon" aria-hidden="true">◎</span><h2><span data-i18n="hero.text09">Prepare</span></h2><p><span data-i18n="hero.text10">Build the knowledge and readiness required for meaningful volunteer and humanitarian roles.</span></p></a>
+    <a class="academy-card" href="#share"><span class="card-icon" aria-hidden="true">↗</span><h2><span data-i18n="hero.text11">Share</span></h2><p><span data-i18n="hero.text12">Help useful knowledge travel between people, professions, communities, cultures and generations.</span></p></a>
+  </div>
+</section>
