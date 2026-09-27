@@ -20,6 +20,16 @@
   };
 
   const start=async()=>{
+    const halo=document.createElement("div");
+    halo.className="echoes-stage-halo-object";
+    halo.setAttribute("aria-hidden","true");
+    halo.style.cssText="position:fixed;left:50%;top:30svh;width:132vw;height:66vw;pointer-events:none;z-index:var(--echoes-stage-halo,7);border-radius:50%;background:radial-gradient(ellipse at center,transparent 0 58%,rgba(54,118,125,.018) 66%,rgba(102,180,176,.055) 73%,rgba(185,224,214,.075) 78%,rgba(87,157,158,.035) 83%,transparent 91%);box-shadow:0 0 46px rgba(102,180,176,.025);filter:blur(2.6px);transform-origin:50% 50%;animation:echoesHeroHaloBreathe 15s ease-in-out infinite";
+    document.body.prepend(halo);
+
+    const haloContract=document.createElement("style");
+    haloContract.textContent='[data-section="hero"]::before{content:none!important}@media(min-width:700px){.echoes-stage-halo-object{top:28vh!important;width:min(92vw,1080px)!important;height:min(38vw,450px)!important;filter:blur(2px)!important;animation-duration:14s!important}}@media(prefers-reduced-motion:reduce){.echoes-stage-halo-object{animation:none!important;transform:translateX(-50%) scale(1)!important;opacity:.20!important}}';
+    document.head.appendChild(haloContract);
+
     try{
       const atmosphere=document.createElement("div");
       atmosphere.className="echoes-atmosphere";
@@ -97,26 +107,39 @@
         ]:[
           document.querySelector("[data-section=\"section-01\"]"),
           document.querySelector("[data-section=\"section-02\"]"),
-          document.querySelector("[data-section=\"section-03\"]")
+          document.querySelector("[data-section=\"cta\"]")
         ];
         pulseAnchors.forEach((anchor,index)=>{
           if(!anchor)return;
           const pulse=document.createElement("div");
           pulse.className="echoes-global-pulse echoes-global-pulse-0"+(index+1);
-          pulse.style.top=Math.max(0,anchor.offsetTop-(index===1?34:28))+"px";
+          pulse.style.top=(anchor.offsetTop+(anchor.offsetHeight*.5))+"px";
           journey.appendChild(pulse);
         });
       }
 
-      document.dispatchEvent(new CustomEvent("echoes:layout-ready"));
+      if(page==="home"){
+        [
+          ["echoes-global-pulse-01","35svh","7vw"],
+          ["echoes-global-pulse-02","43svh","93vw"],
+          ["echoes-global-pulse-03","88svh","12vw"]
+        ].forEach(([name,top,left])=>{
+          const pulse=document.createElement("div");
+          pulse.className="echoes-global-pulse "+name;
+          pulse.style.top=top;
+          pulse.style.left=left;
+          journey.appendChild(pulse);
+        });
+      }
+
+      if(window.EchoesI18n){
+        await window.EchoesI18n.init({page});
+        document.addEventListener("echoes:languagechange",()=>window.EchoesI18n.translatePage());
+      }
     }catch(error){
-      console.error("Echoes layout error:",error);
+      console.error(error);
     }
   };
 
-  if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded",start,{once:true});
-  }else{
-    start();
-  }
+  start();
 })();
