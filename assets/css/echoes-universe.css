@@ -83,8 +83,9 @@
 /* Halo is deliberately readable, but its energy is spread across a band rather than a border. */
 .universe-halo{
   --halo-rgb:var(--universe-turquoise);
+  --halo-rotate:0deg;
   left:var(--halo-x);top:var(--halo-y);width:var(--halo-w);height:var(--halo-h);border-radius:50%;
-  transform:translate(-50%,-50%) scale(.96);
+  transform:translate(-50%,-50%) rotate(var(--halo-rotate)) scale(.96);
   background:radial-gradient(ellipse at center,
     transparent 0%,transparent 38%,
     rgba(var(--halo-rgb),.035) 46%,
@@ -116,6 +117,6 @@
 
 @keyframes echoesUniverseFarBreathe{0%{opacity:.58;transform:scale(1)}50%{opacity:.76;transform:scale(1.012)}100%{opacity:.64;transform:scale(1.006)}}
 @keyframes echoesUniverseLightBreathe{0%{opacity:.20;transform:translate(-50%,-50%) scale(.76)}38%{opacity:.48;transform:translate(-50%,-50%) scale(1.03)}72%{opacity:.31;transform:translate(-50%,-50%) scale(.90)}100%{opacity:.56;transform:translate(-50%,-50%) scale(1.12)}}
-@keyframes echoesUniverseHaloBreathe{0%{opacity:.62;transform:translate(-50%,-50%) scale(.95)}46%{opacity:.88;transform:translate(-50%,-50%) scale(1.018)}100%{opacity:.70;transform:translate(-50%,-50%) scale(.985)}}
+@keyframes echoesUniverseHaloBreathe{0%{opacity:.62;transform:translate(-50%,-50%) rotate(var(--halo-rotate)) scale(.95)}46%{opacity:.88;transform:translate(-50%,-50%) rotate(var(--halo-rotate)) scale(1.018)}100%{opacity:.70;transform:translate(-50%,-50%) rotate(var(--halo-rotate)) scale(.985)}}
 
 @media(prefers-reduced-motion:reduce){.echoes-universe *{animation:none!important}}
