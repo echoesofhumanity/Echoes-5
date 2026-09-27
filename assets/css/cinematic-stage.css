@@ -66,44 +66,6 @@
   display: none !important;
 }
 
-/* ---------------------------------------------------------
-   ATMOSPHERIC LIGHT PLANE — LEGACY BRIDGE
-   Lights remain temporarily active until their Universe layer
-   replacement is introduced and visually verified.
-   --------------------------------------------------------- */
-.echoes-journey {
-  z-index: var(--echoes-stage-base) !important;
-  isolation: isolate;
-}
-
-.echoes-global-pulse {
-  position: fixed !important;
-  z-index: var(--echoes-stage-lights) !important;
-  margin: 0 !important;
-  pointer-events: none;
-}
-
-.echoes-global-pulse-01 {
-  top: 35svh !important;
-  left: 7vw !important;
-}
-
-.echoes-global-pulse-02 {
-  top: 43svh !important;
-  left: 93vw !important;
-}
-
-.echoes-global-pulse-03 {
-  top: 88svh !important;
-  left: 12vw !important;
-}
-
-@media (min-width: 700px) {
-  .echoes-global-pulse-01 { top: 32vh !important; left: 9vw !important; }
-  .echoes-global-pulse-02 { top: 46vh !important; left: 91vw !important; }
-  .echoes-global-pulse-03 { top: 86vh !important; left: 14vw !important; }
-}
-
 body > main {
   position: relative;
   z-index: var(--echoes-stage-content);
