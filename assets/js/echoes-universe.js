@@ -25,7 +25,8 @@
     document.documentElement.offsetHeight,
     document.body.scrollHeight,
     document.body.offsetHeight,
-    window.innerHeight
+    window.innerHeight,
+    window.visualViewport ? window.visualViewport.height + window.scrollY : 0
   );
 
   const sizeUniverse=(universe)=>{
@@ -59,6 +60,10 @@
 
     window.addEventListener("load",()=>sizeUniverse(universe),{once:true});
     window.addEventListener("resize",()=>sizeUniverse(universe),{passive:true});
+
+    if(window.visualViewport){
+      window.visualViewport.addEventListener("resize",()=>sizeUniverse(universe),{passive:true});
+    }
   };
 
   if(document.readyState==="loading"){
