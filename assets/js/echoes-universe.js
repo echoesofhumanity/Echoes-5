@@ -52,24 +52,31 @@
   };
 
   const sizeUniverse=(universe)=>{
-    universe.style.height=getDocumentHeight(universe)+"px";
+    const height=getDocumentHeight(universe);
+    universe.style.height=height+"px";
+    return height;
   };
 
-  const mountLightField=(universe)=>{
+  const mountLightField=(universe,documentHeight)=>{
     const layer=universe.querySelector('[data-universe-layer="lights"]');
-    if(!layer)return;
+    if(!layer||layer.childElementCount)return;
 
     lightField.forEach((light,index)=>{
       const node=document.createElement("span");
       node.className="universe-light universe-light--"+light.tone;
       node.dataset.light=index+1;
       node.style.setProperty("--light-x",light.x+"%");
-      node.style.setProperty("--light-y",light.y+"%");
+      node.style.setProperty("--light-y",Math.round(documentHeight*(light.y/100))+"px");
       node.style.setProperty("--light-size",light.size+"px");
       node.style.setProperty("--light-delay",light.delay+"s");
       node.style.setProperty("--light-duration",light.duration+"s");
       layer.appendChild(node);
     });
+  };
+
+  const finalizeUniverse=(universe)=>{
+    const documentHeight=sizeUniverse(universe);
+    mountLightField(universe,documentHeight);
   };
 
   const mount=()=>{
@@ -91,14 +98,24 @@
 
     universe.appendChild(fragment);
     document.body.prepend(universe);
-    mountLightField(universe);
-    sizeUniverse(universe);
+
+    /*
+      Layout content is injected asynchronously by layout.js. Do not place
+      document-space objects against the temporary DOMContentLoaded height.
+      Wait for the completed page, then lock their Y coordinates in pixels.
+    */
+    if(document.readyState==="complete"){
+      requestAnimationFrame(()=>finalizeUniverse(universe));
+    }else{
+      window.addEventListener("load",()=>{
+        requestAnimationFrame(()=>requestAnimationFrame(()=>finalizeUniverse(universe)));
+      },{once:true});
+    }
 
     const resizeObserver=new ResizeObserver(()=>sizeUniverse(universe));
     resizeObserver.observe(document.body);
     resizeObserver.observe(document.documentElement);
 
-    window.addEventListener("load",()=>sizeUniverse(universe),{once:true});
     window.addEventListener("resize",()=>sizeUniverse(universe),{passive:true});
   };
 
