@@ -56,6 +56,8 @@
         await window.EchoesI18n.init({page});
         document.addEventListener("echoes:languagechange",()=>window.EchoesI18n.translatePage());
       }
+
+      document.dispatchEvent(new CustomEvent("echoes:layout-ready"));
     }catch(error){
       console.error(error);
     }
