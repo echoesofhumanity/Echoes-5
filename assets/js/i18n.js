@@ -8,7 +8,7 @@
     en: { label: "English", dir: "ltr", active: true },
     tr: { label: "Türkçe", dir: "ltr", active: true },
     ar: { label: "العربية", dir: "rtl", active: true },
-    es: { label: "Español", dir: "ltr", active: false },
+    es: { label: "Español", dir: "ltr", active: true },
     fr: { label: "Français", dir: "ltr", active: false },
     de: { label: "Deutsch", dir: "ltr", active: false },
     pt: { label: "Português", dir: "ltr", active: false },
