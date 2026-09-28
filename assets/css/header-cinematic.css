@@ -1,0 +1,63 @@
+/* ECHOES OF HUMANITY — CINEMATIC HEADER MOTION
+   Shared visual language for the future logo, language, symphony and menu controls. */
+
+.site-brand-mark,
+.header-icon{
+  position:relative;
+  color:rgba(243,239,229,.92);
+  border-color:rgba(95,208,197,.18);
+  background:radial-gradient(circle at 50% 50%,rgba(95,208,197,.025),transparent 68%);
+  box-shadow:0 0 0 1px rgba(95,208,197,.015),0 0 18px rgba(95,208,197,.025);
+  animation:echoesHeaderBreathe 7.8s cubic-bezier(.22,.61,.36,1) infinite;
+  transform-origin:center;
+  transition:border-color 900ms cubic-bezier(.22,.61,.36,1),color 900ms cubic-bezier(.22,.61,.36,1),background 900ms cubic-bezier(.22,.61,.36,1),box-shadow 900ms cubic-bezier(.22,.61,.36,1),transform 900ms cubic-bezier(.22,.61,.36,1);
+}
+
+.site-header-actions .header-icon:nth-child(2){animation-delay:-2.6s}
+.site-header-actions .header-icon:nth-child(3){animation-delay:-5.2s}
+.language-control .header-icon{animation-delay:0s}
+
+.header-icon svg{
+  display:block;
+  margin:auto;
+  filter:drop-shadow(0 0 5px rgba(95,208,197,.08));
+  transition:filter 900ms cubic-bezier(.22,.61,.36,1),opacity 900ms cubic-bezier(.22,.61,.36,1);
+}
+
+@keyframes echoesHeaderBreathe{
+  0%,100%{
+    transform:scale(1);
+    color:rgba(243,239,229,.88);
+    border-color:rgba(95,208,197,.16);
+    box-shadow:0 0 0 1px rgba(95,208,197,.01),0 0 14px rgba(95,208,197,.018);
+  }
+  50%{
+    transform:scale(1.035);
+    color:rgba(243,239,229,.98);
+    border-color:rgba(95,208,197,.32);
+    box-shadow:0 0 0 1px rgba(95,208,197,.025),0 0 22px rgba(95,208,197,.085),inset 0 0 15px rgba(95,208,197,.025);
+  }
+}
+
+@media(hover:hover) and (pointer:fine){
+  .header-icon:hover{
+    transform:scale(1.055);
+    color:rgb(95,208,197);
+    border-color:rgba(95,208,197,.42);
+    box-shadow:0 0 25px rgba(95,208,197,.11),inset 0 0 16px rgba(95,208,197,.035);
+  }
+}
+
+.header-icon:focus-visible{
+  outline:1px solid rgba(95,208,197,.72);
+  outline-offset:4px;
+}
+
+.header-icon:active{
+  transform:scale(.97);
+  border-color:rgba(95,208,197,.48);
+}
+
+@media(prefers-reduced-motion:reduce){
+  .site-brand-mark,.header-icon{animation:none}
+}
