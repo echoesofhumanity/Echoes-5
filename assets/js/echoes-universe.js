@@ -14,18 +14,18 @@
     {x:78,y:12,w:270,h:150,tone:"turquoise",delay:-6,duration:31,rotate:-18},{x:9,y:32,w:210,h:124,tone:"cyan",delay:-17,duration:37,rotate:14},{x:88,y:53,w:300,h:168,tone:"sage",delay:-11,duration:43,rotate:-26},{x:14,y:73,w:235,h:142,tone:"warm",delay:-23,duration:39,rotate:22},{x:73,y:90,w:285,h:158,tone:"turquoise",delay:-14,duration:35,rotate:-12}
   ];
   const orbitField=[
-    {layer:"far",x:8,y:4,w:520,h:150,tone:"cyan",rotate:-14,alpha:.10,opacity:.62,delay:-8,duration:42.5,homeHeroY:.30},
-    {layer:"near",x:26,y:9,w:330,h:92,tone:"turquoise",rotate:8,alpha:.14,opacity:.72,delay:-19,duration:36.25,homeHeroY:.42},
-    {layer:"far",x:82,y:18,w:560,h:164,tone:"sage",rotate:-22,alpha:.09,opacity:.56,delay:-4,duration:47.5},
-    {layer:"near",x:64,y:19.5,w:470,h:138,tone:"cyan",rotate:12,alpha:.13,opacity:.68,delay:-15,duration:38.75},
-    {layer:"far",x:70,y:36,w:610,h:174,tone:"warm",rotate:20,alpha:.075,opacity:.50,delay:-24,duration:52.5},
-    {layer:"near",x:88,y:37.5,w:450,h:132,tone:"turquoise",rotate:-16,alpha:.14,opacity:.70,delay:-11,duration:37.5},
-    {layer:"far",x:20,y:54,w:590,h:168,tone:"sage",rotate:-20,alpha:.085,opacity:.54,delay:-29,duration:50},
-    {layer:"near",x:2,y:55.5,w:440,h:128,tone:"cyan",rotate:15,alpha:.13,opacity:.66,delay:-7,duration:41.25},
-    {layer:"far",x:84,y:72,w:620,h:178,tone:"turquoise",rotate:23,alpha:.085,opacity:.52,delay:-18,duration:55},
-    {layer:"near",x:102,y:73.5,w:460,h:136,tone:"warm",rotate:-17,alpha:.11,opacity:.62,delay:-26,duration:43.75},
-    {layer:"far",x:66,y:89,w:550,h:156,tone:"cyan",rotate:-12,alpha:.09,opacity:.55,delay:-13,duration:48.75},
-    {layer:"near",x:48,y:90.5,w:420,h:122,tone:"sage",rotate:19,alpha:.12,opacity:.64,delay:-21,duration:40,homeClosingY:.34}
+    {layer:"far",x:8,y:4,w:520,h:150,tone:"cyan",rotate:-14,alpha:.10,opacity:.62,delay:-8,duration:47.22,homeHeroY:.30},
+    {layer:"near",x:26,y:9,w:330,h:92,tone:"turquoise",rotate:8,alpha:.14,opacity:.72,delay:-19,duration:40.28,homeHeroY:.42},
+    {layer:"far",x:82,y:18,w:560,h:164,tone:"sage",rotate:-22,alpha:.09,opacity:.56,delay:-4,duration:52.78},
+    {layer:"near",x:64,y:19.5,w:470,h:138,tone:"cyan",rotate:12,alpha:.13,opacity:.68,delay:-15,duration:43.06},
+    {layer:"far",x:70,y:36,w:610,h:174,tone:"warm",rotate:20,alpha:.075,opacity:.50,delay:-24,duration:58.33},
+    {layer:"near",x:88,y:37.5,w:450,h:132,tone:"turquoise",rotate:-16,alpha:.14,opacity:.70,delay:-11,duration:41.67},
+    {layer:"far",x:20,y:54,w:590,h:168,tone:"sage",rotate:-20,alpha:.085,opacity:.54,delay:-29,duration:55.56},
+    {layer:"near",x:2,y:55.5,w:440,h:128,tone:"cyan",rotate:15,alpha:.13,opacity:.66,delay:-7,duration:45.83},
+    {layer:"far",x:84,y:72,w:620,h:178,tone:"turquoise",rotate:23,alpha:.085,opacity:.52,delay:-18,duration:61.11},
+    {layer:"near",x:102,y:73.5,w:460,h:136,tone:"warm",rotate:-17,alpha:.11,opacity:.62,delay:-26,duration:48.61},
+    {layer:"far",x:66,y:89,w:550,h:156,tone:"cyan",rotate:-12,alpha:.09,opacity:.55,delay:-13,duration:54.17},
+    {layer:"near",x:48,y:90.5,w:420,h:122,tone:"sage",rotate:19,alpha:.12,opacity:.64,delay:-21,duration:44.44,homeClosingY:.34}
   ];
   const getDocumentHeight=(universe)=>{const previousHeight=universe.style.height;universe.style.height="0px";const height=Math.max(document.documentElement.scrollHeight,document.documentElement.offsetHeight,document.body.scrollHeight,document.body.offsetHeight,window.innerHeight);universe.style.height=previousHeight;return height};
   const sizeUniverse=(universe)=>{const height=getDocumentHeight(universe);universe.style.height=height+"px";return height};
