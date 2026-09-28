@@ -58,6 +58,16 @@
   border-color:rgba(95,208,197,.56);
 }
 
+/* Keep mobile touch feedback on the page name only, never across the nav row. */
+.site-nav a{
+  -webkit-tap-highlight-color:transparent;
+  background:transparent;
+}
+
+.site-nav a:active{
+  background:transparent;
+}
+
 @media(prefers-reduced-motion:reduce){
   .site-brand-mark,.header-icon{animation:none}
 }
