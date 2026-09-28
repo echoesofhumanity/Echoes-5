@@ -20,6 +20,11 @@
       script.src="assets/js/echoes-universe.js";
       document.head.appendChild(script);
     }
+    if(!document.querySelector('script[src^="assets/js/symphony.js"]')){
+      const script=document.createElement("script");
+      script.src="assets/js/symphony.js";
+      document.head.appendChild(script);
+    }
   };
 
   ensureCinematicUniverse();
