@@ -126,6 +126,86 @@
   text-shadow:0 0 10px rgba(95,208,197,.13);
 }
 
+/* Stable current-page state from body data-page; this does not depend on navigation.js freshness. */
+body[data-page="home"] .site-nav a[href="index.html"],
+body[data-page="about"] .site-nav a[href="about.html"],
+body[data-page="vision"] .site-nav a[href="vision.html"],
+body[data-page="mission"] .site-nav a[href="mission.html"],
+body[data-page="manifesto"] .site-nav a[href="manifesto.html"],
+body[data-page="humanitarian-action"] .site-nav a[href="humanitarian-action.html"],
+body[data-page="projects"] .site-nav a[href="projects.html"],
+body[data-page="volunteers"] .site-nav a[href="volunteers.html"],
+body[data-page="academy"] .site-nav a[href="academy.html"],
+body[data-page="media"] .site-nav a[href="media.html"],
+body[data-page="echoes"] .site-nav a[href="echoes.html"],
+body[data-page="stories"] .site-nav a[href="stories.html"],
+body[data-page="echo-of-month"] .site-nav a[href="echo-of-month.html"],
+body[data-page="echo-of-year"] .site-nav a[href="echo-of-year.html"],
+body[data-page="marketplace"] .site-nav a[href="marketplace.html"],
+body[data-page="merchandise"] .site-nav a[href="merchandise.html"],
+body[data-page="partners"] .site-nav a[href="partners.html"],
+body[data-page="governance"] .site-nav a[href="governance.html"],
+body[data-page="contact"] .site-nav a[href="contact.html"],
+body[data-page="join"] .site-nav a[href="join.html"]{
+  padding-left:.78rem;
+}
+
+body[data-page="home"] .site-nav a[href="index.html"]::before,
+body[data-page="about"] .site-nav a[href="about.html"]::before,
+body[data-page="vision"] .site-nav a[href="vision.html"]::before,
+body[data-page="mission"] .site-nav a[href="mission.html"]::before,
+body[data-page="manifesto"] .site-nav a[href="manifesto.html"]::before,
+body[data-page="humanitarian-action"] .site-nav a[href="humanitarian-action.html"]::before,
+body[data-page="projects"] .site-nav a[href="projects.html"]::before,
+body[data-page="volunteers"] .site-nav a[href="volunteers.html"]::before,
+body[data-page="academy"] .site-nav a[href="academy.html"]::before,
+body[data-page="media"] .site-nav a[href="media.html"]::before,
+body[data-page="echoes"] .site-nav a[href="echoes.html"]::before,
+body[data-page="stories"] .site-nav a[href="stories.html"]::before,
+body[data-page="echo-of-month"] .site-nav a[href="echo-of-month.html"]::before,
+body[data-page="echo-of-year"] .site-nav a[href="echo-of-year.html"]::before,
+body[data-page="marketplace"] .site-nav a[href="marketplace.html"]::before,
+body[data-page="merchandise"] .site-nav a[href="merchandise.html"]::before,
+body[data-page="partners"] .site-nav a[href="partners.html"]::before,
+body[data-page="governance"] .site-nav a[href="governance.html"]::before,
+body[data-page="contact"] .site-nav a[href="contact.html"]::before,
+body[data-page="join"] .site-nav a[href="join.html"]::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:50%;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  transform:translateY(-50%);
+  background:rgba(95,208,197,.92);
+  box-shadow:0 0 8px rgba(95,208,197,.58),0 0 16px rgba(95,208,197,.22);
+}
+
+body[data-page="home"] .site-nav a[href="index.html"] span[data-i18n],
+body[data-page="about"] .site-nav a[href="about.html"] span[data-i18n],
+body[data-page="vision"] .site-nav a[href="vision.html"] span[data-i18n],
+body[data-page="mission"] .site-nav a[href="mission.html"] span[data-i18n],
+body[data-page="manifesto"] .site-nav a[href="manifesto.html"] span[data-i18n],
+body[data-page="humanitarian-action"] .site-nav a[href="humanitarian-action.html"] span[data-i18n],
+body[data-page="projects"] .site-nav a[href="projects.html"] span[data-i18n],
+body[data-page="volunteers"] .site-nav a[href="volunteers.html"] span[data-i18n],
+body[data-page="academy"] .site-nav a[href="academy.html"] span[data-i18n],
+body[data-page="media"] .site-nav a[href="media.html"] span[data-i18n],
+body[data-page="echoes"] .site-nav a[href="echoes.html"] span[data-i18n],
+body[data-page="stories"] .site-nav a[href="stories.html"] span[data-i18n],
+body[data-page="echo-of-month"] .site-nav a[href="echo-of-month.html"] span[data-i18n],
+body[data-page="echo-of-year"] .site-nav a[href="echo-of-year.html"] span[data-i18n],
+body[data-page="marketplace"] .site-nav a[href="marketplace.html"] span[data-i18n],
+body[data-page="merchandise"] .site-nav a[href="merchandise.html"] span[data-i18n],
+body[data-page="partners"] .site-nav a[href="partners.html"] span[data-i18n],
+body[data-page="governance"] .site-nav a[href="governance.html"] span[data-i18n],
+body[data-page="contact"] .site-nav a[href="contact.html"] span[data-i18n],
+body[data-page="join"] .site-nav a[href="join.html"] span[data-i18n]{
+  color:rgba(255,250,240,.98);
+  text-shadow:0 0 10px rgba(95,208,197,.13);
+}
+
 .site-nav .nav-group + .nav-group{
   margin-top:1.55rem;
 }
