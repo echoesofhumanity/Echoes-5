@@ -15,7 +15,7 @@
   ];
   const orbitField=[
     {layer:"far",x:8,y:4,w:520,h:150,tone:"cyan",rotate:-14,alpha:.10,opacity:.62,delay:-8,duration:34,homeHeroY:.30},
-    {layer:"near",x:92,y:9,w:430,h:126,tone:"turquoise",rotate:18,alpha:.14,opacity:.72,delay:-19,duration:29,homeHeroY:.74},
+    {layer:"near",x:92,y:9,w:430,h:126,tone:"turquoise",rotate:18,alpha:.14,opacity:.72,delay:-19,duration:29,homeHeroY:.94},
     {layer:"far",x:82,y:18,w:560,h:164,tone:"sage",rotate:-22,alpha:.09,opacity:.56,delay:-4,duration:38},
     {layer:"near",x:18,y:27,w:470,h:138,tone:"cyan",rotate:12,alpha:.13,opacity:.68,delay:-15,duration:31},
     {layer:"far",x:70,y:36,w:610,h:174,tone:"warm",rotate:20,alpha:.075,opacity:.50,delay:-24,duration:42},
