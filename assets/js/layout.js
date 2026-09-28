@@ -9,6 +9,12 @@
       link.href="assets/css/echoes-universe.css";
       document.head.appendChild(link);
     }
+    if(!document.querySelector('link[href^="assets/css/header-cinematic.css"]')){
+      const link=document.createElement("link");
+      link.rel="stylesheet";
+      link.href="assets/css/header-cinematic.css";
+      document.head.appendChild(link);
+    }
     if(!document.querySelector('script[src^="assets/js/echoes-universe.js"]')){
       const script=document.createElement("script");
       script.src="assets/js/echoes-universe.js";
