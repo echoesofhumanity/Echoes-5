@@ -34,9 +34,7 @@
   pointer-events:none;
   isolation:isolate;
   contain:paint;
-  background:
-    radial-gradient(ellipse 86% 34% at 50% 7%,rgba(var(--universe-cyan),.075),transparent 68%),
-    linear-gradient(180deg,var(--universe-bg-mid) 0%,var(--universe-bg-deep) 32%,#071521 66%,var(--universe-bg-mid) 100%);
+  background:linear-gradient(180deg,var(--universe-bg-mid) 0%,var(--universe-bg-deep) 32%,#071521 66%,var(--universe-bg-mid) 100%);
 }
 
 .echoes-universe-layer{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;pointer-events:none}
@@ -48,19 +46,6 @@
 .echoes-universe-orbits-far{z-index:var(--universe-depth-orbit-far)}
 .echoes-universe-orbits-near{z-index:var(--universe-depth-orbit-near)}
 .echoes-universe-humans{z-index:var(--universe-depth-human)}
-
-.echoes-universe-far{
-  background:
-    radial-gradient(ellipse 94% 15% at 18% 9%,rgba(var(--universe-cyan),.075),transparent 72%),
-    radial-gradient(ellipse 82% 14% at 86% 24%,rgba(var(--universe-sage),.052),transparent 74%),
-    radial-gradient(ellipse 96% 16% at 26% 43%,rgba(var(--universe-turquoise),.047),transparent 76%),
-    radial-gradient(ellipse 88% 15% at 82% 61%,rgba(var(--universe-warm),.035),transparent 75%),
-    radial-gradient(ellipse 92% 17% at 20% 79%,rgba(var(--universe-cyan),.052),transparent 76%),
-    radial-gradient(ellipse 90% 14% at 78% 94%,rgba(var(--universe-sage),.043),transparent 75%);
-  opacity:.72;
-  animation:echoesUniverseFarBreathe 42s ease-in-out infinite alternate;
-  transform-origin:50% 50%;
-}
 
 .echoes-universe :where(.universe-color,.universe-haze,.universe-light,.universe-halo,.universe-orbit,.universe-human-light){
   position:absolute;pointer-events:none;user-select:none;transform-origin:center;will-change:transform,opacity
@@ -115,7 +100,6 @@
 .universe-halo--sage{--halo-rgb:var(--universe-sage)}
 .universe-halo--warm{--halo-rgb:var(--universe-warm)}
 
-@keyframes echoesUniverseFarBreathe{0%{opacity:.58;transform:scale(1)}50%{opacity:.76;transform:scale(1.012)}100%{opacity:.64;transform:scale(1.006)}}
 @keyframes echoesUniverseLightBreathe{0%{opacity:.20;transform:translate(-50%,-50%) scale(.76)}38%{opacity:.48;transform:translate(-50%,-50%) scale(1.03)}72%{opacity:.31;transform:translate(-50%,-50%) scale(.90)}100%{opacity:.56;transform:translate(-50%,-50%) scale(1.12)}}
 @keyframes echoesUniverseHaloBreathe{0%{opacity:.62;transform:translate(-50%,-50%) rotate(var(--halo-rotate)) scale(.95)}46%{opacity:.88;transform:translate(-50%,-50%) rotate(var(--halo-rotate)) scale(1.018)}100%{opacity:.70;transform:translate(-50%,-50%) rotate(var(--halo-rotate)) scale(.985)}}
 
