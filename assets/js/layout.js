@@ -2,6 +2,22 @@
   const page=document.body.dataset.page;
   if(!page)return;
 
+  const ensureCinematicUniverse=()=>{
+    if(!document.querySelector('link[href^="assets/css/echoes-universe.css"]')){
+      const link=document.createElement("link");
+      link.rel="stylesheet";
+      link.href="assets/css/echoes-universe.css";
+      document.head.appendChild(link);
+    }
+    if(!document.querySelector('script[src^="assets/js/echoes-universe.js"]')){
+      const script=document.createElement("script");
+      script.src="assets/js/echoes-universe.js";
+      document.head.appendChild(script);
+    }
+  };
+
+  ensureCinematicUniverse();
+
   const loadScript=(url)=>new Promise((resolve,reject)=>{
     if(window.EchoesI18n){resolve();return;}
     const script=document.createElement("script");
