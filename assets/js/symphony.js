@@ -13,6 +13,7 @@
   audio.loop = false;
 
   let toggle = null;
+  let awaitingFirstInteraction = false;
 
   const syncToggle = () => {
     if (!toggle) return;
@@ -25,7 +26,46 @@
     toggle.dataset.symphonyState = playing ? "playing" : "paused";
   };
 
+  const removeAutoplayFallback = () => {
+    if (!awaitingFirstInteraction) return;
+    awaitingFirstInteraction = false;
+    document.removeEventListener("pointerdown", resumeAfterFirstInteraction, true);
+    document.removeEventListener("keydown", resumeAfterFirstInteraction, true);
+  };
+
+  const resumeAfterFirstInteraction = async (event) => {
+    if (event.target && event.target.closest && event.target.closest("[data-symphony-toggle]")) {
+      removeAutoplayFallback();
+      return;
+    }
+
+    removeAutoplayFallback();
+    try {
+      await audio.play();
+    } catch (error) {
+      console.info("Echoes symphony awaits manual playback.");
+    }
+  };
+
+  const installAutoplayFallback = () => {
+    if (awaitingFirstInteraction) return;
+    awaitingFirstInteraction = true;
+    document.addEventListener("pointerdown", resumeAfterFirstInteraction, true);
+    document.addEventListener("keydown", resumeAfterFirstInteraction, true);
+  };
+
+  const attemptAutoplay = async () => {
+    try {
+      await audio.play();
+      removeAutoplayFallback();
+    } catch (error) {
+      installAutoplayFallback();
+      syncToggle();
+    }
+  };
+
   const togglePlayback = async () => {
+    removeAutoplayFallback();
     try {
       if (audio.paused || audio.ended) {
         if (audio.ended) audio.currentTime = 0;
@@ -56,9 +96,13 @@
   document.addEventListener("echoes:layout-ready", bindToggle);
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bindToggle, { once: true });
+    document.addEventListener("DOMContentLoaded", () => {
+      bindToggle();
+      attemptAutoplay();
+    }, { once: true });
   } else {
     bindToggle();
+    attemptAutoplay();
   }
 
   window.EchoesSymphony = {
