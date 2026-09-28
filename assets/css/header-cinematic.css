@@ -59,6 +59,13 @@
 }
 
 /* Language menu enters with the same calm cinematic tempo as primary navigation. */
+.language-menu{
+  position:fixed;
+  top:76px;
+  right:16px;
+  left:auto;
+}
+
 .language-menu:not([hidden]){
   transform-origin:top right;
   animation:echoesLanguageMenuReveal 820ms cubic-bezier(.16,1,.3,1) both;
