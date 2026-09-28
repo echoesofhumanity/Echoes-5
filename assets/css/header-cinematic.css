@@ -62,7 +62,7 @@
 .language-menu{
   position:fixed;
   top:76px;
-  right:16px;
+  right:0;
   left:auto;
 }
 
