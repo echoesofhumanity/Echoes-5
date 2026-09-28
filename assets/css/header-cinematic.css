@@ -25,280 +25,61 @@
 }
 
 @keyframes echoesHeaderBreathe{
-  0%,100%{
-    transform:translateY(1px) scale(.99);
-    color:rgba(243,239,229,.88);
-    border-color:rgba(95,208,197,.20);
-    box-shadow:0 0 0 1px rgba(95,208,197,.018),0 0 15px rgba(95,208,197,.04);
-  }
-  50%{
-    transform:translateY(-4px) scale(1.055);
-    color:rgba(247,244,235,1);
-    border-color:rgba(95,208,197,.46);
-    box-shadow:0 0 0 1px rgba(95,208,197,.045),0 0 28px rgba(95,208,197,.16),0 5px 24px rgba(95,208,197,.08),inset 0 0 18px rgba(95,208,197,.045);
-  }
+  0%,100%{transform:translateY(1px) scale(.99);color:rgba(243,239,229,.88);border-color:rgba(95,208,197,.20);box-shadow:0 0 0 1px rgba(95,208,197,.018),0 0 15px rgba(95,208,197,.04)}
+  50%{transform:translateY(-4px) scale(1.055);color:rgba(247,244,235,1);border-color:rgba(95,208,197,.46);box-shadow:0 0 0 1px rgba(95,208,197,.045),0 0 28px rgba(95,208,197,.16),0 5px 24px rgba(95,208,197,.08),inset 0 0 18px rgba(95,208,197,.045)}
 }
 
-/* Symphony control: invitation breath while silent, living pulse while playing. */
-.header-icon[data-symphony-toggle][data-symphony-state="paused"]{
-  animation:echoesSymphonyInvite 4.8s cubic-bezier(.22,.61,.36,1) infinite;
-}
+.header-icon[data-symphony-toggle][data-symphony-state="paused"]{animation:echoesSymphonyInvite 4.8s cubic-bezier(.22,.61,.36,1) infinite}
+.header-icon[data-symphony-toggle][data-symphony-state="playing"]{color:rgba(255,250,240,1);border-color:rgba(95,208,197,.58);background:radial-gradient(circle at 50% 50%,rgba(95,208,197,.12),rgba(95,208,197,.025) 58%,transparent 72%);animation:echoesSymphonyPlaying 3.6s ease-in-out infinite}
+.header-icon[data-symphony-toggle][data-symphony-state="playing"] svg{filter:drop-shadow(0 0 5px rgba(95,208,197,.55)) drop-shadow(0 0 12px rgba(95,208,197,.22))}
 
-.header-icon[data-symphony-toggle][data-symphony-state="playing"]{
-  color:rgba(255,250,240,1);
-  border-color:rgba(95,208,197,.58);
-  background:radial-gradient(circle at 50% 50%,rgba(95,208,197,.12),rgba(95,208,197,.025) 58%,transparent 72%);
-  animation:echoesSymphonyPlaying 3.6s ease-in-out infinite;
-}
+@keyframes echoesSymphonyInvite{0%,100%{transform:translateY(0) scale(1);border-color:rgba(95,208,197,.24);box-shadow:0 0 0 1px rgba(95,208,197,.02),0 0 16px rgba(95,208,197,.05)}50%{transform:translateY(-3px) scale(1.07);border-color:rgba(95,208,197,.5);box-shadow:0 0 0 1px rgba(95,208,197,.05),0 0 30px rgba(95,208,197,.18),inset 0 0 18px rgba(95,208,197,.05)}}
+@keyframes echoesSymphonyPlaying{0%,100%{transform:translateY(-1px) scale(1.025);box-shadow:0 0 0 1px rgba(95,208,197,.04),0 0 20px rgba(95,208,197,.12),inset 0 0 12px rgba(95,208,197,.035)}50%{transform:translateY(-3px) scale(1.075);box-shadow:0 0 0 1px rgba(95,208,197,.075),0 0 34px rgba(95,208,197,.24),inset 0 0 20px rgba(95,208,197,.075)}}
 
-.header-icon[data-symphony-toggle][data-symphony-state="playing"] svg{
-  filter:drop-shadow(0 0 5px rgba(95,208,197,.55)) drop-shadow(0 0 12px rgba(95,208,197,.22));
-}
+@media(hover:hover) and (pointer:fine){.header-icon:hover{transform:translateY(-4px) scale(1.065);color:rgb(95,208,197);border-color:rgba(95,208,197,.55);box-shadow:0 0 30px rgba(95,208,197,.18),inset 0 0 18px rgba(95,208,197,.05)}}
+.header-icon:focus-visible{outline:1px solid rgba(95,208,197,.72);outline-offset:4px}
+.header-icon:active{transform:translateY(0) scale(.97);border-color:rgba(95,208,197,.56)}
 
-@keyframes echoesSymphonyInvite{
-  0%,100%{
-    transform:translateY(0) scale(1);
-    border-color:rgba(95,208,197,.24);
-    box-shadow:0 0 0 1px rgba(95,208,197,.02),0 0 16px rgba(95,208,197,.05);
-  }
-  50%{
-    transform:translateY(-3px) scale(1.07);
-    border-color:rgba(95,208,197,.5);
-    box-shadow:0 0 0 1px rgba(95,208,197,.05),0 0 30px rgba(95,208,197,.18),inset 0 0 18px rgba(95,208,197,.05);
-  }
-}
+.language-menu{position:fixed;top:76px;right:0;left:auto}
+.language-menu:not([hidden]){transform-origin:top right;animation:echoesLanguageMenuReveal 820ms cubic-bezier(.16,1,.3,1) both}
+@keyframes echoesLanguageMenuReveal{0%{opacity:0;transform:translateY(-12px)}58%{opacity:.72;transform:translateY(-3px)}100%{opacity:1;transform:translateY(0)}}
+.language-flag{display:inline-block;transform-origin:center;will-change:transform,opacity;backface-visibility:hidden;animation:echoesLanguageFlagBreathe 6.8s ease-in-out infinite}
+.language-menu button:nth-child(2) .language-flag{animation-delay:-1.7s}.language-menu button:nth-child(3) .language-flag{animation-delay:-3.4s}.language-menu button:nth-child(4) .language-flag{animation-delay:-5.1s}
+@keyframes echoesLanguageFlagBreathe{0%,100%{transform:translateZ(0) scale(1);opacity:.9}50%{transform:translateZ(0) scale(1.07);opacity:1}}
 
-@keyframes echoesSymphonyPlaying{
-  0%,100%{
-    transform:translateY(-1px) scale(1.025);
-    box-shadow:0 0 0 1px rgba(95,208,197,.04),0 0 20px rgba(95,208,197,.12),inset 0 0 12px rgba(95,208,197,.035);
-  }
-  50%{
-    transform:translateY(-3px) scale(1.075);
-    box-shadow:0 0 0 1px rgba(95,208,197,.075),0 0 34px rgba(95,208,197,.24),inset 0 0 20px rgba(95,208,197,.075);
-  }
-}
+.site-nav a{position:relative;-webkit-tap-highlight-color:transparent;background:transparent}.site-nav a:active{background:transparent}
+.site-nav .nav-group > span{display:flex;align-items:center;gap:.58rem}.site-nav .nav-group > span::before{content:"";width:18px;height:1px;flex:0 0 18px;border-radius:999px;background:linear-gradient(90deg,rgba(95,208,197,.18),rgba(95,208,197,.82));box-shadow:0 0 9px rgba(95,208,197,.18)}
+.site-nav .nav-group > span > span[data-i18n]{color:rgba(95,208,197,.9);font-size:.68rem;font-weight:560;letter-spacing:.22em;line-height:1.35;text-shadow:0 0 14px rgba(95,208,197,.16)}
+.site-nav a span[data-i18n]{color:rgba(226,232,240,.84);font-size:.97rem;font-weight:560;letter-spacing:.085em;line-height:1.42;transition:color 320ms cubic-bezier(.22,.61,.36,1),text-shadow 320ms cubic-bezier(.22,.61,.36,1),opacity 320ms cubic-bezier(.22,.61,.36,1)}
+.site-nav a[aria-current="page"]{padding-left:.78rem}.site-nav a[aria-current="page"]::before{content:"";position:absolute;left:0;top:50%;width:4px;height:4px;border-radius:50%;transform:translateY(-50%);background:rgba(95,208,197,.92);box-shadow:0 0 8px rgba(95,208,197,.58),0 0 16px rgba(95,208,197,.22)}.site-nav a[aria-current="page"] span[data-i18n]{color:rgba(255,250,240,.98);text-shadow:0 0 10px rgba(95,208,197,.13)}
+.site-nav .nav-group + .nav-group{margin-top:1.55rem}.site-nav .nav-group a + a{margin-top:.2rem}
 
-@media(hover:hover) and (pointer:fine){
-  .header-icon:hover{
-    transform:translateY(-4px) scale(1.065);
-    color:rgb(95,208,197);
-    border-color:rgba(95,208,197,.55);
-    box-shadow:0 0 30px rgba(95,208,197,.18),inset 0 0 18px rgba(95,208,197,.05);
-  }
-}
-
-.header-icon:focus-visible{
-  outline:1px solid rgba(95,208,197,.72);
-  outline-offset:4px;
-}
-
-.header-icon:active{
-  transform:translateY(0) scale(.97);
-  border-color:rgba(95,208,197,.56);
-}
-
-/* Language menu enters with the same calm cinematic tempo as primary navigation. */
-.language-menu{
+/* Symphony identity — revealed only by a deliberate long press. */
+.symphony-identity{
   position:fixed;
-  top:76px;
-  right:0;
-  left:auto;
-}
-
-.language-menu:not([hidden]){
+  z-index:1200;
+  top:88px;
+  right:14px;
+  width:min(310px,calc(100vw - 28px));
+  padding:18px 19px 17px;
+  border:1px solid rgba(95,208,197,.22);
+  border-radius:20px;
+  background:linear-gradient(145deg,rgba(7,18,32,.96),rgba(5,12,25,.985));
+  box-shadow:0 18px 46px rgba(0,0,0,.34),0 0 28px rgba(95,208,197,.07),inset 0 0 24px rgba(95,208,197,.025);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  color:rgba(247,244,235,.96);
+  opacity:0;
+  transform:translateY(-10px) scale(.985);
   transform-origin:top right;
-  animation:echoesLanguageMenuReveal 820ms cubic-bezier(.16,1,.3,1) both;
+  pointer-events:none;
+  transition:opacity 360ms cubic-bezier(.16,1,.3,1),transform 360ms cubic-bezier(.16,1,.3,1);
 }
+.symphony-identity[hidden]{display:none}
+.symphony-identity.is-visible{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.symphony-identity__eyebrow{margin-bottom:8px;color:rgba(95,208,197,.9);font-size:.64rem;font-weight:650;letter-spacing:.2em;line-height:1.2}
+.symphony-identity__title{display:block;margin:0 0 7px;font-size:1.05rem;font-weight:650;line-height:1.25;letter-spacing:.015em;color:rgba(255,250,240,.99);text-shadow:0 0 16px rgba(95,208,197,.09)}
+.symphony-identity__subtitle{display:block;margin-bottom:10px;color:rgba(211,220,230,.78);font-size:.78rem;line-height:1.45;letter-spacing:.025em}
+.symphony-identity__artist{display:block;padding-top:10px;border-top:1px solid rgba(95,208,197,.12);color:rgba(247,244,235,.88);font-size:.76rem;font-weight:560;letter-spacing:.06em}
 
-@keyframes echoesLanguageMenuReveal{
-  0%{opacity:0;transform:translateY(-12px)}
-  58%{opacity:.72;transform:translateY(-3px)}
-  100%{opacity:1;transform:translateY(0)}
-}
-
-/* Lightweight flag breathing: transform + opacity only for smooth mobile rendering. */
-.language-flag{
-  display:inline-block;
-  transform-origin:center;
-  will-change:transform,opacity;
-  backface-visibility:hidden;
-  animation:echoesLanguageFlagBreathe 6.8s ease-in-out infinite;
-}
-
-.language-menu button:nth-child(2) .language-flag{animation-delay:-1.7s}
-.language-menu button:nth-child(3) .language-flag{animation-delay:-3.4s}
-.language-menu button:nth-child(4) .language-flag{animation-delay:-5.1s}
-
-@keyframes echoesLanguageFlagBreathe{
-  0%,100%{transform:translateZ(0) scale(1);opacity:.9}
-  50%{transform:translateZ(0) scale(1.07);opacity:1}
-}
-
-/* Keep mobile touch feedback on the page name only, never across the nav row. */
-.site-nav a{
-  position:relative;
-  -webkit-tap-highlight-color:transparent;
-  background:transparent;
-}
-
-.site-nav a:active{
-  background:transparent;
-}
-
-/* Editorial cinematic hierarchy: typography, breath and restrained light. */
-.site-nav .nav-group > span{
-  display:flex;
-  align-items:center;
-  gap:.58rem;
-}
-
-.site-nav .nav-group > span::before{
-  content:"";
-  width:18px;
-  height:1px;
-  flex:0 0 18px;
-  border-radius:999px;
-  background:linear-gradient(90deg,rgba(95,208,197,.18),rgba(95,208,197,.82));
-  box-shadow:0 0 9px rgba(95,208,197,.18);
-}
-
-.site-nav .nav-group > span > span[data-i18n]{
-  color:rgba(95,208,197,.9);
-  font-size:.68rem;
-  font-weight:560;
-  letter-spacing:.22em;
-  line-height:1.35;
-  text-shadow:0 0 14px rgba(95,208,197,.16);
-}
-
-.site-nav a span[data-i18n]{
-  color:rgba(226,232,240,.84);
-  font-size:.97rem;
-  font-weight:560;
-  letter-spacing:.085em;
-  line-height:1.42;
-  transition:color 320ms cubic-bezier(.22,.61,.36,1),text-shadow 320ms cubic-bezier(.22,.61,.36,1),opacity 320ms cubic-bezier(.22,.61,.36,1);
-}
-
-.site-nav a[aria-current="page"]{
-  padding-left:.78rem;
-}
-
-.site-nav a[aria-current="page"]::before{
-  content:"";
-  position:absolute;
-  left:0;
-  top:50%;
-  width:4px;
-  height:4px;
-  border-radius:50%;
-  transform:translateY(-50%);
-  background:rgba(95,208,197,.92);
-  box-shadow:0 0 8px rgba(95,208,197,.58),0 0 16px rgba(95,208,197,.22);
-}
-
-.site-nav a[aria-current="page"] span[data-i18n]{
-  color:rgba(255,250,240,.98);
-  text-shadow:0 0 10px rgba(95,208,197,.13);
-}
-
-/* Stable current-page state from body data-page; this does not depend on navigation.js freshness. */
-body[data-page="home"] .site-nav a[href="index.html"],
-body[data-page="about"] .site-nav a[href="about.html"],
-body[data-page="vision"] .site-nav a[href="vision.html"],
-body[data-page="mission"] .site-nav a[href="mission.html"],
-body[data-page="manifesto"] .site-nav a[href="manifesto.html"],
-body[data-page="humanitarian-action"] .site-nav a[href="humanitarian-action.html"],
-body[data-page="projects"] .site-nav a[href="projects.html"],
-body[data-page="volunteers"] .site-nav a[href="volunteers.html"],
-body[data-page="academy"] .site-nav a[href="academy.html"],
-body[data-page="media"] .site-nav a[href="media.html"],
-body[data-page="echoes"] .site-nav a[href="echoes.html"],
-body[data-page="stories"] .site-nav a[href="stories.html"],
-body[data-page="echo-of-month"] .site-nav a[href="echo-of-month.html"],
-body[data-page="echo-of-year"] .site-nav a[href="echo-of-year.html"],
-body[data-page="marketplace"] .site-nav a[href="marketplace.html"],
-body[data-page="merchandise"] .site-nav a[href="merchandise.html"],
-body[data-page="partners"] .site-nav a[href="partners.html"],
-body[data-page="governance"] .site-nav a[href="governance.html"],
-body[data-page="contact"] .site-nav a[href="contact.html"],
-body[data-page="join"] .site-nav a[href="join.html"]{
-  padding-left:.78rem;
-}
-
-body[data-page="home"] .site-nav a[href="index.html"]::before,
-body[data-page="about"] .site-nav a[href="about.html"]::before,
-body[data-page="vision"] .site-nav a[href="vision.html"]::before,
-body[data-page="mission"] .site-nav a[href="mission.html"]::before,
-body[data-page="manifesto"] .site-nav a[href="manifesto.html"]::before,
-body[data-page="humanitarian-action"] .site-nav a[href="humanitarian-action.html"]::before,
-body[data-page="projects"] .site-nav a[href="projects.html"]::before,
-body[data-page="volunteers"] .site-nav a[href="volunteers.html"]::before,
-body[data-page="academy"] .site-nav a[href="academy.html"]::before,
-body[data-page="media"] .site-nav a[href="media.html"]::before,
-body[data-page="echoes"] .site-nav a[href="echoes.html"]::before,
-body[data-page="stories"] .site-nav a[href="stories.html"]::before,
-body[data-page="echo-of-month"] .site-nav a[href="echo-of-month.html"]::before,
-body[data-page="echo-of-year"] .site-nav a[href="echo-of-year.html"]::before,
-body[data-page="marketplace"] .site-nav a[href="marketplace.html"]::before,
-body[data-page="merchandise"] .site-nav a[href="merchandise.html"]::before,
-body[data-page="partners"] .site-nav a[href="partners.html"]::before,
-body[data-page="governance"] .site-nav a[href="governance.html"]::before,
-body[data-page="contact"] .site-nav a[href="contact.html"]::before,
-body[data-page="join"] .site-nav a[href="join.html"]::before{
-  content:"";
-  position:absolute;
-  left:0;
-  top:50%;
-  width:4px;
-  height:4px;
-  border-radius:50%;
-  transform:translateY(-50%);
-  background:rgba(95,208,197,.92);
-  box-shadow:0 0 8px rgba(95,208,197,.58),0 0 16px rgba(95,208,197,.22);
-}
-
-body[data-page="home"] .site-nav a[href="index.html"] span[data-i18n],
-body[data-page="about"] .site-nav a[href="about.html"] span[data-i18n],
-body[data-page="vision"] .site-nav a[href="vision.html"] span[data-i18n],
-body[data-page="mission"] .site-nav a[href="mission.html"] span[data-i18n],
-body[data-page="manifesto"] .site-nav a[href="manifesto.html"] span[data-i18n],
-body[data-page="humanitarian-action"] .site-nav a[href="humanitarian-action.html"] span[data-i18n],
-body[data-page="projects"] .site-nav a[href="projects.html"] span[data-i18n],
-body[data-page="volunteers"] .site-nav a[href="volunteers.html"] span[data-i18n],
-body[data-page="academy"] .site-nav a[href="academy.html"] span[data-i18n],
-body[data-page="media"] .site-nav a[href="media.html"] span[data-i18n],
-body[data-page="echoes"] .site-nav a[href="echoes.html"] span[data-i18n],
-body[data-page="stories"] .site-nav a[href="stories.html"] span[data-i18n],
-body[data-page="echo-of-month"] .site-nav a[href="echo-of-month.html"] span[data-i18n],
-body[data-page="echo-of-year"] .site-nav a[href="echo-of-year.html"] span[data-i18n],
-body[data-page="marketplace"] .site-nav a[href="marketplace.html"] span[data-i18n],
-body[data-page="merchandise"] .site-nav a[href="merchandise.html"] span[data-i18n],
-body[data-page="partners"] .site-nav a[href="partners.html"] span[data-i18n],
-body[data-page="governance"] .site-nav a[href="governance.html"] span[data-i18n],
-body[data-page="contact"] .site-nav a[href="contact.html"] span[data-i18n],
-body[data-page="join"] .site-nav a[href="join.html"] span[data-i18n]{
-  color:rgba(255,250,240,.98);
-  text-shadow:0 0 10px rgba(95,208,197,.13);
-}
-
-.site-nav .nav-group + .nav-group{
-  margin-top:1.55rem;
-}
-
-.site-nav .nav-group a + a{
-  margin-top:.2rem;
-}
-
-@media(hover:hover) and (pointer:fine){
-  .site-nav a:hover span[data-i18n]{
-    color:rgba(255,250,240,.98);
-    text-shadow:0 0 10px rgba(95,208,197,.22);
-  }
-}
-
-@media(prefers-reduced-motion:reduce){
-  .site-brand-mark,.header-icon,.language-flag{animation:none}
-  .language-menu:not([hidden]){animation:none}
-}
+@media(max-width:520px){.symphony-identity{top:82px;right:8px;width:min(292px,calc(100vw - 16px));border-radius:18px;padding:17px 18px 16px}}
