@@ -13,7 +13,11 @@
   audio.loop = false;
 
   let toggle = null;
+  let identityPanel = null;
   let awaitingFirstInteraction = false;
+  let pressTimer = null;
+  let longPressTriggered = false;
+  const LONG_PRESS_MS = 620;
 
   const syncToggle = () => {
     if (!toggle) return;
@@ -24,6 +28,43 @@
       playing ? "Pause Where Humanity Echoes" : "Play Where Humanity Echoes"
     );
     toggle.dataset.symphonyState = playing ? "playing" : "paused";
+    if (identityPanel) {
+      const status = identityPanel.querySelector("[data-symphony-status]");
+      if (status) status.textContent = playing ? "NOW PLAYING" : "PAUSED";
+    }
+  };
+
+  const ensureIdentityPanel = () => {
+    if (identityPanel) return identityPanel;
+
+    identityPanel = document.createElement("div");
+    identityPanel.className = "symphony-identity";
+    identityPanel.hidden = true;
+    identityPanel.setAttribute("role", "status");
+    identityPanel.setAttribute("aria-live", "polite");
+    identityPanel.innerHTML = `
+      <div class="symphony-identity__eyebrow" data-symphony-status>PAUSED</div>
+      <strong class="symphony-identity__title">${TRACK.title}</strong>
+      <span class="symphony-identity__subtitle">${TRACK.subtitle}</span>
+      <span class="symphony-identity__artist">Music by ${TRACK.artist}</span>
+    `;
+    document.body.appendChild(identityPanel);
+    syncToggle();
+    return identityPanel;
+  };
+
+  const showIdentity = () => {
+    const panel = ensureIdentityPanel();
+    panel.hidden = false;
+    requestAnimationFrame(() => panel.classList.add("is-visible"));
+  };
+
+  const hideIdentity = () => {
+    if (!identityPanel || identityPanel.hidden) return;
+    identityPanel.classList.remove("is-visible");
+    window.setTimeout(() => {
+      if (!identityPanel.classList.contains("is-visible")) identityPanel.hidden = true;
+    }, 360);
   };
 
   const removeAutoplayFallback = () => {
@@ -66,6 +107,7 @@
 
   const togglePlayback = async () => {
     removeAutoplayFallback();
+    hideIdentity();
     try {
       if (audio.paused || audio.ended) {
         if (audio.ended) audio.currentTime = 0;
@@ -80,12 +122,40 @@
     }
   };
 
+  const beginPress = () => {
+    longPressTriggered = false;
+    window.clearTimeout(pressTimer);
+    pressTimer = window.setTimeout(() => {
+      longPressTriggered = true;
+      showIdentity();
+    }, LONG_PRESS_MS);
+  };
+
+  const endPress = () => {
+    window.clearTimeout(pressTimer);
+    pressTimer = null;
+  };
+
+  const handleToggleClick = (event) => {
+    if (longPressTriggered) {
+      event.preventDefault();
+      longPressTriggered = false;
+      return;
+    }
+    togglePlayback();
+  };
+
   const bindToggle = () => {
     const nextToggle = document.querySelector("[data-symphony-toggle]");
     if (!nextToggle || nextToggle === toggle) return;
 
     toggle = nextToggle;
-    toggle.addEventListener("click", togglePlayback);
+    toggle.addEventListener("pointerdown", beginPress);
+    toggle.addEventListener("pointerup", endPress);
+    toggle.addEventListener("pointercancel", endPress);
+    toggle.addEventListener("pointerleave", endPress);
+    toggle.addEventListener("contextmenu", event => event.preventDefault());
+    toggle.addEventListener("click", handleToggleClick);
     syncToggle();
   };
 
@@ -94,6 +164,11 @@
   audio.addEventListener("ended", syncToggle);
 
   document.addEventListener("echoes:layout-ready", bindToggle);
+  document.addEventListener("pointerdown", event => {
+    if (!identityPanel || identityPanel.hidden) return;
+    if (event.target.closest("[data-symphony-toggle]") || event.target.closest(".symphony-identity")) return;
+    hideIdentity();
+  });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
@@ -108,6 +183,8 @@
   window.EchoesSymphony = {
     track: TRACK,
     audio,
-    toggle: togglePlayback
+    toggle: togglePlayback,
+    showIdentity,
+    hideIdentity
   };
 })();
