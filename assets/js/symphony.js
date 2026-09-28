@@ -23,10 +23,7 @@
     if (!toggle) return;
     const playing = !audio.paused && !audio.ended;
     toggle.setAttribute("aria-pressed", String(playing));
-    toggle.setAttribute(
-      "aria-label",
-      playing ? "Pause Where Humanity Echoes" : "Play Where Humanity Echoes"
-    );
+    toggle.setAttribute("aria-label", playing ? "Pause Where Humanity Echoes" : "Play Where Humanity Echoes");
     toggle.dataset.symphonyState = playing ? "playing" : "paused";
     if (identityPanel) {
       const status = identityPanel.querySelector("[data-symphony-status]");
@@ -36,7 +33,6 @@
 
   const ensureIdentityPanel = () => {
     if (identityPanel) return identityPanel;
-
     identityPanel = document.createElement("div");
     identityPanel.className = "symphony-identity";
     identityPanel.hidden = true;
@@ -79,13 +75,8 @@
       removeAutoplayFallback();
       return;
     }
-
     removeAutoplayFallback();
-    try {
-      await audio.play();
-    } catch (error) {
-      console.info("Echoes symphony awaits manual playback.");
-    }
+    try { await audio.play(); } catch (error) { console.info("Echoes symphony awaits manual playback."); }
   };
 
   const installAutoplayFallback = () => {
@@ -122,7 +113,8 @@
     }
   };
 
-  const beginPress = () => {
+  const beginPress = (event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
     longPressTriggered = false;
     window.clearTimeout(pressTimer);
     pressTimer = window.setTimeout(() => {
@@ -139,6 +131,7 @@
   const handleToggleClick = (event) => {
     if (longPressTriggered) {
       event.preventDefault();
+      event.stopPropagation();
       longPressTriggered = false;
       return;
     }
@@ -148,12 +141,14 @@
   const bindToggle = () => {
     const nextToggle = document.querySelector("[data-symphony-toggle]");
     if (!nextToggle || nextToggle === toggle) return;
-
     toggle = nextToggle;
+    toggle.style.touchAction = "manipulation";
+    toggle.style.webkitTouchCallout = "none";
+    toggle.style.webkitUserSelect = "none";
+    toggle.style.userSelect = "none";
     toggle.addEventListener("pointerdown", beginPress);
     toggle.addEventListener("pointerup", endPress);
     toggle.addEventListener("pointercancel", endPress);
-    toggle.addEventListener("pointerleave", endPress);
     toggle.addEventListener("contextmenu", event => event.preventDefault());
     toggle.addEventListener("click", handleToggleClick);
     syncToggle();
@@ -180,11 +175,5 @@
     attemptAutoplay();
   }
 
-  window.EchoesSymphony = {
-    track: TRACK,
-    audio,
-    toggle: togglePlayback,
-    showIdentity,
-    hideIdentity
-  };
+  window.EchoesSymphony = { track: TRACK, audio, toggle: togglePlayback, showIdentity, hideIdentity };
 })();
