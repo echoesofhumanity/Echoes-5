@@ -77,30 +77,22 @@
   100%{opacity:1;transform:translateY(0)}
 }
 
-/* Flags share the header's restrained breathing rhythm without moving the language rows. */
+/* Lightweight flag breathing: transform + opacity only for smooth mobile rendering. */
 .language-flag{
   display:inline-block;
   transform-origin:center;
-  filter:drop-shadow(0 0 0 rgba(95,208,197,0));
-  animation:echoesLanguageFlagBreathe 7.2s cubic-bezier(.22,.61,.36,1) infinite;
-  transition:transform 900ms cubic-bezier(.22,.61,.36,1),filter 900ms cubic-bezier(.22,.61,.36,1),opacity 900ms cubic-bezier(.22,.61,.36,1);
+  will-change:transform,opacity;
+  backface-visibility:hidden;
+  animation:echoesLanguageFlagBreathe 6.8s ease-in-out infinite;
 }
 
-.language-menu button:nth-child(2) .language-flag{animation-delay:-1.8s}
-.language-menu button:nth-child(3) .language-flag{animation-delay:-3.6s}
-.language-menu button:nth-child(4) .language-flag{animation-delay:-5.4s}
+.language-menu button:nth-child(2) .language-flag{animation-delay:-1.7s}
+.language-menu button:nth-child(3) .language-flag{animation-delay:-3.4s}
+.language-menu button:nth-child(4) .language-flag{animation-delay:-5.1s}
 
 @keyframes echoesLanguageFlagBreathe{
-  0%,100%{
-    transform:scale(.96);
-    opacity:.86;
-    filter:drop-shadow(0 0 0 rgba(95,208,197,0));
-  }
-  50%{
-    transform:scale(1.08);
-    opacity:1;
-    filter:drop-shadow(0 0 7px rgba(95,208,197,.18));
-  }
+  0%,100%{transform:translateZ(0) scale(1);opacity:.9}
+  50%{transform:translateZ(0) scale(1.07);opacity:1}
 }
 
 /* Keep mobile touch feedback on the page name only, never across the nav row. */
