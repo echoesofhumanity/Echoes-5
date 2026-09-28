@@ -68,6 +68,45 @@
   background:transparent;
 }
 
+/* Cinematic menu typography: hierarchy through type, spacing and light only. */
+.site-nav .nav-group > span{
+  color:rgba(95,208,197,.66);
+  font-size:.72rem;
+  font-weight:500;
+  letter-spacing:.24em;
+  line-height:1.35;
+  text-shadow:0 0 14px rgba(95,208,197,.07);
+}
+
+.site-nav a span[data-i18n]{
+  color:rgba(226,232,240,.82);
+  font-size:.96rem;
+  font-weight:520;
+  letter-spacing:.12em;
+  line-height:1.4;
+  transition:color 320ms cubic-bezier(.22,.61,.36,1),text-shadow 320ms cubic-bezier(.22,.61,.36,1),opacity 320ms cubic-bezier(.22,.61,.36,1);
+}
+
+.site-nav a[aria-current="page"] span[data-i18n]{
+  color:rgba(248,250,252,.98);
+  text-shadow:0 0 10px rgba(95,208,197,.16);
+}
+
+.site-nav .nav-group + .nav-group{
+  margin-top:1.35rem;
+}
+
+.site-nav .nav-group a + a{
+  margin-top:.18rem;
+}
+
+@media(hover:hover) and (pointer:fine){
+  .site-nav a:hover span[data-i18n]{
+    color:rgba(248,250,252,.98);
+    text-shadow:0 0 10px rgba(95,208,197,.22);
+  }
+}
+
 @media(prefers-reduced-motion:reduce){
   .site-brand-mark,.header-icon{animation:none}
 }
