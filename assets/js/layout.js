@@ -60,6 +60,9 @@
         await load('[data-section="section-01"]',"sections/"+page+"/section-01.html");
         await load('[data-section="section-02"]',"sections/"+page+"/section-02.html");
         await load('[data-section="section-03"]',"sections/"+page+"/section-03.html");
+        if(page==="media"){
+          await load('[data-section="section-04"]',"sections/media/section-04.html");
+        }
         if(page==="partners"){
           await load('[data-section="partnership-action"]',"sections/partners/partnership-action.html");
         }
