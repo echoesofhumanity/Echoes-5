@@ -58,6 +58,18 @@
   border-color:rgba(95,208,197,.56);
 }
 
+/* Language menu enters with the same calm cinematic tempo as primary navigation. */
+.language-menu:not([hidden]){
+  transform-origin:top right;
+  animation:echoesLanguageMenuReveal 820ms cubic-bezier(.16,1,.3,1) both;
+}
+
+@keyframes echoesLanguageMenuReveal{
+  0%{opacity:0;transform:translateY(-12px)}
+  58%{opacity:.72;transform:translateY(-3px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+
 /* Keep mobile touch feedback on the page name only, never across the nav row. */
 .site-nav a{
   position:relative;
@@ -223,4 +235,5 @@ body[data-page="join"] .site-nav a[href="join.html"] span[data-i18n]{
 
 @media(prefers-reduced-motion:reduce){
   .site-brand-mark,.header-icon{animation:none}
+  .language-menu:not([hidden]){animation:none}
 }
