@@ -77,6 +77,32 @@
   100%{opacity:1;transform:translateY(0)}
 }
 
+/* Flags share the header's restrained breathing rhythm without moving the language rows. */
+.language-flag{
+  display:inline-block;
+  transform-origin:center;
+  filter:drop-shadow(0 0 0 rgba(95,208,197,0));
+  animation:echoesLanguageFlagBreathe 7.2s cubic-bezier(.22,.61,.36,1) infinite;
+  transition:transform 900ms cubic-bezier(.22,.61,.36,1),filter 900ms cubic-bezier(.22,.61,.36,1),opacity 900ms cubic-bezier(.22,.61,.36,1);
+}
+
+.language-menu button:nth-child(2) .language-flag{animation-delay:-1.8s}
+.language-menu button:nth-child(3) .language-flag{animation-delay:-3.6s}
+.language-menu button:nth-child(4) .language-flag{animation-delay:-5.4s}
+
+@keyframes echoesLanguageFlagBreathe{
+  0%,100%{
+    transform:scale(.96);
+    opacity:.86;
+    filter:drop-shadow(0 0 0 rgba(95,208,197,0));
+  }
+  50%{
+    transform:scale(1.08);
+    opacity:1;
+    filter:drop-shadow(0 0 7px rgba(95,208,197,.18));
+  }
+}
+
 /* Keep mobile touch feedback on the page name only, never across the nav row. */
 .site-nav a{
   position:relative;
@@ -241,6 +267,6 @@ body[data-page="join"] .site-nav a[href="join.html"] span[data-i18n]{
 }
 
 @media(prefers-reduced-motion:reduce){
-  .site-brand-mark,.header-icon{animation:none}
+  .site-brand-mark,.header-icon,.language-flag{animation:none}
   .language-menu:not([hidden]){animation:none}
 }
