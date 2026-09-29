@@ -1,0 +1,63 @@
+{
+  "playlistRotationPolicy": {
+    "version": 1,
+    "enabled": true,
+    "purpose": "Keep Echoes Radio continuous, varied and editorially coherent while ensuring only broadcast-eligible audio assets enter automated rotation.",
+    "rotationModes": [
+      "24/7-flow",
+      "scheduled-program",
+      "curated-special",
+      "fallback"
+    ],
+    "defaultRotationMode": "24/7-flow",
+    "eligibility": {
+      "requireAssetStatusReady": true,
+      "requireEditorialApproval": true,
+      "requireClearedRights": true,
+      "requireValidTechnicalAsset": true,
+      "excludeQuarantinedAssets": true,
+      "excludeRetiredAssets": true,
+      "excludeExpiredOrWithdrawnRights": true
+    },
+    "continuity": {
+      "neverAllowEmptyRotation": true,
+      "fallbackWhenNoEligibleScheduledAsset": "24/7-flow",
+      "preserveCurrentPlayableAssetUntilSuccessorReady": true,
+      "skipUnplayableAsset": true,
+      "continueAfterAssetFailure": true
+    },
+    "repetitionControl": {
+      "avoidImmediateAssetRepeat": true,
+      "avoidImmediateCreatorRepeat": true,
+      "trackRecentPlaybackHistory": true,
+      "allowRepeatOnlyWhenEligiblePoolRequiresIt": true
+    },
+    "editorialBalance": {
+      "supportMultipleLanguages": true,
+      "supportMultipleRegions": true,
+      "supportMultipleContentFamilies": true,
+      "doNotInferPriorityFromPopularityAlone": true,
+      "allowCuratedProgramOverrides": true
+    },
+    "scheduledProgramBehavior": {
+      "scheduledProgramMayTakePriorityOverAutomation": true,
+      "requireProgramReadyBeforeTakeover": true,
+      "preserveCurrentFlowUntilProgramReady": true,
+      "returnTo24x7FlowAfterProgram": true
+    },
+    "liveBehavior": {
+      "authorizedLiveMayTakePriority": true,
+      "requireLiveSessionReadyBeforeTakeover": true,
+      "preserveAutomationUntilLiveReady": true,
+      "returnToAutomationAfterLive": true
+    },
+    "history": {
+      "recordPlayedAssetId": true,
+      "recordStartedAt": true,
+      "recordEndedAt": true,
+      "recordRotationMode": true,
+      "preservePlaybackHistory": true
+    },
+    "playbackHistory": []
+  }
+}
