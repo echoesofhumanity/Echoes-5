@@ -17,7 +17,36 @@
   let awaitingFirstInteraction = false;
   let pressTimer = null;
   let longPressTriggered = false;
+  let fadeFrame = null;
+  let loopTransitionStarted = false;
   const LONG_PRESS_MS = 620;
+  const LOOP_FADE_SECONDS = 4;
+  const LOOP_FADE_IN_MS = 4000;
+
+  const cancelFade = () => {
+    if (fadeFrame !== null) cancelAnimationFrame(fadeFrame);
+    fadeFrame = null;
+  };
+
+  const fadeVolumeTo = (target, duration, onComplete) => {
+    cancelFade();
+    const startVolume = audio.volume;
+    const startedAt = performance.now();
+
+    const step = (now) => {
+      const progress = Math.min((now - startedAt) / duration, 1);
+      const eased = progress * progress * (3 - 2 * progress);
+      audio.volume = startVolume + (target - startVolume) * eased;
+      if (progress < 1) {
+        fadeFrame = requestAnimationFrame(step);
+      } else {
+        fadeFrame = null;
+        if (onComplete) onComplete();
+      }
+    };
+
+    fadeFrame = requestAnimationFrame(step);
+  };
 
   const syncToggle = () => {
     if (!toggle) return;
@@ -101,9 +130,17 @@
     hideIdentity();
     try {
       if (audio.paused || audio.ended) {
-        if (audio.ended) audio.currentTime = 0;
-        await audio.play();
+        if (audio.ended) {
+          audio.currentTime = 0;
+          audio.volume = 0;
+          loopTransitionStarted = false;
+          await audio.play();
+          fadeVolumeTo(1, LOOP_FADE_IN_MS);
+        } else {
+          await audio.play();
+        }
       } else {
+        cancelFade();
         audio.pause();
       }
     } catch (error) {
@@ -156,7 +193,27 @@
 
   audio.addEventListener("play", syncToggle);
   audio.addEventListener("pause", syncToggle);
-  audio.addEventListener("ended", syncToggle);
+  audio.addEventListener("timeupdate", () => {
+    if (!Number.isFinite(audio.duration) || audio.paused || loopTransitionStarted) return;
+    const remaining = audio.duration - audio.currentTime;
+    if (remaining <= LOOP_FADE_SECONDS && remaining > 0) {
+      loopTransitionStarted = true;
+      fadeVolumeTo(0, Math.max(remaining * 1000, 250));
+    }
+  });
+  audio.addEventListener("ended", async () => {
+    cancelFade();
+    audio.currentTime = 0;
+    audio.volume = 0;
+    loopTransitionStarted = false;
+    try {
+      await audio.play();
+      fadeVolumeTo(1, LOOP_FADE_IN_MS);
+    } catch (error) {
+      console.info("Echoes symphony loop awaits playback permission.");
+      syncToggle();
+    }
+  });
 
   document.addEventListener("echoes:layout-ready", bindToggle);
   document.addEventListener("pointerdown", event => {
