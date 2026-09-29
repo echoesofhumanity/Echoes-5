@@ -1,0 +1,96 @@
+{
+  "broadcastLoggingAuditRetentionPolicy": {
+    "version": 1,
+    "enabled": true,
+    "purpose": "Maintain a reliable, privacy-conscious and auditable operational record of Echoes Radio broadcasts, control actions, incidents and safety-critical events.",
+    "principles": [
+      "accountability",
+      "integrity",
+      "data-minimization",
+      "need-to-know-access",
+      "traceability",
+      "controlled-retention"
+    ],
+    "logCategories": [
+      "broadcast-state",
+      "playback-history",
+      "live-session",
+      "schedule-handoff",
+      "manual-override",
+      "moderation-action",
+      "emergency-action",
+      "incident",
+      "acknowledgement",
+      "resolution",
+      "post-incident-review",
+      "rights-status-change",
+      "editorial-status-change"
+    ],
+    "requiredEventFields": [
+      "eventId",
+      "eventType",
+      "occurredAt",
+      "source",
+      "result"
+    ],
+    "actorFieldsWhenApplicable": [
+      "actorId",
+      "actorRole"
+    ],
+    "integrity": {
+      "useUtcTimestamps": true,
+      "requireUniqueEventId": true,
+      "appendEventsChronologically": true,
+      "preserveOriginalEventRecord": true,
+      "recordCorrectionsAsNewEvents": true,
+      "doNotSilentlyRewriteAuditHistory": true
+    },
+    "privacy": {
+      "collectOnlyOperationallyNecessaryData": true,
+      "avoidSensitivePersonalDataInFreeText": true,
+      "restrictAccessByRole": true,
+      "doNotLogCredentialsOrSecrets": true,
+      "protectChildrenAndVulnerablePeople": true
+    },
+    "retentionClasses": {
+      "routine-operational": {
+        "minimumDays": 30,
+        "reviewAfterDays": 90
+      },
+      "rights-and-editorial": {
+        "minimumDays": 365,
+        "reviewAfterDays": 730
+      },
+      "safety-incident": {
+        "minimumDays": 365,
+        "reviewAfterDays": 1095
+      },
+      "critical-emergency": {
+        "minimumDays": 730,
+        "reviewAfterDays": 1825
+      }
+    },
+    "retentionRules": {
+      "retentionPeriodIsMinimumNotAutomaticDeletion": true,
+      "requireAuthorizedReviewBeforeDeletion": true,
+      "preserveRecordsUnderActiveInvestigation": true,
+      "preserveRecordsRequiredForRightsOrLegalObligations": true,
+      "documentDeletionDecision": true
+    },
+    "access": {
+      "defaultAccess": "restricted",
+      "authorizedRoles": [
+        "producer",
+        "presenter-producer"
+      ],
+      "presenterAccessLimitedToOwnOperationalRecords": true,
+      "recordMaterialAuditAccess": true
+    },
+    "failureBehavior": {
+      "loggingFailureMustNotSilentlyDisableSafetyControls": true,
+      "criticalLoggingFailureCreatesIncident": true,
+      "preserveBroadcastContinuityWhenSafe": true
+    },
+    "auditEvents": []
+  }
+}
