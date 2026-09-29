@@ -11,13 +11,37 @@
     return !Number.isNaN(Date.parse(value));
   };
 
+  const isAllowedStreamSource = (source, type, policy) => {
+    if (!source || !type || !policy) return false;
+
+    try {
+      const url = new URL(source, window.location.href);
+      const protocol = url.protocol.replace(":", "");
+      const acceptedProtocols = Array.isArray(policy.acceptedProtocols) ? policy.acceptedProtocols : [];
+      const acceptedTypes = Array.isArray(policy.acceptedStreamTypes) ? policy.acceptedStreamTypes : [];
+
+      if (policy.requireSecureSource && protocol !== "https") return false;
+      if (acceptedProtocols.length && !acceptedProtocols.includes(protocol)) return false;
+      if (acceptedTypes.length && !acceptedTypes.includes(type)) return false;
+
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   const resolveLiveState = (data) => {
     const live = data?.live;
+    const validStream = isAllowedStreamSource(
+      live?.streamSource,
+      live?.streamType,
+      data?.streamPolicy
+    );
     const isLive = Boolean(
       live?.enabled &&
       live?.authorized &&
       live?.status === "on-air" &&
-      live?.streamSource
+      validStream
     );
 
     if (!isLive) return null;
@@ -27,6 +51,7 @@
       format: "live",
       host: live.presenter || "Echoes Radio",
       streamSource: live.streamSource,
+      streamType: live.streamType,
       startedAt: live.startedAt || null,
       isLive: true
     };
