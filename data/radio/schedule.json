@@ -14,7 +14,19 @@
     "type": "rotation",
     "label": "24/7 Flow"
   },
-  "schedule": [],
+  "schedule": [
+    {
+      "id": "shared-frequency-001",
+      "title": "The Shared Frequency",
+      "format": "music",
+      "startAt": null,
+      "endAt": null,
+      "status": "scheduled",
+      "audioSource": null,
+      "host": "Echoes Radio",
+      "description": "A continuous Echoes Radio music program shaped around dignity, belonging, hope and our shared humanity."
+    }
+  ],
   "programModel": {
     "version": 1,
     "requiredFields": [
