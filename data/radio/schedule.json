@@ -59,6 +59,39 @@
       "offline"
     ]
   },
+  "presenters": [],
+  "presenterModel": {
+    "version": 1,
+    "requiredFields": [
+      "id",
+      "name",
+      "role",
+      "region",
+      "timezone",
+      "languages",
+      "status"
+    ],
+    "roles": [
+      "presenter",
+      "producer",
+      "presenter-producer"
+    ],
+    "statuses": [
+      "active",
+      "inactive"
+    ],
+    "example": {
+      "id": "presenter-example",
+      "name": "Example Presenter",
+      "role": "presenter",
+      "region": "Europe",
+      "timezone": "UTC",
+      "languages": [
+        "en"
+      ],
+      "status": "active"
+    }
+  },
   "now": null,
   "upNext": null,
   "fallback": {
