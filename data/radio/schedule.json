@@ -92,6 +92,18 @@
       "status": "active"
     }
   },
+  "presenterAuthorization": {
+    "version": 1,
+    "defaultLiveAccess": false,
+    "requireActivePresenter": true,
+    "requireExplicitLivePermission": true,
+    "permissions": [
+      "broadcast-live",
+      "prepare-live",
+      "manage-program"
+    ],
+    "assignments": []
+  },
   "now": null,
   "upNext": null,
   "fallback": {
