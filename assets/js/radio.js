@@ -112,6 +112,16 @@
     return window.EchoesRadioPlayer.configure(streamEndpoint);
   };
 
+  const syncListenerControl = (playerConfigured) => {
+    const control = document.querySelector("#radio-play-toggle");
+    if (!control) return;
+
+    control.disabled = !playerConfigured;
+    control.setAttribute("aria-disabled", String(!playerConfigured));
+    control.setAttribute("aria-pressed", "false");
+    control.textContent = playerConfigured ? "Listen Live" : "Listen Live";
+  };
+
   const initializeRadio = async () => {
     const [scheduleResult, streamEndpoint] = await Promise.all([
       fetch(DATA_URL, { cache: "no-store" })
@@ -128,6 +138,7 @@
 
     renderRadioSchedule(scheduleResult);
     const playerConfigured = configurePlayer(streamEndpoint);
+    syncListenerControl(playerConfigured);
 
     window.EchoesRadioRuntime = Object.freeze({
       streamEndpoint,
