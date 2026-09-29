@@ -96,6 +96,16 @@
     "onConflict": "reject",
     "preserveCurrentBroadcast": true
   },
+  "scheduleContinuityPolicy": {
+    "version": 1,
+    "enabled": true,
+    "fillUnscheduledGaps": true,
+    "gapSource": "24/7-flow",
+    "preserveLiveBroadcast": true,
+    "preserveReadyHandoff": true,
+    "resumeScheduledProgramAfterGap": true,
+    "neverAllowSilentGap": true
+  },
   "now": null,
   "upNext": null,
   "fallback": {
