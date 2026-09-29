@@ -1,0 +1,63 @@
+{
+  "emergencyBroadcastStopPolicy": {
+    "version": 1,
+    "enabled": true,
+    "purpose": "Provide a controlled, auditable and human-authorized way to interrupt, replace or stop Echoes Radio output when continuing the current broadcast could cause harm, violate rights or compromise operational safety.",
+    "emergencyStates": [
+      "normal",
+      "emergency-ready",
+      "emergency-on-air",
+      "emergency-stopped",
+      "recovering"
+    ],
+    "defaultState": "normal",
+    "activationReasons": [
+      "immediate-safety-risk",
+      "harmful-or-prohibited-content",
+      "rights-or-legal-withdrawal",
+      "compromised-live-session",
+      "critical-technical-failure",
+      "authorized-public-interest-message"
+    ],
+    "authority": {
+      "requireExplicitAuthorization": true,
+      "authorizedRoles": ["producer", "presenter-producer"],
+      "presenterMayRequestEmergencyAction": true,
+      "presenterAloneMayNotOverrideAuthorization": true,
+      "recordActorIdentity": true
+    },
+    "emergencyOverride": {
+      "mayInterruptAutomation": true,
+      "mayInterruptScheduledProgram": true,
+      "mayInterruptLiveBroadcast": true,
+      "requireEmergencySourceReadyBeforeTakeoverWhenAvailable": true,
+      "preserveCurrentSafeAudioUntilEmergencySourceReady": true,
+      "allowImmediateStopWhenContinuingWouldCauseHarm": true,
+      "emergencyAudioMustBeBroadcastEligible": true
+    },
+    "emergencyStop": {
+      "enabled": true,
+      "stopCurrentLiveSource": true,
+      "preventAutomaticReturnToCompromisedSource": true,
+      "fallbackOrder": ["approved-emergency-audio", "24/7-flow", "controlled-silence"],
+      "controlledSilenceAllowedOnlyAsLastResort": true,
+      "requireIncidentRecord": true
+    },
+    "recovery": {
+      "requireCauseContainedBeforeReturn": true,
+      "requireHealthyBroadcastState": true,
+      "requireAuthorizedReturn": true,
+      "requireTargetSourceReady": true,
+      "preventAbruptCutover": true,
+      "returnMode": "controlled-handoff",
+      "defaultReturnTarget": "24/7-flow"
+    },
+    "audit": {
+      "requiredFields": ["eventId", "reason", "activatedBy", "activatedAt", "action", "sourceBefore", "sourceAfter"],
+      "recordEndedAt": true,
+      "recordRecoveryPath": true,
+      "preserveEmergencyHistory": true
+    },
+    "events": []
+  }
+}
