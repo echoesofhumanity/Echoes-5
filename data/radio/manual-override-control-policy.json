@@ -1,0 +1,90 @@
+{
+  "manualOverrideControlAuthorityPolicy": {
+    "version": 1,
+    "enabled": true,
+    "purpose": "Define who may manually alter Echoes Radio broadcast state, what actions they may take, and the safeguards required to prevent unauthorized or unsafe control changes.",
+    "principles": [
+      "least-privilege",
+      "explicit-authorization",
+      "human-accountability",
+      "broadcast-continuity",
+      "reversible-control",
+      "auditability"
+    ],
+    "roles": {
+      "presenter": [
+        "request-live-takeover",
+        "end-own-live-session",
+        "request-emergency-action"
+      ],
+      "producer": [
+        "authorize-live-takeover",
+        "return-to-automation",
+        "skip-failed-source",
+        "activate-approved-fallback",
+        "end-live-session",
+        "activate-emergency-action"
+      ],
+      "presenter-producer": [
+        "authorize-live-takeover",
+        "return-to-automation",
+        "skip-failed-source",
+        "activate-approved-fallback",
+        "end-live-session",
+        "activate-emergency-action"
+      ]
+    },
+    "controlRules": {
+      "defaultManualOverrideAllowed": false,
+      "requireActiveAuthorizedOperator": true,
+      "requireExplicitAction": true,
+      "requireReasonForMaterialOverride": true,
+      "doNotAllowSilentPrivilegeEscalation": true,
+      "doNotBypassRightsOrEditorialEligibility": true,
+      "doNotBypassEmergencySafetyControls": true,
+      "preserveCurrentSafeBroadcastUntilReplacementReady": true
+    },
+    "protectedActions": [
+      "live-takeover",
+      "forced-return-to-automation",
+      "source-replacement",
+      "fallback-activation",
+      "emergency-stop",
+      "emergency-broadcast",
+      "schedule-bypass"
+    ],
+    "confirmation": {
+      "requireConfirmationForProtectedActions": true,
+      "requireSecondAuthorizationForEmergencyActionWhenOperationallyPossible": true,
+      "allowImmediateEmergencyActionWhenDelayCouldCauseHarm": true
+    },
+    "failureBehavior": {
+      "onUnauthorizedAction": "reject",
+      "onInvalidTargetSource": "reject-and-preserve-current-broadcast",
+      "onOperatorDisconnect": "preserve-safe-current-state",
+      "onOverrideFailure": "activate-approved-fallback-when-required"
+    },
+    "returnToNormalControl": {
+      "requireTargetStateHealthy": true,
+      "requireAuthorizedReturn": true,
+      "preventAbruptCutover": true,
+      "defaultTarget": "24/7-flow"
+    },
+    "audit": {
+      "requiredFields": [
+        "eventId",
+        "action",
+        "actorId",
+        "actorRole",
+        "reason",
+        "requestedAt",
+        "result"
+      ],
+      "recordPreviousState": true,
+      "recordResultingState": true,
+      "recordCompletedAt": true,
+      "preserveOverrideHistory": true
+    },
+    "overrideEvents": []
+  }
+}
