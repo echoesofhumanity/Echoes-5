@@ -141,6 +141,30 @@
     "fallbackWhenHandoffFails": "24/7-flow",
     "returnToAutomationWhenNoPresenter": true
   },
+  "globalScheduleModel": {
+    "version": 1,
+    "canonicalTimezone": "UTC",
+    "displayInPresenterTimezone": true,
+    "displayInListenerTimezone": true,
+    "requiredFields": [
+      "id",
+      "programId",
+      "presenterId",
+      "regionId",
+      "startAt",
+      "endAt",
+      "status"
+    ],
+    "statuses": [
+      "draft",
+      "scheduled",
+      "ready",
+      "on-air",
+      "completed",
+      "cancelled"
+    ],
+    "assignments": []
+  },
   "now": null,
   "upNext": null,
   "fallback": {
