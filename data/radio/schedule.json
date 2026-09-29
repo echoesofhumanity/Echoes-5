@@ -14,6 +14,24 @@
     "requireSecureSource": true,
     "allowEmptySourceWhenOffline": true
   },
+  "broadcastContentEditorialPolicy": {
+    "version": 1,
+    "enabled": true,
+    "editorialPrinciples": ["human-dignity", "accuracy", "cultural-respect", "non-exploitation", "public-interest", "editorial-independence"],
+    "contentFamilies": ["music", "human-stories", "voices-of-humanity", "conversations", "academy", "poetry-literature", "documentary-radio", "young-voices", "world-windows", "special-broadcasts", "podcasts", "night-echoes"],
+    "requiredBeforeBroadcast": ["editorial-status", "rights-status", "content-rating", "language", "source-attribution"],
+    "editorialStatuses": ["draft", "review", "approved", "rejected", "withdrawn"],
+    "contentRatings": ["general", "guidance", "restricted"],
+    "defaultEditorialStatus": "draft",
+    "requireApprovalBeforeBroadcast": true,
+    "blockRejectedOrWithdrawnContent": true,
+    "protectChildrenAndVulnerablePeople": true,
+    "prohibitExploitativeTreatment": true,
+    "requireContextForSensitiveMaterial": true,
+    "requireCorrectionOfMaterialErrors": true,
+    "preserveEditorialReviewHistory": true,
+    "reviews": []
+  },
   "live": {
     "enabled": false,
     "authorized": false,
