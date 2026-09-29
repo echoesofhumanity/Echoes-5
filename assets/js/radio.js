@@ -11,7 +11,29 @@
     return !Number.isNaN(Date.parse(value));
   };
 
+  const resolveLiveState = (data) => {
+    const live = data?.live;
+    const isLive = Boolean(
+      live?.enabled &&
+      live?.authorized &&
+      live?.status === "on-air" &&
+      live?.streamSource
+    );
+
+    if (!isLive) return null;
+
+    return {
+      title: live.programTitle || "Echoes Radio Live",
+      format: "live",
+      host: live.presenter || "Echoes Radio",
+      streamSource: live.streamSource,
+      startedAt: live.startedAt || null,
+      isLive: true
+    };
+  };
+
   const resolveProgramState = (data) => {
+    const liveProgram = resolveLiveState(data);
     const schedule = Array.isArray(data?.schedule) ? data.schedule : [];
     const nowTime = Date.now();
 
@@ -24,7 +46,7 @@
       }))
       .sort((a, b) => a.startTime - b.startTime);
 
-    const liveProgram = timedPrograms.find(
+    const scheduledNow = timedPrograms.find(
       (program) => program.status !== "cancelled" && program.startTime <= nowTime && nowTime < program.endTime
     );
 
@@ -33,8 +55,9 @@
     );
 
     return {
-      now: data?.now || liveProgram || null,
-      upNext: data?.upNext || nextProgram || null
+      now: liveProgram || data?.now || scheduledNow || null,
+      upNext: data?.upNext || nextProgram || null,
+      live: Boolean(liveProgram)
     };
   };
 
