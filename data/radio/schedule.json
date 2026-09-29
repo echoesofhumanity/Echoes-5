@@ -131,6 +131,16 @@
       "referenceTimezone": "Asia/Dubai"
     }
   ],
+  "globalHandoffPolicy": {
+    "version": 1,
+    "enabled": true,
+    "handoffMode": "scheduled",
+    "requireAuthorizedIncomingPresenter": true,
+    "requireIncomingSessionReady": true,
+    "keepCurrentBroadcastUntilIncomingReady": true,
+    "fallbackWhenHandoffFails": "24/7-flow",
+    "returnToAutomationWhenNoPresenter": true
+  },
   "now": null,
   "upNext": null,
   "fallback": {
