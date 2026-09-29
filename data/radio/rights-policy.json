@@ -1,0 +1,51 @@
+{
+  "rightsLicensingAttributionPolicy": {
+    "version": 1,
+    "enabled": true,
+    "purpose": "Prevent broadcast of material whose broadcast, streaming, recording or attribution rights have not been verified for the intended use.",
+    "rightsStatuses": [
+      "unverified",
+      "cleared",
+      "restricted",
+      "expired",
+      "withdrawn"
+    ],
+    "defaultRightsStatus": "unverified",
+    "requiredBeforeBroadcast": [
+      "rights-status",
+      "rights-basis",
+      "rights-holder-or-source",
+      "territory",
+      "permitted-uses",
+      "attribution-status"
+    ],
+    "rightsBases": [
+      "owned-by-echoes",
+      "licensed",
+      "creator-permission",
+      "public-domain",
+      "open-license",
+      "other-documented-basis"
+    ],
+    "permittedUses": [
+      "scheduled-broadcast",
+      "live-broadcast",
+      "on-demand",
+      "archive",
+      "rebroadcast",
+      "promotional-excerpt"
+    ],
+    "requireVerifiedRightsBeforeBroadcast": true,
+    "blockUnverifiedRights": true,
+    "blockExpiredRights": true,
+    "blockWithdrawnRights": true,
+    "enforceTerritoryRestrictions": true,
+    "enforceUsageRestrictions": true,
+    "requireAttributionWhenApplicable": true,
+    "requireLicenseExpiryTrackingWhenApplicable": true,
+    "removeFromFutureRotationWhenRightsExpireOrWithdrawn": true,
+    "preserveRightsEvidence": true,
+    "preserveRightsHistory": true,
+    "records": []
+  }
+}
