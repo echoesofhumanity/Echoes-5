@@ -1,0 +1,72 @@
+{
+  "audioAssetMetadataPolicy": {
+    "version": 1,
+    "enabled": true,
+    "purpose": "Ensure every broadcast audio asset is technically valid, identifiable, rights-linked and operationally safe before entering Echoes Radio rotation, scheduling or archive workflows.",
+    "assetStatuses": [
+      "draft",
+      "validating",
+      "ready",
+      "quarantined",
+      "retired"
+    ],
+    "defaultAssetStatus": "draft",
+    "assetTypes": [
+      "music",
+      "station-id",
+      "program",
+      "interview",
+      "podcast",
+      "story",
+      "poetry-literature",
+      "documentary",
+      "emergency-audio"
+    ],
+    "requiredMetadata": [
+      "asset-id",
+      "title",
+      "asset-type",
+      "creator-or-source",
+      "duration",
+      "language",
+      "audio-format",
+      "rights-record-id",
+      "editorial-status",
+      "created-at"
+    ],
+    "technicalValidation": {
+      "requirePlayableAudio": true,
+      "requireNonZeroDuration": true,
+      "requireSupportedFormat": true,
+      "requireReadableMetadata": true,
+      "requireStableSource": true,
+      "rejectCorruptAssets": true,
+      "quarantineFailedAssets": true
+    },
+    "metadataIntegrity": {
+      "requireUniqueAssetId": true,
+      "requireRightsRecordLink": true,
+      "requireEditorialStatus": true,
+      "preserveOriginalCreatorAndSource": true,
+      "preserveMetadataHistory": true,
+      "trackMaterialRevisions": true
+    },
+    "broadcastEligibility": {
+      "requiredStatus": "ready",
+      "requireEditorialApproval": true,
+      "requireClearedRights": true,
+      "blockDraftAssets": true,
+      "blockQuarantinedAssets": true,
+      "blockRetiredAssets": true,
+      "removeIneligibleAssetsFromFutureRotation": true
+    },
+    "replacementPolicy": {
+      "replaceByAssetId": false,
+      "requireNewRevisionForMaterialAudioChange": true,
+      "preservePreviousRevisionRecord": true,
+      "revalidateRightsAfterMaterialChange": true,
+      "revalidateEditorialStatusAfterMaterialChange": true
+    },
+    "records": []
+  }
+}
