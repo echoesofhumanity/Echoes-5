@@ -1,0 +1,79 @@
+{
+  "liveModerationSafetyPolicy": {
+    "version": 1,
+    "enabled": true,
+    "purpose": "Protect human dignity, children, vulnerable people, guests, presenters and listeners during live Echoes Radio broadcasts while preserving responsible editorial freedom.",
+    "appliesTo": [
+      "live-presenters",
+      "live-guests",
+      "call-ins",
+      "remote-contributors",
+      "live-interviews",
+      "live-special-broadcasts"
+    ],
+    "requiredBeforeLive": {
+      "authorizedPresenter": true,
+      "moderationResponsibilityAssigned": true,
+      "programPurposeDefined": true,
+      "sensitiveTopicRiskReviewedWhenApplicable": true,
+      "guestConsentConfirmedWhenApplicable": true,
+      "emergencyStopAvailable": true
+    },
+    "safetyPrinciples": [
+      "human-dignity",
+      "child-safety",
+      "non-exploitation",
+      "privacy",
+      "informed-consent",
+      "accuracy",
+      "cultural-respect",
+      "do-no-harm"
+    ],
+    "prohibitedLiveTreatment": [
+      "sexual-exploitation-of-minors",
+      "doxxing-or-private-data-exposure",
+      "credible-threats-or-incitement-to-violence",
+      "humiliation-or-exploitation-of-vulnerable-people",
+      "non-consensual-sensitive-disclosure",
+      "knowingly-fabricated-emergency-information"
+    ],
+    "sensitiveContentHandling": {
+      "requireContext": true,
+      "avoidGratuitousGraphicDetail": true,
+      "protectVictimAndMinorIdentityWhenRequired": true,
+      "allowPresenterToPauseOrRedirect": true,
+      "allowProducerToMuteOrEndContribution": true,
+      "escalateImmediateRiskToEmergencyPolicy": true
+    },
+    "moderationActions": [
+      "continue",
+      "warn",
+      "redirect",
+      "mute-contributor",
+      "remove-contributor",
+      "end-segment",
+      "end-live-session",
+      "activate-emergency-stop"
+    ],
+    "authority": {
+      "presenterMayWarnRedirectOrEndSegment": true,
+      "producerMayMuteRemoveOrEndLiveSession": true,
+      "emergencyActionsFollowEmergencyBroadcastPolicy": true,
+      "recordMaterialModerationActions": true
+    },
+    "guestAndContributorProtection": {
+      "requireConsentForParticipation": true,
+      "allowWithdrawalBeforeBroadcastWhenOperationallyPossible": true,
+      "doNotPressureDisclosureOfTrauma": true,
+      "minimizeCollectionOfSensitivePersonalInformation": true,
+      "specialProtectionForChildrenAndVulnerablePeople": true
+    },
+    "postLive": {
+      "recordMaterialSafetyIncident": true,
+      "routeIncidentsToBroadcastIncidentModel": true,
+      "reviewWarningOrCriticalIncidents": true,
+      "preserveModerationHistory": true
+    },
+    "moderationEvents": []
+  }
+}
