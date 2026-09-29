@@ -12,7 +12,9 @@
   "fallback": {
     "enabled": true,
     "type": "rotation",
-    "label": "24/7 Flow"
+    "label": "24/7 Flow",
+    "programId": "shared-frequency-001",
+    "resumeAfterLive": true
   },
   "schedule": [
     {
