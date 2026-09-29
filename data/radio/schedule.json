@@ -155,6 +155,17 @@
     "requireHumanAcknowledgementForUrgent": true,
     "notifications": []
   },
+  "incidentAcknowledgementPolicy": {
+    "version": 1,
+    "enabled": true,
+    "requiredForLevels": ["operator-attention", "urgent"],
+    "authorizedRoles": ["producer", "presenter-producer"],
+    "requiredFields": ["incidentId", "acknowledgedBy", "acknowledgedAt"],
+    "acknowledgementDoesNotResolveIncident": true,
+    "requireResolutionEvidence": true,
+    "preserveAcknowledgementHistory": true,
+    "acknowledgements": []
+  },
   "broadcastRegions": [
     {"id": "africa", "name": "Africa", "referenceTimezone": "Africa/Nairobi"},
     {"id": "americas", "name": "Americas", "referenceTimezone": "America/New_York"},
