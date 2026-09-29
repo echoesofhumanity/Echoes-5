@@ -7,11 +7,25 @@
     "mode": "scheduled",
     "liveOverride": false
   },
+  "streamPolicy": {
+    "version": 1,
+    "acceptedProtocols": [
+      "https"
+    ],
+    "acceptedStreamTypes": [
+      "audio/mpeg",
+      "audio/aac",
+      "application/vnd.apple.mpegurl"
+    ],
+    "requireSecureSource": true,
+    "allowEmptySourceWhenOffline": true
+  },
   "live": {
     "enabled": false,
     "authorized": false,
     "status": "offline",
     "streamSource": null,
+    "streamType": null,
     "presenter": null,
     "programTitle": null,
     "startedAt": null,
@@ -36,6 +50,7 @@
       "endAt": null,
       "status": "scheduled",
       "audioSource": null,
+      "audioType": null,
       "host": "Echoes Radio",
       "description": "A continuous Echoes Radio music program shaped around dignity, belonging, hope and our shared humanity."
     }
@@ -71,6 +86,7 @@
       "endAt": "2026-01-01T19:00:00Z",
       "status": "scheduled",
       "audioSource": null,
+      "audioType": null,
       "host": null,
       "description": null
     }
