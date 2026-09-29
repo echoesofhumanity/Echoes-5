@@ -107,6 +107,11 @@
     }
   };
 
+  const configurePlayer = (streamEndpoint) => {
+    if (!window.EchoesRadioPlayer?.configure) return false;
+    return window.EchoesRadioPlayer.configure(streamEndpoint);
+  };
+
   const initializeRadio = async () => {
     const [scheduleResult, streamEndpoint] = await Promise.all([
       fetch(DATA_URL, { cache: "no-store" })
@@ -122,9 +127,11 @@
     ]);
 
     renderRadioSchedule(scheduleResult);
+    const playerConfigured = configurePlayer(streamEndpoint);
 
     window.EchoesRadioRuntime = Object.freeze({
-      streamEndpoint
+      streamEndpoint,
+      playerConfigured
     });
   };
 
