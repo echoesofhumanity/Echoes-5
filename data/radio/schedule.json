@@ -7,6 +7,17 @@
     "mode": "scheduled",
     "liveOverride": false
   },
+  "live": {
+    "enabled": false,
+    "authorized": false,
+    "status": "offline",
+    "streamSource": null,
+    "presenter": null,
+    "programTitle": null,
+    "startedAt": null,
+    "takeoverAutomation": true,
+    "returnToAutomation": true
+  },
   "now": null,
   "upNext": null,
   "fallback": {
