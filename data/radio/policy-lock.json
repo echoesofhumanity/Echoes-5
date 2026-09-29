@@ -1,0 +1,57 @@
+{
+  "echoesRadioPolicyArchitectureLock": {
+    "version": "1.0",
+    "status": "locked",
+    "lockedAt": "2026-09-29",
+    "scope": "Echoes Radio core broadcast governance architecture",
+    "baselineRoadmap": "docs/ECHOES-RADIO-MASTER-ROADMAP.md",
+    "auditResult": {
+      "corePolicyGaps": 0,
+      "unresolvedCoreConflicts": 0,
+      "orphanedCoreOperationalStates": 0,
+      "result": "pass"
+    },
+    "coveredDomains": [
+      "editorial-governance",
+      "rights-licensing-attribution",
+      "audio-assets-metadata",
+      "playlist-rotation",
+      "presenter-authorization-readiness-standby",
+      "global-scheduling-handoff-continuity",
+      "broadcast-health-recovery-incidents",
+      "incident-escalation-acknowledgement-resolution-review",
+      "emergency-broadcast-stop",
+      "live-moderation-safety",
+      "manual-override-control-authority",
+      "broadcast-logging-audit-retention",
+      "archive-recording-retention",
+      "listener-failure-degraded-experience"
+    ],
+    "policyFiles": [
+      "data/radio/schedule.json",
+      "data/radio/rights-policy.json",
+      "data/radio/audio-asset-policy.json",
+      "data/radio/playlist-rotation-policy.json",
+      "data/radio/emergency-broadcast-policy.json",
+      "data/radio/live-moderation-safety-policy.json",
+      "data/radio/manual-override-control-policy.json",
+      "data/radio/broadcast-logging-audit-retention-policy.json",
+      "data/radio/archive-recording-retention-policy.json",
+      "data/radio/listener-failure-degraded-experience-policy.json"
+    ],
+    "changeControl": {
+      "incidentalCorePolicyChangesAllowed": false,
+      "requireDeliberateArchitectureDecision": true,
+      "requireDocumentedReason": true,
+      "requireImpactReview": true,
+      "requireVersionIncrementForCoreModelChange": true,
+      "preservePreviousPolicyHistory": true
+    },
+    "implementationBoundary": {
+      "policyArchitectureComplete": true,
+      "implementationMayProceed": true,
+      "futureProviderSpecificRequirementsMayAddImplementationControls": true,
+      "providerSpecificControlsDoNotReopenCorePolicyArchitectureUnlessTheyChangeTheCoreModel": true
+    }
+  }
+}
