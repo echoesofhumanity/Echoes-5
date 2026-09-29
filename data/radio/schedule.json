@@ -14,5 +14,40 @@
     "type": "rotation",
     "label": "24/7 Flow"
   },
-  "schedule": []
+  "schedule": [],
+  "programModel": {
+    "version": 1,
+    "requiredFields": [
+      "id",
+      "title",
+      "format",
+      "startAt",
+      "endAt",
+      "status"
+    ],
+    "formats": [
+      "music",
+      "conversation",
+      "podcast",
+      "story",
+      "live"
+    ],
+    "statuses": [
+      "scheduled",
+      "on-air",
+      "completed",
+      "cancelled"
+    ],
+    "example": {
+      "id": "program-example",
+      "title": "Example Broadcast",
+      "format": "music",
+      "startAt": "2026-01-01T18:00:00Z",
+      "endAt": "2026-01-01T19:00:00Z",
+      "status": "scheduled",
+      "audioSource": null,
+      "host": null,
+      "description": null
+    }
+  }
 }
