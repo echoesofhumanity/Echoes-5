@@ -96,11 +96,37 @@
     setText("#radio-flow", data.fallback?.label || "24/7 Flow");
   };
 
-  fetch(DATA_URL, { cache: "no-store" })
-    .then((response) => {
-      if (!response.ok) throw new Error(`Radio schedule request failed: ${response.status}`);
-      return response.json();
-    })
-    .then(renderRadioSchedule)
-    .catch((error) => console.warn("Echoes Radio schedule unavailable.", error));
+  const loadStreamEndpoint = async () => {
+    if (!window.EchoesRadioStream?.loadEndpoint) return null;
+
+    try {
+      return await window.EchoesRadioStream.loadEndpoint();
+    } catch (error) {
+      console.warn("Echoes Radio stream endpoint unavailable.", error);
+      return null;
+    }
+  };
+
+  const initializeRadio = async () => {
+    const [scheduleResult, streamEndpoint] = await Promise.all([
+      fetch(DATA_URL, { cache: "no-store" })
+        .then((response) => {
+          if (!response.ok) throw new Error(`Radio schedule request failed: ${response.status}`);
+          return response.json();
+        })
+        .catch((error) => {
+          console.warn("Echoes Radio schedule unavailable.", error);
+          return null;
+        }),
+      loadStreamEndpoint()
+    ]);
+
+    renderRadioSchedule(scheduleResult);
+
+    window.EchoesRadioRuntime = Object.freeze({
+      streamEndpoint
+    });
+  };
+
+  initializeRadio();
 })();
