@@ -1,0 +1,18 @@
+{
+  "station": {
+    "id": "echoes-radio",
+    "name": "Echoes Radio",
+    "tagline": "One humanity. One shared frequency.",
+    "timezone": "UTC",
+    "mode": "scheduled",
+    "liveOverride": false
+  },
+  "now": null,
+  "upNext": null,
+  "fallback": {
+    "enabled": true,
+    "type": "rotation",
+    "label": "24/7 Flow"
+  },
+  "schedule": []
+}
