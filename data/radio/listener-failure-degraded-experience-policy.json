@@ -1,0 +1,90 @@
+{
+  "listenerFailureDegradedExperiencePolicy": {
+    "version": 1,
+    "enabled": true,
+    "purpose": "Keep the listener experience understandable, calm and recoverable when Echoes Radio playback, stream, metadata or connectivity is degraded or unavailable.",
+    "principles": [
+      "listener-continuity",
+      "clear-status",
+      "no-false-live-state",
+      "graceful-degradation",
+      "privacy",
+      "accessible-recovery"
+    ],
+    "states": [
+      "normal",
+      "buffering",
+      "degraded",
+      "recovering",
+      "offline"
+    ],
+    "defaultState": "normal",
+    "failureTypes": [
+      "stream-unavailable",
+      "stream-interrupted",
+      "buffering-timeout",
+      "metadata-unavailable",
+      "scheduled-source-unavailable",
+      "live-source-unavailable",
+      "network-offline",
+      "unsupported-playback"
+    ],
+    "listenerBehavior": {
+      "neverClaimLiveWhenLiveSourceIsUnavailable": true,
+      "preserveLastKnownMetadataOnlyWhenClearlyMarked": true,
+      "showCalmHumanReadableStatus": true,
+      "avoidTechnicalErrorDumpToListener": true,
+      "doNotExposeInternalUrlsCredentialsOrDiagnostics": true,
+      "doNotAutoPlayUnexpectedReplacementAudioWithoutExistingPlaybackIntent": true
+    },
+    "recoveryOrder": [
+      "retry-current-source",
+      "approved-fallback",
+      "24/7-flow",
+      "offline-state"
+    ],
+    "recovery": {
+      "allowBoundedAutomaticRetry": true,
+      "avoidInfiniteRapidRetry": true,
+      "preserveUserPauseIntent": true,
+      "resumeAutomaticallyOnlyWhenPlaybackWasPreviouslyActive": true,
+      "requireRecoveredSourcePlayableBeforeResume": true,
+      "clearDegradedStateAfterStableRecovery": true
+    },
+    "metadataFailure": {
+      "audioMayContinueWhenSafe": true,
+      "doNotInventTrackProgramOrPresenterMetadata": true,
+      "useNeutralUnavailableLabelWhenRequired": true,
+      "restoreMetadataWhenValidated": true
+    },
+    "liveFailure": {
+      "followBroadcastRecoveryPolicy": true,
+      "fallbackWithoutFalseLiveIndicator": true,
+      "removeLiveStateWhenLiveSessionIsNoLongerValid": true,
+      "preserveListenerContinuityWhenSafe": true
+    },
+    "offlineExperience": {
+      "showStationIdentity": true,
+      "showServiceUnavailableState": true,
+      "allowManualRetry": true,
+      "preserveNavigation": true,
+      "doNotBlockAccessToNonRadioPortalContent": true
+    },
+    "accessibility": {
+      "statusMustNotDependOnColorAlone": true,
+      "statusTextMustBeReadable": true,
+      "playbackControlsRemainUnderstandableDuringFailure": true,
+      "avoidRapidFlashingOrDistractingFailureAnimation": true
+    },
+    "privacy": {
+      "doNotCollectPersonalDataSolelyForPlaybackRecovery": true,
+      "doNotExposeListenerNetworkDetails": true
+    },
+    "logging": {
+      "recordOperationalFailureCategory": true,
+      "avoidListenerPersonalData": true,
+      "routeCriticalFailuresToBroadcastIncidentModel": true
+    },
+    "events": []
+  }
+}
