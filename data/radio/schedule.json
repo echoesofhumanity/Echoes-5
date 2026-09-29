@@ -24,13 +24,40 @@
     "enabled": false,
     "authorized": false,
     "status": "offline",
+    "sessionId": null,
     "streamSource": null,
     "streamType": null,
     "presenter": null,
     "programTitle": null,
+    "scheduledAt": null,
     "startedAt": null,
+    "endedAt": null,
     "takeoverAutomation": true,
     "returnToAutomation": true
+  },
+  "liveSessionModel": {
+    "version": 1,
+    "statuses": [
+      "offline",
+      "ready",
+      "on-air",
+      "ending"
+    ],
+    "requiredForOnAir": [
+      "sessionId",
+      "streamSource",
+      "streamType",
+      "presenter",
+      "programTitle",
+      "startedAt"
+    ],
+    "transitionOrder": [
+      "offline",
+      "ready",
+      "on-air",
+      "ending",
+      "offline"
+    ]
   },
   "now": null,
   "upNext": null,
