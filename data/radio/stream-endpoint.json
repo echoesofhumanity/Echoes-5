@@ -1,0 +1,20 @@
+{
+  "broadcastStreamEndpoint": {
+    "version": 1,
+    "stationId": "echoes-radio",
+    "status": "unconfigured",
+    "publicStreamUrl": null,
+    "streamType": null,
+    "metadataUrl": null,
+    "healthUrl": null,
+    "secureTransportRequired": true,
+    "portalHostIsBroadcastServer": false,
+    "listenerUsesSingleContinuousEndpoint": true,
+    "sourceTransitionsRemainBehindEndpoint": true,
+    "supportedStreamTypes": [
+      "audio/mpeg",
+      "audio/aac",
+      "application/vnd.apple.mpegurl"
+    ]
+  }
+}
