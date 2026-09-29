@@ -114,6 +114,19 @@
     "preventAbruptCutover": true,
     "returnMode": "controlled-handoff"
   },
+  "broadcastHealthModel": {
+    "version": 1,
+    "enabled": true,
+    "states": ["healthy", "degraded", "recovering", "offline"],
+    "signals": ["stream-available", "session-active", "presenter-ready", "schedule-continuity"],
+    "healthyRequires": ["stream-available", "schedule-continuity"],
+    "degradedTriggersRecovery": true,
+    "offlineTriggersFallback": true,
+    "fallbackSource": "24/7-flow",
+    "preserveListenerContinuity": true,
+    "currentState": null,
+    "checks": []
+  },
   "broadcastRegions": [
     {"id": "africa", "name": "Africa", "referenceTimezone": "Africa/Nairobi"},
     {"id": "americas", "name": "Americas", "referenceTimezone": "America/New_York"},
