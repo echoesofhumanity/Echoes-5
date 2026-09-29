@@ -127,6 +127,18 @@
     "currentState": null,
     "checks": []
   },
+  "broadcastIncidentModel": {
+    "version": 1,
+    "enabled": true,
+    "types": ["stream-loss", "session-ended", "presenter-not-ready", "handoff-failed", "schedule-gap", "fallback-activated"],
+    "severities": ["info", "warning", "critical"],
+    "statuses": ["open", "recovering", "resolved"],
+    "requiredFields": ["id", "type", "severity", "status", "startedAt"],
+    "recordRecoveryPath": true,
+    "recordResolvedAt": true,
+    "preserveHistory": true,
+    "incidents": []
+  },
   "broadcastRegions": [
     {"id": "africa", "name": "Africa", "referenceTimezone": "Africa/Nairobi"},
     {"id": "americas", "name": "Americas", "referenceTimezone": "America/New_York"},
