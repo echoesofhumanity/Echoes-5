@@ -1,0 +1,85 @@
+{
+  "archiveRecordingRetentionPolicy": {
+    "version": 1,
+    "enabled": true,
+    "purpose": "Define when Echoes Radio broadcasts may be recorded, archived, retained, replayed or removed while respecting rights, consent, privacy, editorial integrity and operational accountability.",
+    "principles": [
+      "rights-first",
+      "informed-consent",
+      "privacy",
+      "editorial-integrity",
+      "data-minimization",
+      "controlled-retention",
+      "traceability"
+    ],
+    "recording": {
+      "defaultLiveRecording": false,
+      "requireRecordingAuthorization": true,
+      "requireRightsClearance": true,
+      "requireParticipantConsentWhenApplicable": true,
+      "protectChildrenAndVulnerablePeople": true,
+      "recordingMustNotBeRequiredForLiveBroadcast": true,
+      "allowOperationalRecordingWhenRequiredForSafetyOrCompliance": true
+    },
+    "archiveEligibility": {
+      "requireEditorialApproval": true,
+      "requireClearedArchiveRights": true,
+      "requireValidConsentWhenApplicable": true,
+      "requireArchiveMetadata": true,
+      "blockWithdrawnOrRestrictedMaterial": true
+    },
+    "requiredArchiveMetadata": [
+      "archiveId",
+      "programId",
+      "title",
+      "recordedAt",
+      "duration",
+      "language",
+      "rightsRecordId",
+      "editorialStatus",
+      "archiveStatus"
+    ],
+    "archiveStatuses": [
+      "review",
+      "approved",
+      "restricted",
+      "withdrawn",
+      "expired"
+    ],
+    "replay": {
+      "requireApprovedArchiveStatus": true,
+      "recheckRightsBeforeReplay": true,
+      "recheckRestrictionsBeforeReplay": true,
+      "identifyArchivedContentWhenContextRequiresIt": true,
+      "doNotPresentArchivedMaterialAsLive": true
+    },
+    "retention": {
+      "defaultReviewAfterDays": 365,
+      "retentionIsSubjectToRightsAndConsent": true,
+      "preserveMaterialRequiredForActiveIncidentReview": true,
+      "preserveMaterialRequiredForRightsOrLegalObligations": true,
+      "requireAuthorizedReviewBeforePermanentDeletion": true,
+      "documentRetentionAndDeletionDecisions": true
+    },
+    "withdrawal": {
+      "supportRightsWithdrawal": true,
+      "supportConsentWithdrawalWhereApplicable": true,
+      "removeWithdrawnMaterialFromPublicReplay": true,
+      "preserveRestrictedAuditRecordWhenRequired": true,
+      "doNotAutomaticallyDeleteEvidenceUnderActiveReview": true
+    },
+    "access": {
+      "defaultArchiveAccess": "restricted",
+      "publicReplayRequiresExplicitApproval": true,
+      "authorizedOperationalRoles": ["producer", "presenter-producer"],
+      "recordMaterialArchiveAccess": true
+    },
+    "integrity": {
+      "preserveOriginalRecordingWhenRetained": true,
+      "trackEditedDerivativesSeparately": true,
+      "linkDerivativesToOriginalArchiveId": true,
+      "preserveArchiveHistory": true
+    },
+    "records": []
+  }
+}
