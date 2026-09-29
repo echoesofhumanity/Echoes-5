@@ -9,14 +9,8 @@
   },
   "streamPolicy": {
     "version": 1,
-    "acceptedProtocols": [
-      "https"
-    ],
-    "acceptedStreamTypes": [
-      "audio/mpeg",
-      "audio/aac",
-      "application/vnd.apple.mpegurl"
-    ],
+    "acceptedProtocols": ["https"],
+    "acceptedStreamTypes": ["audio/mpeg", "audio/aac", "application/vnd.apple.mpegurl"],
     "requireSecureSource": true,
     "allowEmptySourceWhenOffline": true
   },
@@ -37,58 +31,23 @@
   },
   "liveSessionModel": {
     "version": 1,
-    "statuses": [
-      "offline",
-      "ready",
-      "on-air",
-      "ending"
-    ],
-    "requiredForOnAir": [
-      "sessionId",
-      "streamSource",
-      "streamType",
-      "presenter",
-      "programTitle",
-      "startedAt"
-    ],
-    "transitionOrder": [
-      "offline",
-      "ready",
-      "on-air",
-      "ending",
-      "offline"
-    ]
+    "statuses": ["offline", "ready", "on-air", "ending"],
+    "requiredForOnAir": ["sessionId", "streamSource", "streamType", "presenter", "programTitle", "startedAt"],
+    "transitionOrder": ["offline", "ready", "on-air", "ending", "offline"]
   },
   "presenters": [],
   "presenterModel": {
     "version": 1,
-    "requiredFields": [
-      "id",
-      "name",
-      "role",
-      "region",
-      "timezone",
-      "languages",
-      "status"
-    ],
-    "roles": [
-      "presenter",
-      "producer",
-      "presenter-producer"
-    ],
-    "statuses": [
-      "active",
-      "inactive"
-    ],
+    "requiredFields": ["id", "name", "role", "region", "timezone", "languages", "status"],
+    "roles": ["presenter", "producer", "presenter-producer"],
+    "statuses": ["active", "inactive"],
     "example": {
       "id": "presenter-example",
       "name": "Example Presenter",
       "role": "presenter",
       "region": "Europe",
       "timezone": "UTC",
-      "languages": [
-        "en"
-      ],
+      "languages": ["en"],
       "status": "active"
     }
   },
@@ -97,39 +56,15 @@
     "defaultLiveAccess": false,
     "requireActivePresenter": true,
     "requireExplicitLivePermission": true,
-    "permissions": [
-      "broadcast-live",
-      "prepare-live",
-      "manage-program"
-    ],
+    "permissions": ["broadcast-live", "prepare-live", "manage-program"],
     "assignments": []
   },
   "broadcastRegions": [
-    {
-      "id": "africa",
-      "name": "Africa",
-      "referenceTimezone": "Africa/Nairobi"
-    },
-    {
-      "id": "americas",
-      "name": "Americas",
-      "referenceTimezone": "America/New_York"
-    },
-    {
-      "id": "asia-pacific",
-      "name": "Asia Pacific",
-      "referenceTimezone": "Asia/Singapore"
-    },
-    {
-      "id": "europe",
-      "name": "Europe",
-      "referenceTimezone": "Europe/Amsterdam"
-    },
-    {
-      "id": "middle-east",
-      "name": "Middle East",
-      "referenceTimezone": "Asia/Dubai"
-    }
+    {"id": "africa", "name": "Africa", "referenceTimezone": "Africa/Nairobi"},
+    {"id": "americas", "name": "Americas", "referenceTimezone": "America/New_York"},
+    {"id": "asia-pacific", "name": "Asia Pacific", "referenceTimezone": "Asia/Singapore"},
+    {"id": "europe", "name": "Europe", "referenceTimezone": "Europe/Amsterdam"},
+    {"id": "middle-east", "name": "Middle East", "referenceTimezone": "Asia/Dubai"}
   ],
   "globalHandoffPolicy": {
     "version": 1,
@@ -146,24 +81,20 @@
     "canonicalTimezone": "UTC",
     "displayInPresenterTimezone": true,
     "displayInListenerTimezone": true,
-    "requiredFields": [
-      "id",
-      "programId",
-      "presenterId",
-      "regionId",
-      "startAt",
-      "endAt",
-      "status"
-    ],
-    "statuses": [
-      "draft",
-      "scheduled",
-      "ready",
-      "on-air",
-      "completed",
-      "cancelled"
-    ],
+    "requiredFields": ["id", "programId", "presenterId", "regionId", "startAt", "endAt", "status"],
+    "statuses": ["draft", "scheduled", "ready", "on-air", "completed", "cancelled"],
     "assignments": []
+  },
+  "scheduleConflictPolicy": {
+    "version": 1,
+    "enabled": true,
+    "rejectOverlappingAssignments": true,
+    "checkPresenterAvailability": true,
+    "checkProgramOverlap": true,
+    "checkRegionHandoffWindow": true,
+    "allowManualOverride": false,
+    "onConflict": "reject",
+    "preserveCurrentBroadcast": true
   },
   "now": null,
   "upNext": null,
@@ -190,27 +121,9 @@
   ],
   "programModel": {
     "version": 1,
-    "requiredFields": [
-      "id",
-      "title",
-      "format",
-      "startAt",
-      "endAt",
-      "status"
-    ],
-    "formats": [
-      "music",
-      "conversation",
-      "podcast",
-      "story",
-      "live"
-    ],
-    "statuses": [
-      "scheduled",
-      "on-air",
-      "completed",
-      "cancelled"
-    ],
+    "requiredFields": ["id", "title", "format", "startAt", "endAt", "status"],
+    "formats": ["music", "conversation", "podcast", "story", "live"],
+    "statuses": ["scheduled", "on-air", "completed", "cancelled"],
     "example": {
       "id": "program-example",
       "title": "Example Broadcast",
