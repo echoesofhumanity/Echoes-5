@@ -119,7 +119,27 @@
     control.disabled = !playerConfigured;
     control.setAttribute("aria-disabled", String(!playerConfigured));
     control.setAttribute("aria-pressed", "false");
-    control.textContent = playerConfigured ? "Listen Live" : "Listen Live";
+    control.textContent = "Listen Live";
+
+    if (!playerConfigured) return;
+
+    control.addEventListener("click", async () => {
+      const player = window.EchoesRadioPlayer;
+      if (!player) return;
+
+      const isPlaying = player.getState?.().state === "playing";
+
+      if (isPlaying) {
+        player.pause();
+        control.setAttribute("aria-pressed", "false");
+        control.textContent = "Listen Live";
+        return;
+      }
+
+      const started = await player.play();
+      control.setAttribute("aria-pressed", String(started));
+      control.textContent = started ? "Pause Live" : "Listen Live";
+    });
   };
 
   const initializeRadio = async () => {
