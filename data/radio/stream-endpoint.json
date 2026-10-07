@@ -3,7 +3,7 @@
     "version": 1,
     "stationId": "echoes-radio",
     "status": "configured",
-    "publicStreamUrl": "https://headset-surveillance-father-numeric.trycloudflare.com/echoes.mp3",
+  "publicStreamUrl": "https://138.2.134.174/echoes.mp3",
     "streamType": "audio/mpeg",
     "metadataUrl": null,
     "healthUrl": null,
