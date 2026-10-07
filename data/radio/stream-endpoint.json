@@ -2,9 +2,9 @@
   "broadcastStreamEndpoint": {
     "version": 1,
     "stationId": "echoes-radio",
-    "status": "unconfigured",
-    "publicStreamUrl": null,
-    "streamType": null,
+    "status": "configured",
+    "publicStreamUrl": "https://headset-surveillance-father-numeric.trycloudflare.com/echoes.mp3",
+    "streamType": "audio/mpeg",
     "metadataUrl": null,
     "healthUrl": null,
     "secureTransportRequired": true,
