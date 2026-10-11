@@ -152,7 +152,8 @@
   // Read only the public, filtered listener statistics endpoint.
   const initializeListenerStats = () => {
     const counter = document.querySelector("#radio-live-listeners");
-    if (!counter) return;
+    const peakCounter = document.querySelector("#radio-peak-listeners");
+    if (!counter || !peakCounter) return;
 
     const refresh = async () => {
       try {
@@ -167,9 +168,16 @@
         }
         counter.textContent = String(data.listeners);
         counter.setAttribute("aria-label", `${data.listeners} live listeners`);
+        if (!Number.isSafeInteger(data.peakListeners) || data.peakListeners < 0) {
+          throw new Error("Invalid peak listener count");
+        }
+        peakCounter.textContent = String(data.peakListeners);
+        peakCounter.setAttribute("aria-label", `${data.peakListeners} peak concurrent listeners`);
       } catch (error) {
         counter.textContent = "—";
         counter.setAttribute("aria-label", "Live listener count unavailable");
+        peakCounter.textContent = "—";
+        peakCounter.setAttribute("aria-label", "Peak listener count unavailable");
         console.warn("Echoes Radio listener statistics unavailable.", error);
       }
     };
