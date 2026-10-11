@@ -116,30 +116,37 @@
     const control = document.querySelector("#radio-play-toggle");
     if (!control) return;
 
-    control.disabled = !playerConfigured;
-    control.setAttribute("aria-disabled", String(!playerConfigured));
-    control.setAttribute("aria-pressed", "false");
-    control.textContent = "Listen Live";
+    const sync = () => {
+      const state = window.EchoesRadioPlayer?.getState?.().state || "unconfigured";
+      const playing = state === "playing";
+      const buffering = state === "buffering";
+      control.disabled = !playerConfigured;
+      control.setAttribute("aria-disabled", String(!playerConfigured));
+      control.setAttribute("aria-pressed", String(playing));
+      control.setAttribute("aria-busy", String(buffering));
+      control.textContent = playing ? "Pause Live" : buffering ? "Connecting…" : "Listen Live";
+    };
 
+    sync();
     if (!playerConfigured) return;
 
     control.addEventListener("click", async () => {
       const player = window.EchoesRadioPlayer;
-      if (!player) return;
-
-      const isPlaying = player.getState?.().state === "playing";
-
-      if (isPlaying) {
+      if (!player || control.getAttribute("aria-busy") === "true") return;
+      if (player.getState?.().state === "playing") {
         player.pause();
-        control.setAttribute("aria-pressed", "false");
-        control.textContent = "Listen Live";
-        return;
+      } else {
+        await player.play();
       }
-
-      const started = await player.play();
-      control.setAttribute("aria-pressed", String(started));
-      control.textContent = started ? "Pause Live" : "Listen Live";
+      sync();
     });
+
+    // Audio playback can change without a button click (network interruption,
+    // buffering, browser media controls). Keep the visible control truthful.
+    window.setInterval(sync, 500);
+    window.addEventListener("pagehide", () => {
+      window.EchoesRadioPlayer?.pause?.();
+    }, { once: true });
   };
 
   const initializeRadio = async () => {
