@@ -149,6 +149,35 @@
     }, { once: true });
   };
 
+  // Read only the public, filtered listener statistics endpoint.
+  const initializeListenerStats = () => {
+    const counter = document.querySelector("#radio-live-listeners");
+    if (!counter) return;
+
+    const refresh = async () => {
+      try {
+        const response = await fetch("https://138.2.134.174/radio-stats", {
+          cache: "no-store",
+          signal: AbortSignal.timeout(8000)
+        });
+        if (!response.ok) throw new Error("Statistics request failed");
+        const data = await response.json();
+        if (!Number.isSafeInteger(data.listeners) || data.listeners < 0) {
+          throw new Error("Invalid listener count");
+        }
+        counter.textContent = String(data.listeners);
+        counter.setAttribute("aria-label", `${data.listeners} live listeners`);
+      } catch (error) {
+        counter.textContent = "—";
+        counter.setAttribute("aria-label", "Live listener count unavailable");
+        console.warn("Echoes Radio listener statistics unavailable.", error);
+      }
+    };
+
+    refresh();
+    window.setInterval(refresh, 30000);
+  };
+
   const initializeRadio = async () => {
     const [scheduleResult, streamEndpoint] = await Promise.all([
       fetch(DATA_URL, { cache: "no-store" })
@@ -166,6 +195,7 @@
     renderRadioSchedule(scheduleResult);
     const playerConfigured = configurePlayer(streamEndpoint);
     syncListenerControl(playerConfigured);
+    initializeListenerStats();
 
     window.EchoesRadioRuntime = Object.freeze({
       streamEndpoint,
