@@ -96,6 +96,32 @@
     setText("#radio-flow", data.fallback?.label || "24/7 Flow");
   };
 
+  // Display verified Icecast metadata without changing scheduled-program logic.
+  const initializeNowMetadata = () => {
+    const nowElement = document.querySelector("#radio-now");
+    if (!nowElement) return;
+
+    const refresh = async () => {
+      try {
+        const response = await fetch("https://138.2.134.174/radio-now", {
+          cache: "no-store",
+          signal: AbortSignal.timeout(8000)
+        });
+        if (!response.ok) throw new Error("Now metadata request failed");
+        const data = await response.json();
+        if (typeof data.title !== "string" || !data.title.trim()) {
+          throw new Error("Now metadata title unavailable");
+        }
+        nowElement.textContent = data.title.trim();
+      } catch (error) {
+        console.warn("Echoes Radio now metadata unavailable.", error);
+      }
+    };
+
+    refresh();
+    window.setInterval(refresh, 30000);
+  };
+
   const loadStreamEndpoint = async () => {
     if (!window.EchoesRadioStream?.loadEndpoint) return null;
 
@@ -201,6 +227,7 @@
     ]);
 
     renderRadioSchedule(scheduleResult);
+    initializeNowMetadata();
     const playerConfigured = configurePlayer(streamEndpoint);
     syncListenerControl(playerConfigured);
     initializeListenerStats();
