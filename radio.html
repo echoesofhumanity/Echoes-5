@@ -5,6 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Echoes Radio — Echoes of Humanity</title>
   <link rel="stylesheet" href="assets/css/core.css?v=a73a9986">
+  <style>
+    /* Echoes Radio: isolated broadcast panel styling. */
+    body[data-page="radio"] #on-air .radio-console {
+      --radio-light: #5fd0c5;
+      text-align: center;
+      align-items: center;
+      gap: 18px;
+      max-width: 720px;
+      width: 100%;
+      margin-inline: auto;
+      padding-block: clamp(38px, 7vw, 64px);
+    }
+    #on-air .radio-console h3 { margin: 0; }
+    #on-air .radio-console .radio-description { max-width: 440px; line-height: 1.65; }
+    #on-air .radio-console .radio-indicator {
+      display: inline-flex; align-items: center; gap: 11px;
+      padding: 10px 18px; border: 1px solid rgba(255,255,255,.14);
+      border-radius: 999px; color: #b7c6ce; background: rgba(4,12,24,.48);
+      font-size: 12px; font-weight: 700; letter-spacing: .17em;
+    }
+    #on-air .radio-console .radio-indicator::before {
+      content: ""; width: 10px; height: 10px; border-radius: 50%;
+      background: #647783; box-shadow: 0 0 0 4px rgba(100,119,131,.12);
+      transition: background .6s ease, box-shadow .6s ease;
+    }
+    #on-air .radio-console:has(#radio-play-toggle[aria-pressed="true"]) .radio-indicator {
+      color: #d9fffa; border-color: rgba(95,208,197,.34);
+    }
+    #on-air .radio-console:has(#radio-play-toggle[aria-pressed="true"]) .radio-indicator::before {
+      background: var(--radio-light);
+      box-shadow: 0 0 10px rgba(95,208,197,.65), 0 0 24px rgba(95,208,197,.3);
+      animation: radio-light-breathe 2.8s ease-in-out infinite;
+    }
+    #on-air #radio-play-toggle {
+      display: inline-flex; justify-content: center; align-items: center;
+      width: min(100%, 360px); min-height: 56px; padding: 14px 24px;
+      border: 1px solid rgba(95,208,197,.5); border-radius: 16px;
+      background: linear-gradient(145deg,rgba(28,84,92,.9),rgba(12,40,57,.96));
+      color: #f4fffe; font-weight: 700; letter-spacing: .045em;
+      cursor: pointer; box-shadow: 0 12px 32px rgba(0,0,0,.22),0 0 24px rgba(95,208,197,.08);
+      transition: border-color .4s ease, box-shadow .4s ease, transform .4s ease;
+    }
+    #on-air #radio-play-toggle:focus-visible { outline: 2px solid #a4f8ef; outline-offset: 4px; }
+    #on-air #radio-play-toggle:disabled { opacity: .55; cursor: not-allowed; }
+    #on-air #radio-play-toggle:not(:disabled):active { transform: scale(.985); }
+    #on-air #radio-play-toggle[aria-pressed="true"] {
+      border-color: rgba(95,208,197,.8);
+      box-shadow: 0 12px 32px rgba(0,0,0,.22), 0 0 32px rgba(95,208,197,.17);
+    }
+    @keyframes radio-light-breathe {
+      0%,100% { box-shadow: 0 0 8px rgba(95,208,197,.5),0 0 18px rgba(95,208,197,.2); }
+      50% { box-shadow: 0 0 15px rgba(95,208,197,.85),0 0 30px rgba(95,208,197,.4); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #on-air .radio-console .radio-indicator::before { animation: none !important; }
+    }
+  </style>
 </head>
 <body data-page="radio">
   <div data-component="header"></div>
@@ -20,10 +77,11 @@
       <h2>The Shared Frequency of Humanity</h2>
       <p>Music, voices, stories and conversations from across the Echoes community — gathered into one continuous global listening space.</p>
       <div class="card-grid">
-        <article class="cinematic-card">
+        <article class="cinematic-card radio-console">
           <span class="card-icon" aria-hidden="true">≋</span>
+          <span class="radio-indicator" aria-label="Local player status">ON AIR · PLAYER READY</span>
           <h3>Echoes Radio</h3>
-          <p>Broadcast foundation ready. Continuous programming and live transmission will connect here in the next broadcast phases.</p>
+          <p class="radio-description">One world. One human family. Listen to the shared frequency of humanity.</p>
           <button id="radio-play-toggle" type="button" aria-pressed="false" disabled>Listen Live</button>
         </article>
       </div>
