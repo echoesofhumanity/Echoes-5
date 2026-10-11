@@ -8,7 +8,7 @@
   <style>
     /* Echoes Radio: isolated broadcast panel styling. */
     body[data-page="radio"] #on-air .radio-console {
-      --radio-light: #5fd0c5;
+      --radio-light: #ff4b56;
       text-align: center;
       align-items: center;
       gap: 18px;
@@ -31,11 +31,11 @@
       transition: background .6s ease, box-shadow .6s ease;
     }
     #on-air .radio-console:has(#radio-play-toggle[aria-pressed="true"]) .radio-indicator {
-      color: #d9fffa; border-color: rgba(95,208,197,.34);
+      color: #ffe2e4; border-color: rgba(255,75,86,.42);
     }
     #on-air .radio-console:has(#radio-play-toggle[aria-pressed="true"]) .radio-indicator::before {
       background: var(--radio-light);
-      box-shadow: 0 0 10px rgba(95,208,197,.65), 0 0 24px rgba(95,208,197,.3);
+      box-shadow: 0 0 10px rgba(255,75,86,.7), 0 0 24px rgba(255,75,86,.35);
       animation: radio-light-breathe 2.8s ease-in-out infinite;
     }
     #on-air #radio-play-toggle {
@@ -55,8 +55,8 @@
       box-shadow: 0 12px 32px rgba(0,0,0,.22), 0 0 32px rgba(95,208,197,.17);
     }
     @keyframes radio-light-breathe {
-      0%,100% { box-shadow: 0 0 8px rgba(95,208,197,.5),0 0 18px rgba(95,208,197,.2); }
-      50% { box-shadow: 0 0 15px rgba(95,208,197,.85),0 0 30px rgba(95,208,197,.4); }
+      0%,100% { box-shadow: 0 0 8px rgba(255,75,86,.5),0 0 18px rgba(255,75,86,.2); }
+      50% { box-shadow: 0 0 15px rgba(255,75,86,.85),0 0 30px rgba(255,75,86,.4); }
     }
     @media (prefers-reduced-motion: reduce) {
       #on-air .radio-console .radio-indicator::before { animation: none !important; }
