@@ -29,7 +29,26 @@ try {
     transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
   }));globe.add(lights);
   renderer.compile(scene,camera);
-  nightStatus.textContent="Night lights: texture loaded · shader compilation requested";
+  // Diagnostic toggle: isolate the city-light texture from the night-side mask.
+  const diagnostic=document.createElement("button");
+  diagnostic.type="button";
+  diagnostic.textContent="Show city-light layer (diagnostic)";
+  diagnostic.style.cssText="margin:8px auto 12px;padding:12px 16px;border:1px solid #39cde8;border-radius:24px;background:#082b3b;color:#e6f8fc;font:inherit;cursor:pointer";
+  nightStatus.insertAdjacentElement("afterend",diagnostic);
+  let isolated=false;
+  diagnostic.addEventListener("click",()=>{
+    isolated=!isolated;
+    earth.visible=!isolated;
+    lights.material.uniforms.sunDirection.value.set(0,0,-1);
+    lights.material.fragmentShader=isolated
+      ? `uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){vec3 city=texture2D(nightMap,vUv).rgb;gl_FragColor=vec4(city*2.0,1.0);}`
+      : `uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){float night=smoothstep(-0.12,0.36,-dot(normalize(vWorldNormal),normalize(sunDirection)));vec3 city=texture2D(nightMap,vUv).rgb;gl_FragColor=vec4(city*night*1.45,night);}`;
+    lights.material.uniforms.sunDirection.value.set(4,2,5).normalize();
+    lights.material.needsUpdate=true;
+    diagnostic.textContent=isolated?"Return to normal globe":"Show city-light layer (diagnostic)";
+    nightStatus.textContent=isolated?"Diagnostic: city-light texture only":"Night lights: texture loaded · normal globe";
+  });
+  nightStatus.textContent="Night lights: texture loaded · diagnostic available";
 } catch(error) { nightStatus.textContent="Night lights: texture FAILED — "+(error?.message||"network or decoding error"); console.warn("Optional city lights unavailable; daytime globe remains active",error); }
 const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(1.49,64,48),new THREE.MeshBasicMaterial({color:0x28cbe8,transparent:true,opacity:.15,side:THREE.BackSide}));scene.add(atmosphere);
 scene.add(new THREE.AmbientLight(0xa3d4e7,1.65));const sun=new THREE.DirectionalLight(0xfff2df,2.8);sun.position.set(4,2,5);scene.add(sun);
