@@ -4,28 +4,28 @@
   "products": [
     {
       "concept_id": "one-humanity-tee",
-      "database_product_id": null,
+      "database_product_id": "5fa95de9-7873-4f1a-a6dc-704ff8848f2e",
       "creator_id": null,
       "status": "concept",
       "checkout_enabled": false
     },
     {
       "concept_id": "echoes-hoodie",
-      "database_product_id": null,
+      "database_product_id": "40a0ebad-7b78-4621-a7eb-6896c2450334",
       "creator_id": null,
       "status": "concept",
       "checkout_enabled": false
     },
     {
       "concept_id": "one-world-bottle",
-      "database_product_id": null,
+      "database_product_id": "a349efa0-b80f-4426-8e4e-90d0c9c904bc",
       "creator_id": null,
       "status": "concept",
       "checkout_enabled": false
     },
     {
       "concept_id": "humanity-notebook",
-      "database_product_id": null,
+      "database_product_id": "d01e00cc-ce6c-4065-89e6-dbff5896f1ba",
       "creator_id": null,
       "status": "concept",
       "checkout_enabled": false
