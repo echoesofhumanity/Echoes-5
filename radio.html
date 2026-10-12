@@ -159,6 +159,22 @@
     body[data-page="radio"] #on-air .radio-console .radio-art .radio-earth-image { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%; }
     body[data-page="radio"] #on-air .radio-console .radio-art.is-globe-ready .radio-earth-image { display:none; }
     body[data-page="radio"] #on-air #radio-play-toggle { margin:4px auto 10px; }
+
+    /* Compact phone-first radio console: all controls visible with minimal scrolling. */
+    @media (max-width:600px) {
+      body[data-page="radio"] #on-air .radio-console { gap:8px; padding:12px 14px 16px; border-radius:20px; }
+      body[data-page="radio"] #on-air .radio-console .radio-art { width:min(100%,260px);max-width:260px;aspect-ratio:1;margin:0 auto; }
+      body[data-page="radio"] #on-air #radio-play-toggle { width:66px;min-width:66px;max-width:66px;height:66px;min-height:66px;margin:2px auto 6px;border-width:2px;box-shadow:0 0 0 5px rgba(15,192,228,.12),0 0 20px rgba(0,199,239,.3); }
+      body[data-page="radio"] #on-air #radio-play-toggle::before { border-top-width:12px;border-bottom-width:12px;border-left-width:19px; }
+      body[data-page="radio"] #on-air #radio-play-toggle[aria-pressed="true"]::before { width:18px;height:25px;border:0; }
+      body[data-page="radio"] #on-air .radio-console .radio-indicator { padding:6px 12px;font-size:10px;letter-spacing:.11em; }
+      body[data-page="radio"] #on-air .radio-console h3 { font-size:clamp(24px,6vw,30px);line-height:1.1;margin:2px 0; }
+      body[data-page="radio"] #on-air .radio-console .radio-description { font-size:12px;line-height:1.4;margin:0; }
+      body[data-page="radio"] #on-air .radio-live-now { margin:3px 0;padding:9px 12px;gap:3px;border-radius:13px; }
+      body[data-page="radio"] #on-air #radio-live-now-title { font-size:15px;line-height:1.3; }
+      body[data-page="radio"] #on-air .radio-stats { gap:8px;margin-top:2px; }
+      body[data-page="radio"] #on-air .radio-stat { min-height:60px;padding:9px 6px;border-radius:12px; }
+    }
   </style>
 </head>
 <body data-page="radio">
