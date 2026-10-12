@@ -7,6 +7,7 @@ main{width:min(100%,440px)}h1{font:400 clamp(26px,7vw,38px) Georgia,serif;margin
 </style></head><body><main><h1>Echoes Radio</h1><p>Rotating Earth · visual performance test</p><div class="stage" id="stage" aria-label="Slowly rotating 3D Earth"></div><p class="status" id="status">Preparing the globe…</p><p class="note">Visual test only. Radio playback is not modified.</p></main>
 <script type="module">
 const stage=document.getElementById("stage"),status=document.getElementById("status");
+const nightStatus=document.createElement("p");nightStatus.className="note";nightStatus.setAttribute("role","status");nightStatus.textContent="Night lights: checking texture…";status.insertAdjacentElement("afterend",nightStatus);
 try{
 const THREE=await import("https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js");
 const scene=new THREE.Scene();
@@ -20,13 +21,16 @@ const earth=new THREE.Mesh(geometry,new THREE.MeshPhongMaterial({map:texture,emi
 try {
   const nightMap=await new THREE.TextureLoader().loadAsync("https://threejs.org/examples/textures/planets/earth_lights_2048.png");
   nightMap.colorSpace=THREE.SRGBColorSpace;
+  nightStatus.textContent="Night lights: texture loaded · checking WebGL shader…";
   const lights=new THREE.Mesh(new THREE.SphereGeometry(1.455,64,48),new THREE.ShaderMaterial({
     uniforms:{nightMap:{value:nightMap},sunDirection:{value:new THREE.Vector3(4,2,5).normalize()}},
     vertexShader:`varying vec2 vUv;varying vec3 vWorldNormal;void main(){vUv=uv;vWorldNormal=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
     fragmentShader:`uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){float night=smoothstep(-0.12,0.36,-dot(normalize(vWorldNormal),normalize(sunDirection)));vec3 city=texture2D(nightMap,vUv).rgb;gl_FragColor=vec4(city*night*1.45,night);}`,
     transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
   }));globe.add(lights);
-} catch(error) { console.warn("Optional city lights unavailable; daytime globe remains active",error); }
+  renderer.compile(scene,camera);
+  nightStatus.textContent="Night lights: texture loaded · shader compilation requested";
+} catch(error) { nightStatus.textContent="Night lights: texture FAILED — "+(error?.message||"network or decoding error"); console.warn("Optional city lights unavailable; daytime globe remains active",error); }
 const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(1.49,64,48),new THREE.MeshBasicMaterial({color:0x28cbe8,transparent:true,opacity:.15,side:THREE.BackSide}));scene.add(atmosphere);
 scene.add(new THREE.AmbientLight(0xa3d4e7,1.65));const sun=new THREE.DirectionalLight(0xfff2df,2.8);sun.position.set(4,2,5);scene.add(sun);
 const rim=new THREE.DirectionalLight(0x00c8f0,2.2);rim.position.set(-4,0,-2);scene.add(rim);
