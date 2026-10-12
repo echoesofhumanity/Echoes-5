@@ -25,7 +25,7 @@ try {
   const lights=new THREE.Mesh(new THREE.SphereGeometry(1.455,64,48),new THREE.ShaderMaterial({
     uniforms:{nightMap:{value:nightMap},sunDirection:{value:new THREE.Vector3(-4,2,1).normalize()}},
     vertexShader:`varying vec2 vUv;varying vec3 vWorldNormal;void main(){vUv=uv;vWorldNormal=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
-    fragmentShader:`uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){float night=smoothstep(-0.12,0.36,-dot(normalize(vWorldNormal),normalize(sunDirection)));vec3 city=texture2D(nightMap,vUv).rgb;vec3 warm=city*vec3(1.22,0.96,0.70);gl_FragColor=vec4(warm*night*2.1,night);}`,
+    fragmentShader:`uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){float night=smoothstep(-0.20,0.48,-dot(normalize(vWorldNormal),normalize(sunDirection)));vec3 city=texture2D(nightMap,vUv).rgb;vec3 warm=city*vec3(1.35,1.05,0.80);gl_FragColor=vec4(warm*night*3.0,night);}`,
     transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
   }));globe.add(lights);
   renderer.compile(scene,camera);
@@ -42,7 +42,7 @@ try {
     lights.material.uniforms.sunDirection.value.set(0,0,-1);
     lights.material.fragmentShader=isolated
       ? `uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){vec3 city=texture2D(nightMap,vUv).rgb;gl_FragColor=vec4(city*2.0,1.0);}`
-      : `uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){float night=smoothstep(-0.12,0.36,-dot(normalize(vWorldNormal),normalize(sunDirection)));vec3 city=texture2D(nightMap,vUv).rgb;vec3 warm=city*vec3(1.22,0.96,0.70);gl_FragColor=vec4(warm*night*2.1,night);}`;
+      : `uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){float night=smoothstep(-0.20,0.48,-dot(normalize(vWorldNormal),normalize(sunDirection)));vec3 city=texture2D(nightMap,vUv).rgb;vec3 warm=city*vec3(1.35,1.05,0.80);gl_FragColor=vec4(warm*night*3.0,night);}`;
     lights.material.uniforms.sunDirection.value.set(-4,2,1).normalize();
     lights.material.needsUpdate=true;
     diagnostic.textContent=isolated?"Return to normal globe":"Show city-light layer (diagnostic)";
