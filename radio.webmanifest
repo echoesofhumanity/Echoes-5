@@ -1,0 +1,19 @@
+{
+  "id": "/Echoes-5/radio.html",
+  "name": "Echoes Radio",
+  "short_name": "Echoes Radio",
+  "description": "One world. One human family. Listen to Echoes Radio.",
+  "start_url": "/Echoes-5/radio.html",
+  "scope": "/Echoes-5/",
+  "display": "standalone",
+  "background_color": "#071218",
+  "theme_color": "#071218",
+  "icons": [
+    {
+      "src": "assets/icons/echoes-radio.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
