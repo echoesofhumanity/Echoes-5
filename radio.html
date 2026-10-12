@@ -150,6 +150,15 @@
     body[data-page="radio"] #on-air #radio-play-toggle[aria-busy="true"]::before { margin:0; animation:radio-control-spin-centered 1s linear infinite; }
     @keyframes radio-control-spin-centered { to { transform:translate(-50%,-50%) rotate(360deg); } }
     @media(prefers-reduced-motion:reduce) { body[data-page="radio"] #on-air #radio-play-toggle[aria-busy="true"]::before { animation:none; } }
+
+    /* Rotating Earth: isolated visual layer, existing player untouched. */
+    body[data-page="radio"] #on-air .radio-console .radio-art { width:min(100%,440px);max-width:440px;aspect-ratio:1;overflow:hidden;border-radius:50%;background:radial-gradient(circle at 50% 48%,#103d58,#071218 75%);isolation:isolate; }
+    body[data-page="radio"] #on-air .radio-console .radio-art::after { content:"";display:block;position:absolute;z-index:2;left:13%;bottom:12%;width:74%;height:10%;transform:none;border-top:1px solid rgba(80,224,246,.62);border-radius:50%;background:radial-gradient(ellipse at top,rgba(22,180,223,.17),transparent 72%);box-shadow:0 -5px 20px rgba(25,194,231,.12);pointer-events:none; }
+    body[data-page="radio"] #on-air .radio-console .radio-earth-stage { position:absolute;inset:0;display:grid;place-items:center; }
+    body[data-page="radio"] #on-air .radio-console .radio-earth-stage canvas { display:block;width:100%;height:100%; }
+    body[data-page="radio"] #on-air .radio-console .radio-art .radio-earth-image { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%; }
+    body[data-page="radio"] #on-air .radio-console .radio-art.is-globe-ready .radio-earth-image { display:none; }
+    body[data-page="radio"] #on-air #radio-play-toggle { margin:4px auto 10px; }
   </style>
 </head>
 <body data-page="radio">
@@ -183,7 +192,7 @@
       <p>Music, voices, stories and conversations from across the Echoes community — gathered into one continuous global listening space.</p>
       <div class="card-grid">
         <article class="cinematic-card radio-console">
-          <div class="radio-art" aria-hidden="true"><img class="radio-earth-image" src="assets/icons/echoes-radio-earth-cinematic.png" alt="" width="896" height="345"></div>
+          <div class="radio-art" aria-label="Slowly rotating Earth"><div class="radio-earth-stage" id="radio-earth-stage" aria-hidden="true"></div><img class="radio-earth-image" src="assets/icons/echoes-radio-earth-cinematic.png" alt="" width="896" height="345"></div>
           <button id="radio-play-toggle" type="button" aria-pressed="false" disabled>Listen Live</button>
           <span class="radio-indicator" aria-label="Local player status">ON AIR · PLAYER READY</span>
           <h3>Echoes Radio</h3>
@@ -261,5 +270,41 @@
   <script src="assets/js/radio-stream.js"></script>
   <script src="assets/js/radio-player.js"></script>
   <script src="assets/js/radio.js?v=live-now-20261012"></script>
+
+<script type="module">
+
+const stage=document.getElementById("radio-earth-stage");
+try{
+const THREE=await import("https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js");
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(34,1,.1,100);camera.position.z=5.3;
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"low-power"});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.setSize(stage.clientWidth,stage.clientWidth);renderer.outputColorSpace=THREE.SRGBColorSpace;stage.appendChild(renderer.domElement);
+const geometry=new THREE.SphereGeometry(1.45,64,48);
+const texture=await new THREE.TextureLoader().loadAsync("https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg");texture.colorSpace=THREE.SRGBColorSpace;
+const globe=new THREE.Group();globe.rotation.set(.08,-1.15,.15);scene.add(globe);
+const earth=new THREE.Mesh(geometry,new THREE.MeshPhongMaterial({map:texture,emissiveMap:texture,emissive:0x284a5a,emissiveIntensity:.5,shininess:5,specular:0x173b50}));globe.add(earth);
+// Independent city-light layer: visible mainly on the night side of the rotating globe.
+try {
+  const nightMap=await new THREE.TextureLoader().loadAsync("https://threejs.org/examples/textures/planets/earth_lights_2048.png");
+  nightMap.colorSpace=THREE.SRGBColorSpace;
+  const lights=new THREE.Mesh(new THREE.SphereGeometry(1.455,64,48),new THREE.ShaderMaterial({
+    uniforms:{nightMap:{value:nightMap},sunDirection:{value:new THREE.Vector3(-4,2,1).normalize()}},
+    vertexShader:`varying vec2 vUv;varying vec3 vWorldNormal;void main(){vUv=uv;vWorldNormal=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+    fragmentShader:`uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){float night=smoothstep(-0.20,0.48,-dot(normalize(vWorldNormal),normalize(sunDirection)));vec3 city=texture2D(nightMap,vUv).rgb;vec3 warm=city*vec3(1.35,1.05,0.80);gl_FragColor=vec4(warm*night*3.0,night);}`,
+    transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
+  }));globe.add(lights);
+  renderer.compile(scene,camera);
+} catch(error) { console.warn("Optional city lights unavailable; daytime globe remains active",error); }
+const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(1.49,64,48),new THREE.MeshBasicMaterial({color:0x28cbe8,transparent:true,opacity:.15,side:THREE.BackSide}));scene.add(atmosphere);
+scene.add(new THREE.AmbientLight(0xa3d4e7,1.65));const sun=new THREE.DirectionalLight(0xfff2df,2.8);sun.position.set(-4,2,1);scene.add(sun);
+const rim=new THREE.DirectionalLight(0x00c8f0,2.2);rim.position.set(-4,0,-2);scene.add(rim);
+let visible=true;const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting});observer.observe(stage);
+function resize(){const w=stage.clientWidth;renderer.setSize(w,w,false);camera.aspect=1;camera.updateProjectionMatrix()}resize();addEventListener("resize",resize,{passive:true});
+let last=0;function animate(now){requestAnimationFrame(animate);if(!visible||document.hidden){last=0;return;}if(!reduced&&last)globe.rotation.y+=(now-last)*Math.PI*2/90000;last=now;renderer.render(scene,camera)}requestAnimationFrame(animate);
+stage.parentElement.classList.add("is-globe-ready");
+}catch(err){console.error("Echoes Earth preview",err)}
+
+</script>
 </body>
 </html>
