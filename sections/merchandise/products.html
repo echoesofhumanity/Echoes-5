@@ -31,9 +31,9 @@
       .echoes-tee-detail{border:1px solid rgba(223,185,142,.35);border-radius:22px;padding:0;width:min(94vw,720px);max-height:90dvh;overflow:auto;background:#0b1520;color:#f3efe5;box-shadow:0 20px 90px #000b}
       .echoes-tee-detail::backdrop{background:rgba(0,6,14,.85);backdrop-filter:blur(5px)}
       .echoes-tee-detail__inside{padding:clamp(16px,4vw,30px)}
-      .echoes-tee-detail__top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+      .echoes-tee-detail__top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;background:#0b1520;box-shadow:0 6px 12px #0b1520}
       .echoes-tee-detail__close{border:1px solid #796d62;background:transparent;color:#f3efe5;border-radius:50%;width:40px;height:40px;font-size:24px;cursor:pointer}
-      .echoes-tee-detail__stage{height:min(48vh,410px);display:grid;place-items:center;border-radius:16px;margin:16px 0;background:radial-gradient(circle at 50% 25%,#bca18b,#333944 80%);overflow:hidden}
+      .echoes-tee-detail__stage{height:min(36dvh,330px);display:grid;place-items:center;border-radius:16px;margin:16px 0;background:radial-gradient(circle at 50% 25%,#bca18b,#333944 80%);overflow:hidden}
       .echoes-tee-detail__stage svg{width:100%;height:100%;max-width:450px}
       .echoes-tee-detail__controls{display:flex;flex-wrap:wrap;gap:9px;margin:10px 0 19px}
       .echoes-tee-detail__controls button{background:#152332;color:#f3efe5;border:1px solid #53606b;border-radius:12px;padding:10px 14px;min-width:48px;cursor:pointer}
