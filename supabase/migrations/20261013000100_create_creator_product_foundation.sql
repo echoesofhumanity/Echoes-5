@@ -54,5 +54,8 @@ CREATE TABLE public.echoes_products (
 ALTER TABLE public.echoes_creators ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.echoes_products ENABLE ROW LEVEL SECURITY;
 
+-- Explicitly remove direct table privileges from public API roles, including any default grants.
+REVOKE ALL PRIVILEGES ON TABLE public.echoes_creators, public.echoes_products FROM anon, authenticated;
+
 -- No public access policies in this migration. Application/API access is a separate reviewed step.
 COMMIT;
