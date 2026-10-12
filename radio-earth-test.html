@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071218"><title>Echoes Radio — Rotating Earth Test</title>
 <style>
 *{box-sizing:border-box}body{margin:0;min-height:100svh;background:radial-gradient(ellipse at 50% 35%,#103d58,#071218 70%);color:#e6f8fc;font-family:system-ui,sans-serif;display:grid;place-items:center;text-align:center;padding:20px}
-main{width:min(100%,440px)}h1{font:400 clamp(26px,7vw,38px) Georgia,serif;margin:0 0 8px}p{font-size:14px;color:#a9ccd7;line-height:1.5}.stage{position:relative;width:100%;aspect-ratio:1;display:grid;place-items:center;isolation:isolate}.stage::after{content:"";position:absolute;width:92%;height:16%;bottom:3%;border-top:2px solid #32cce6;border-radius:50%;background:radial-gradient(ellipse at top,rgba(22,180,223,.23),transparent 70%);box-shadow:0 -8px 38px rgba(25,194,231,.19)}canvas{display:block;width:100%;height:100%;touch-action:pan-y}.status{min-height:42px}.note{font-size:12px;opacity:.7}
+main{width:min(100%,440px)}h1{font:400 clamp(26px,7vw,38px) Georgia,serif;margin:0 0 8px}p{font-size:14px;color:#a9ccd7;line-height:1.5}.stage{position:relative;width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;isolation:isolate}.stage::after{content:"";position:absolute;width:92%;height:16%;bottom:3%;border-top:2px solid #32cce6;border-radius:50%;background:radial-gradient(ellipse at top,rgba(22,180,223,.23),transparent 70%);box-shadow:0 -8px 38px rgba(25,194,231,.19)}canvas{display:block;flex:0 1 auto;min-width:0;max-width:100%;width:100%;height:auto;aspect-ratio:1;touch-action:pan-y}.status{min-height:42px}.note{font-size:12px;opacity:.7}
 @media(prefers-reduced-motion:reduce){.note{opacity:1}}
 </style></head><body><main><h1>Echoes Radio</h1><p>Rotating Earth · visual performance test</p><div class="stage" id="stage" aria-label="Slowly rotating 3D Earth"></div><p class="status" id="status">Preparing the globe…</p><p class="note">Visual test only. Radio playback is not modified.</p></main>
 <script type="module">
@@ -11,7 +11,7 @@ try{
 const THREE=await import("https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js");
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(34,1,.1,100);camera.position.z=5.3;
-const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"low-power"});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.setSize(400,400);renderer.outputColorSpace=THREE.SRGBColorSpace;stage.appendChild(renderer.domElement);
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"low-power"});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.setSize(stage.clientWidth,stage.clientWidth);renderer.outputColorSpace=THREE.SRGBColorSpace;stage.appendChild(renderer.domElement);
 const geometry=new THREE.SphereGeometry(1.45,64,48);
 const texture=await new THREE.TextureLoader().loadAsync("https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg");texture.colorSpace=THREE.SRGBColorSpace;
 const earth=new THREE.Mesh(geometry,new THREE.MeshPhongMaterial({map:texture,shininess:8,specular:0x235875}));earth.rotation.z=.15;scene.add(earth);
