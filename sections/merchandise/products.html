@@ -91,7 +91,16 @@
         <div class="echoes-merch-preview__info"><h4>One World Bottle</h4><p>Natural sand · A concept for thoughtful everyday craft.</p><div class="echoes-merch-preview__price"><strong>1,490 EC</strong><span class="echoes-merch-preview__status">Coming Soon</span></div></div>
       </article>
       <article class="echoes-merch-preview__item" style="--product-tone:#8f6b57">
-        <div class="echoes-merch-preview__art" aria-label="Concept illustration for a warm brown notebook"><span class="echoes-merch-preview__symbol" aria-hidden="true">✧</span></div>
+        <button type="button" class="echoes-tee-open" aria-label="Open Humanity Notebook concept detail" onclick="var d=document.getElementById('echoes-notebook-detail');d.querySelector('#echoes-notebook-stage').replaceChildren(this.querySelector('svg').cloneNode(true));d.showModal()"><div class="echoes-merch-preview__art" aria-label="Illustrated notebook concept, not an available product"><svg viewBox="0 0 320 260" role="img" aria-label="Warm brown Humanity Notebook concept illustration" style="width:100%;height:100%;max-width:330px;filter:drop-shadow(0 16px 15px rgba(18,10,8,.32))">
+<defs><linearGradient id="echoes-notebook-cover" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ba8b68"/><stop offset=".55" stop-color="#86543e"/><stop offset="1" stop-color="#55362d"/></linearGradient></defs>
+<path d="M93 31 L237 27 Q244 28 244 39 L244 222 Q244 233 233 233 L91 229 Q84 228 84 217 L84 44 Q84 34 93 31 Z" fill="#e8d5b8" stroke="#d9bd97" stroke-width="3"/>
+<path d="M85 29 L225 25 Q236 25 236 37 L236 218 Q236 229 225 229 L85 225 Q76 224 76 215 L76 42 Q76 31 85 29 Z" fill="url(#echoes-notebook-cover)" stroke="#d6ab82" stroke-width="2"/>
+<path d="M93 29 L93 225" stroke="#e8b58b" stroke-width="4" opacity=".75"/>
+<path d="M112 55 L206 55 M112 199 L206 199" stroke="#e9c8a4" opacity=".5" stroke-width="1.5"/>
+<circle cx="159" cy="122" r="34" fill="none" stroke="#efc99e" stroke-width="2.5"/>
+<path d="M138 122 Q149 101 159 120 Q169 101 180 122 Q176 140 159 151 Q142 140 138 122 Z" fill="none" stroke="#f1d6b3" stroke-width="3"/>
+<text x="159" y="178" text-anchor="middle" font-family="Georgia,serif" font-size="11" letter-spacing="1.7" fill="#f2d9b9">HUMANITY</text>
+</svg></div></button>
         <div class="echoes-merch-preview__info"><h4>Humanity Notebook</h4><p>Earth brown · A concept for an original maker's edition.</p><div class="echoes-merch-preview__price"><strong>990 EC</strong><span class="echoes-merch-preview__status">Coming Soon</span></div></div>
       </article>
     </div>
@@ -168,6 +177,16 @@
         <p class="echoes-tee-detail__muted">Natural sand · Concept illustration</p>
         <p><strong>1,490 EC</strong> · Coming Soon</p>
         <p class="echoes-tee-detail__muted">A proposed everyday object celebrating the hands that create. No maker, materials, production method, inventory or checkout has been confirmed. Details will be added when a creator joins this collection.</p>
+      </div>
+    </dialog>
+    <dialog id="echoes-notebook-detail" class="echoes-tee-detail" aria-labelledby="echoes-notebook-title" onclick="if(event.target===this)this.close()">
+      <div class="echoes-tee-detail__inside">
+        <div class="echoes-tee-detail__top"><span class="echoes-merch-preview__eyebrow">CONCEPT COLLECTION</span><button type="button" class="echoes-tee-detail__close" aria-label="Close notebook detail" onclick="this.closest('dialog').close()">×</button></div>
+        <h3 id="echoes-notebook-title">Humanity Notebook</h3>
+        <div class="echoes-tee-detail__stage" id="echoes-notebook-stage" aria-label="Enlarged notebook concept illustration"></div>
+        <p class="echoes-tee-detail__muted">Earth brown · Concept illustration</p>
+        <p><strong>990 EC</strong> · Coming Soon</p>
+        <p class="echoes-tee-detail__muted">An original maker's edition concept celebrating creativity and thoughtful expression. Its future maker, binding, paper, dimensions and availability are not yet confirmed. The creator's approved story will be shared when the work becomes real.</p>
       </div>
     </dialog>
     <p class="echoes-merch-preview__note">Concepts and indicative EC prices only. No makers or production methods are claimed yet. Each future product will identify its verified creator and offer an optional, creator-approved story honoring their work and dignity. No orders are being accepted.</p>
