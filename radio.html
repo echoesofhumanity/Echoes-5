@@ -318,7 +318,7 @@ try {
   renderer.compile(scene,camera);
 } catch(error) { console.warn("Optional city lights unavailable; daytime globe remains active",error); }
 const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(1.49,64,48),new THREE.MeshBasicMaterial({color:0x28cbe8,transparent:true,opacity:.15,side:THREE.BackSide}));scene.add(atmosphere);
-scene.add(new THREE.AmbientLight(0xa3d4e7,1.65));const sun=new THREE.DirectionalLight(0xfff2df,2.8);sun.position.set(-4,2,1);scene.add(sun);
+scene.add(new THREE.AmbientLight(0xa3d4e7,2.4));const sun=new THREE.DirectionalLight(0xfff2df,2.8);sun.position.set(-4,2,1);scene.add(sun);
 const rim=new THREE.DirectionalLight(0x00c8f0,2.2);rim.position.set(-4,0,-2);scene.add(rim);
 let visible=true;const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting});observer.observe(stage);
