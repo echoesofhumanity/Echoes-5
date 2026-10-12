@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071218"><title>Echoes Radio — Rotating Earth Test</title>
 <style>
 *{box-sizing:border-box}body{margin:0;min-height:100svh;background:radial-gradient(ellipse at 50% 35%,#103d58,#071218 70%);color:#e6f8fc;font-family:system-ui,sans-serif;display:grid;place-items:center;text-align:center;padding:20px}
-main{width:min(100%,440px)}h1{font:400 clamp(26px,7vw,38px) Georgia,serif;margin:0 0 8px}p{font-size:14px;color:#a9ccd7;line-height:1.5}.stage{position:relative;width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;isolation:isolate}.stage::after{content:"";position:absolute;width:92%;height:16%;bottom:3%;border-top:2px solid #32cce6;border-radius:50%;background:radial-gradient(ellipse at top,rgba(22,180,223,.23),transparent 70%);box-shadow:0 -8px 38px rgba(25,194,231,.19)}canvas{display:block;flex:0 1 auto;min-width:0;max-width:100%;width:100%;height:auto;aspect-ratio:1;touch-action:pan-y}.status{min-height:42px}.note{font-size:12px;opacity:.7}
+main{width:min(100%,440px)}h1{font:400 clamp(26px,7vw,38px) Georgia,serif;margin:0 0 8px}p{font-size:14px;color:#a9ccd7;line-height:1.5}.stage{position:relative;width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;isolation:isolate}.stage::before{content:"";position:absolute;inset:8%;border-radius:50%;background:radial-gradient(circle,transparent 51%,rgba(18,177,220,.10) 66%,rgba(32,207,244,.16) 72%,transparent 81%);filter:blur(13px);pointer-events:none}.stage::after{content:"";position:absolute;width:73%;height:10%;bottom:10%;border-top:1px solid rgba(80,224,246,.62);border-radius:50%;background:radial-gradient(ellipse at top,rgba(22,180,223,.17),transparent 72%);box-shadow:0 -5px 20px rgba(25,194,231,.12);pointer-events:none}canvas{display:block;flex:0 1 auto;min-width:0;max-width:100%;width:100%;height:auto;aspect-ratio:1;touch-action:pan-y}.status{min-height:42px}.note{font-size:12px;opacity:.7}
 @media(prefers-reduced-motion:reduce){.note{opacity:1}}
 </style></head><body><main><h1>Echoes Radio</h1><p>Rotating Earth · visual performance test</p><div class="stage" id="stage" aria-label="Slowly rotating 3D Earth"></div><p class="status" id="status">Preparing the globe…</p><p class="note">Visual test only. Radio playback is not modified.</p></main>
 <script type="module">
@@ -15,9 +15,9 @@ const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreferenc
 const geometry=new THREE.SphereGeometry(1.45,64,48);
 const texture=await new THREE.TextureLoader().loadAsync("https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg");texture.colorSpace=THREE.SRGBColorSpace;
 const earth=new THREE.Mesh(geometry,new THREE.MeshPhongMaterial({map:texture,shininess:8,specular:0x235875}));earth.rotation.z=.15;scene.add(earth);
-const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(1.49,64,48),new THREE.MeshBasicMaterial({color:0x28cbe8,transparent:true,opacity:.09,side:THREE.BackSide}));scene.add(atmosphere);
-scene.add(new THREE.AmbientLight(0x80b9d6,1.05));const sun=new THREE.DirectionalLight(0xffebce,2.3);sun.position.set(4,2,5);scene.add(sun);
-const rim=new THREE.DirectionalLight(0x00bce9,1.8);rim.position.set(-4,0,-2);scene.add(rim);
+const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(1.49,64,48),new THREE.MeshBasicMaterial({color:0x28cbe8,transparent:true,opacity:.15,side:THREE.BackSide}));scene.add(atmosphere);
+scene.add(new THREE.AmbientLight(0xa3d4e7,1.65));const sun=new THREE.DirectionalLight(0xfff2df,2.8);sun.position.set(4,2,5);scene.add(sun);
+const rim=new THREE.DirectionalLight(0x00c8f0,2.2);rim.position.set(-4,0,-2);scene.add(rim);
 let visible=true;const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting});observer.observe(stage);
 function resize(){const w=stage.clientWidth;renderer.setSize(w,w,false);camera.aspect=1;camera.updateProjectionMatrix()}resize();addEventListener("resize",resize,{passive:true});
