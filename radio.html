@@ -141,6 +141,15 @@
     body[data-page="radio"] #on-air #radio-play-toggle:disabled { opacity:.55; }
     @keyframes radio-control-spin { to { transform:rotate(360deg); } }
     @media(prefers-reduced-motion:reduce) { body[data-page="radio"] #on-air #radio-play-toggle[aria-busy="true"]::before { animation:none; } }
+    /* Optical centering and seamless Earth-to-control light bridge. */
+    body[data-page="radio"] #on-air .radio-console .radio-art { margin-bottom:0; overflow:visible; }
+    body[data-page="radio"] #on-air .radio-console .radio-art::after { content:""; display:block; position:absolute; z-index:0; left:50%; bottom:-37px; width:52%; height:67px; transform:translateX(-50%); border:0; border-radius:50%; background:radial-gradient(ellipse at 50% 15%,rgba(24,205,238,.38),rgba(9,120,163,.13) 48%,transparent 75%); box-shadow:none; pointer-events:none; }
+    body[data-page="radio"] #on-air #radio-play-toggle { margin:-10px auto 10px; z-index:2; }
+    body[data-page="radio"] #on-air #radio-play-toggle::before { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); margin:0 0 0 3px; }
+    body[data-page="radio"] #on-air #radio-play-toggle[aria-pressed="true"]::before { margin:0; }
+    body[data-page="radio"] #on-air #radio-play-toggle[aria-busy="true"]::before { margin:0; animation:radio-control-spin-centered 1s linear infinite; }
+    @keyframes radio-control-spin-centered { to { transform:translate(-50%,-50%) rotate(360deg); } }
+    @media(prefers-reduced-motion:reduce) { body[data-page="radio"] #on-air #radio-play-toggle[aria-busy="true"]::before { animation:none; } }
   </style>
 </head>
 <body data-page="radio">
