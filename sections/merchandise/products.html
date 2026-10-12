@@ -120,10 +120,21 @@
         <div class="echoes-tee-detail__top"><span class="echoes-merch-preview__eyebrow">CONCEPT COLLECTION</span><button type="button" class="echoes-tee-detail__close" aria-label="Close product detail" onclick="this.closest('dialog').close()">×</button></div>
         <h3 id="echoes-hoodie-title">Echoes Hoodie</h3>
         <div class="echoes-tee-detail__stage" id="echoes-hoodie-stage" aria-label="Enlarged product concept image"></div>
+        <template id="echoes-hoodie-back-art">
+          <svg viewBox="0 0 320 260" role="img" aria-label="Back of terracotta hoodie concept with plain back panel" style="width:100%;height:100%;max-width:330px;filter:drop-shadow(0 20px 17px rgba(20,15,10,.28))">
+            <defs><linearGradient id="echoes-hoodie-back-fabric" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ce855e"/><stop offset=".55" stop-color="#9e513c"/><stop offset="1" stop-color="#6e342b"/></linearGradient></defs>
+            <path d="M109 52 L130 42 Q119 25 135 14 Q160 -2 185 14 Q201 25 190 42 L211 52 L272 86 L244 137 L220 125 L218 232 Q160 243 102 232 L100 125 L76 137 L48 86 Z" fill="url(#echoes-hoodie-back-fabric)" stroke="#e3a47e" stroke-width="2"/>
+            <path d="M130 42 Q160 74 190 42 Q186 22 160 21 Q134 22 130 42 Z" fill="#7b3d31" stroke="#e3a47e" stroke-width="2"/>
+            <path d="M109 52 Q115 91 100 125 M211 52 Q205 91 220 125" fill="none" stroke="#e9a47b" stroke-opacity=".3" stroke-width="3"/>
+            <path d="M106 222 Q160 233 214 222" fill="none" stroke="#e3a47e" stroke-width="3" opacity=".6"/>
+            <path d="M143 146 Q160 137 177 146" fill="none" stroke="#eac19d" stroke-width="2" opacity=".65"/>
+            <text x="160" y="166" text-anchor="middle" font-family="Georgia,serif" font-size="9" letter-spacing="2" fill="#f7d9b9">ONE HUMANITY</text>
+          </svg>
+        </template>
         <p class="echoes-tee-detail__muted" id="echoes-hoodie-view-label" aria-live="polite">Front view · Illustration</p>
         <div class="echoes-tee-detail__controls" aria-label="Product angle">
-          <button type="button" aria-pressed="true" onclick="var d=this.closest('dialog');d.querySelectorAll('[aria-label=\'Product angle\'] button').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true');d.querySelector('#echoes-hoodie-stage svg').style.transform='none';d.querySelector('#echoes-hoodie-stage svg circle').style.display='';d.querySelector('#echoes-hoodie-view-label').textContent='Front view · Illustration'">Front</button>
-          <button type="button" aria-pressed="false" onclick="var d=this.closest('dialog');d.querySelectorAll('[aria-label=\'Product angle\'] button').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true');d.querySelector('#echoes-hoodie-stage svg').style.transform='scaleX(-1)';d.querySelector('#echoes-hoodie-stage svg circle').style.display='none';d.querySelector('#echoes-hoodie-view-label').textContent='Back concept · Illustrative only'">Back</button>
+          <button type="button" aria-pressed="true" onclick="var d=this.closest('dialog');d.querySelectorAll('[aria-label=\'Product angle\'] button').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true');d.querySelector('#echoes-hoodie-stage').replaceChildren(document.querySelector('[aria-label="Open Echoes Hoodie detail and options"] svg').cloneNode(true));d.querySelector('#echoes-hoodie-view-label').textContent='Front view · Illustration'">Front</button>
+          <button type="button" aria-pressed="false" onclick="var d=this.closest('dialog');d.querySelectorAll('[aria-label=\'Product angle\'] button').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true');d.querySelector('#echoes-hoodie-stage').replaceChildren(d.querySelector('#echoes-hoodie-back-art svg').cloneNode(true));d.querySelector('#echoes-hoodie-view-label').textContent='Back concept · Illustrative only'">Back</button>
         </div>
         <p class="echoes-tee-detail__muted">Concept colors</p>
         <div class="echoes-tee-detail__controls" aria-label="Concept color">
