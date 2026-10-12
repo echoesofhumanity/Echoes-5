@@ -86,9 +86,34 @@
     @media (prefers-reduced-motion: reduce) {
       #on-air .radio-console .radio-indicator::before { animation: none !important; }
     }
+    /* Standalone-only opening identity; the live player remains untouched. */
+    #radio-splash { position:fixed; inset:0; z-index:10000; display:grid; place-items:center; overflow:hidden; background:radial-gradient(ellipse at 50% 100%,#105879 0%,#071e2c 36%,#071218 78%); color:#e6f4f8; text-align:center; opacity:1; transition:opacity .35s ease; }
+    #radio-splash[hidden] { display:none; }
+    #radio-splash.is-leaving { opacity:0; pointer-events:none; }
+    #radio-splash::after { content:""; position:absolute; width:150vw; height:45vw; min-height:200px; bottom:-31vw; left:50%; transform:translateX(-50%); border-radius:50% 50% 0 0; border-top:2px solid #44d9ed; background:radial-gradient(ellipse at 50% 0%,rgba(23,157,199,.55),rgba(5,23,38,.92) 57%,#071218 85%); box-shadow:0 -13px 65px rgba(0,196,216,.25); }
+    #radio-splash .splash-center { position:relative; z-index:1; width:min(72vw,310px); margin-top:-12vh; }
+    #radio-splash .splash-center img { display:block; width:100%; height:auto; border-radius:22%; box-shadow:0 0 70px rgba(0,196,216,.16); }
+    #radio-splash .splash-center p { font:400 clamp(12px,3vw,15px)/1.6 system-ui,sans-serif; letter-spacing:.08em; margin:22px 0 0; }
+    @media (prefers-reduced-motion:reduce) { #radio-splash { transition:none; } }
   </style>
 </head>
 <body data-page="radio">
+  <div id="radio-splash" hidden aria-label="Echoes Radio opening screen">
+    <div class="splash-center"><img src="assets/icons/echoes-radio-approved-512.png" alt="Echoes Radio" width="512" height="512"><p>One world. One human family.</p></div>
+  </div>
+  <script>
+    (() => {
+      const splash = document.getElementById('radio-splash');
+      const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      if (!standalone || sessionStorage.getItem('echoes-radio-splash-seen')) return;
+      sessionStorage.setItem('echoes-radio-splash-seen', '1');
+      splash.hidden = false;
+      window.setTimeout(() => {
+        splash.classList.add('is-leaving');
+        window.setTimeout(() => splash.remove(), 400);
+      }, 1300);
+    })();
+  </script>
   <div data-component="header"></div>
   <main>
     <section class="page-section">
