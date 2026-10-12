@@ -14,5 +14,18 @@
   "radio.upnext": "Up Next",
   "radio.flow": "24/7 Flow",
   "radio.intro": "One humanity. One shared frequency.",
-  "radio.description": "One world. One human family. Listen to the shared frequency of humanity."
+  "radio.description": "One world. One human family. Listen to the shared frequency of humanity.",
+  "radio.network": "ECHOES GLOBAL MEDIA NETWORK",
+  "radio.shared_desc": "Music, voices, stories and conversations from across the Echoes community — gathered into one continuous global listening space.",
+  "radio.voices": "Voices Across One Humanity",
+  "radio.voices_desc": "A living radio space where music, human stories, thoughtful conversation and voices from across the world can meet.",
+  "radio.music_desc": "Original works and selected music shaped around dignity, belonging, hope and our shared humanity.",
+  "radio.conversations_desc": "Human conversations that cross borders, cultures and generations without losing the intimacy of a single voice.",
+  "radio.podcasts_desc": "Stories, ideas and documentary listening created across the Echoes Global Media Network.",
+  "radio.live_desc": "Live voices, special broadcasts and shared moments from the global Echoes community.",
+  "radio.schedule_title": "A Radio That Moves With the World",
+  "radio.schedule_desc": "Echoes Radio is designed for a continuous global schedule. Music, conversations, podcasts, stories and live broadcasts will move through one shared programming flow while remaining identifiable as distinct programs.",
+  "radio.now_desc": "The current broadcast will appear here with its program title, format and live status.",
+  "radio.next_desc": "The next scheduled program will be visible before it begins so listeners can stay with the shared frequency.",
+  "radio.flow_desc": "When no live program is on air, scheduled and approved Echoes audio can keep the station alive without breaking the broadcast experience."
 }

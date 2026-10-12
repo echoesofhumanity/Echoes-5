@@ -14,5 +14,18 @@
   "radio.upnext": "Sıradaki",
   "radio.flow": "7/24 Yayın",
   "radio.intro": "Tek insanlık. Ortak bir frekans.",
-  "radio.description": "Tek dünya. Tek insanlık ailesi. İnsanlığın ortak frekansını dinleyin."
+  "radio.description": "Tek dünya. Tek insanlık ailesi. İnsanlığın ortak frekansını dinleyin.",
+  "radio.network": "ECHOES KÜRESEL MEDYA AĞI",
+  "radio.shared_desc": "Echoes topluluğunun dört bir yanından müzikler, sesler, hikâyeler ve sohbetler; kesintisiz, küresel bir dinleme alanında buluşuyor.",
+  "radio.voices": "Tek İnsanlığın Sesleri",
+  "radio.voices_desc": "Müziğin, insan hikâyelerinin, anlamlı sohbetlerin ve dünyanın dört bir yanından seslerin buluştuğu yaşayan bir radyo alanı.",
+  "radio.music_desc": "İnsan onuru, aidiyet, umut ve ortak insanlığımız etrafında şekillenen özgün eserler ve seçilmiş müzikler.",
+  "radio.conversations_desc": "Tek bir sesin samimiyetini kaybetmeden sınırları, kültürleri ve kuşakları aşan insan sohbetleri.",
+  "radio.podcasts_desc": "Echoes Küresel Medya Ağı bünyesinde hazırlanan hikâyeler, fikirler ve belgesel ses içerikleri.",
+  "radio.live_desc": "Küresel Echoes topluluğundan canlı sesler, özel yayınlar ve paylaşılan anlar.",
+  "radio.schedule_title": "Dünyayla Birlikte Akan Radyo",
+  "radio.schedule_desc": "Echoes Radio kesintisiz küresel yayın akışı için tasarlandı. Müzik, sohbetler, podcastler, hikâyeler ve canlı yayınlar, kendi program kimliklerini koruyarak ortak bir akışta buluşacak.",
+  "radio.now_desc": "Güncel yayın; program adı, türü ve canlı yayın durumuyla burada görünecek.",
+  "radio.next_desc": "Dinleyicilerin ortak frekansta kalabilmesi için sıradaki program başlamadan önce burada gösterilecek.",
+  "radio.flow_desc": "Canlı program olmadığında planlanmış ve onaylanmış Echoes ses içerikleri yayın deneyimini kesintiye uğratmadan radyoyu sürdürebilir."
 }

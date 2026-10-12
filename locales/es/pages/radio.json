@@ -14,5 +14,18 @@
   "radio.upnext": "A continuación",
   "radio.flow": "Emisión 24/7",
   "radio.intro": "Una humanidad. Una frecuencia compartida.",
-  "radio.description": "Un mundo. Una familia humana. Escucha la frecuencia compartida de la humanidad."
+  "radio.description": "Un mundo. Una familia humana. Escucha la frecuencia compartida de la humanidad.",
+  "radio.network": "RED GLOBAL DE MEDIOS ECHOES",
+  "radio.shared_desc": "Música, voces, historias y conversaciones de toda la comunidad Echoes, reunidas en un espacio global de escucha continua.",
+  "radio.voices": "Voces de una sola humanidad",
+  "radio.voices_desc": "Un espacio radiofónico vivo donde se encuentran música, historias humanas, conversaciones profundas y voces de todo el mundo.",
+  "radio.music_desc": "Obras originales y música seleccionada en torno a la dignidad, la pertenencia, la esperanza y nuestra humanidad compartida.",
+  "radio.conversations_desc": "Conversaciones humanas que cruzan fronteras, culturas y generaciones sin perder la cercanía de una sola voz.",
+  "radio.podcasts_desc": "Historias, ideas y documentales sonoros creados en la Red Global de Medios Echoes.",
+  "radio.live_desc": "Voces en directo, emisiones especiales y momentos compartidos por la comunidad global Echoes.",
+  "radio.schedule_title": "Una radio que se mueve con el mundo",
+  "radio.schedule_desc": "Echoes Radio está diseñada para una programación global continua. Música, conversaciones, pódcasts, historias y emisiones en directo compartirán una misma programación sin perder su identidad.",
+  "radio.now_desc": "La emisión actual aparecerá aquí con el título, el formato y su estado en directo.",
+  "radio.next_desc": "El próximo programa aparecerá antes de comenzar para que los oyentes sigan en la frecuencia compartida.",
+  "radio.flow_desc": "Cuando no haya programas en directo, los audios programados y aprobados de Echoes mantendrán la emisora activa sin interrumpir la experiencia."
 }
