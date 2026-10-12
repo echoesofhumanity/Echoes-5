@@ -119,6 +119,12 @@
     body[data-page="radio"] #on-air .radio-stats { max-width:none; gap:12px; }
     body[data-page="radio"] #on-air .radio-stat { min-height:100px; border-radius:17px; border-color:rgba(30,178,204,.22); background:linear-gradient(145deg,rgba(7,31,47,.95),rgba(3,17,30,.85)); }
     @media (max-width:600px) { body[data-page="radio"] #on-air .radio-console { width:100%; } body[data-page="radio"] #on-air .radio-stats { gap:9px; } body[data-page="radio"] #on-air .radio-stat-label { letter-spacing:.07em; } }
+    /* Radio-specific cinematic emblem; player and metadata stay unchanged. */
+    body[data-page="radio"] #on-air .radio-console .radio-art { position:relative; display:grid; place-items:center; width:min(100%,340px); aspect-ratio:1.55; margin:0 auto 2px; overflow:hidden; border-radius:18px; background:radial-gradient(ellipse at 50% 83%,rgba(6,108,148,.26),transparent 55%); }
+    body[data-page="radio"] #on-air .radio-console .radio-art::before { content:""; position:absolute; width:75%; aspect-ratio:1; top:12%; border:2px solid rgba(47,222,242,.72); border-bottom-color:transparent; border-radius:50%; transform:rotate(-35deg); filter:drop-shadow(0 0 9px #12bcd8); box-shadow:0 0 0 13px rgba(28,189,216,.08),0 0 0 26px rgba(28,189,216,.05); }
+    body[data-page="radio"] #on-air .radio-console .radio-art::after { content:""; position:absolute; width:85%; height:30%; bottom:1%; border-top:2px solid rgba(96,230,247,.72); border-radius:50%; background:radial-gradient(ellipse at 50% 0%,rgba(9,149,202,.28),transparent 67%); box-shadow:0 -9px 23px rgba(13,179,220,.13); }
+    body[data-page="radio"] #on-air .radio-console .radio-art img { position:relative; z-index:1; width:60%; max-width:205px; height:auto; border-radius:50%; opacity:.93; filter:drop-shadow(0 0 19px rgba(0,193,231,.25)); }
+    body[data-page="radio"] #on-air .radio-console > .card-icon { display:none; }
   </style>
 </head>
 <body data-page="radio">
@@ -152,7 +158,7 @@
       <p>Music, voices, stories and conversations from across the Echoes community — gathered into one continuous global listening space.</p>
       <div class="card-grid">
         <article class="cinematic-card radio-console">
-          <span class="card-icon" aria-hidden="true">≋</span>
+          <div class="radio-art" aria-hidden="true"><img src="assets/icons/echoes-radio-approved-512.png" alt="" width="512" height="512"></div>
           <span class="radio-indicator" aria-label="Local player status">ON AIR · PLAYER READY</span>
           <h3>Echoes Radio</h3>
           <p class="radio-description">One world. One human family. Listen to the shared frequency of humanity.</p>
