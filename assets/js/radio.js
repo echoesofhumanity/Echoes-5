@@ -99,7 +99,8 @@
   // Display verified Icecast metadata without changing scheduled-program logic.
   const initializeNowMetadata = () => {
     const nowElement = document.querySelector("#radio-now");
-    if (!nowElement) return;
+    const liveNowElement = document.querySelector("#radio-live-now-title");
+    if (!nowElement && !liveNowElement) return;
 
     const refresh = async () => {
       try {
@@ -112,7 +113,8 @@
         if (typeof data.title !== "string" || !data.title.trim()) {
           throw new Error("Now metadata title unavailable");
         }
-        nowElement.textContent = data.title.trim();
+        if (nowElement) nowElement.textContent = data.title.trim();
+        if (liveNowElement) liveNowElement.textContent = data.title.trim();
       } catch (error) {
         console.warn("Echoes Radio now metadata unavailable.", error);
       }
