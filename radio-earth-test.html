@@ -23,9 +23,9 @@ try {
   nightMap.colorSpace=THREE.SRGBColorSpace;
   nightStatus.textContent="Night lights: texture loaded · checking WebGL shader…";
   const lights=new THREE.Mesh(new THREE.SphereGeometry(1.455,64,48),new THREE.ShaderMaterial({
-    uniforms:{nightMap:{value:nightMap},sunDirection:{value:new THREE.Vector3(4,2,5).normalize()}},
+    uniforms:{nightMap:{value:nightMap},sunDirection:{value:new THREE.Vector3(-4,2,1).normalize()}},
     vertexShader:`varying vec2 vUv;varying vec3 vWorldNormal;void main(){vUv=uv;vWorldNormal=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
-    fragmentShader:`uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){float night=smoothstep(-0.12,0.36,-dot(normalize(vWorldNormal),normalize(sunDirection)));vec3 city=texture2D(nightMap,vUv).rgb;gl_FragColor=vec4(city*night*1.45,night);}`,
+    fragmentShader:`uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){float night=smoothstep(-0.12,0.36,-dot(normalize(vWorldNormal),normalize(sunDirection)));vec3 city=texture2D(nightMap,vUv).rgb;vec3 warm=city*vec3(1.22,0.96,0.70);gl_FragColor=vec4(warm*night*2.1,night);}`,
     transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
   }));globe.add(lights);
   renderer.compile(scene,camera);
@@ -42,8 +42,8 @@ try {
     lights.material.uniforms.sunDirection.value.set(0,0,-1);
     lights.material.fragmentShader=isolated
       ? `uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){vec3 city=texture2D(nightMap,vUv).rgb;gl_FragColor=vec4(city*2.0,1.0);}`
-      : `uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){float night=smoothstep(-0.12,0.36,-dot(normalize(vWorldNormal),normalize(sunDirection)));vec3 city=texture2D(nightMap,vUv).rgb;gl_FragColor=vec4(city*night*1.45,night);}`;
-    lights.material.uniforms.sunDirection.value.set(4,2,5).normalize();
+      : `uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){float night=smoothstep(-0.12,0.36,-dot(normalize(vWorldNormal),normalize(sunDirection)));vec3 city=texture2D(nightMap,vUv).rgb;vec3 warm=city*vec3(1.22,0.96,0.70);gl_FragColor=vec4(warm*night*2.1,night);}`;
+    lights.material.uniforms.sunDirection.value.set(-4,2,1).normalize();
     lights.material.needsUpdate=true;
     diagnostic.textContent=isolated?"Return to normal globe":"Show city-light layer (diagnostic)";
     nightStatus.textContent=isolated?"Diagnostic: city-light texture only":"Night lights: texture loaded · normal globe";
@@ -51,7 +51,7 @@ try {
   nightStatus.textContent="Night lights: texture loaded · diagnostic available";
 } catch(error) { nightStatus.textContent="Night lights: texture FAILED — "+(error?.message||"network or decoding error"); console.warn("Optional city lights unavailable; daytime globe remains active",error); }
 const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(1.49,64,48),new THREE.MeshBasicMaterial({color:0x28cbe8,transparent:true,opacity:.15,side:THREE.BackSide}));scene.add(atmosphere);
-scene.add(new THREE.AmbientLight(0xa3d4e7,1.65));const sun=new THREE.DirectionalLight(0xfff2df,2.8);sun.position.set(4,2,5);scene.add(sun);
+scene.add(new THREE.AmbientLight(0xa3d4e7,1.65));const sun=new THREE.DirectionalLight(0xfff2df,2.8);sun.position.set(-4,2,1);scene.add(sun);
 const rim=new THREE.DirectionalLight(0x00c8f0,2.2);rim.position.set(-4,0,-2);scene.add(rim);
 let visible=true;const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting});observer.observe(stage);
