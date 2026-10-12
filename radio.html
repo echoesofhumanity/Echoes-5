@@ -38,6 +38,9 @@
       box-shadow: 0 0 10px rgba(255,75,86,.7), 0 0 24px rgba(255,75,86,.35);
       animation: radio-light-breathe 2.8s ease-in-out infinite;
     }
+    #on-air .radio-live-now { display: grid; gap: 6px; margin: 20px 0; padding: 15px 17px; border: 1px solid rgba(95,208,197,.24); border-radius: 14px; background: rgba(95,208,197,.07); overflow-wrap: anywhere; }
+    #on-air .radio-live-now-label { color: #85dcd5; font-size: .72rem; font-weight: 700; letter-spacing: .13em; }
+    #on-air #radio-live-now-title { color: #f4fafa; font-size: clamp(1rem, 3.5vw, 1.2rem); line-height: 1.45; }
     #on-air .radio-stats {
       display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
       width: 100%; max-width: 480px; gap: 12px; margin-top: 8px;
@@ -101,6 +104,7 @@
           <span class="radio-indicator" aria-label="Local player status">ON AIR · PLAYER READY</span>
           <h3>Echoes Radio</h3>
           <p class="radio-description">One world. One human family. Listen to the shared frequency of humanity.</p>
+          <div class="radio-live-now" aria-live="polite" aria-atomic="true"><span class="radio-live-now-label">NOW PLAYING</span><strong id="radio-live-now-title">Awaiting broadcast information</strong></div>
           <button id="radio-play-toggle" type="button" aria-pressed="false" disabled>Listen Live</button>
           <div class="radio-stats" aria-label="Radio listening statistics">
             <div class="radio-stat">
@@ -172,6 +176,6 @@
   <script src="assets/js/navigation.js"></script>
   <script src="assets/js/radio-stream.js"></script>
   <script src="assets/js/radio-player.js"></script>
-  <script src="assets/js/radio.js?v=df5b6b6"></script>
+  <script src="assets/js/radio.js?v=live-now-20261012"></script>
 </body>
 </html>
