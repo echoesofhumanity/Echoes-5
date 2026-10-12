@@ -80,7 +80,14 @@
         <div class="echoes-merch-preview__info"><h4>Echoes Hoodie</h4><p>Terracotta warmth · A concept for creator-led textile work.</p><div class="echoes-merch-preview__price"><strong>2,490 EC</strong><span class="echoes-merch-preview__status">Coming Soon</span></div></div>
       </article>
       <article class="echoes-merch-preview__item" style="--product-tone:#b6a28a">
-        <div class="echoes-merch-preview__art" aria-label="Concept illustration for a sand-colored reusable bottle"><span class="echoes-merch-preview__symbol" aria-hidden="true">◉</span></div>
+        <button type="button" class="echoes-tee-open" aria-label="Open One World Bottle concept detail" onclick="var d=document.getElementById('echoes-bottle-detail');d.querySelector('#echoes-bottle-stage').replaceChildren(this.querySelector('svg').cloneNode(true));d.showModal()"><div class="echoes-merch-preview__art" aria-label="Illustrated reusable bottle concept, not an available product"><svg viewBox="0 0 320 260" role="img" aria-label="Sand-colored reusable bottle concept illustration" style="width:100%;height:100%;max-width:330px;filter:drop-shadow(0 16px 16px rgba(15,10,8,.3))">
+<defs><linearGradient id="echoes-bottle-sand" x1="0" x2="1"><stop stop-color="#8d7761"/><stop offset=".28" stop-color="#e6d2ae"/><stop offset=".7" stop-color="#c5aa86"/><stop offset="1" stop-color="#87745f"/></linearGradient></defs>
+<rect x="138" y="17" width="44" height="25" rx="7" fill="#665b52"/><rect x="133" y="36" width="54" height="14" rx="6" fill="#d9bf9b"/>
+<path d="M133 47 Q118 51 118 68 L118 221 Q118 237 135 239 L185 239 Q202 237 202 221 L202 68 Q202 51 187 47 Z" fill="url(#echoes-bottle-sand)" stroke="#e9d9bd" stroke-width="2"/>
+<path d="M135 65 L135 220" stroke="#fff2d8" stroke-width="3" opacity=".35"/>
+<circle cx="160" cy="140" r="29" fill="#946b57" opacity=".9"/><path d="M148 119 L161 127 L156 140 L146 143 L140 133 Z M167 120 L179 133 L170 146 L161 142 L163 131 Z" fill="#f0d7af"/>
+<text x="160" y="182" text-anchor="middle" font-family="Georgia,serif" font-size="10" letter-spacing="2" fill="#5b4c40">ONE WORLD</text>
+</svg></div></button>
         <div class="echoes-merch-preview__info"><h4>One World Bottle</h4><p>Natural sand · A concept for thoughtful everyday craft.</p><div class="echoes-merch-preview__price"><strong>1,490 EC</strong><span class="echoes-merch-preview__status">Coming Soon</span></div></div>
       </article>
       <article class="echoes-merch-preview__item" style="--product-tone:#8f6b57">
@@ -151,6 +158,16 @@
         </div>
         <p><strong>2,490 EC</strong> · Coming Soon</p>
         <p class="echoes-tee-detail__muted">Design preview only. No maker, physical inventory, actual alternate-angle photographs, or checkout is available yet.</p>
+      </div>
+    </dialog>
+    <dialog id="echoes-bottle-detail" class="echoes-tee-detail" aria-labelledby="echoes-bottle-title" onclick="if(event.target===this)this.close()">
+      <div class="echoes-tee-detail__inside">
+        <div class="echoes-tee-detail__top"><span class="echoes-merch-preview__eyebrow">CONCEPT COLLECTION</span><button type="button" class="echoes-tee-detail__close" aria-label="Close bottle detail" onclick="this.closest('dialog').close()">×</button></div>
+        <h3 id="echoes-bottle-title">One World Bottle</h3>
+        <div class="echoes-tee-detail__stage" id="echoes-bottle-stage" aria-label="Enlarged bottle concept illustration"></div>
+        <p class="echoes-tee-detail__muted">Natural sand · Concept illustration</p>
+        <p><strong>1,490 EC</strong> · Coming Soon</p>
+        <p class="echoes-tee-detail__muted">A proposed everyday object celebrating the hands that create. No maker, materials, production method, inventory or checkout has been confirmed. Details will be added when a creator joins this collection.</p>
       </div>
     </dialog>
     <p class="echoes-merch-preview__note">Concepts and indicative EC prices only. No makers or production methods are claimed yet. Each future product will identify its verified creator and offer an optional, creator-approved story honoring their work and dignity. No orders are being accepted.</p>
