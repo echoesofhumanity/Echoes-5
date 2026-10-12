@@ -14,14 +14,26 @@ const camera=new THREE.PerspectiveCamera(34,1,.1,100);camera.position.z=5.3;
 const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"low-power"});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.setSize(stage.clientWidth,stage.clientWidth);renderer.outputColorSpace=THREE.SRGBColorSpace;stage.appendChild(renderer.domElement);
 const geometry=new THREE.SphereGeometry(1.45,64,48);
 const texture=await new THREE.TextureLoader().loadAsync("https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg");texture.colorSpace=THREE.SRGBColorSpace;
-const earth=new THREE.Mesh(geometry,new THREE.MeshPhongMaterial({map:texture,emissiveMap:texture,emissive:0x284a5a,emissiveIntensity:.5,shininess:5,specular:0x173b50}));earth.rotation.set(.08,-1.15,.15);scene.add(earth);
+const globe=new THREE.Group();globe.rotation.set(.08,-1.15,.15);scene.add(globe);
+const earth=new THREE.Mesh(geometry,new THREE.MeshPhongMaterial({map:texture,emissiveMap:texture,emissive:0x284a5a,emissiveIntensity:.5,shininess:5,specular:0x173b50}));globe.add(earth);
+// Independent city-light layer: visible mainly on the night side of the rotating globe.
+try {
+  const nightMap=await new THREE.TextureLoader().loadAsync("https://threejs.org/examples/textures/planets/earth_lights_2048.png");
+  nightMap.colorSpace=THREE.SRGBColorSpace;
+  const lights=new THREE.Mesh(new THREE.SphereGeometry(1.455,64,48),new THREE.ShaderMaterial({
+    uniforms:{nightMap:{value:nightMap},sunDirection:{value:new THREE.Vector3(4,2,5).normalize()}},
+    vertexShader:`varying vec2 vUv;varying vec3 vWorldNormal;void main(){vUv=uv;vWorldNormal=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+    fragmentShader:`uniform sampler2D nightMap;uniform vec3 sunDirection;varying vec2 vUv;varying vec3 vWorldNormal;void main(){float night=smoothstep(-0.12,0.36,-dot(normalize(vWorldNormal),normalize(sunDirection)));vec3 city=texture2D(nightMap,vUv).rgb;gl_FragColor=vec4(city*night*1.45,night);}`,
+    transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
+  }));globe.add(lights);
+} catch(error) { console.warn("Optional city lights unavailable; daytime globe remains active",error); }
 const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(1.49,64,48),new THREE.MeshBasicMaterial({color:0x28cbe8,transparent:true,opacity:.15,side:THREE.BackSide}));scene.add(atmosphere);
 scene.add(new THREE.AmbientLight(0xa3d4e7,1.65));const sun=new THREE.DirectionalLight(0xfff2df,2.8);sun.position.set(4,2,5);scene.add(sun);
 const rim=new THREE.DirectionalLight(0x00c8f0,2.2);rim.position.set(-4,0,-2);scene.add(rim);
 let visible=true;const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting});observer.observe(stage);
 function resize(){const w=stage.clientWidth;renderer.setSize(w,w,false);camera.aspect=1;camera.updateProjectionMatrix()}resize();addEventListener("resize",resize,{passive:true});
-let last=0;function animate(now){requestAnimationFrame(animate);if(!visible||document.hidden)return;if(!reduced&&last)earth.rotation.y+=(now-last)*Math.PI*2/90000;last=now;renderer.render(scene,camera)}requestAnimationFrame(animate);
+let last=0;function animate(now){requestAnimationFrame(animate);if(!visible||document.hidden)return;if(!reduced&&last)globe.rotation.y+=(now-last)*Math.PI*2/90000;last=now;renderer.render(scene,camera)}requestAnimationFrame(animate);
 status.textContent=reduced?"Globe ready · motion reduced by device settings":"Globe ready · one rotation every 90 seconds";
 }catch(err){status.textContent="3D preview could not load. Check browser/WebGL and connection.";console.error("Echoes Earth preview",err)}
 </script></body></html>
