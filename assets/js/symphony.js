@@ -8,6 +8,9 @@
     src: "assets/audio/where-humanity-echoes.m4a"
   };
 
+  // Radio and TV require an explicit tap on the header note icon.
+  const manualPlaybackOnly = ["radio", "tv", "television"].includes(document.body.dataset.page);
+
   const audio = new Audio(TRACK.src);
   audio.preload = "metadata";
   audio.loop = false;
@@ -225,11 +228,11 @@
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
       bindToggle();
-      attemptAutoplay();
+      if (!manualPlaybackOnly) attemptAutoplay();
     }, { once: true });
   } else {
     bindToggle();
-    attemptAutoplay();
+    if (!manualPlaybackOnly) attemptAutoplay();
   }
 
   window.EchoesSymphony = { track: TRACK, audio, toggle: togglePlayback, showIdentity, hideIdentity };
