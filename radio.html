@@ -125,6 +125,10 @@
     body[data-page="radio"] #on-air .radio-console .radio-art::after { content:""; position:absolute; width:85%; height:30%; bottom:1%; border-top:2px solid rgba(96,230,247,.72); border-radius:50%; background:radial-gradient(ellipse at 50% 0%,rgba(9,149,202,.28),transparent 67%); box-shadow:0 -9px 23px rgba(13,179,220,.13); }
     body[data-page="radio"] #on-air .radio-console .radio-art img { position:relative; z-index:1; width:60%; max-width:205px; height:auto; border-radius:50%; opacity:.93; filter:drop-shadow(0 0 19px rgba(0,193,231,.25)); }
     body[data-page="radio"] #on-air .radio-console > .card-icon { display:none; }
+    /* Earth-horizon artwork replaces the interim square app icon. */
+    body[data-page="radio"] #on-air .radio-console .radio-art { aspect-ratio:1.35; background:radial-gradient(ellipse at 50% 78%,rgba(16,164,211,.3),transparent 65%); }
+    body[data-page="radio"] #on-air .radio-console .radio-art .radio-earth { position:relative; z-index:1; display:block; width:78%; height:auto; overflow:visible; filter:drop-shadow(0 0 20px rgba(8,182,224,.37)); }
+    body[data-page="radio"] #on-air .radio-console .radio-art::after { bottom:0; }
   </style>
 </head>
 <body data-page="radio">
@@ -158,7 +162,30 @@
       <p>Music, voices, stories and conversations from across the Echoes community — gathered into one continuous global listening space.</p>
       <div class="card-grid">
         <article class="cinematic-card radio-console">
-          <div class="radio-art" aria-hidden="true"><img src="assets/icons/echoes-radio-approved-512.png" alt="" width="512" height="512"></div>
+          <div class="radio-art" aria-hidden="true">
+            <svg class="radio-earth" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="radio-earth-fill" cx="34%" cy="22%" r="80%"><stop stop-color="#40c5e3" stop-opacity=".7"/><stop offset=".35" stop-color="#096184"/><stop offset=".78" stop-color="#062a47"/><stop offset="1" stop-color="#020b1b"/></radialGradient>
+                <linearGradient id="radio-earth-land" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#77ebf1"/><stop offset="1" stop-color="#157da1"/></linearGradient>
+                <clipPath id="radio-earth-clip"><circle cx="160" cy="160" r="133"/></clipPath>
+              </defs>
+              <circle cx="160" cy="160" r="139" fill="none" stroke="#24d8f0" stroke-opacity=".6" stroke-width="1.5"/>
+              <circle cx="160" cy="160" r="133" fill="url(#radio-earth-fill)"/>
+              <g clip-path="url(#radio-earth-clip)" fill="none" stroke="#70d9ed" stroke-opacity=".19" stroke-width="1">
+                <ellipse cx="160" cy="160" rx="62" ry="133"/><ellipse cx="160" cy="160" rx="104" ry="133"/>
+                <path d="M27 160h266M39 104q121 54 242 0M39 216q121-54 242 0M69 67q91 67 182 0M69 253q91-67 182 0"/>
+              </g>
+              <g clip-path="url(#radio-earth-clip)" fill="url(#radio-earth-land)" opacity=".72">
+                <path d="M65 85l23-19 22 3 12 16 21 3 15 16-7 17-18 7-9 22-20 9-5 27-13-4-9-24-17-10-8-24 9-14-11-13z"/>
+                <path d="M128 170l23 14 9 27-14 19-7 27-15 29-15-8 2-26-13-20 6-25-7-19z"/>
+                <path d="M171 84l25-17 30 6 15-10 30 15 19 23-13 15-27-2-12 20-26-2-12 20-18-4-6-21-18-10z"/>
+                <path d="M191 153l28-7 23 17-5 33-15 19-6 28-18 5-17-32-8-30z"/>
+                <path d="M257 238l24-10 23 15-8 26-31-2-15-13z"/>
+              </g>
+              <path d="M55 102Q115 20 218 37" fill="none" stroke="#c0fbff" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="160" cy="160" r="133" fill="none" stroke="#50e5fa" stroke-opacity=".5" stroke-width="2"/>
+            </svg>
+          </div>
           <span class="radio-indicator" aria-label="Local player status">ON AIR · PLAYER READY</span>
           <h3>Echoes Radio</h3>
           <p class="radio-description">One world. One human family. Listen to the shared frequency of humanity.</p>
