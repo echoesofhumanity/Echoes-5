@@ -39,7 +39,7 @@ CREATE TABLE public.echoes_products (
     CHECK (production_type IN ('handmade','creator_original','approved_exception','undetermined')),
   status text NOT NULL DEFAULT 'concept'
     CHECK (status IN ('concept','review','published','unavailable','retired')),
-  checkout_enabled boolean NOT NULL DEFAULT false,
+  checkout_enabled boolean NOT NULL DEFAULT false CHECK (checkout_enabled = false),
   price_minor_units bigint CHECK (price_minor_units IS NULL OR price_minor_units >= 0),
   currency char(3),
   ec_display_amount integer CHECK (ec_display_amount IS NULL OR ec_display_amount >= 0),
