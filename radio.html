@@ -95,6 +95,30 @@
     #radio-splash .splash-center img { display:block; width:100%; height:auto; border-radius:22%; box-shadow:0 0 70px rgba(0,196,216,.16); }
     #radio-splash .splash-center p { font:400 clamp(12px,3vw,15px)/1.6 system-ui,sans-serif; letter-spacing:.08em; margin:22px 0 0; }
     @media (prefers-reduced-motion:reduce) { #radio-splash { transition:none; } }
+    /* Echoes Radio — approved cinematic mobile listening surface (visual-only). */
+    body[data-page="radio"] { background:#071218; }
+    body[data-page="radio"] main { position:relative; overflow:hidden; }
+    body[data-page="radio"] main::before { content:""; position:absolute; z-index:0; pointer-events:none; inset:0 0 auto; height:760px; background:radial-gradient(ellipse 70% 38% at 50% 18%,rgba(0,170,202,.13),transparent 75%); }
+    body[data-page="radio"] main > .page-section { position:relative; z-index:1; }
+    body[data-page="radio"] main > .page-section:first-child { text-align:center; padding-top:clamp(40px,8vw,90px); padding-bottom:clamp(18px,4vw,38px); }
+    body[data-page="radio"] main > .page-section:first-child h1 { font-family:Georgia,"Times New Roman",serif; font-weight:400; letter-spacing:.055em; text-shadow:0 0 34px rgba(20,200,225,.26); }
+    body[data-page="radio"] main > .page-section:first-child > p:last-child { color:#b4d1d8; letter-spacing:.055em; }
+    body[data-page="radio"] #on-air { text-align:center; }
+    body[data-page="radio"] #on-air > .section-label { color:#62dce9; letter-spacing:.22em; }
+    body[data-page="radio"] #on-air > h2 { font-family:Georgia,"Times New Roman",serif; font-weight:400; }
+    body[data-page="radio"] #on-air > .card-grid { display:flex; justify-content:center; }
+    body[data-page="radio"] #on-air .radio-console { position:relative; isolation:isolate; box-sizing:border-box; overflow:hidden; max-width:560px; border:1px solid rgba(42,199,220,.3); border-radius:24px; padding:clamp(28px,6vw,52px) clamp(20px,5vw,44px); background:linear-gradient(160deg,rgba(9,39,56,.96),rgba(4,15,27,.98) 72%); box-shadow:0 24px 65px rgba(0,0,0,.34),inset 0 1px 0 rgba(122,239,255,.08),0 0 48px rgba(0,172,199,.07); }
+    body[data-page="radio"] #on-air .radio-console::before { content:""; position:absolute; z-index:-1; pointer-events:none; width:125%; aspect-ratio:1; top:-88%; left:-12.5%; border:2px solid rgba(30,209,236,.3); border-radius:50%; box-shadow:0 0 24px rgba(0,210,237,.19),0 0 0 18px rgba(12,158,188,.045),0 0 0 42px rgba(12,158,188,.025); }
+    body[data-page="radio"] #on-air .radio-console > .card-icon { display:block; width:auto; height:auto; margin:0 auto 4px; padding:0; border:0; background:none; color:#62e7f2; font-size:clamp(38px,9vw,58px); line-height:1; text-shadow:0 0 18px rgba(0,221,246,.65); }
+    body[data-page="radio"] #on-air .radio-console h3 { font-family:Georgia,"Times New Roman",serif; font-size:clamp(28px,7vw,43px); font-weight:400; letter-spacing:.04em; color:#f3fbff; }
+    body[data-page="radio"] #on-air .radio-console .radio-description { color:#b3d0d9; font-size:14px; }
+    body[data-page="radio"] #on-air .radio-live-now { box-sizing:border-box; width:100%; margin:8px 0 4px; padding:25px 18px; border-radius:18px; border-color:rgba(24,187,218,.3); background:linear-gradient(160deg,rgba(4,27,42,.85),rgba(8,41,57,.5)); }
+    body[data-page="radio"] #on-air .radio-live-now-label { color:#6be4ee; letter-spacing:.18em; }
+    body[data-page="radio"] #on-air #radio-live-now-title { font-size:clamp(16px,4.2vw,22px); font-weight:600; }
+    body[data-page="radio"] #on-air #radio-play-toggle { width:100%; max-width:none; min-height:58px; border-radius:999px; border-color:rgba(58,225,236,.7); background:linear-gradient(100deg,#075268,#087f8c 52%,#075268); box-shadow:inset 0 1px 0 rgba(200,255,255,.19),0 0 26px rgba(0,198,217,.16); }
+    body[data-page="radio"] #on-air .radio-stats { max-width:none; gap:12px; }
+    body[data-page="radio"] #on-air .radio-stat { min-height:100px; border-radius:17px; border-color:rgba(30,178,204,.22); background:linear-gradient(145deg,rgba(7,31,47,.95),rgba(3,17,30,.85)); }
+    @media (max-width:600px) { body[data-page="radio"] #on-air .radio-console { width:100%; } body[data-page="radio"] #on-air .radio-stats { gap:9px; } body[data-page="radio"] #on-air .radio-stat-label { letter-spacing:.07em; } }
   </style>
 </head>
 <body data-page="radio">
