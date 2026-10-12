@@ -133,6 +133,14 @@
     body[data-page="radio"] #on-air .radio-console .radio-art { width:100%; max-width:500px; aspect-ratio:896 / 345; border-radius:18px; background:#061727; }
     body[data-page="radio"] #on-air .radio-console .radio-art::before,body[data-page="radio"] #on-air .radio-console .radio-art::after { content:none; }
     body[data-page="radio"] #on-air .radio-console .radio-art .radio-earth-image { display:block; position:relative; z-index:1; width:100%; max-width:none; height:100%; object-fit:cover; border-radius:18px; opacity:1; filter:none; }
+    /* One real player control, placed directly below the Earth artwork. */
+    body[data-page="radio"] #on-air #radio-play-toggle { position:relative; flex:0 0 auto; align-self:center; display:grid; place-items:center; width:94px; min-width:94px; max-width:94px; height:94px; min-height:94px; padding:0; margin:0 auto 8px; border:3px solid #50e4f5; border-radius:50%; font-size:0; line-height:0; color:transparent; background:radial-gradient(circle at 45% 32%,#136780 0%,#062a45 50%,#031324 100%); box-shadow:0 0 0 8px rgba(15,192,228,.13),0 0 0 17px rgba(17,173,211,.065),inset 0 2px 12px rgba(76,227,250,.19),0 0 34px rgba(0,199,239,.42); }
+    body[data-page="radio"] #on-air #radio-play-toggle::before { content:""; display:block; width:0; height:0; margin-left:8px; border-top:17px solid transparent; border-bottom:17px solid transparent; border-left:26px solid #d9faff; filter:drop-shadow(0 0 7px rgba(77,222,246,.65)); }
+    body[data-page="radio"] #on-air #radio-play-toggle[aria-pressed="true"]::before { width:23px; height:32px; margin-left:0; border:0; background:linear-gradient(90deg,#d9faff 0 35%,transparent 35% 65%,#d9faff 65% 100%); }
+    body[data-page="radio"] #on-air #radio-play-toggle[aria-busy="true"]::before { width:28px; height:28px; margin-left:0; border:3px solid rgba(217,250,255,.25); border-top-color:#d9faff; border-radius:50%; animation:radio-control-spin 1s linear infinite; }
+    body[data-page="radio"] #on-air #radio-play-toggle:disabled { opacity:.55; }
+    @keyframes radio-control-spin { to { transform:rotate(360deg); } }
+    @media(prefers-reduced-motion:reduce) { body[data-page="radio"] #on-air #radio-play-toggle[aria-busy="true"]::before { animation:none; } }
   </style>
 </head>
 <body data-page="radio">
@@ -167,11 +175,12 @@
       <div class="card-grid">
         <article class="cinematic-card radio-console">
           <div class="radio-art" aria-hidden="true"><img class="radio-earth-image" src="assets/icons/echoes-radio-earth-cinematic.png" alt="" width="896" height="345"></div>
+          <button id="radio-play-toggle" type="button" aria-pressed="false" disabled>Listen Live</button>
           <span class="radio-indicator" aria-label="Local player status">ON AIR · PLAYER READY</span>
           <h3>Echoes Radio</h3>
           <p class="radio-description">One world. One human family. Listen to the shared frequency of humanity.</p>
           <div class="radio-live-now" aria-live="polite" aria-atomic="true"><span class="radio-live-now-label">NOW PLAYING</span><strong id="radio-live-now-title">Awaiting broadcast information</strong></div>
-          <button id="radio-play-toggle" type="button" aria-pressed="false" disabled>Listen Live</button>
+
           <div class="radio-stats" aria-label="Radio listening statistics">
             <div class="radio-stat">
               <span class="radio-stat-value" id="radio-live-listeners" aria-label="Live listeners not yet available">—</span>
