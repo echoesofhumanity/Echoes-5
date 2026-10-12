@@ -143,6 +143,7 @@
   const syncListenerControl = (playerConfigured) => {
     const control = document.querySelector("#radio-play-toggle");
     if (!control) return;
+    const indicator = document.querySelector("#on-air .radio-indicator");
 
     const sync = () => {
       const state = window.EchoesRadioPlayer?.getState?.().state || "unconfigured";
@@ -153,6 +154,7 @@
       control.setAttribute("aria-pressed", String(playing));
       control.setAttribute("aria-busy", String(buffering));
       control.textContent = playing ? "Pause Live" : buffering ? "Connecting…" : "Listen Live";
+      if (indicator) indicator.textContent = playing ? "ON AIR · LIVE" : buffering ? "ON AIR · CONNECTING" : state === "paused" ? "ON AIR · PAUSED" : "ON AIR · READY";
     };
 
     sync();
