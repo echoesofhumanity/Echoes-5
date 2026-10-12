@@ -28,7 +28,9 @@
         const catalog = new Map(entries.map(function (entry) {
           return [entry.concept_id, entry];
         }));
-        const valid = cards.length === entries.length && cards.every(function (card) {
+        const cardIds = cards.map(function (card) { return card.dataset.conceptProduct; });
+        const valid = cards.length === entries.length &&
+          new Set(cardIds).size === cards.length && cards.every(function (card) {
           const entry = catalog.get(card.dataset.conceptProduct);
           return entry && card.dataset.databaseProductId === entry.database_product_id;
         });
