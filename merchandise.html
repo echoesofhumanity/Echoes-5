@@ -19,6 +19,27 @@
   <div data-component="footer"></div>
   <script src="assets/js/layout.js"></script>
   <script src="assets/js/merchandise-catalog.js?v=92a43e3"></script>
+  <script>
+    document.addEventListener("echoes:layout-ready", async function () {
+      if (!window.EchoesMerchandiseCatalog) return;
+      try {
+        const entries = await window.EchoesMerchandiseCatalog.load();
+        const cards = Array.from(document.querySelectorAll("[data-concept-product]"));
+        const catalog = new Map(entries.map(function (entry) {
+          return [entry.concept_id, entry];
+        }));
+        const valid = cards.length === entries.length && cards.every(function (card) {
+          const entry = catalog.get(card.dataset.conceptProduct);
+          return entry && card.dataset.databaseProductId === entry.database_product_id;
+        });
+        document.body.dataset.merchandiseCatalogStatus = valid ? "matched" : "mismatch";
+        if (!valid) console.warn("Merchandise catalog/card identity mismatch");
+      } catch (error) {
+        document.body.dataset.merchandiseCatalogStatus = "unavailable";
+        console.warn("Merchandise catalog validation unavailable", error);
+      }
+    }, { once: true });
+  </script>
   <script src="assets/js/navigation.js"></script>
 </body>
 </html>
