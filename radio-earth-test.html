@@ -14,7 +14,7 @@ const camera=new THREE.PerspectiveCamera(34,1,.1,100);camera.position.z=5.3;
 const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"low-power"});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.setSize(stage.clientWidth,stage.clientWidth);renderer.outputColorSpace=THREE.SRGBColorSpace;stage.appendChild(renderer.domElement);
 const geometry=new THREE.SphereGeometry(1.45,64,48);
 const texture=await new THREE.TextureLoader().loadAsync("https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg");texture.colorSpace=THREE.SRGBColorSpace;
-const earth=new THREE.Mesh(geometry,new THREE.MeshPhongMaterial({map:texture,shininess:8,specular:0x235875}));earth.rotation.z=.15;scene.add(earth);
+const earth=new THREE.Mesh(geometry,new THREE.MeshPhongMaterial({map:texture,emissiveMap:texture,emissive:0x284a5a,emissiveIntensity:.5,shininess:5,specular:0x173b50}));earth.rotation.set(.08,-1.15,.15);scene.add(earth);
 const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(1.49,64,48),new THREE.MeshBasicMaterial({color:0x28cbe8,transparent:true,opacity:.15,side:THREE.BackSide}));scene.add(atmosphere);
 scene.add(new THREE.AmbientLight(0xa3d4e7,1.65));const sun=new THREE.DirectionalLight(0xfff2df,2.8);sun.position.set(4,2,5);scene.add(sun);
 const rim=new THREE.DirectionalLight(0x00c8f0,2.2);rim.position.set(-4,0,-2);scene.add(rim);
