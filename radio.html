@@ -160,6 +160,12 @@
     body[data-page="radio"] #on-air .radio-console .radio-art.is-globe-ready .radio-earth-image { display:none; }
     body[data-page="radio"] #on-air #radio-play-toggle { margin:4px auto 10px; }
 
+    /* Subtle, static turquoise atmosphere behind the globe; no changes to the WebGL scene. */
+    body[data-page="radio"] #on-air .radio-console .radio-art { overflow:visible; isolation:auto; background:transparent; }
+    body[data-page="radio"] #on-air .radio-console .radio-art::before { content:""; display:block; position:absolute; z-index:0; inset:-6%; width:auto; aspect-ratio:auto; top:-6%; left:-6%; border:0; border-radius:50%; transform:none; filter:blur(13px); background:radial-gradient(circle,rgba(13,183,200,.13) 49%,rgba(15,198,210,.2) 62%,rgba(14,167,183,.09) 71%,transparent 79%); box-shadow:none; pointer-events:none; }
+    body[data-page="radio"] #on-air .radio-console .radio-earth-stage { z-index:1; }
+    body[data-page="radio"] #on-air .radio-console .radio-art .radio-earth-image { z-index:1; }
+
     /* Compact phone-first radio console: all controls visible with minimal scrolling. */
     @media (max-width:600px) {
       body[data-page="radio"] #on-air .radio-console { gap:8px; padding:12px 14px 16px; border-radius:20px; }
@@ -210,7 +216,7 @@
         <article class="cinematic-card radio-console">
           <div class="radio-art" aria-label="Slowly rotating Earth"><div class="radio-earth-stage" id="radio-earth-stage" aria-hidden="true"></div><img class="radio-earth-image" src="assets/icons/echoes-radio-earth-cinematic.png" alt="" width="896" height="345"></div>
           <button id="radio-play-toggle" type="button" aria-pressed="false" disabled>Listen Live</button>
-          <span class="radio-indicator" aria-label="Local player status">ON AIR · PLAYER READY</span>
+          <span class="radio-indicator" aria-label="Local player status">ON AIR · READY</span>
           <h3>Echoes Radio</h3>
           <p class="radio-description">One world. One human family. Listen to the shared frequency of humanity.</p>
           <div class="radio-live-now" aria-live="polite" aria-atomic="true"><span class="radio-live-now-label">NOW PLAYING</span><strong id="radio-live-now-title">Awaiting broadcast information</strong></div>
