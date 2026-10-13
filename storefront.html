@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creator Storefront — Echoes of Humanity</title>
+  <link rel="stylesheet" href="assets/css/core.css?v=a73a9986">
+  <style>
+    .echoes-storefront-shell{min-height:70svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(100px,16vw,180px) 20px 90px}
+    .echoes-storefront-shell__inner{width:min(100%,780px);margin:auto}
+    .echoes-storefront-shell__eyebrow{color:#8adad5;letter-spacing:.22em;text-transform:uppercase;font-size:.76rem}
+    .echoes-storefront-shell h1{font-size:clamp(2rem,7vw,4.5rem);line-height:1.1;margin:24px 0}
+    .echoes-storefront-shell p{line-height:1.8;color:#c0cdd0;max-width:620px;margin:0 auto 25px}
+    .echoes-storefront-shell__notice{border:1px solid rgba(102,220,211,.25);border-radius:20px;background:rgba(7,18,24,.75);padding:clamp(24px,5vw,42px);margin-top:36px}
+    .echoes-storefront-shell__back{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border:1px solid rgba(102,220,211,.5);border-radius:999px;color:#c5f6ef;text-decoration:none;margin-top:18px}
+    .echoes-storefront-shell__back:focus-visible{outline:3px solid #8adad5;outline-offset:4px}
+  </style>
+</head>
+<body data-page="marketplace">
+  <div data-component="header"></div>
+  <main>
+    <section class="echoes-storefront-shell" aria-labelledby="storefront-heading">
+      <div class="echoes-storefront-shell__inner">
+        <span class="echoes-storefront-shell__eyebrow" data-storefront-i18n="eyebrow">CREATOR STOREFRONTS</span>
+        <h1 id="storefront-heading" data-storefront-i18n="title">Every creation begins with a person.</h1>
+        <p data-storefront-i18n="intro">A home for independent makers, artists, writers and musicians within the Echoes of Humanity Marketplace.</p>
+        <div class="echoes-storefront-shell__notice" role="status">
+          <h2 data-storefront-i18n="emptyTitle">No published storefront is available yet.</h2>
+          <p data-storefront-i18n="emptyBody">Creator stores will appear here only after verification, permission and publication review. No products are offered for sale on this page.</p>
+        </div>
+        <a class="echoes-storefront-shell__back" href="marketplace.html" data-storefront-i18n="back">Return to Marketplace</a>
+      </div>
+    </section>
+  </main>
+  <div data-component="footer"></div>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/navigation.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      var translations = {
+        en: {eyebrow:"CREATOR STOREFRONTS",title:"Every creation begins with a person.",intro:"A home for independent makers, artists, writers and musicians within the Echoes of Humanity Marketplace.",emptyTitle:"No published storefront is available yet.",emptyBody:"Creator stores will appear here only after verification, permission and publication review. No products are offered for sale on this page.",back:"Return to Marketplace"},
+        tr: {eyebrow:"ÜRETİCİ MAĞAZALARI",title:"Her eser bir insanla başlar.",intro:"Echoes of Humanity Marketplace içinde bağımsız üreticiler, sanatçılar, yazarlar ve müzisyenler için bir yuva.",emptyTitle:"Henüz yayımlanmış bir üretici mağazası bulunmuyor.",emptyBody:"Üretici mağazaları yalnızca doğrulama, izin ve yayın incelemesi tamamlandıktan sonra burada yer alacak. Bu sayfada satışa sunulan ürün yoktur.",back:"Marketplace'e Dön"},
+        ar: {eyebrow:"متاجر المبدعين",title:"كل إبداع يبدأ بإنسان.",intro:"مساحة للصناع والفنانين والكتاب والموسيقيين المستقلين ضمن سوق أصداء الإنسانية.",emptyTitle:"لا توجد متاجر منشورة بعد.",emptyBody:"ستظهر متاجر المبدعين هنا بعد التحقق والحصول على الموافقة ومراجعة النشر. لا تُعرض أي منتجات للبيع في هذه الصفحة.",back:"العودة إلى السوق"},
+        es: {eyebrow:"TIENDAS DE CREADORES",title:"Toda creación comienza con una persona.",intro:"Un hogar para artesanos, artistas, escritores y músicos independientes dentro del Marketplace de Echoes of Humanity.",emptyTitle:"Todavía no hay tiendas publicadas.",emptyBody:"Las tiendas aparecerán aquí solo después de la verificación, el consentimiento y la revisión para su publicación. No se ofrecen productos a la venta en esta página.",back:"Volver al Marketplace"}
+      };
+      function render() {
+        var code = window.EchoesI18n && window.EchoesI18n.getLanguage ? window.EchoesI18n.getLanguage() : "en";
+        var copy = translations[code] || translations.en;
+        document.querySelectorAll("[data-storefront-i18n]").forEach(function (el) {
+          var value = copy[el.dataset.storefrontI18n];
+          if (value) el.textContent = value;
+        });
+      }
+      document.addEventListener("echoes:language-change", render);
+      document.addEventListener("echoes:layout-ready", render);
+      render();
+    })();
+  </script>
+</body>
+</html>
