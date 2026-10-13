@@ -5,18 +5,26 @@
  * No database, network, user accounts, or operational permissions.
  */
 const states = new Set(["pending", "approved", "suspended", "revoked"]);
-const forbiddenKeys = new Set([
-  "jwt", "token", "accessToken", "refreshToken", "password", "secret",
-  "caseDetails", "caseNarrative", "preciseLocation", "patientData"
+// Strict allowlist: unknown fields, including unexpected sensitive data, fail closed.
+const requiredKeys = new Set([
+  "eventId", "transitionId", "targetStaffId", "actorId", "requestId",
+  "reasonCode", "policyVersion", "timestampSeconds", "fromStatus",
+  "toStatus", "previousVersion", "nextVersion", "highRiskApproval",
+  "decisionIds"
 ]);
+const optionalKeys = new Set(["secondReviewerId"]);
 const id = x => typeof x === "string" && /^[a-zA-Z0-9_-]{3,96}$/.test(x);
 const deny = reason => Object.freeze({ valid: false, reason });
 
 export function validateSyntheticCoordinatorAuditEvent(event) {
   if (!event || typeof event !== "object" || Array.isArray(event))
     return deny("invalid_event");
-  if (Object.keys(event).some(k => forbiddenKeys.has(k)))
-    return deny("forbidden_field");
+  if (Object.keys(event).some(k => !requiredKeys.has(k) && !optionalKeys.has(k)))
+    return deny("unexpected_field");
+  if ([...requiredKeys].some(k => !Object.hasOwn(event, k)))
+    return deny("missing_required_field");
+  if (typeof event.highRiskApproval !== "boolean")
+    return deny("invalid_risk_flag");
   const keys = ["eventId", "transitionId", "targetStaffId", "actorId",
     "requestId", "reasonCode", "policyVersion"];
   if (keys.some(k => !id(event[k])) ||
