@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071218">
+<meta name="robots" content="noindex,nofollow">
+<title>Echoes Alert — Synthetic Demo</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#071218;color:#e9f7f7}
+*{box-sizing:border-box}body{margin:0}.shell{max-width:720px;margin:auto;padding:32px 18px 80px}
+a{color:#82d9d2}h1{font-size:clamp(2.2rem,8vw,3.7rem);margin:16px 0}h2{font-size:1.12rem}
+.eyebrow{letter-spacing:.19em;text-transform:uppercase;color:#82d9d2;font-size:.75rem;font-weight:700}
+.lead{color:#b9cccf;line-height:1.7}.notice{border:1px solid #4b8d8a;border-radius:16px;padding:16px;line-height:1.6;background:#112c32}
+.panel{margin-top:22px;padding:22px;border:1px solid #27555b;border-radius:20px;background:linear-gradient(145deg,#17323a,#0a1b22)}
+label{display:block;margin:16px 0 8px;font-weight:600}select,button{width:100%;font:inherit;border-radius:12px;min-height:48px;padding:11px 14px}
+select{background:#0a2028;color:#e9f7f7;border:1px solid #528b8c}
+button{margin-top:20px;background:#78d7cd;color:#062028;border:0;font-weight:750;cursor:pointer}
+button:focus-visible,select:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.output{margin-top:20px;border-top:1px solid #31585d;padding-top:18px;line-height:1.65}
+dl{display:grid;grid-template-columns:1fr 1fr;gap:12px}dt{color:#9dbdc0}dd{margin:3px 0 0;font-weight:700;overflow-wrap:anywhere}
+small{color:#a9c2c3}footer{margin-top:30px;color:#a9c2c3;font-size:.85rem;line-height:1.6}
+</style>
+</head>
+<body>
+<main class="shell">
+<a href="../echoes-alert.html">← Echoes Alert</a>
+<p class="eyebrow">Echoes of Humanity / Isolated prototype</p>
+<h1>Alert — Synthetic Case Lab</h1>
+<p class="lead">A controlled demonstration of personal safety and humanitarian triage. No names, contact details, location, or personal narratives are collected.</p>
+<div class="notice" role="note"><strong>DEMO ONLY — NOT AN EMERGENCY SERVICE.</strong> Nothing is submitted, saved, dispatched, or shared. In a real emergency, contact official local emergency services directly.</div>
+<section class="panel" aria-labelledby="form-title">
+<h2 id="form-title">Create a fictional scenario</h2>
+<form id="scenario">
+<label for="pathway">Scenario pathway</label>
+<select id="pathway" required>
+<option value="Personal safety">Personal safety — fictional threat</option>
+<option value="Humanitarian response">Humanitarian response — fictional urgent need</option>
+</select>
+<label for="priority">Synthetic priority</label>
+<select id="priority" required>
+<option value="Review">Review required</option>
+<option value="Elevated">Elevated review</option>
+</select>
+<button type="submit">Generate synthetic case</button>
+</form>
+<div id="result" class="output" role="status" aria-live="polite" hidden>
+<h2>Fictional case created locally</h2>
+<dl>
+<div><dt>Demo reference</dt><dd id="reference"></dd></div>
+<div><dt>Pathway</dt><dd id="selected-pathway"></dd></div>
+<div><dt>Priority</dt><dd id="selected-priority"></dd></div>
+<div><dt>Status</dt><dd>Awaiting synthetic review</dd></div>
+</dl>
+<small>Browser memory only. Refreshing the page clears this scenario. No backend connection.</small>
+</div>
+</section>
+<footer>This isolated page is not linked from the public portal. All scenarios are fictional; real case intake and coordinator operations remain disabled.</footer>
+</main>
+<script>
+"use strict";
+const form=document.getElementById("scenario");
+let counter=0;
+form.addEventListener("submit",event=>{
+  event.preventDefault();
+  counter+=1;
+  document.getElementById("reference").textContent="DEMO-ALERT-"+String(counter).padStart(3,"0");
+  document.getElementById("selected-pathway").textContent=document.getElementById("pathway").selectedOptions[0].textContent;
+  document.getElementById("selected-priority").textContent=document.getElementById("priority").value;
+  document.getElementById("result").hidden=false;
+});
+</script>
+</body>
+</html>
