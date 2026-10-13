@@ -36,7 +36,7 @@ function check(label, edit, expected, reason) {
 check("valid synthetic high-risk event", () => {}, true, "synthetic_structure_only");
 check("null event", () => null, false, "invalid_event");
 check("array event", () => [], false, "invalid_event");
-check("missing event id", e => { delete e.eventId; }, false, "missing_or_invalid_metadata");
+check("missing event id", e => { delete e.eventId; }, false, "missing_required_field");
 check("invalid actor id", e => { e.actorId = "x"; }, false, "missing_or_invalid_metadata");
 check("missing request id", e => { e.requestId = ""; }, false, "missing_or_invalid_metadata");
 check("invalid timestamp", e => { e.timestampSeconds = -1; }, false, "missing_or_invalid_metadata");
@@ -51,8 +51,12 @@ check("one high-risk decision", e => { e.decisionIds = ["decision-one"]; }, fals
 check("no second reviewer", e => { delete e.secondReviewerId; }, false, "missing_independent_review");
 check("same reviewer twice", e => { e.secondReviewerId = e.actorId; }, false, "missing_independent_review");
 check("target is second reviewer", e => { e.secondReviewerId = e.targetStaffId; }, false, "missing_independent_review");
-check("forbidden JWT", e => { e.jwt = "synthetic-secret"; }, false, "forbidden_field");
-check("forbidden patient data", e => { e.patientData = "synthetic"; }, false, "forbidden_field");
-check("forbidden precise location", e => { e.preciseLocation = "synthetic"; }, false, "forbidden_field");
+check("forbidden JWT", e => { e.jwt = "synthetic-secret"; }, false, "unexpected_field");
+check("forbidden patient data", e => { e.patientData = "synthetic"; }, false, "unexpected_field");
+check("forbidden precise location", e => { e.preciseLocation = "synthetic"; }, false, "unexpected_field");
 check("standard non-high-risk event", e => { e.highRiskApproval = false; delete e.secondReviewerId; e.decisionIds = ["decision-one"]; }, true, "synthetic_structure_only");
+check("unexpected benign field", e => { e.extra = "value"; }, false, "unexpected_field");
+check("missing high-risk flag", e => { delete e.highRiskApproval; }, false, "missing_required_field");
+check("invalid high-risk flag", e => { e.highRiskApproval = "false"; }, false, "invalid_risk_flag");
+check("missing decision references", e => { delete e.decisionIds; }, false, "missing_required_field");
 console.log("PASS: " + passed + " offline synthetic audit-event checks");
