@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071218"><meta name="robots" content="noindex,nofollow">
+<title>Echoes Response — Synthetic Coordinator Lab</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#071218;color:#eaf7f7}*{box-sizing:border-box}body{margin:0}
+main{max-width:780px;margin:auto;padding:32px 18px 80px}a{color:#83dad2}h1{font-size:clamp(2rem,7vw,3.5rem);line-height:1.12}h2{font-size:1.18rem}
+p{line-height:1.65;color:#bdd1d3}.eyebrow{color:#82d9d2;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700}
+.notice,.card{padding:20px;border-radius:20px;border:1px solid #356a6b;background:linear-gradient(145deg,#17343c,#0b2027);margin:20px 0}
+.notice{border-color:#6a9895}button,select{width:100%;min-height:48px;border-radius:12px;padding:12px;font:inherit}
+button{background:#79d8cd;color:#062028;border:0;font-weight:750;margin-top:12px;cursor:pointer}
+select{background:#091f27;color:#f2ffff;border:1px solid #548e8d}label{display:block;margin:14px 0 8px;font-weight:650}
+button:focus-visible,select:focus-visible{outline:3px solid white;outline-offset:3px}
+.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.meta span{display:block;color:#9fbfc1;font-size:.85rem}.meta strong{display:block;margin-top:6px;overflow-wrap:anywhere}
+#queue{margin-top:24px}footer{font-size:.88rem;margin-top:30px;color:#b5cacc;line-height:1.65}
+</style>
+</head>
+<body>
+<main>
+<a href="../humanitarian-action.html">← Humanitarian Action</a>
+<p class="eyebrow">Echoes of Humanity / Offline synthetic lab</p>
+<h1>Response Coordinator Lab</h1>
+<p>A fictional case queue for testing review workflows. This screen does not receive cases from Echoes Alert or Echoes Missing yet.</p>
+<div class="notice" role="note"><strong>DEMO ONLY — NO LIVE RESPONSE.</strong> No real cases, identities, staff access, notifications, database writes, dispatch, or emergency response. Do not enter personal information.</div>
+<section class="card">
+<h2>Load fictional queue</h2>
+<p>Preset cases exist only in this page's browser memory. Refresh to reset.</p>
+<button id="load" type="button">Load two synthetic cases</button>
+</section>
+<section id="queue" aria-live="polite" aria-label="Synthetic case queue"></section>
+<footer>This is an unprotected public demonstration, not a real coordinator dashboard. No authorization or confidentiality is provided. Live intake remains disabled.</footer>
+</main>
+<script>
+"use strict";
+const presets=[
+ {ref:"LAB-ALERT-001",type:"Echoes Alert",pathway:"Personal safety — fictional threat",priority:"Review"},
+ {ref:"LAB-MISSING-001",type:"Echoes Missing",pathway:"Adult needing cognitive support — fictional scenario",priority:"Elevated"}
+];
+const allowed=["Awaiting synthetic review","Under synthetic review","Synthetic review complete"];
+const queue=document.getElementById("queue");
+function render(items){
+ queue.replaceChildren();
+ for(const item of items){
+  const section=document.createElement("section");section.className="card";
+  const title=document.createElement("h2");title.textContent=item.ref;
+  const meta=document.createElement("div");meta.className="meta";
+  for(const [label,value] of [["Application",item.type],["Scenario",item.pathway],["Priority",item.priority]]){
+   const cell=document.createElement("div"),small=document.createElement("span"),strong=document.createElement("strong");
+   small.textContent=label;strong.textContent=value;cell.append(small,strong);meta.append(cell);
+  }
+  const label=document.createElement("label");label.textContent="Synthetic workflow status";
+  const select=document.createElement("select");select.id="status-"+item.ref;label.htmlFor=select.id;
+  for(const status of allowed){const option=document.createElement("option");option.value=status;option.textContent=status;select.append(option)}
+  select.value=item.status;
+  select.addEventListener("change",()=>{item.status=select.value});
+  section.append(title,meta,label,select);queue.append(section);
+ }
+}
+document.getElementById("load").addEventListener("click",()=>{
+ const items=presets.map(item=>({...item,status:allowed[0]}));render(items);
+});
+</script>
+</body>
+</html>
