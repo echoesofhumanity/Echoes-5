@@ -1,3 +1,12 @@
+<style>
+  /* Marketplace categories: compact presentation, with all future categories retained. */
+  .marketplace-stores .card-grid { gap: clamp(14px, 2.5vw, 24px); }
+  .marketplace-stores .cinematic-card { min-height: 190px; padding: clamp(22px, 3vw, 34px); }
+  @media (max-width: 699px) {
+    .marketplace-stores .card-grid { margin-top: 32px; }
+    .marketplace-stores .cinematic-card { min-height: 168px; padding: 22px 20px; }
+  }
+</style>
 <section class="page-section marketplace-stores" id="marketplace-stores">
   <p class="section-label"><span data-i18n="stores.text001">STORES</span></p>
   <h2><span data-i18n="stores.text002">Enter the Marketplace</span></h2>
