@@ -26,7 +26,8 @@ const fixture = () => ({
 let passed = 0;
 function check(label, edit, expected, reason) {
   const event = fixture();
-  const candidate = edit(event) ?? event;
+  const edited = edit(event);
+  const candidate = edited === undefined ? event : edited;
   const result = validate(candidate);
   assert.equal(result.valid, expected, label + " (result: " + result.reason + ")");
   if (reason) assert.equal(result.reason, reason, label + " reason");
