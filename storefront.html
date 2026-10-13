@@ -6,20 +6,20 @@
   <title>Creator Storefront — Echoes of Humanity</title>
   <link rel="stylesheet" href="assets/css/core.css?v=a73a9986">
   <style>
-    .echoes-storefront-shell{min-height:70svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(100px,16vw,180px) 20px 90px}
-    .echoes-storefront-shell__inner{width:min(100%,780px);margin:auto}
+    .echoes-storefront-shell{position:relative;z-index:25;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:clamp(38px,7vw,76px) 12px 64px}
+    .echoes-storefront-shell__inner{width:min(100%,780px);margin:0 auto}
     .echoes-storefront-shell__eyebrow{color:#8adad5;letter-spacing:.22em;text-transform:uppercase;font-size:.76rem}
     .echoes-storefront-shell h1{font-size:clamp(2rem,7vw,4.5rem);line-height:1.1;margin:24px 0}
     .echoes-storefront-shell p{line-height:1.8;color:#c0cdd0;max-width:620px;margin:0 auto 25px}
     .echoes-storefront-shell__notice{border:1px solid rgba(102,220,211,.25);border-radius:20px;background:rgba(7,18,24,.75);padding:clamp(24px,5vw,42px);margin-top:36px}
-    .echoes-storefront-shell__catalog{width:min(100%,1120px);margin:54px auto 24px}
+    .echoes-storefront-shell__catalog{position:relative;z-index:26;width:min(100%,1120px);margin:54px auto 24px}
     .echoes-storefront-shell__catalog h2{font-size:clamp(1.6rem,4vw,2.5rem);margin:0 0 12px}
     .echoes-storefront-shell__catalog-lead{margin:0 auto 30px!important}
     .echoes-storefront-shell__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;text-align:left}
-    .echoes-storefront-shell__product{border:1px solid rgba(102,220,211,.2);border-radius:20px;overflow:hidden;background:linear-gradient(145deg,#10232b,#08151e);min-width:0}
+    .echoes-storefront-shell__product{position:relative;z-index:26;border:1px solid rgba(102,220,211,.2);border-radius:20px;overflow:hidden;background:linear-gradient(145deg,#10232b,#08151e);min-width:0}
     .echoes-storefront-shell__art{aspect-ratio:4/3;display:grid;place-items:center;position:relative;overflow:hidden;background:radial-gradient(circle at 55% 30%,var(--glow),transparent 60%),linear-gradient(135deg,#182f39,#08151c)}
     .echoes-storefront-shell__art svg{width:72%;height:72%;max-height:210px;filter:drop-shadow(0 15px 14px #0007)}
-    .echoes-storefront-shell__info{padding:20px}
+    .echoes-storefront-shell__info{position:relative;z-index:2;display:block;padding:20px;background:#10212a;color:#f3efe5;text-align:left}
     .echoes-storefront-shell__category{color:#8adad5;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase}
     .echoes-storefront-shell__info h3{font-size:1.2rem;margin:12px 0 8px}
     .echoes-storefront-shell__info p{font-size:.87rem;line-height:1.65;margin:0 0 18px;text-align:left}
