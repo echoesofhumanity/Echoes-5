@@ -22,7 +22,7 @@ button:focus-visible,select:focus-visible{outline:3px solid white;outline-offset
 <a href="../humanitarian-action.html">← Humanitarian Action</a>
 <p class="eyebrow">Echoes of Humanity / Offline synthetic lab</p>
 <h1>Response Coordinator Lab</h1>
-<p>A fictional case queue for testing review workflows. This screen does not receive cases from Echoes Alert or Echoes Missing yet.</p>
+<p>A fictional case queue for testing review workflows. The queue supports fixed fictional presets and a strictly validated synthetic handoff link. No personal information is accepted.</p>
 <div class="notice" role="note"><strong>DEMO ONLY — NO LIVE RESPONSE.</strong> No real cases, identities, staff access, notifications, database writes, dispatch, or emergency response. Do not enter personal information.</div>
 <section class="card">
 <h2>Load fictional queue</h2>
@@ -58,6 +58,20 @@ function render(items){
   section.append(title,meta,label,select);queue.append(section);
  }
 }
+// Only these fixed demo tokens may cross the page boundary. No free text or PII.
+const handoffCatalog=Object.freeze({
+ "alert-personal-review":{ref:"DEMO-ALERT-TRANSFER",type:"Echoes Alert",pathway:"Personal safety — fictional threat",priority:"Review"},
+ "alert-humanitarian-elevated":{ref:"DEMO-ALERT-TRANSFER",type:"Echoes Alert",pathway:"Humanitarian response — fictional urgent need",priority:"Elevated"},
+ "missing-cognitive-review":{ref:"DEMO-MISSING-TRANSFER",type:"Echoes Missing",pathway:"Adult needing cognitive support — fictional scenario",priority:"Review"},
+ "missing-child-elevated":{ref:"DEMO-MISSING-TRANSFER",type:"Echoes Missing",pathway:"Child safeguarding — fictional scenario",priority:"Elevated"}
+});
+const params=new URLSearchParams(window.location.search);
+const token=params.get("demo");
+if(params.size===1 && token && Object.hasOwn(handoffCatalog,token)){
+ render([{...handoffCatalog[token],status:allowed[0]}]);
+}
+// Remove query tokens from browser history after processing.
+if(window.location.search)window.history.replaceState(null,"",window.location.pathname+window.location.hash);
 document.getElementById("load").addEventListener("click",()=>{
  const items=presets.map(item=>({...item,status:allowed[0]}));render(items);
 });
