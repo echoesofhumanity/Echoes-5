@@ -1,4 +1,9 @@
 <style>
+  /* Echoes turquoise eyebrow standard for every Home section. */
+  body[data-page="home"] .page-section > p.section-label,
+  body[data-page="home"] .page-section > p.section-label > span {
+    color: var(--echoes-turquoise);
+  }
   /* Home introduction: give longer translations room to breathe on mobile. */
   @media (max-width: 699px) {
     body[data-page="home"] #global-home > p + p { margin-top: 2.5rem; }
