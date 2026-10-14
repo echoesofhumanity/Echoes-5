@@ -1,0 +1,30 @@
+name: Marketplace Synthetic Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/data/marketplace-demo-catalog.json'
+      - 'assets/js/marketplace-demo-*.js'
+      - 'tests/marketplace-demo-*.test.js'
+      - '.github/workflows/marketplace-synthetic-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-synthetic-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+      - name: Verify Node.js runtime
+        run: node --version
+      - name: Validate synthetic catalogue
+        run: node tests/marketplace-demo-catalog.test.js
+      - name: Validate synthetic cart
+        run: node tests/marketplace-demo-cart.test.js
+      - name: Validate synthetic order lifecycle
+        run: node tests/marketplace-demo-order.test.js
