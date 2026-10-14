@@ -175,5 +175,8 @@
   "economy.text013": "Değerin Dolaşımı",
   "economy.text014": "Pazaryeri faaliyetleri, şeffaf değer akışları yoluyla yaratıcıları, katılımcı mağazaları ve daha geniş Echoes ekosistemini destekleyebilir.",
   "economy.text015": "Ekonomi bağlantısı daha sonra gelecek",
-  "economy.ratesNote": "12 Ekim 2026 tarihli sabit referans oranları. EC satın alma henüz aktif değildir."
+  "economy.ratesNote": "12 Ekim 2026 tarihli sabit referans oranları. EC satın alma henüz aktif değildir.",
+  "economy.rateCurrency": "Para birimi",
+  "economy.rateCost": "100 EC bedeli",
+  "economy.ratePerUnit": "1 birim karşılığı EC"
 }
