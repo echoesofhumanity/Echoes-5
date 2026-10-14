@@ -40,6 +40,7 @@ button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-v
 <button id="cancel" type="button" disabled>Cancel demo order</button>
 </section>
 </main>
+<script src="assets/js/marketplace-demo-selection.js?v=6b2a6f7"></script>
 <script src="assets/js/marketplace-demo-catalog.js"></script>
 <script src="assets/js/marketplace-demo-cart.js"></script>
 <script src="assets/js/marketplace-demo-order.js"></script>
@@ -103,6 +104,22 @@ window.EchoesMarketplaceDemoCatalog.load().then(function(items){
   const input=document.createElement("input");input.type="number";input.min="0";input.max="99";input.step="1";input.value="0";input.id="qty-"+product.concept_id;input.setAttribute("aria-label","Quantity for "+product.title);
   input.addEventListener("input",function(){cart=null;byId("total").textContent="0 EC";controls();});
   row.append(info,input);parent.append(row);
+ }
+ const saved = window.EchoesMarketplaceDemoSelection.read();
+ if(saved.length){
+  const byConcept = new Map(products.map(p=>[p.concept_id,p]));
+  let accepted=0;
+  saved.forEach(function(line){
+   if(!byConcept.has(line.concept_id))return;
+   const input=byId("qty-"+line.concept_id);
+   if(!input)return;
+   input.value=String(line.quantity);
+   accepted++;
+  });
+  if(accepted){
+   byId("status").textContent="Imported "+accepted+" product selection(s) from Merchandise. Review quantities before creating a demo order.";
+   calculate();
+  }
  }
  byId("calculate").disabled=false;
 }).catch(showError);
