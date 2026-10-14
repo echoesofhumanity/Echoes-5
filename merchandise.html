@@ -55,6 +55,40 @@
           const label = document.createElement("p");
           label.textContent = "DEMO ONLY — No real purchase or payment";
           label.style.cssText = "margin:0 0 12px;color:#a4e7df;font-size:.85rem";
+          const quantityRow = document.createElement("div");
+          quantityRow.style.cssText = "display:flex;align-items:center;justify-content:center;gap:16px;margin:12px 0 18px";
+          const minus = document.createElement("button");
+          const plus = document.createElement("button");
+          const amount = document.createElement("output");
+          let quantity = 1;
+          amount.textContent = String(quantity);
+          amount.setAttribute("aria-label", "Demo quantity");
+          amount.style.cssText = "min-width:32px;text-align:center;font-weight:700;font-size:1.2rem;color:#fff";
+          [minus, plus].forEach(function (control) {
+            control.type = "button";
+            control.style.cssText = "width:52px;min-height:48px;border:1px solid #87dfd5;border-radius:12px;background:#16363d;color:#fff;font-size:1.4rem;cursor:pointer";
+          });
+          minus.textContent = "−";
+          plus.textContent = "+";
+          minus.setAttribute("aria-label", "Decrease demo quantity");
+          plus.setAttribute("aria-label", "Increase demo quantity");
+          function refreshQuantity() {
+            amount.textContent = String(quantity);
+            minus.disabled = quantity <= 1;
+            plus.disabled = quantity >= 99;
+            minus.style.opacity = minus.disabled ? ".4" : "1";
+            plus.style.opacity = plus.disabled ? ".4" : "1";
+          }
+          minus.addEventListener("click", function () {
+            quantity = Math.max(1, quantity - 1);
+            refreshQuantity();
+          });
+          plus.addEventListener("click", function () {
+            quantity = Math.min(99, quantity + 1);
+            refreshQuantity();
+          });
+          refreshQuantity();
+          quantityRow.append(minus, amount, plus);
           const button = document.createElement("button");
           button.type = "button";
           button.textContent = "Add to demo cart";
@@ -65,14 +99,14 @@
           status.style.cssText = "margin:10px 0 0;font-size:.85rem;color:#c5e8e3";
           button.addEventListener("click", function () {
             try {
-              const lines = selection.add(entry.concept_id, 1);
+              const lines = selection.add(entry.concept_id, quantity);
               const total = lines.reduce(function (sum, line) { return sum + line.quantity; }, 0);
               status.textContent = "Added to demo cart. Items: " + total + ". No order or payment created.";
             } catch (error) {
               status.textContent = "Demo cart unavailable. Please try again.";
             }
           });
-          area.append(label, button, status);
+          area.append(label, quantityRow, button, status);
           inside.appendChild(area);
         });
       } catch (error) {
