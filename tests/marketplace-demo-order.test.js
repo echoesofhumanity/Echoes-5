@@ -61,4 +61,45 @@ reject("reject cancellation after fulfillment", () => api.transition(api.transit
 reject("reject forged payment state", () => api.transition({ ...created, payment_status: "paid" }, "confirmed"));
 reject("reject forged checkout state", () => api.transition({ ...created, checkout_enabled: true }, "confirmed"));
 reject("reject history/status mismatch", () => api.transition({ ...created, status: "confirmed" }, "fulfilled"));
+pass("end-to-end catalogue to fulfilled synthetic order", () => {
+  const selected = context.window.EchoesMarketplaceDemoCatalog.validate(catalog);
+  const selectedCart = context.window.EchoesMarketplaceDemoCart.calculate(selected, [
+    { product_id: selected[1].product_id, quantity: 1 },
+    { product_id: selected[2].product_id, quantity: 2 }
+  ]);
+  assert.equal(selectedCart.total_ec, 5470);
+  const newOrder = api.create(selectedCart, "DEMO-E2E001");
+  const confirmed = api.transition(newOrder, "confirmed");
+  const fulfilled = api.transition(confirmed, "fulfilled");
+  assert.equal(fulfilled.total_ec, 5470);
+  assert.equal(fulfilled.currency, "EC");
+  assert.equal(fulfilled.status, "fulfilled");
+  assert.equal(fulfilled.checkout_enabled, false);
+  assert.equal(fulfilled.payment_status, "not_applicable");
+  assert.deepEqual(Array.from(fulfilled.history, entry => entry.to), [
+    "created", "confirmed", "fulfilled"
+  ]);
+  assert.equal(newOrder.status, "created");
+});
+pass("end-to-end cancellation preserves original order", () => {
+  const selected = context.window.EchoesMarketplaceDemoCatalog.validate(catalog);
+  const selectedCart = context.window.EchoesMarketplaceDemoCart.calculate(selected, [
+    { product_id: selected[3].product_id, quantity: 1 }
+  ]);
+  const newOrder = api.create(selectedCart, "DEMO-E2E002");
+  const cancelled = api.transition(newOrder, "cancelled");
+  assert.equal(cancelled.total_ec, 990);
+  assert.equal(cancelled.status, "cancelled");
+  assert.equal(newOrder.status, "created");
+  assert.equal(cancelled.payment_status, "not_applicable");
+});
+reject("end-to-end cannot checkout an unpublished concept", () => {
+  const unsafe = catalog && JSON.parse(JSON.stringify(catalog));
+  unsafe.products[0].checkout_enabled = true;
+  const selected = context.window.EchoesMarketplaceDemoCatalog.validate(unsafe);
+  const selectedCart = context.window.EchoesMarketplaceDemoCart.calculate(selected, [
+    { product_id: selected[0].product_id, quantity: 1 }
+  ]);
+  api.create(selectedCart, "DEMO-E2E003");
+});
 console.log("All " + count + " synthetic order tests passed.");
