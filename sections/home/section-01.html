@@ -1,3 +1,12 @@
+<style>
+  /* Home introduction: give longer translations room to breathe on mobile. */
+  @media (max-width: 699px) {
+    body[data-page="home"] #global-home > p + p { margin-top: 2.5rem; }
+    body[data-page="home"] #global-home > p + h2 { margin-top: 3.75rem; }
+    body[data-page="home"] #global-home > h2 + p { margin-top: 2rem; }
+    body[data-page="home"] #global-home > p + .card-grid { margin-top: 4.25rem; }
+  }
+</style>
 <section id="global-home" class="page-section page-section-01">
   <p class="section-label"><span data-i18n="section01.text06">ONE HUMANITY · ONE HOME · ONE FUTURE</span></p>
   <h2><span data-i18n="section01.text07">A Digital Nation Without Borders</span></h2>
