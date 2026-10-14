@@ -10,7 +10,7 @@
     ar: { label: "العربية", dir: "rtl", active: true },
     es: { label: "Español", dir: "ltr", active: true },
     fr: { label: "Français", dir: "ltr", active: true },
-    de: { label: "Deutsch", dir: "ltr", active: false },
+    de: { label: "Deutsch", dir: "ltr", active: true },
     pt: { label: "Português", dir: "ltr", active: false },
     ru: { label: "Русский", dir: "ltr", active: false },
     zh: { label: "中文", dir: "ltr", active: false },
