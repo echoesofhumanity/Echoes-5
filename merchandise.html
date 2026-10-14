@@ -18,6 +18,7 @@
   <div data-component="footer"></div>
   <script src="assets/js/layout.js"></script>
   <script src="assets/js/merchandise-catalog.js?v=92a43e3"></script>
+  <script src="assets/js/marketplace-demo-selection.js?v=6b2a6f7"></script>
   <script>
     document.addEventListener("echoes:layout-ready", async function () {
       if (!window.EchoesMerchandiseCatalog) return;
@@ -34,7 +35,46 @@
           return entry && card.dataset.databaseProductId === entry.database_product_id;
         });
         document.body.dataset.merchandiseCatalogStatus = valid ? "matched" : "mismatch";
-        if (!valid) console.warn("Merchandise catalog/card identity mismatch");
+        if (!valid) {
+          console.warn("Merchandise catalog/card identity mismatch");
+          return;
+        }
+        const selection = window.EchoesMarketplaceDemoSelection;
+        if (!selection) return;
+        const detailIds = ["echoes-tee-detail", "echoes-hoodie-detail", "echoes-bottle-detail", "echoes-notebook-detail"];
+        detailIds.forEach(function (detailId, index) {
+          const dialog = document.getElementById(detailId);
+          const card = cards[index];
+          if (!dialog || !card) return;
+          const entry = catalog.get(card.dataset.conceptProduct);
+          if (!entry || entry.checkout_enabled !== false) return;
+          const inside = dialog.querySelector(".echoes-tee-detail__inside");
+          if (!inside) return;
+          const area = document.createElement("div");
+          area.style.cssText = "margin:22px 0 8px;padding:18px;border:1px solid rgba(112,224,210,.35);border-radius:16px;background:#10252b";
+          const label = document.createElement("p");
+          label.textContent = "DEMO ONLY — No real purchase or payment";
+          label.style.cssText = "margin:0 0 12px;color:#a4e7df;font-size:.85rem";
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = "Add to demo cart";
+          button.style.cssText = "width:100%;min-height:48px;padding:12px;border:1px solid #87dfd5;border-radius:12px;background:#164d4c;color:#fff;font-weight:600;cursor:pointer";
+          const status = document.createElement("p");
+          status.setAttribute("role", "status");
+          status.setAttribute("aria-live", "polite");
+          status.style.cssText = "margin:10px 0 0;font-size:.85rem;color:#c5e8e3";
+          button.addEventListener("click", function () {
+            try {
+              const lines = selection.add(entry.concept_id, 1);
+              const total = lines.reduce(function (sum, line) { return sum + line.quantity; }, 0);
+              status.textContent = "Added to demo cart. Items: " + total + ". No order or payment created.";
+            } catch (error) {
+              status.textContent = "Demo cart unavailable. Please try again.";
+            }
+          });
+          area.append(label, button, status);
+          inside.appendChild(area);
+        });
       } catch (error) {
         document.body.dataset.merchandiseCatalogStatus = "unavailable";
         console.warn("Merchandise catalog validation unavailable", error);
