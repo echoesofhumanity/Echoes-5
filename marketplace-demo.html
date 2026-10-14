@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marketplace Synthetic Demo — Echoes of Humanity</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#071218;color:#f0f7f6}
+*{box-sizing:border-box}body{margin:0}main{width:min(100% - 32px,780px);margin:0 auto;padding:44px 0 90px}
+a{color:#9debe4}header{margin-bottom:36px}.eyebrow{color:#74d9d2;letter-spacing:.2em;text-transform:uppercase;font-size:.76rem}
+h1{font-size:clamp(2rem,7vw,3.5rem);line-height:1.12;margin:15px 0 18px}h2{color:#8ce8df;font-size:1.35rem;margin:0 0 20px}
+p{line-height:1.7;color:#c1d0d2}.notice{border-left:3px solid #73d9d0;padding:12px 18px;background:#10242b;border-radius:0 12px 12px 0}
+section{margin-top:34px;border:1px solid #24444a;border-radius:20px;padding:clamp(18px,5vw,30px);background:linear-gradient(145deg,#10262d,#0a1820)}
+.product{display:grid;grid-template-columns:1fr auto;gap:10px 16px;padding:16px 0;border-bottom:1px solid #28444a;align-items:center}
+.product:last-child{border-bottom:0}.product strong{display:block}.product small{color:#acc9c9}
+input{width:76px;min-height:46px;border:1px solid #598a8b;border-radius:10px;background:#071218;color:#fff;font:inherit;padding:9px}
+button{width:100%;min-height:50px;border:1px solid #77d9d1;border-radius:12px;background:#154044;color:#eafffd;font:inherit;font-weight:650;cursor:pointer;margin-top:14px}
+button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #a3fff1;outline-offset:3px}
+.total{display:flex;justify-content:space-between;gap:12px;font-size:1.3rem;margin:20px 0}
+.status{white-space:pre-line;overflow-wrap:anywhere;background:#0b1d24;border-radius:12px;padding:16px;line-height:1.8}
+.error{color:#ffb6b6}.muted{color:#afc2c4;font-size:.9rem}
+</style>
+</head>
+<body>
+<main>
+<header><a href="marketplace.html">← Back to Marketplace</a><div class="eyebrow" style="margin-top:32px">Echoes of Humanity · Isolated Test</div>
+<h1>Marketplace Synthetic Demo</h1>
+<p class="notice"><strong>DEMO ONLY — NO REAL PURCHASES.</strong> Products are concepts. No payment, EC transfer, customer data, stock reservation, or real orders. All order states exist only in this browser tab and disappear when it is closed.</p>
+</header>
+<section aria-labelledby="products-heading"><h2 id="products-heading">Concept products</h2><div id="products" aria-live="polite">Loading synthetic catalogue…</div></section>
+<section aria-labelledby="cart-heading"><h2 id="cart-heading">Synthetic cart</h2>
+<div class="total"><span>EC total</span><strong id="total">0 EC</strong></div>
+<button id="calculate" type="button" disabled>Calculate demo cart</button>
+<button id="create" type="button" disabled>Create synthetic order</button>
+<p class="muted">Nothing is saved or transmitted. A new DEMO order identifier is generated locally.</p></section>
+<section aria-labelledby="order-heading"><h2 id="order-heading">Order simulation</h2>
+<div class="status" id="status" role="status" aria-live="polite">No synthetic order yet.</div>
+<button id="confirm" type="button" disabled>Confirm demo order</button>
+<button id="fulfill" type="button" disabled>Complete demo order</button>
+<button id="cancel" type="button" disabled>Cancel demo order</button>
+</section>
+</main>
+<script src="assets/js/marketplace-demo-catalog.js"></script>
+<script src="assets/js/marketplace-demo-cart.js"></script>
+<script src="assets/js/marketplace-demo-order.js"></script>
+<script>
+(function(){
+"use strict";
+const byId=id=>document.getElementById(id);
+let products=[],cart=null,order=null;
+const money=value=>value.toLocaleString("en-US")+" EC";
+function showError(error){byId("status").textContent="Demo error: "+error.message;byId("status").classList.add("error");}
+function controls(){
+ byId("confirm").disabled=!order||order.status!=="created";
+ byId("fulfill").disabled=!order||order.status!=="confirmed";
+ byId("cancel").disabled=!order||!["created","confirmed"].includes(order.status);
+ byId("create").disabled=!cart||!!order;
+}
+function showOrder(){
+ if(!order)return;
+ byId("status").classList.remove("error");
+ byId("status").textContent="ID: "+order.order_id+"\nStatus: "+order.status+"\nTotal: "+money(order.total_ec)+"\nPayment: not applicable\nHistory: "+order.history.map(x=>x.to).join(" → ");
+ controls();
+}
+function selection(){
+ return products.map(p=>({product_id:p.product_id,quantity:Number(byId("qty-"+p.concept_id).value)}))
+ .filter(x=>x.quantity!==0);
+}
+function calculate(){
+ cart=null;byId("total").textContent="0 EC";byId("create").disabled=true;
+ if(order)return;
+ try{
+  const lines=selection();
+  if(!lines.length){byId("status").textContent="Select at least one product.";return;}
+  cart=window.EchoesMarketplaceDemoCart.calculate(products,lines);
+  byId("total").textContent=money(cart.total_ec);
+  byId("status").classList.remove("error");
+  byId("status").textContent="Demo cart calculated. No order created.";
+ }catch(error){showError(error);}
+ controls();
+}
+byId("calculate").addEventListener("click",calculate);
+byId("create").addEventListener("click",function(){
+ try{
+  if(!cart||order)return;
+  const id="DEMO-"+Array.from(crypto.getRandomValues(new Uint8Array(8)),b=>b.toString(16).padStart(2,"0")).join("").toUpperCase();
+  order=window.EchoesMarketplaceDemoOrder.create(cart,id);showOrder();
+  byId("calculate").disabled=true;
+  document.querySelectorAll("input").forEach(input=>input.disabled=true);
+ }catch(error){showError(error);}
+});
+for(const [button,state] of [["confirm","confirmed"],["fulfill","fulfilled"],["cancel","cancelled"]]){
+ byId(button).addEventListener("click",function(){try{order=window.EchoesMarketplaceDemoOrder.transition(order,state);showOrder();}catch(error){showError(error);}});
+}
+window.EchoesMarketplaceDemoCatalog.load().then(function(items){
+ products=items;
+ const parent=byId("products");parent.textContent="";
+ for(const product of products){
+  const row=document.createElement("div");row.className="product";
+  const info=document.createElement("div"),title=document.createElement("strong"),price=document.createElement("small");
+  title.textContent=product.title;price.textContent=money(product.price_ec)+" · Concept only";
+  info.append(title,price);
+  const input=document.createElement("input");input.type="number";input.min="0";input.max="99";input.step="1";input.value="0";input.id="qty-"+product.concept_id;input.setAttribute("aria-label","Quantity for "+product.title);
+  input.addEventListener("input",function(){cart=null;byId("total").textContent="0 EC";controls();});
+  row.append(info,input);parent.append(row);
+ }
+ byId("calculate").disabled=false;
+}).catch(showError);
+})();
+</script>
+</body>
+</html>
