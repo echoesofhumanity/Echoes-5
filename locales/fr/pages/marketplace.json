@@ -174,5 +174,9 @@
   "economy.text012": "Connexion au paiement sécurisé prévue ultérieurement",
   "economy.text013": "La valeur en mouvement",
   "economy.text014": "Les activités de la place de marché pourront soutenir les créateurs, les boutiques participantes et l’écosystème Echoes élargi grâce à des flux de valeur transparents.",
+  "economy.rateCurrency": "Devise",
+  "economy.rateCost": "Coût de 100 EC",
+  "economy.ratePerUnit": "EC pour 1 unité",
+  "economy.ratesNote": "Taux de référence fixes du 12 octobre 2026. L’achat de crédits EC n’est pas encore disponible.",
   "economy.text015": "Connexion à l’économie prévue ultérieurement"
 }
