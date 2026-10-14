@@ -16,7 +16,7 @@ let count = 0;
 function test(name, change, shouldReject = true) {
   const data = clone();
   change(data);
-  if (shouldReject) assert.throws(() => validate(data), Error, name);
+  if (shouldReject) assert.throws(() => validate(data), { name: "Error" }, name);
   else assert.equal(validate(data).length, 4, name);
   console.log("PASS", name);
   count++;
