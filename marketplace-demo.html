@@ -92,8 +92,8 @@ function refreshVisibleProducts(){
 function quantityChanged(){
  if(order)return;
  persistQuantities();
- refreshVisibleProducts();
  calculate();
+ refreshVisibleProducts();
 }
 function calculate(){
  cart=null;byId("total").textContent="0 EC";byId("cart-summary").textContent="Your demo cart is empty.";byId("create").disabled=true;
