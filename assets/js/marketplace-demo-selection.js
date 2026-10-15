@@ -59,10 +59,21 @@
     }
     return write(next);
   }
+  function setQuantity(conceptId, quantity) {
+    if (typeof conceptId !== "string" || !SLUG.test(conceptId) ||
+        !Number.isSafeInteger(quantity) || quantity < 0 || quantity > 99) {
+      throw new Error("Invalid demo quantity update");
+    }
+    const next = read().map(function (line) {
+      return { concept_id: line.concept_id, quantity: line.quantity };
+    }).filter(function (line) { return line.concept_id !== conceptId; });
+    if (quantity > 0) next.push({ concept_id: conceptId, quantity: quantity });
+    return write(next);
+  }
   function clear() {
     root.sessionStorage.removeItem(KEY);
   }
   root.EchoesMarketplaceDemoSelection = Object.freeze({
-    read: read, add: add, clear: clear
+    read: read, add: add, setQuantity: setQuantity, clear: clear
   });
 })(window);
