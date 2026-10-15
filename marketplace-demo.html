@@ -53,7 +53,7 @@ const demoLanguage=new URLSearchParams(location.search).get("lang")==="tr"?"tr":
 let demoStrings={};
 const tr=(key,english,values={})=>{
  const raw=demoStrings[key]||english;
- return raw.replace(/\\{(\\w+)\\}/g,(all,name)=>values[name]===undefined?all:String(values[name]));
+ return raw.replace(/\{(\w+)\}/g,(all,name)=>values[name]===undefined?all:String(values[name]));
 };
 function applyDemoLanguage(){
  document.documentElement.lang=demoLanguage;
@@ -61,6 +61,7 @@ function applyDemoLanguage(){
   const key=el.getAttribute("data-demo-i18n");
   if(demoStrings[key])el.textContent=demoStrings[key];
  });
+ translateDynamic();
 }
 if(demoLanguage==="tr"){
  fetch("locales/tr/pages/marketplace-demo.json",{cache:"no-store"})
@@ -69,8 +70,23 @@ if(demoLanguage==="tr"){
  .catch(error=>console.warn("Demo language fallback:",error.message));
 }
 let products=[],cart=null,order=null;
+function translateDynamic(){
+ if(!products.length)return;
+ document.querySelectorAll("#products .product").forEach(row=>{
+  const title=row.querySelector("strong")?.textContent||"";
+  const price=row.querySelector("small");if(price)price.textContent=price.textContent.split(" · ")[0]+" · "+tr("conceptOnly","Concept only");
+  const input=row.querySelector("input");if(input)input.setAttribute("aria-label",tr("quantity","Quantity for {product}",{product:title}));
+  const buttons=row.querySelectorAll("button");
+  if(buttons[0])buttons[0].setAttribute("aria-label",tr("decrease","Decrease {product}",{product:title}));
+  if(buttons[1])buttons[1].setAttribute("aria-label",tr("increase","Increase {product}",{product:title}));
+  if(buttons[2]){buttons[2].textContent=tr("remove","Remove");buttons[2].setAttribute("aria-label",tr("removeProduct","Remove {product} from demo cart",{product:title}));}
+ });
+ const empty=byId("empty-cart-products");if(empty&&empty.firstChild)empty.firstChild.textContent=tr("emptyProducts","Your demo cart is empty. Add a concept product from Merchandise to begin.");
+ const browse=empty?.querySelector("a");if(browse)browse.textContent=tr("browse","Browse Merchandise →");
+ if(order)showOrder();else if(cart)calculate();else if(byId("cart-summary").textContent==="Your demo cart is empty.")byId("cart-summary").textContent=tr("emptyCart","Your demo cart is empty.");
+}
 const money=value=>value.toLocaleString("en-US")+" EC";
-function showError(error){byId("status").textContent="Demo error: "+error.message;byId("status").classList.add("error");}
+function showError(error){byId("status").textContent=tr("demoError","Demo error: {error}",{error:error.message});byId("status").classList.add("error");}
 function controls(){
  byId("confirm").disabled=!order||order.status!=="created";
  byId("fulfill").disabled=!order||order.status!=="confirmed";
@@ -80,7 +96,7 @@ function controls(){
 function showOrder(){
  if(!order)return;
  byId("status").classList.remove("error");
- byId("status").textContent="ID: "+order.order_id+"\nStatus: "+order.status+"\nTotal: "+money(order.total_ec)+"\nPayment: not applicable\nHistory: "+order.history.map(x=>x.to).join(" → ");
+ byId("status").textContent=tr("id","ID")+": "+order.order_id+"\n"+tr("status","Status")+": "+tr(order.status,order.status)+"\n"+tr("orderTotal","Total: {total}",{total:money(order.total_ec)})+"\n"+tr("payment","Payment")+": "+tr("paymentNA","not applicable")+"\n"+tr("history","History")+": "+order.history.map(x=>tr(x.to,x.to)).join(" → ");
  controls();
 }
 function selection(){
@@ -115,20 +131,20 @@ function quantityChanged(){
  refreshVisibleProducts();
 }
 function calculate(){
- cart=null;byId("total").textContent="0 EC";byId("cart-summary").textContent="Your demo cart is empty.";byId("create").disabled=true;
+ cart=null;byId("total").textContent="0 EC";byId("cart-summary").textContent=tr("emptyCart","Your demo cart is empty.");byId("create").disabled=true;
  if(order)return;
  try{
   const lines=selection();
-  if(!lines.length){byId("status").textContent="Select at least one product.";return;}
+  if(!lines.length){byId("status").textContent=tr("selectProduct","Select at least one product.");return;}
   cart=window.EchoesMarketplaceDemoCart.calculate(products,lines);
   byId("total").textContent=money(cart.total_ec);
   const productById=new Map(products.map(p=>[p.product_id,p]));
-  byId("cart-summary").textContent="Review your demo order:\n"+lines.map(line=>{
+  byId("cart-summary").textContent=tr("review","Review your demo order:")+"\n"+lines.map(line=>{
    const product=productById.get(line.product_id);
    return product.title+" × "+line.quantity+" — "+money(product.price_ec*line.quantity);
-  }).join("\n")+"\nTotal: "+money(cart.total_ec);
+  }).join("\n")+"\n"+tr("orderTotal","Total: {total}",{total:money(cart.total_ec)});
   byId("status").classList.remove("error");
-  byId("status").textContent="Demo cart calculated. No order created.";
+  byId("status").textContent=tr("calculated","Demo cart calculated. No order created.");
  }catch(error){showError(error);}
  controls();
 }
@@ -161,16 +177,16 @@ window.EchoesMarketplaceDemoCatalog.load().then(function(items){
  for(const product of products){
   const row=document.createElement("div");row.className="product";
   const info=document.createElement("div"),title=document.createElement("strong"),price=document.createElement("small");
-  title.textContent=product.title;price.textContent=money(product.price_ec)+" · Concept only";
+  title.textContent=product.title;price.textContent=money(product.price_ec)+" · "+tr("conceptOnly","Concept only");
   info.append(title,price);
-  const input=document.createElement("input");input.type="number";input.min="0";input.max="99";input.step="1";input.value="0";input.id="qty-"+product.concept_id;input.setAttribute("aria-label","Quantity for "+product.title);
+  const input=document.createElement("input");input.type="number";input.min="0";input.max="99";input.step="1";input.value="0";input.id="qty-"+product.concept_id;input.setAttribute("aria-label",tr("quantity","Quantity for {product}",{product:product.title}));
   const controlsRow=document.createElement("div");controlsRow.className="qty-controls";
   const minus=document.createElement("button"),plus=document.createElement("button"),remove=document.createElement("button");
   minus.type=plus.type=remove.type="button";
-  minus.textContent="−";plus.textContent="+";remove.textContent="Remove";remove.className="remove";
-  minus.setAttribute("aria-label","Decrease "+product.title);
-  plus.setAttribute("aria-label","Increase "+product.title);
-  remove.setAttribute("aria-label","Remove "+product.title+" from demo cart");
+  minus.textContent="−";plus.textContent="+";remove.textContent=tr("remove","Remove");remove.className="remove";
+  minus.setAttribute("aria-label",tr("decrease","Decrease {product}",{product:product.title}));
+  plus.setAttribute("aria-label",tr("increase","Increase {product}",{product:product.title}));
+  remove.setAttribute("aria-label",tr("removeProduct","Remove {product} from demo cart",{product:product.title}));
   function setQuantity(n){if(order)return;input.value=String(Math.max(0,Math.min(99,n)));quantityChanged();}
   minus.addEventListener("click",()=>setQuantity(Number(input.value)-1));
   plus.addEventListener("click",()=>setQuantity(Number(input.value)+1));
@@ -185,8 +201,8 @@ window.EchoesMarketplaceDemoCatalog.load().then(function(items){
  }
  const empty=document.createElement("p");
  empty.id="empty-cart-products";empty.className="muted";empty.hidden=true;
- empty.textContent="Your demo cart is empty. Add a concept product from Merchandise to begin.";
- const browse=document.createElement("a");browse.href="merchandise.html";browse.textContent="Browse Merchandise →";
+ empty.textContent=tr("emptyProducts","Your demo cart is empty. Add a concept product from Merchandise to begin.");
+ const browse=document.createElement("a");browse.href="merchandise.html";browse.textContent=tr("browse","Browse Merchandise →");
  empty.append(document.createElement("br"),browse);parent.append(empty);
  const saved = window.EchoesMarketplaceDemoSelection.read();
  if(saved.length){
@@ -200,7 +216,7 @@ window.EchoesMarketplaceDemoCatalog.load().then(function(items){
    accepted++;
   });
   if(accepted){
-   byId("status").textContent="Imported "+accepted+" product selection(s) from Merchandise. Review quantities before creating a demo order.";
+   byId("status").textContent=tr("imported","Imported {count} product selection(s) from Merchandise. Review quantities before creating a demo order.",{count:accepted});
    calculate();
   }
  }
