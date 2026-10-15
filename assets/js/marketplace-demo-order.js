@@ -60,15 +60,34 @@
     });
   }
 
+  function validHistory(order) {
+    if (!Array.isArray(order.history) || order.history.length < 1 ||
+        order.history.length > 3) return false;
+    let previous = null;
+    for (let i = 0; i < order.history.length; i++) {
+      const entry = order.history[i];
+      if (!entry || typeof entry !== "object" ||
+          !Object.prototype.hasOwnProperty.call(entry, "from") ||
+          !Object.prototype.hasOwnProperty.call(entry, "to")) return false;
+      if (i === 0) {
+        if (entry.from !== null || entry.to !== "created") return false;
+      } else {
+        if (entry.from !== previous ||
+            !Object.prototype.hasOwnProperty.call(TRANSITIONS, previous) ||
+            !TRANSITIONS[previous].includes(entry.to)) return false;
+      }
+      previous = entry.to;
+    }
+    return previous === order.status;
+  }
+
   function transition(order, nextStatus) {
     if (!order || order.mode !== "synthetic_demo" ||
         order.checkout_enabled !== false || order.payment_status !== "not_applicable" ||
         !ID.test(order.order_id || "") ||
         !Object.prototype.hasOwnProperty.call(TRANSITIONS, order.status) ||
         !TRANSITIONS[order.status].includes(nextStatus) ||
-        !Array.isArray(order.history) || order.history.length < 1 ||
-        !order.history[order.history.length - 1] ||
-        order.history[order.history.length - 1].to !== order.status ||
+        !validHistory(order) ||
         !validCart({
           mode: order.mode, currency: order.currency,
           checkout_enabled: order.checkout_enabled,
