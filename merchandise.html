@@ -97,6 +97,15 @@
           status.setAttribute("role", "status");
           status.setAttribute("aria-live", "polite");
           status.style.cssText = "margin:10px 0 0;font-size:.85rem;color:#c5e8e3";
+          const existing = document.createElement("p");
+          existing.style.cssText = "margin:10px 0;color:#a4e7df;font-size:.9rem";
+          function refreshExisting() {
+            const line = selection.read().find(function (item) { return item.concept_id === entry.concept_id; });
+            existing.textContent = line ? "Already in demo cart: " + line.quantity : "Not yet in demo cart";
+          }
+          const opener = card.querySelector(".echoes-tee-open");
+          if (opener) opener.addEventListener("click", refreshExisting);
+          refreshExisting();
           const goToCart = document.createElement("a");
           goToCart.href = "marketplace-demo.html";
           goToCart.textContent = "View demo cart →";
@@ -109,11 +118,12 @@
               const total = lines.reduce(function (sum, line) { return sum + line.quantity; }, 0);
               status.textContent = "Added to demo cart. Items: " + total + ". No order or payment created.";
               goToCart.hidden = false;
+              refreshExisting();
             } catch (error) {
               status.textContent = "Demo cart unavailable. Please try again.";
             }
           });
-          area.append(label, quantityRow, button, status, goToCart);
+          area.append(label, existing, quantityRow, button, status, goToCart);
           inside.appendChild(area);
         });
       } catch (error) {
