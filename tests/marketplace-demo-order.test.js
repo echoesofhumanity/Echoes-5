@@ -129,4 +129,37 @@ reject("end-to-end cannot checkout an unpublished concept", () => {
   ]);
   api.create(selectedCart, "DEMO-E2E003");
 });
+pass("created to cancelled history stays consistent", () => {
+  const cancelled = api.transition(created, "cancelled");
+  assert.deepEqual(Array.from(cancelled.history, entry => [entry.from, entry.to]), [
+    [null, "created"], ["created", "cancelled"]
+  ]);
+  assert.equal(cancelled.total_ec, created.total_ec);
+  assert.equal(cancelled.currency, "EC");
+  assert.equal(cancelled.payment_status, "not_applicable");
+  assert.equal(created.history.length, 1);
+});
+pass("confirmed to cancelled history stays consistent", () => {
+  const confirmed = api.transition(created, "confirmed");
+  const cancelled = api.transition(confirmed, "cancelled");
+  assert.deepEqual(Array.from(cancelled.history, entry => [entry.from, entry.to]), [
+    [null, "created"], ["created", "confirmed"], ["confirmed", "cancelled"]
+  ]);
+  assert.equal(cancelled.total_ec, created.total_ec);
+  assert.equal(confirmed.status, "confirmed");
+});
+pass("fulfilled order history and financial snapshot stay consistent", () => {
+  const confirmed = api.transition(created, "confirmed");
+  const fulfilled = api.transition(confirmed, "fulfilled");
+  assert.deepEqual(Array.from(fulfilled.history, entry => [entry.from, entry.to]), [
+    [null, "created"], ["created", "confirmed"], ["confirmed", "fulfilled"]
+  ]);
+  assert.equal(fulfilled.total_ec, created.total_ec);
+  assert.deepEqual(Array.from(fulfilled.lines, line => line.subtotal_ec),
+    Array.from(created.lines, line => line.subtotal_ec));
+  assert.equal(fulfilled.payment_status, "not_applicable");
+  assert.equal(fulfilled.checkout_enabled, false);
+  assert.equal(Object.isFrozen(fulfilled.history), true);
+  assert.equal(Object.isFrozen(fulfilled.history[2]), true);
+});
 console.log("All " + count + " synthetic order tests passed.");
