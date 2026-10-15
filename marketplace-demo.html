@@ -124,7 +124,17 @@ byId("create").addEventListener("click",function(){
  }catch(error){showError(error);}
 });
 for(const [button,state] of [["confirm","confirmed"],["fulfill","fulfilled"],["cancel","cancelled"]]){
- byId(button).addEventListener("click",function(){try{order=window.EchoesMarketplaceDemoOrder.transition(order,state);showOrder();}catch(error){showError(error);}});
+ byId(button).addEventListener("click",function(){try{
+  order=window.EchoesMarketplaceDemoOrder.transition(order,state);
+  showOrder();
+  if(state==="cancelled"){
+   // Keep the cancelled order summary visible, but release the editable demo cart.
+   order=null;
+   document.querySelectorAll("input, .qty-controls button").forEach(input=>input.disabled=false);
+   refreshVisibleProducts();
+   controls();
+  }
+ }catch(error){showError(error);}});
 }
 window.EchoesMarketplaceDemoCatalog.load().then(function(items){
  products=items;
