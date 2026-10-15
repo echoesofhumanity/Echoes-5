@@ -67,6 +67,27 @@ reject("reject forged history ending in wrong status", () => api.transition({ ..
 reject("reject empty history", () => api.transition({ ...created, history: [] }, "confirmed"));
 reject("reject history with no final entry", () => api.transition({ ...created, history: [null] }, "confirmed"));
 
+reject("reject forged intermediate history transition", () => {
+  const confirmed = api.transition(created, "confirmed");
+  const forged = { ...confirmed, history: [
+    { from: null, to: "created" },
+    { from: "cancelled", to: "confirmed" }
+  ] };
+  api.transition(forged, "fulfilled");
+});
+reject("reject missing initial created history", () => {
+  const confirmed = api.transition(created, "confirmed");
+  api.transition({ ...confirmed, history: [
+    { from: null, to: "confirmed" }
+  ] }, "fulfilled");
+});
+reject("reject history containing a null intermediate entry", () => {
+  const confirmed = api.transition(created, "confirmed");
+  api.transition({ ...confirmed, history: [
+    null, { from: "created", to: "confirmed" }
+  ] }, "fulfilled");
+});
+
 pass("end-to-end catalogue to fulfilled synthetic order", () => {
   const selected = context.window.EchoesMarketplaceDemoCatalog.validate(catalog);
   const selectedCart = context.window.EchoesMarketplaceDemoCart.calculate(selected, [
