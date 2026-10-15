@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'marketplace-demo.html'
       - 'assets/data/marketplace-demo-catalog.json'
       - 'assets/js/marketplace-demo-*.js'
       - 'tests/marketplace-demo-*.test.js'
