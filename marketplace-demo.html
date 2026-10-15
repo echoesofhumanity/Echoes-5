@@ -12,7 +12,7 @@ h1{font-size:clamp(2rem,7vw,3.5rem);line-height:1.12;margin:15px 0 18px}h2{color
 p{line-height:1.7;color:#c1d0d2}.notice{border-left:3px solid #73d9d0;padding:12px 18px;background:#10242b;border-radius:0 12px 12px 0}
 section{margin-top:34px;border:1px solid #24444a;border-radius:20px;padding:clamp(18px,5vw,30px);background:linear-gradient(145deg,#10262d,#0a1820)}
 .product{display:grid;grid-template-columns:1fr auto;gap:10px 16px;padding:16px 0;border-bottom:1px solid #28444a;align-items:center}
-.qty-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-start}.product{grid-template-columns:minmax(0,1fr)}.product>div:first-child{min-width:0}.qty-controls .remove{margin-left:auto}.qty-controls input{width:53px;text-align:center;padding:8px 3px}.qty-controls button{width:38px;min-height:44px;margin:0;padding:0}.qty-controls .remove{width:auto;padding:0 9px;font-size:.78rem;border-color:#598a8b;background:transparent}.product:last-child{border-bottom:0}.product strong{display:block}.product small{color:#acc9c9}
+.qty-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-start}.product{grid-template-columns:minmax(0,1fr)}.product>div:first-child{min-width:0}.qty-controls .remove{margin-left:auto}.qty-controls input{width:53px;text-align:center;padding:8px 3px}.qty-controls button{width:38px;min-height:44px;margin:0;padding:0}.qty-controls .remove{width:auto;padding:0 9px;font-size:.78rem;border-color:#598a8b;background:transparent}.product[hidden]{display:none}.product:last-child{border-bottom:0}.product strong{display:block}.product small{color:#acc9c9}
 input{width:76px;min-height:46px;border:1px solid #598a8b;border-radius:10px;background:#071218;color:#fff;font:inherit;padding:9px}
 button{width:100%;min-height:50px;border:1px solid #77d9d1;border-radius:12px;background:#154044;color:#eafffd;font:inherit;font-weight:650;cursor:pointer;margin-top:14px}
 button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #a3fff1;outline-offset:3px}
@@ -77,9 +77,21 @@ function persistQuantities(){
   for(let i=1;i<lines.length;i++)window.EchoesMarketplaceDemoSelection.add(lines[i].concept_id,lines[i].quantity);
  }catch(error){showError(error);}
 }
+function refreshVisibleProducts(){
+ let count=0;
+ document.querySelectorAll("#products .product").forEach(function(row){
+  const input=row.querySelector("input");
+  const visible=!!input&&Number(input.value)>0;
+  row.hidden=!visible;
+  if(visible)count++;
+ });
+ const empty=byId("empty-cart-products");
+ if(empty)empty.hidden=count>0;
+}
 function quantityChanged(){
  if(order)return;
  persistQuantities();
+ refreshVisibleProducts();
  calculate();
 }
 function calculate(){
@@ -141,6 +153,11 @@ window.EchoesMarketplaceDemoCatalog.load().then(function(items){
   controlsRow.append(minus,input,plus,remove);
   row.append(info,controlsRow);parent.append(row);
  }
+ const empty=document.createElement("p");
+ empty.id="empty-cart-products";empty.className="muted";empty.hidden=true;
+ empty.textContent="Your demo cart is empty. Add a concept product from Merchandise to begin.";
+ const browse=document.createElement("a");browse.href="merchandise.html";browse.textContent="Browse Merchandise →";
+ empty.append(document.createElement("br"),browse);parent.append(empty);
  const saved = window.EchoesMarketplaceDemoSelection.read();
  if(saved.length){
   const byConcept = new Map(products.map(p=>[p.concept_id,p]));
@@ -157,6 +174,7 @@ window.EchoesMarketplaceDemoCatalog.load().then(function(items){
    calculate();
   }
  }
+ refreshVisibleProducts();
  byId("calculate").disabled=false;
 }).catch(showError);
 })();
