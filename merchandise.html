@@ -97,16 +97,23 @@
           status.setAttribute("role", "status");
           status.setAttribute("aria-live", "polite");
           status.style.cssText = "margin:10px 0 0;font-size:.85rem;color:#c5e8e3";
+          const goToCart = document.createElement("a");
+          goToCart.href = "marketplace-demo.html";
+          goToCart.textContent = "View demo cart →";
+          goToCart.hidden = true;
+          goToCart.style.cssText = "display:block;margin-top:14px;padding:12px;text-align:center;border:1px solid #87dfd5;border-radius:12px;color:#b8f4ec;text-decoration:none";
+          goToCart.setAttribute("aria-label", "View demo cart in this tab");
           button.addEventListener("click", function () {
             try {
               const lines = selection.add(entry.concept_id, quantity);
               const total = lines.reduce(function (sum, line) { return sum + line.quantity; }, 0);
               status.textContent = "Added to demo cart. Items: " + total + ". No order or payment created.";
+              goToCart.hidden = false;
             } catch (error) {
               status.textContent = "Demo cart unavailable. Please try again.";
             }
           });
-          area.append(label, quantityRow, button, status);
+          area.append(label, quantityRow, button, status, goToCart);
           inside.appendChild(area);
         });
       } catch (error) {
