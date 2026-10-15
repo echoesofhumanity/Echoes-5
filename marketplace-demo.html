@@ -87,6 +87,7 @@ function refreshVisibleProducts(){
  });
  const empty=byId("empty-cart-products");
  if(empty)empty.hidden=count>0;
+ byId("calculate").disabled=count===0||!!order;
 }
 function quantityChanged(){
  if(order)return;
@@ -175,7 +176,6 @@ window.EchoesMarketplaceDemoCatalog.load().then(function(items){
   }
  }
  refreshVisibleProducts();
- byId("calculate").disabled=false;
 }).catch(showError);
 })();
 </script>
