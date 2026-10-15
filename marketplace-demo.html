@@ -29,6 +29,7 @@ button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-v
 </header>
 <section aria-labelledby="products-heading"><h2 id="products-heading">Concept products</h2><div id="products" aria-live="polite">Loading synthetic catalogue…</div></section>
 <section aria-labelledby="cart-heading"><h2 id="cart-heading">Synthetic cart</h2>
+<div id="cart-summary" class="status" aria-live="polite">Your demo cart is empty.</div>
 <div class="total"><span>EC total</span><strong id="total">0 EC</strong></div>
 <button id="calculate" type="button" disabled>Calculate demo cart</button>
 <button id="create" type="button" disabled>Create synthetic order</button>
@@ -82,13 +83,18 @@ function quantityChanged(){
  calculate();
 }
 function calculate(){
- cart=null;byId("total").textContent="0 EC";byId("create").disabled=true;
+ cart=null;byId("total").textContent="0 EC";byId("cart-summary").textContent="Your demo cart is empty.";byId("create").disabled=true;
  if(order)return;
  try{
   const lines=selection();
   if(!lines.length){byId("status").textContent="Select at least one product.";return;}
   cart=window.EchoesMarketplaceDemoCart.calculate(products,lines);
   byId("total").textContent=money(cart.total_ec);
+  const productById=new Map(products.map(p=>[p.product_id,p]));
+  byId("cart-summary").textContent="Review your demo order:\n"+lines.map(line=>{
+   const product=productById.get(line.product_id);
+   return product.title+" × "+line.quantity+" — "+money(product.price_ec*line.quantity);
+  }).join("\n")+"\nTotal: "+money(cart.total_ec);
   byId("status").classList.remove("error");
   byId("status").textContent="Demo cart calculated. No order created.";
  }catch(error){showError(error);}
