@@ -162,4 +162,27 @@ pass("fulfilled order history and financial snapshot stay consistent", () => {
   assert.equal(Object.isFrozen(fulfilled.history), true);
   assert.equal(Object.isFrozen(fulfilled.history[2]), true);
 });
+reject("reject tampered quantity during confirmation", () => {
+  const lines = Array.from(created.lines, line => ({ ...line }));
+  lines[0].quantity += 1;
+  api.transition({ ...created, lines }, "confirmed");
+});
+reject("reject tampered unit price during confirmation", () => {
+  const lines = Array.from(created.lines, line => ({ ...line }));
+  lines[0].unit_price_ec += 1;
+  api.transition({ ...created, lines }, "confirmed");
+});
+reject("reject tampered subtotal during confirmation", () => {
+  const lines = Array.from(created.lines, line => ({ ...line }));
+  lines[0].subtotal_ec += 1;
+  api.transition({ ...created, lines }, "confirmed");
+});
+reject("reject tampered order total during fulfillment", () => {
+  const confirmed = api.transition(created, "confirmed");
+  api.transition({ ...confirmed, total_ec: confirmed.total_ec + 1 }, "fulfilled");
+});
+reject("reject duplicate product lines during fulfillment", () => {
+  const confirmed = api.transition(created, "confirmed");
+  api.transition({ ...confirmed, lines: [confirmed.lines[0], confirmed.lines[0]] }, "fulfilled");
+});
 console.log("All " + count + " synthetic order tests passed.");
