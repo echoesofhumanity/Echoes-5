@@ -67,6 +67,7 @@
         !Object.prototype.hasOwnProperty.call(TRANSITIONS, order.status) ||
         !TRANSITIONS[order.status].includes(nextStatus) ||
         !Array.isArray(order.history) || order.history.length < 1 ||
+        !order.history[order.history.length - 1] ||
         order.history[order.history.length - 1].to !== order.status ||
         !validCart({
           mode: order.mode, currency: order.currency,
