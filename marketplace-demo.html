@@ -7,7 +7,7 @@
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#071218;color:#f0f7f6}
 *{box-sizing:border-box}body{margin:0}main{width:min(100% - 32px,780px);margin:0 auto;padding:44px 0 90px}
-a{color:#9debe4}header{margin-bottom:36px}.eyebrow{color:#74d9d2;letter-spacing:.2em;text-transform:uppercase;font-size:.76rem}
+a{color:#9debe4}header{margin-bottom:36px}.demo-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:32px}.demo-language{position:relative}.demo-language summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;border:1px solid #35666b;border-radius:999px;background:#10282e;color:#a1ebe3;padding:11px 15px;min-height:44px;font-weight:600}.demo-language summary::-webkit-details-marker{display:none}.demo-language summary:after{content:"⌄";font-size:1.1em}.demo-language[open] summary:after{content:"⌃"}.demo-language-menu{position:absolute;right:0;top:calc(100% + 7px);min-width:155px;background:#10282e;border:1px solid #35666b;border-radius:12px;padding:6px;z-index:5;box-shadow:0 12px 28px #0008}.demo-language-menu a{display:block;padding:11px;border-radius:8px;text-decoration:none}.demo-language-menu a[aria-current="page"]{background:#19464a;color:#fff;font-weight:700}.demo-back{font-size:.92rem;text-decoration:none}.demo-back:hover,.demo-language-menu a:hover{text-decoration:underline}@media(max-width:420px){.demo-topbar{align-items:flex-start}.demo-back{min-height:44px;display:inline-flex;align-items:center}}.eyebrow{color:#74d9d2;letter-spacing:.2em;text-transform:uppercase;font-size:.76rem}
 h1{font-size:clamp(2rem,7vw,3.5rem);line-height:1.12;margin:15px 0 18px}h2{color:#8ce8df;font-size:1.35rem;margin:0 0 20px}
 p{line-height:1.7;color:#c1d0d2}.notice{border-left:3px solid #73d9d0;padding:12px 18px;background:#10242b;border-radius:0 12px 12px 0}
 section{margin-top:34px;border:1px solid #24444a;border-radius:20px;padding:clamp(18px,5vw,30px);background:linear-gradient(145deg,#10262d,#0a1820)}
@@ -23,7 +23,7 @@ button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-v
 </head>
 <body>
 <main>
-<header><nav aria-label="Demo language"><a href="?lang=en">English</a> · <a href="?lang=tr">Türkçe</a></nav><p><a href="marketplace.html" data-demo-i18n="back">← Back to Marketplace</a></p><div class="eyebrow" style="margin-top:32px" data-demo-i18n="eyebrow">Echoes of Humanity · Isolated Test</div>
+<header><div class="demo-topbar"><a class="demo-back" href="marketplace.html" data-demo-i18n="back">← Back to Marketplace</a><details class="demo-language"><summary id="demo-language-current" aria-label="Select language">English</summary><nav class="demo-language-menu" aria-label="Demo language"><a href="?lang=en" data-demo-language="en">English</a><a href="?lang=tr" data-demo-language="tr">Türkçe</a></nav></details></div><div class="eyebrow" style="margin-top:32px" data-demo-i18n="eyebrow">Echoes of Humanity · Isolated Test</div>
 <h1 data-demo-i18n="title">Marketplace Synthetic Demo</h1>
 <p class="notice"><strong data-demo-i18n="noticeStrong">DEMO ONLY — NO REAL PURCHASES.</strong> <span data-demo-i18n="notice">Products are concepts. No payment, EC transfer, customer data, stock reservation, or real orders. All order states exist only in this browser tab and disappear when it is closed.</span></p>
 </header>
@@ -51,6 +51,8 @@ button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-v
 const byId=id=>document.getElementById(id);
 const demoLanguage=new URLSearchParams(location.search).get("lang")==="tr"?"tr":"en";
 let demoStrings={};
+document.getElementById("demo-language-current").textContent=demoLanguage==="tr"?"Türkçe":"English";
+document.querySelectorAll("[data-demo-language]").forEach(link=>{if(link.getAttribute("data-demo-language")===demoLanguage)link.setAttribute("aria-current","page");});
 const tr=(key,english,values={})=>{
  const raw=demoStrings[key]||english;
  return raw.replace(/\{(\w+)\}/g,(all,name)=>values[name]===undefined?all:String(values[name]));
