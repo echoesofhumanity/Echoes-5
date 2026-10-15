@@ -63,6 +63,10 @@ reject("reject non-EC currency during order transition", () => api.transition({ 
 reject("reject forged payment state", () => api.transition({ ...created, payment_status: "paid" }, "confirmed"));
 reject("reject forged checkout state", () => api.transition({ ...created, checkout_enabled: true }, "confirmed"));
 reject("reject history/status mismatch", () => api.transition({ ...created, status: "confirmed" }, "fulfilled"));
+reject("reject forged history ending in wrong status", () => api.transition({ ...created, history: [{ from: null, to: "confirmed" }] }, "confirmed"));
+reject("reject empty history", () => api.transition({ ...created, history: [] }, "confirmed"));
+reject("reject history with no final entry", () => api.transition({ ...created, history: [null] }, "confirmed"));
+
 pass("end-to-end catalogue to fulfilled synthetic order", () => {
   const selected = context.window.EchoesMarketplaceDemoCatalog.validate(catalog);
   const selectedCart = context.window.EchoesMarketplaceDemoCart.calculate(selected, [
