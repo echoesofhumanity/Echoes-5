@@ -12,7 +12,7 @@ h1{font-size:clamp(2rem,7vw,3.5rem);line-height:1.12;margin:15px 0 18px}h2{color
 p{line-height:1.7;color:#c1d0d2}.notice{border-left:3px solid #73d9d0;padding:12px 18px;background:#10242b;border-radius:0 12px 12px 0}
 section{margin-top:34px;border:1px solid #24444a;border-radius:20px;padding:clamp(18px,5vw,30px);background:linear-gradient(145deg,#10262d,#0a1820)}
 .product{display:grid;grid-template-columns:1fr auto;gap:10px 16px;padding:16px 0;border-bottom:1px solid #28444a;align-items:center}
-.product:last-child{border-bottom:0}.product strong{display:block}.product small{color:#acc9c9}
+.qty-controls{display:flex;align-items:center;gap:7px}.qty-controls input{width:53px;text-align:center;padding:8px 3px}.qty-controls button{width:38px;min-height:44px;margin:0;padding:0}.qty-controls .remove{width:auto;padding:0 9px;font-size:.78rem;border-color:#598a8b;background:transparent}.product:last-child{border-bottom:0}.product strong{display:block}.product small{color:#acc9c9}
 input{width:76px;min-height:46px;border:1px solid #598a8b;border-radius:10px;background:#071218;color:#fff;font:inherit;padding:9px}
 button{width:100%;min-height:50px;border:1px solid #77d9d1;border-radius:12px;background:#154044;color:#eafffd;font:inherit;font-weight:650;cursor:pointer;margin-top:14px}
 button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #a3fff1;outline-offset:3px}
@@ -67,6 +67,20 @@ function selection(){
  return products.map(p=>({product_id:p.product_id,quantity:Number(byId("qty-"+p.concept_id).value)}))
  .filter(x=>x.quantity!==0);
 }
+function persistQuantities(){
+ if(order)return;
+ try{
+  const lines=products.map(p=>({concept_id:p.concept_id,quantity:Number(byId("qty-"+p.concept_id).value)})).filter(x=>x.quantity>0);
+  window.EchoesMarketplaceDemoSelection.clear();
+  if(lines.length)window.EchoesMarketplaceDemoSelection.add(lines[0].concept_id,lines[0].quantity);
+  for(let i=1;i<lines.length;i++)window.EchoesMarketplaceDemoSelection.add(lines[i].concept_id,lines[i].quantity);
+ }catch(error){showError(error);}
+}
+function quantityChanged(){
+ if(order)return;
+ persistQuantities();
+ calculate();
+}
 function calculate(){
  cart=null;byId("total").textContent="0 EC";byId("create").disabled=true;
  if(order)return;
@@ -87,7 +101,7 @@ byId("create").addEventListener("click",function(){
   const id="DEMO-"+Array.from(crypto.getRandomValues(new Uint8Array(8)),b=>b.toString(16).padStart(2,"0")).join("").toUpperCase();
   order=window.EchoesMarketplaceDemoOrder.create(cart,id);showOrder();
   byId("calculate").disabled=true;
-  document.querySelectorAll("input").forEach(input=>input.disabled=true);
+  document.querySelectorAll("input, .qty-controls button").forEach(input=>input.disabled=true);
  }catch(error){showError(error);}
 });
 for(const [button,state] of [["confirm","confirmed"],["fulfill","fulfilled"],["cancel","cancelled"]]){
@@ -102,8 +116,24 @@ window.EchoesMarketplaceDemoCatalog.load().then(function(items){
   title.textContent=product.title;price.textContent=money(product.price_ec)+" · Concept only";
   info.append(title,price);
   const input=document.createElement("input");input.type="number";input.min="0";input.max="99";input.step="1";input.value="0";input.id="qty-"+product.concept_id;input.setAttribute("aria-label","Quantity for "+product.title);
-  input.addEventListener("input",function(){cart=null;byId("total").textContent="0 EC";controls();});
-  row.append(info,input);parent.append(row);
+  const controlsRow=document.createElement("div");controlsRow.className="qty-controls";
+  const minus=document.createElement("button"),plus=document.createElement("button"),remove=document.createElement("button");
+  minus.type=plus.type=remove.type="button";
+  minus.textContent="−";plus.textContent="+";remove.textContent="Remove";remove.className="remove";
+  minus.setAttribute("aria-label","Decrease "+product.title);
+  plus.setAttribute("aria-label","Increase "+product.title);
+  remove.setAttribute("aria-label","Remove "+product.title+" from demo cart");
+  function setQuantity(n){if(order)return;input.value=String(Math.max(0,Math.min(99,n)));quantityChanged();}
+  minus.addEventListener("click",()=>setQuantity(Number(input.value)-1));
+  plus.addEventListener("click",()=>setQuantity(Number(input.value)+1));
+  remove.addEventListener("click",()=>setQuantity(0));
+  input.addEventListener("change",function(){
+   const n=Number(input.value);
+   if(!Number.isSafeInteger(n)||n<0||n>99){input.value="0";}
+   quantityChanged();
+  });
+  controlsRow.append(minus,input,plus,remove);
+  row.append(info,controlsRow);parent.append(row);
  }
  const saved = window.EchoesMarketplaceDemoSelection.read();
  if(saved.length){
