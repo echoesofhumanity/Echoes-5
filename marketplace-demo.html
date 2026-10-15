@@ -61,6 +61,14 @@ function applyDemoLanguage(){
  document.documentElement.lang=demoLanguage;
  document.querySelectorAll("[data-demo-i18n]").forEach(el=>{
   const key=el.getAttribute("data-demo-i18n");
+  // Dynamic containers are owned by the catalogue/cart/order renderers.
+  // Replacing their textContent after async translation would erase loaded products.
+  if(["loading","emptyCart","noOrder"].includes(key)){
+   if(key==="loading"&&!products.length&&el.textContent.trim()==="Loading synthetic catalogue…")el.textContent=demoStrings[key]||el.textContent;
+   if(key==="emptyCart"&&!cart&&!order)el.textContent=demoStrings[key]||el.textContent;
+   if(key==="noOrder"&&!order&&el.textContent.trim()==="No synthetic order yet.")el.textContent=demoStrings[key]||el.textContent;
+   return;
+  }
   if(demoStrings[key])el.textContent=demoStrings[key];
  });
  translateDynamic();
