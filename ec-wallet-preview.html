@@ -6,15 +6,44 @@
 <title>EC Wallet Preview — Echoes of Humanity</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#071218;color:#effaf9}*{box-sizing:border-box}body{margin:0}main{max-width:720px;margin:auto;padding:18px 16px 40px}a{color:#9eece5}header{padding:8px 0 0}h1{font-size:clamp(1.65rem,6vw,2.25rem);margin:8px 0 12px}h2{font-size:1rem;color:#89e4db;margin:0 0 10px}p{line-height:1.45;color:#bcd0d0;margin:8px 0}.eyebrow{color:#7de2d8;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase}.notice{padding:10px 12px;border-left:3px solid #85e3d9;background:#10272e;border-radius:0 9px 9px 0;font-size:.82rem}section{margin-top:12px;padding:16px;border:1px solid #31565c;border-radius:16px;background:linear-gradient(140deg,#112b32,#0a1a22)}.balance{font-size:2rem;font-weight:750;margin:3px 0}.muted{color:#a9c3c4;font-size:.8rem}.row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #2c4a50;font-size:.85rem}.row:last-child{border-bottom:0}.tag{color:#8be6dd;font-weight:650;text-align:right}.action{display:block;text-align:center;text-decoration:none;margin-top:12px;padding:11px;border:1px solid #78d9d0;border-radius:10px;background:#123e43;color:#eafffd;font-weight:700;font-size:.88rem}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.disabled{display:flex;align-items:center;justify-content:center;min-height:44px;padding:9px 6px;text-align:center;border:1px solid #456167;border-radius:10px;color:#9db6b9;background:#17272c;font-size:.82rem}.rules{margin-top:12px}.rules summary{cursor:pointer;color:#89e4db;font-weight:650;min-height:36px;display:flex;align-items:center}.rules summary:after{content:"⌄";margin-left:auto}.rules[open] summary:after{content:"⌃"}.rules .muted{margin-top:10px}a:focus-visible,summary:focus-visible{outline:3px solid #b0fff5;outline-offset:3px}@media(max-width:350px){.actions{grid-template-columns:1fr}}
-</style>
+button[hidden]{display:none!important}button:focus-visible{outline:3px solid #b0fff5;outline-offset:3px}</style>
 </head>
 <body>
 <main>
-<header><a href="marketplace.html">← Marketplace</a><div class="eyebrow" style="margin-top:16px">Echoes of Humanity · EC Economy</div><h1>EC Wallet</h1><p class="notice"><strong>PREVIEW ONLY — NO REAL BALANCE OR PAYMENT.</strong> No account or payment connection; no EC is issued or transferred.</p></header>
-<section aria-labelledby="balance-title"><h2 id="balance-title">Your EC wallet</h2><div class="balance" aria-label="Balance unavailable">— EC</div><p class="muted">Balance unavailable · Secure account not connected.</p><div class="actions"><div class="disabled" aria-disabled="true">Add EC · Unavailable</div><div class="disabled" aria-disabled="true">Pay with EC · Unavailable</div></div></section>
+<header><a href="marketplace.html">← Marketplace</a><div class="eyebrow" style="margin-top:16px">Echoes of Humanity · EC Economy</div><h1>EC Wallet</h1><p class="notice"><strong>PREVIEW ONLY — NO REAL BALANCE OR PAYMENT.</strong> Staging wallet read-only. No EC purchases, top-ups or transfers.</p></header>
+<section aria-labelledby="balance-title"><h2 id="balance-title">Your EC wallet</h2><div id="wallet-balance" class="balance" aria-label="Balance unavailable">— EC</div><p id="wallet-status" class="muted" role="status" aria-live="polite">Sign in to the staging account to view your EC balance.</p><div id="wallet-auth" class="actions"><button id="wallet-signin" type="button" class="disabled" style="cursor:pointer;width:100%">Sign in (test)</button><button id="wallet-signout" type="button" class="disabled" style="cursor:pointer;width:100%" hidden>Sign out</button></div><div class="actions"><div class="disabled" aria-disabled="true">Add EC · Unavailable</div><div class="disabled" aria-disabled="true">Pay with EC · Unavailable</div></div></section>
 <section aria-labelledby="activity-title"><h2 id="activity-title">Transaction history</h2><p class="muted">No account connected. No transactions to display.</p></section>
 <details class="rules"><summary>EC usage &amp; safety information</summary><div class="row"><span>Use</span><span class="tag">Inside Echoes portal only</span></div><div class="row"><span>Outside transfer</span><span class="tag">Not supported</span></div><div class="row"><span>Balance authority</span><span class="tag">Secure server ledger</span></div><p class="muted">Seller payouts, refunds and purchases require verified payment and legal integrations before activation.</p></details>
 <a class="action" href="marketplace-demo.html">Explore synthetic Marketplace demo →</a>
 </main>
+<script type="module">
+import {createClient} from "https://esm.sh/@supabase/supabase-js@2";
+const client=createClient("https://ymxpbkviadypsvahrqwt.supabase.co","sb_publishable_LNOf9EzOZl4Uk5LAyOTA0Q_unhclrGd",{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+const balance=document.getElementById("wallet-balance"),status=document.getElementById("wallet-status"),signin=document.getElementById("wallet-signin"),signout=document.getElementById("wallet-signout");
+let session=null;
+async function refresh(){
+ balance.textContent="— EC";
+ if(!session){status.textContent="Not signed in. No balance available.";signin.hidden=false;signout.hidden=true;return;}
+ signin.hidden=true;signout.hidden=false;status.textContent="Checking staging wallet…";
+ const {data,error}=await client.rpc("ec_wallet_snapshot");
+ if(error){status.textContent="Balance unavailable. Secure wallet connection could not be verified.";return;}
+ const entry=Array.isArray(data)?data[0]:null;
+ if(!entry||!Number.isSafeInteger(entry.balance_ec)){status.textContent="Wallet balance unavailable.";return;}
+ balance.textContent=entry.balance_ec.toLocaleString("en-US")+" EC";
+ status.textContent="Staging balance · "+new Date(entry.as_of).toLocaleString();
+}
+signin.addEventListener("click",async()=>{
+ const email=window.prompt("Staging test account email:");
+ if(!email)return;
+ const password=window.prompt("Staging test account password (test account only):");
+ if(!password)return;
+ status.textContent="Signing in to staging…";
+ const {data,error}=await client.auth.signInWithPassword({email:email.trim(),password});
+ if(error){status.textContent="Sign-in failed. Check your staging test credentials.";return;}
+ session=data.session;await refresh();
+});
+signout.addEventListener("click",async()=>{await client.auth.signOut();session=null;await refresh();});
+refresh();
+</script>
 </body>
 </html>
