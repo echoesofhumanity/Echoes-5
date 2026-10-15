@@ -23,7 +23,7 @@ button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-v
 </head>
 <body>
 <main>
-<header><div class="demo-topbar"><a class="demo-back" href="marketplace.html" data-demo-i18n="back">← Back to Marketplace</a><details class="demo-language"><summary id="demo-language-current" aria-label="Select language">English</summary><nav class="demo-language-menu" aria-label="Demo language"><a href="?lang=en" data-demo-language="en">English</a><a href="?lang=tr" data-demo-language="tr">Türkçe</a></nav></details></div><div class="eyebrow" style="margin-top:32px" data-demo-i18n="eyebrow">Echoes of Humanity · Isolated Test</div>
+<header><div class="demo-topbar"><a class="demo-back" href="marketplace.html" data-demo-i18n="back">← Back to Marketplace</a><details class="demo-language"><summary id="demo-language-current" aria-label="Select language">English</summary><nav class="demo-language-menu" aria-label="Demo language"><a href="?lang=en" data-demo-language="en">English</a><a href="?lang=tr" data-demo-language="tr">Türkçe</a><a href="?lang=es" data-demo-language="es">Español</a></nav></details></div><div class="eyebrow" style="margin-top:32px" data-demo-i18n="eyebrow">Echoes of Humanity · Isolated Test</div>
 <h1 data-demo-i18n="title">Marketplace Synthetic Demo</h1>
 <p class="notice"><strong data-demo-i18n="noticeStrong">DEMO ONLY — NO REAL PURCHASES.</strong> <span data-demo-i18n="notice">Products are concepts. No payment, EC transfer, customer data, stock reservation, or real orders. All order states exist only in this browser tab and disappear when it is closed.</span></p>
 </header>
@@ -49,9 +49,10 @@ button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-v
 (function(){
 "use strict";
 const byId=id=>document.getElementById(id);
-const demoLanguage=new URLSearchParams(location.search).get("lang")==="tr"?"tr":"en";
+const requestedLanguage=new URLSearchParams(location.search).get("lang");
+const demoLanguage=["en","tr","es"].includes(requestedLanguage)?requestedLanguage:"en";
 let demoStrings={};
-document.getElementById("demo-language-current").textContent=demoLanguage==="tr"?"Türkçe":"English";
+document.getElementById("demo-language-current").textContent=({en:"English",tr:"Türkçe",es:"Español"})[demoLanguage];
 document.querySelectorAll("[data-demo-language]").forEach(link=>{if(link.getAttribute("data-demo-language")===demoLanguage)link.setAttribute("aria-current","page");});
 const tr=(key,english,values={})=>{
  const raw=demoStrings[key]||english;
@@ -73,8 +74,8 @@ function applyDemoLanguage(){
  });
  translateDynamic();
 }
-if(demoLanguage==="tr"){
- fetch("locales/tr/pages/marketplace-demo.json",{cache:"no-store"})
+if(demoLanguage!=="en"){
+ fetch("locales/"+demoLanguage+"/pages/marketplace-demo.json",{cache:"no-store"})
  .then(r=>{if(!r.ok)throw Error("Translation unavailable");return r.json();})
  .then(dict=>{demoStrings=dict;applyDemoLanguage();})
  .catch(error=>console.warn("Demo language fallback:",error.message));
