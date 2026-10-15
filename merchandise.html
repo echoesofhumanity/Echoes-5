@@ -18,7 +18,7 @@
   <div data-component="footer"></div>
   <script src="assets/js/layout.js"></script>
   <script src="assets/js/merchandise-catalog.js?v=92a43e3"></script>
-  <script src="assets/js/marketplace-demo-selection.js?v=6b2a6f7"></script>
+  <script src="assets/js/marketplace-demo-selection.js?v=08dfae8"></script>
   <script>
     document.addEventListener("echoes:layout-ready", async function () {
       if (!window.EchoesMerchandiseCatalog) return;
@@ -74,13 +74,13 @@
           plus.setAttribute("aria-label", "Increase demo quantity");
           function refreshQuantity() {
             amount.textContent = String(quantity);
-            minus.disabled = quantity <= 1;
+            minus.disabled = quantity <= 0;
             plus.disabled = quantity >= 99;
             minus.style.opacity = minus.disabled ? ".4" : "1";
             plus.style.opacity = plus.disabled ? ".4" : "1";
           }
           minus.addEventListener("click", function () {
-            quantity = Math.max(1, quantity - 1);
+            quantity = Math.max(0, quantity - 1);
             refreshQuantity();
           });
           plus.addEventListener("click", function () {
@@ -91,7 +91,7 @@
           quantityRow.append(minus, amount, plus);
           const button = document.createElement("button");
           button.type = "button";
-          button.textContent = "Add to demo cart";
+          button.textContent = "Update demo cart";
           button.style.cssText = "width:100%;min-height:48px;padding:12px;border:1px solid #87dfd5;border-radius:12px;background:#164d4c;color:#fff;font-weight:600;cursor:pointer";
           const status = document.createElement("p");
           status.setAttribute("role", "status");
@@ -101,10 +101,17 @@
           existing.style.cssText = "margin:10px 0;color:#a4e7df;font-size:.9rem";
           function refreshExisting() {
             const line = selection.read().find(function (item) { return item.concept_id === entry.concept_id; });
-            existing.textContent = line ? "Already in demo cart: " + line.quantity : "Not yet in demo cart";
+            const savedQuantity = line ? line.quantity : 0;
+            existing.textContent = line ? "Already in demo cart: " + savedQuantity : "Not yet in demo cart";
+            quantity = savedQuantity;
+            refreshQuantity();
+            button.textContent = savedQuantity ? "Update demo cart" : "Add to demo cart";
           }
           const opener = card.querySelector(".echoes-tee-open");
-          if (opener) opener.addEventListener("click", refreshExisting);
+          if (opener) opener.addEventListener("click", function () {
+            status.textContent = "";
+            refreshExisting();
+          });
           refreshExisting();
           const goToCart = document.createElement("a");
           goToCart.href = "marketplace-demo.html";
@@ -114,10 +121,12 @@
           goToCart.setAttribute("aria-label", "View demo cart in this tab");
           button.addEventListener("click", function () {
             try {
-              const lines = selection.add(entry.concept_id, quantity);
+              const lines = selection.setQuantity(entry.concept_id, quantity);
               const total = lines.reduce(function (sum, line) { return sum + line.quantity; }, 0);
-              status.textContent = "Added to demo cart. Items: " + total + ". No order or payment created.";
-              goToCart.hidden = false;
+              status.textContent = quantity === 0
+                ? "Removed from demo cart. No order or payment created."
+                : "Demo cart updated. Items: " + total + ". No order or payment created.";
+              goToCart.hidden = total === 0;
               refreshExisting();
             } catch (error) {
               status.textContent = "Demo cart unavailable. Please try again.";
