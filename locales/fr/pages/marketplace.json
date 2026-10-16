@@ -178,5 +178,7 @@
   "economy.rateCost": "Coût de 100 EC",
   "economy.ratePerUnit": "EC pour 1 unité",
   "economy.ratesNote": "Taux de référence fixes du 12 octobre 2026. L’achat de crédits EC n’est pas encore disponible.",
-  "economy.text015": "Connexion à l’économie prévue ultérieurement"
+  "economy.text015": "Connexion à l’économie prévue ultérieurement",
+  "cta.ecWalletDemo": "Portefeuille EC de test",
+  "cta.ecCheckoutDemo": "Achat et remboursement EC de test"
 }
