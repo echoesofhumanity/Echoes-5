@@ -20,6 +20,23 @@
   <script src="assets/js/merchandise-catalog.js?v=92a43e3"></script>
   <script src="assets/js/marketplace-demo-selection.js?v=08dfae8"></script>
   <script>
+    (function () {
+      const labels = {
+        en: ["DEMO ONLY — No real purchase or payment","Demo quantity","Decrease demo quantity","Increase demo quantity","Update demo cart","View demo cart →","View demo cart in this tab","Removed from demo cart. No order or payment created.","Demo cart updated. Items: ",". No order or payment created.","Demo cart unavailable. Please try again.","In demo cart: "],
+        tr: ["YALNIZCA DEMO — Gerçek satın alma veya ödeme yok","Demo miktarı","Demo miktarını azalt","Demo miktarını artır","Demo sepetini güncelle","Demo sepetini görüntüle →","Demo sepetini bu sekmede görüntüle","Demo sepetinden kaldırıldı. Sipariş veya ödeme oluşturulmadı.","Demo sepeti güncellendi. Ürün adedi: ",". Sipariş veya ödeme oluşturulmadı.","Demo sepetine erişilemiyor. Lütfen tekrar deneyin.","Demo sepetinde: "],
+        de: ["NUR DEMO — Kein echter Kauf oder Zahlung","Demo-Menge","Demo-Menge verringern","Demo-Menge erhöhen","Demo-Warenkorb aktualisieren","Demo-Warenkorb ansehen →","Demo-Warenkorb in diesem Tab ansehen","Aus dem Demo-Warenkorb entfernt. Keine Bestellung oder Zahlung erstellt.","Demo-Warenkorb aktualisiert. Artikel: ",". Keine Bestellung oder Zahlung erstellt.","Demo-Warenkorb nicht verfügbar. Bitte erneut versuchen.","Im Demo-Warenkorb: "],
+        ar: ["عرض تجريبي فقط — لا شراء أو دفع حقيقي","الكمية التجريبية","تقليل الكمية التجريبية","زيادة الكمية التجريبية","تحديث السلة التجريبية","عرض السلة التجريبية ←","عرض السلة التجريبية في هذه الصفحة","أُزيل من السلة التجريبية. لم يُنشأ طلب أو دفع.","تم تحديث السلة التجريبية. عدد العناصر: ",". لم يُنشأ طلب أو دفع.","السلة التجريبية غير متاحة. يرجى المحاولة مجددًا.","في السلة التجريبية: "],
+        es: ["SOLO DEMO — Sin compras ni pagos reales","Cantidad de demostración","Reducir cantidad","Aumentar cantidad","Actualizar carrito de demostración","Ver carrito de demostración →","Ver carrito de demostración en esta pestaña","Eliminado del carrito de demostración. No se creó ningún pedido ni pago.","Carrito actualizado. Artículos: ",". No se creó ningún pedido ni pago.","Carrito no disponible. Inténtalo de nuevo.","En el carrito de demostración: "],
+        fr: ["DÉMONSTRATION UNIQUEMENT — Aucun achat ni paiement réel","Quantité de démonstration","Diminuer la quantité","Augmenter la quantité","Mettre à jour le panier de démonstration","Voir le panier de démonstration →","Voir le panier de démonstration dans cet onglet","Retiré du panier de démonstration. Aucune commande ni paiement créé.","Panier mis à jour. Articles : ",". Aucune commande ni paiement créé.","Panier indisponible. Veuillez réessayer.","Dans le panier de démonstration : "]
+      };
+      window.EchoesMerchDemoText = function (index) {
+        const lang = (window.EchoesI18n && window.EchoesI18n.getLanguage()) || "en";
+        return (labels[lang] || labels.en)[index];
+      };
+    })();
+  </script>
+
+  <script>
     document.addEventListener("echoes:layout-ready", async function () {
       if (!window.EchoesMerchandiseCatalog) return;
       try {
@@ -53,7 +70,7 @@
           const area = document.createElement("div");
           area.style.cssText = "margin:22px 0 8px;padding:18px;border:1px solid rgba(112,224,210,.35);border-radius:16px;background:#10252b";
           const label = document.createElement("p");
-          label.textContent = "DEMO ONLY — No real purchase or payment";
+          label.textContent = window.EchoesMerchDemoText(0);
           label.style.cssText = "margin:0 0 12px;color:#a4e7df;font-size:.85rem";
           const quantityRow = document.createElement("div");
           quantityRow.style.cssText = "display:flex;align-items:center;justify-content:center;gap:16px;margin:12px 0 18px";
@@ -62,7 +79,7 @@
           const amount = document.createElement("output");
           let quantity = 1;
           amount.textContent = String(quantity);
-          amount.setAttribute("aria-label", "Demo quantity");
+          amount.setAttribute("aria-label", window.EchoesMerchDemoText(1));
           amount.style.cssText = "min-width:32px;text-align:center;font-weight:700;font-size:1.2rem;color:#fff";
           [minus, plus].forEach(function (control) {
             control.type = "button";
@@ -70,8 +87,8 @@
           });
           minus.textContent = "−";
           plus.textContent = "+";
-          minus.setAttribute("aria-label", "Decrease demo quantity");
-          plus.setAttribute("aria-label", "Increase demo quantity");
+          minus.setAttribute("aria-label", window.EchoesMerchDemoText(2));
+          plus.setAttribute("aria-label", window.EchoesMerchDemoText(3));
           function refreshQuantity() {
             amount.textContent = String(quantity);
             minus.disabled = quantity <= 0;
@@ -91,7 +108,7 @@
           quantityRow.append(minus, amount, plus);
           const button = document.createElement("button");
           button.type = "button";
-          button.textContent = "Update demo cart";
+          button.textContent = window.EchoesMerchDemoText(4);
           button.style.cssText = "width:100%;min-height:48px;padding:12px;border:1px solid #87dfd5;border-radius:12px;background:#164d4c;color:#fff;font-weight:600;cursor:pointer";
           const status = document.createElement("p");
           status.setAttribute("role", "status");
@@ -105,7 +122,7 @@
             existing.textContent = line ? "Already in demo cart: " + savedQuantity : "Not yet in demo cart";
             quantity = savedQuantity;
             refreshQuantity();
-            button.textContent = savedQuantity ? "Update demo cart" : "Add to demo cart";
+            button.textContent = savedQuantity ? window.EchoesMerchDemoText(4) : "Add to demo cart";
           }
           const opener = card.querySelector(".echoes-tee-open");
           if (opener) opener.addEventListener("click", function () {
@@ -115,21 +132,21 @@
           refreshExisting();
           const goToCart = document.createElement("a");
           goToCart.href = "marketplace-demo.html";
-          goToCart.textContent = "View demo cart →";
+          goToCart.textContent = window.EchoesMerchDemoText(5);
           goToCart.hidden = true;
           goToCart.style.cssText = "display:block;margin-top:14px;padding:12px;text-align:center;border:1px solid #87dfd5;border-radius:12px;color:#b8f4ec;text-decoration:none";
-          goToCart.setAttribute("aria-label", "View demo cart in this tab");
+          goToCart.setAttribute("aria-label", window.EchoesMerchDemoText(6));
           button.addEventListener("click", function () {
             try {
               const lines = selection.setQuantity(entry.concept_id, quantity);
               const total = lines.reduce(function (sum, line) { return sum + line.quantity; }, 0);
               status.textContent = quantity === 0
-                ? "Removed from demo cart. No order or payment created."
-                : "Demo cart updated. Items: " + total + ". No order or payment created.";
+                ? window.EchoesMerchDemoText(7)
+                : window.EchoesMerchDemoText(8) + total + window.EchoesMerchDemoText(9);
               goToCart.hidden = total === 0;
               refreshExisting();
             } catch (error) {
-              status.textContent = "Demo cart unavailable. Please try again.";
+              status.textContent = window.EchoesMerchDemoText(10);
             }
           });
           area.append(label, existing, quantityRow, button, status, goToCart);
