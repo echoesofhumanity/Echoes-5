@@ -180,5 +180,7 @@
   "economy.rateCost": "100 EC bedeli",
   "economy.ratePerUnit": "1 birim karşılığı EC",
   "cta.ecWalletDemo": "EC Test Cüzdanı",
-  "cta.ecCheckoutDemo": "EC Test Satın Alma ve İade"
+  "cta.ecCheckoutDemo": "EC Test Satın Alma ve İade",
+  "economy.ecDemoHeading": "EC TEST ORTAMI",
+  "economy.ecDemoNotice": "Yalnızca sentetik test kredileri kullanılır. Gerçek ödeme, satın alma veya nakit iadesi yapılmaz."
 }
