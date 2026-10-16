@@ -4,7 +4,7 @@
   "short_name": "Echoes Radio",
   "description": "One world. One human family. Listen to Echoes Radio.",
   "start_url": "/Echoes-5/radio.html",
-  "scope": "/Echoes-5/",
+  "scope": "/Echoes-5/radio.html",
   "display": "standalone",
   "background_color": "#071218",
   "theme_color": "#071218",
