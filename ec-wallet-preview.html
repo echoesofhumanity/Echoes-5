@@ -16,6 +16,23 @@ button[hidden]{display:none!important}button:focus-visible{outline:3px solid #b0
 <details class="rules"><summary>EC usage &amp; safety information</summary><div class="row"><span>Use</span><span class="tag">Inside Echoes portal only</span></div><div class="row"><span>Outside transfer</span><span class="tag">Not supported</span></div><div class="row"><span>Balance authority</span><span class="tag">Secure server ledger</span></div><p class="muted">Seller payouts, refunds and purchases require verified payment and legal integrations before activation.</p></details>
 <a class="action" href="marketplace-demo.html">Explore synthetic Marketplace demo →</a>
 </main>
+<script>
+(function(){
+const dictionary={"en":["EC Wallet","PREVIEW ONLY — NO REAL BALANCE OR PAYMENT.","Staging wallet read-only. No EC purchases, top-ups or transfers.","Your EC wallet","Sign in to the staging account to view your EC balance.","Sign in (test)","Sign out","Add EC · Unavailable","Pay with EC · Unavailable","Transaction history","Sign in to view transaction availability.","EC usage & safety information","Use","Inside Echoes portal only","Outside transfer","Not supported","Balance authority","Secure server ledger","Seller payouts, refunds and purchases require verified payment and legal integrations before activation.","Explore synthetic Marketplace demo →","Not signed in. No balance available.","Sign in to view transactions.","Checking staging wallet…","Account connected · Transaction history is not yet available in this preview.","Balance unavailable. Secure wallet connection could not be verified.","Wallet balance unavailable.","Staging balance · ","Loading transactions…","Transaction history unavailable. Please retry later.","No EC transactions yet."," transaction(s) · staging","EC activity","Staging test account email:","Staging test account password (test account only):","Signing in to staging…","Sign-in failed. Check your staging test credentials."],"tr":["EC Cüzdanı","YALNIZCA ÖN İZLEME — GERÇEK BAKİYE VEYA ÖDEME YOK.","Test cüzdanı yalnızca görüntülenebilir. EC satın alma, yükleme veya transfer yapılamaz.","EC cüzdanınız","EC bakiyenizi görmek için test hesabına giriş yapın.","Giriş yap (test)","Çıkış yap","EC yükle · Kullanılamıyor","EC ile öde · Kullanılamıyor","İşlem geçmişi","İşlem geçmişini görmek için giriş yapın.","EC kullanımı ve güvenlik bilgileri","Kullanım","Yalnızca Echoes portalında","Dışarıya transfer","Desteklenmiyor","Bakiye kaynağı","Güvenli sunucu kayıt sistemi","Üretici ödemeleri, iadeler ve satın almalar açılmadan önce doğrulanmış ödeme ve hukuki entegrasyonlar gereklidir.","Sentetik Marketplace demosunu keşfet →","Giriş yapılmadı. Bakiye görüntülenemiyor.","İşlemleri görmek için giriş yapın.","Test cüzdanı kontrol ediliyor…","Hesap bağlandı · Bu ön izlemede işlem geçmişi henüz kullanılamıyor.","Bakiye görüntülenemiyor. Güvenli cüzdan bağlantısı doğrulanamadı.","Cüzdan bakiyesi görüntülenemiyor.","Test bakiyesi · ","İşlemler yükleniyor…","İşlem geçmişine erişilemiyor. Lütfen sonra yeniden deneyin.","Henüz EC işlemi yok."," işlem · test ortamı","EC işlemi","Test hesabı e-posta adresi:","Test hesabı şifresi (yalnızca test hesabı):","Test ortamına giriş yapılıyor…","Giriş başarısız. Test hesabı bilgilerinizi kontrol edin."],"de":["EC-Wallet","NUR VORSCHAU — KEIN ECHTES GUTHABEN ODER ZAHLUNG.","Test-Wallet nur lesbar. Kein EC-Kauf, Aufladen oder Transfer.","Ihr EC-Wallet","Melden Sie sich mit dem Testkonto an, um das Guthaben zu sehen.","Anmelden (Test)","Abmelden","EC aufladen · Nicht verfügbar","Mit EC zahlen · Nicht verfügbar","Transaktionsverlauf","Anmelden, um Transaktionen zu sehen.","EC-Nutzung und Sicherheit","Verwendung","Nur im Echoes-Portal","Externe Übertragung","Nicht unterstützt","Guthabenquelle","Sicheres Server-Hauptbuch","Auszahlungen, Erstattungen und Käufe erfordern geprüfte Zahlungs- und Rechtsintegrationen.","Synthetische Marketplace-Demo ansehen →","Nicht angemeldet. Kein Guthaben verfügbar.","Anmelden, um Transaktionen zu sehen.","Test-Wallet wird geprüft…","Konto verbunden · Verlauf in dieser Vorschau noch nicht verfügbar.","Guthaben nicht verfügbar. Sichere Verbindung nicht bestätigt.","Wallet-Guthaben nicht verfügbar.","Testguthaben · ","Transaktionen werden geladen…","Verlauf nicht verfügbar. Bitte später erneut versuchen.","Noch keine EC-Transaktionen."," Transaktion(en) · Test","EC-Aktivität","E-Mail des Testkontos:","Passwort des Testkontos:","Anmeldung im Testsystem…","Anmeldung fehlgeschlagen. Testzugang prüfen."],"fr":["Portefeuille EC","APERÇU UNIQUEMENT — AUCUN SOLDE OU PAIEMENT RÉEL.","Portefeuille de test en lecture seule. Aucun achat, recharge ou transfert EC.","Votre portefeuille EC","Connectez-vous au compte de test pour voir votre solde.","Connexion (test)","Déconnexion","Ajouter des EC · Indisponible","Payer en EC · Indisponible","Historique des transactions","Connectez-vous pour consulter les transactions.","Utilisation et sécurité des EC","Utilisation","Dans le portail Echoes uniquement","Transfert externe","Non pris en charge","Source du solde","Registre sécurisé du serveur","Paiements aux vendeurs, remboursements et achats nécessitent des intégrations légales et de paiement vérifiées.","Explorer la démo Marketplace fictive →","Non connecté. Aucun solde disponible.","Connectez-vous pour voir les transactions.","Vérification du portefeuille de test…","Compte connecté · Historique indisponible dans cet aperçu.","Solde indisponible. Connexion sécurisée non vérifiée.","Solde du portefeuille indisponible.","Solde de test · ","Chargement des transactions…","Historique indisponible. Réessayez plus tard.","Aucune transaction EC pour le moment."," transaction(s) · test","Activité EC","E-mail du compte de test :","Mot de passe du compte de test :","Connexion au test…","Échec de connexion. Vérifiez vos identifiants de test."],"es":["Billetera EC","SOLO VISTA PREVIA — SIN SALDO NI PAGOS REALES.","Billetera de prueba de solo lectura. Sin compras, recargas ni transferencias EC.","Tu billetera EC","Inicia sesión en la cuenta de prueba para ver tu saldo.","Iniciar sesión (prueba)","Cerrar sesión","Añadir EC · No disponible","Pagar con EC · No disponible","Historial de transacciones","Inicia sesión para consultar las transacciones.","Uso y seguridad de EC","Uso","Solo dentro del portal Echoes","Transferencia externa","No compatible","Fuente del saldo","Registro seguro del servidor","Los pagos a vendedores, reembolsos y compras requieren integraciones legales y de pago verificadas.","Explorar demo ficticia de Marketplace →","Sin iniciar sesión. Saldo no disponible.","Inicia sesión para ver las transacciones.","Comprobando billetera de prueba…","Cuenta conectada · Historial aún no disponible en esta vista.","Saldo no disponible. No se verificó la conexión segura.","Saldo de billetera no disponible.","Saldo de prueba · ","Cargando transacciones…","Historial no disponible. Inténtalo más tarde.","Aún no hay transacciones EC."," transacción(es) · prueba","Actividad EC","Correo de cuenta de prueba:","Contraseña de cuenta de prueba:","Iniciando sesión en prueba…","Error de inicio de sesión. Comprueba tus credenciales."],"ar":["محفظة EC","معاينة فقط — لا رصيد أو دفع حقيقي.","محفظة الاختبار للعرض فقط. لا شراء أو شحن أو تحويل EC.","محفظة EC الخاصة بك","سجّل الدخول إلى حساب الاختبار لعرض الرصيد.","تسجيل الدخول (اختبار)","تسجيل الخروج","إضافة EC · غير متاح","الدفع بـ EC · غير متاح","سجل المعاملات","سجّل الدخول لعرض المعاملات.","استخدام EC ومعلومات السلامة","الاستخدام","داخل بوابة إيكوز فقط","التحويل الخارجي","غير مدعوم","مصدر الرصيد","سجل خادم آمن","تتطلب مدفوعات البائعين والاستردادات والمشتريات تكاملات دفع وقانونية معتمدة قبل تفعيلها.","استكشف عرض السوق التجريبي →","لم تسجّل الدخول. الرصيد غير متاح.","سجّل الدخول لعرض المعاملات.","جارٍ فحص محفظة الاختبار…","الحساب متصل · السجل غير متاح بعد في هذه المعاينة.","الرصيد غير متاح. تعذّر التحقق من الاتصال الآمن.","رصيد المحفظة غير متاح.","رصيد الاختبار · ","جارٍ تحميل المعاملات…","سجل المعاملات غير متاح. حاول لاحقًا.","لا توجد معاملات EC بعد."," معاملة · اختبار","نشاط EC","البريد الإلكتروني لحساب الاختبار:","كلمة مرور حساب الاختبار:","جارٍ تسجيل الدخول للاختبار…","فشل تسجيل الدخول. تحقق من بيانات حساب الاختبار."]};
+const selected=(new URLSearchParams(location.search).get("lang")||localStorage.getItem("echoes_lang")||document.documentElement.lang||"en").toLowerCase().slice(0,2);
+const lang=Object.hasOwn(dictionary,selected)?selected:"en";
+const source=dictionary.en,translated=dictionary[lang];
+window.ecWalletLang=lang;
+window.ecWalletText=function(value){const index=source.indexOf(value);return index<0?value:translated[index];};
+document.documentElement.lang=lang;
+if(lang==="ar")document.documentElement.dir="rtl";
+document.addEventListener("DOMContentLoaded",()=>{
+ const walker=document.createTreeWalker(document.querySelector("main"),NodeFilter.SHOW_TEXT);
+ let node;while((node=walker.nextNode())){const value=node.nodeValue,trim=value.trim(),index=source.indexOf(trim);if(index>=0)node.nodeValue=value.replace(trim,translated[index]);}
+ document.title=window.ecWalletText("EC Wallet")+" — Echoes of Humanity";
+});
+})();
+</script>
 <script type="module">
 import {createClient} from "https://esm.sh/@supabase/supabase-js@2";
 const client=createClient("https://ymxpbkviadypsvahrqwt.supabase.co","sb_publishable_LNOf9EzOZl4Uk5LAyOTA0Q_unhclrGd",{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
@@ -23,36 +40,36 @@ const balance=document.getElementById("wallet-balance"),status=document.getEleme
 let session=null;
 async function refresh(){
  balance.textContent="— EC";
- if(!session){status.textContent="Not signed in. No balance available.";signin.hidden=false;signout.hidden=true;document.getElementById("wallet-history-status").textContent="Sign in to view transactions.";document.getElementById("wallet-history-list").replaceChildren();return;}
- signin.hidden=true;signout.hidden=false;status.textContent="Checking staging wallet…";document.getElementById("wallet-history-status").textContent="Account connected · Transaction history is not yet available in this preview.";
+ if(!session){status.textContent=window.ecWalletText("Not signed in. No balance available.");signin.hidden=false;signout.hidden=true;document.getElementById("wallet-history-status").textContent=window.ecWalletText("Sign in to view transactions.");document.getElementById("wallet-history-list").replaceChildren();return;}
+ signin.hidden=true;signout.hidden=false;status.textContent=window.ecWalletText("Checking staging wallet…");document.getElementById("wallet-history-status").textContent=window.ecWalletText("Account connected · Transaction history is not yet available in this preview.");
  const {data,error}=await client.rpc("ec_wallet_snapshot");
- if(error){status.textContent="Balance unavailable. Secure wallet connection could not be verified.";return;}
+ if(error){status.textContent=window.ecWalletText("Balance unavailable. Secure wallet connection could not be verified.");return;}
  const entry=Array.isArray(data)?data[0]:null;
- if(!entry||!Number.isSafeInteger(entry.balance_ec)){status.textContent="Wallet balance unavailable.";return;}
- balance.textContent=entry.balance_ec.toLocaleString("en-US")+" EC";
- status.textContent="Staging balance · "+new Date(entry.as_of).toLocaleString();
+ if(!entry||!Number.isSafeInteger(entry.balance_ec)){status.textContent=window.ecWalletText("Wallet balance unavailable.");return;}
+ balance.textContent=entry.balance_ec.toLocaleString(window.ecWalletLang==="tr"?"tr-TR":window.ecWalletLang)+" EC";
+ status.textContent=window.ecWalletText("Staging balance · ")+new Date(entry.as_of).toLocaleString(window.ecWalletLang);
  const historyStatus=document.getElementById("wallet-history-status"),historyList=document.getElementById("wallet-history-list");
  historyList.replaceChildren();
- historyStatus.textContent="Loading transactions…";
+ historyStatus.textContent=window.ecWalletText("Loading transactions…");
  const {data:transactions,error:historyError}=await client.rpc("ec_wallet_transactions",{p_limit:20});
- if(historyError){historyStatus.textContent="Transaction history unavailable. Please retry later.";return;}
- if(!Array.isArray(transactions)||transactions.length===0){historyStatus.textContent="No EC transactions yet.";return;}
- historyStatus.textContent=transactions.length+" transaction(s) · staging";
+ if(historyError){historyStatus.textContent=window.ecWalletText("Transaction history unavailable. Please retry later.");return;}
+ if(!Array.isArray(transactions)||transactions.length===0){historyStatus.textContent=window.ecWalletText("No EC transactions yet.");return;}
+ historyStatus.textContent=transactions.length+window.ecWalletText(" transaction(s) · staging");
  for(const item of transactions){
   const row=document.createElement("div");row.className="row";
-  const label=document.createElement("span");label.textContent=String(item.operation||"EC activity").replaceAll("_"," ")+" · "+new Date(item.recorded_at).toLocaleDateString();
-  const amount=document.createElement("span");amount.className="tag";amount.textContent=(item.delta_ec>0?"+":"")+Number(item.delta_ec).toLocaleString()+" EC";
+  const label=document.createElement("span");label.textContent=String(item.operation||window.ecWalletText("EC activity")).replaceAll("_"," ")+" · "+new Date(item.recorded_at).toLocaleDateString(window.ecWalletLang);
+  const amount=document.createElement("span");amount.className="tag";amount.textContent=(item.delta_ec>0?"+":"")+Number(item.delta_ec).toLocaleString(window.ecWalletLang)+" EC";
   row.append(label,amount);historyList.append(row);
  }
 }
 signin.addEventListener("click",async()=>{
- const email=window.prompt("Staging test account email:");
+ const email=window.prompt(window.ecWalletText("Staging test account email:"));
  if(!email)return;
- const password=window.prompt("Staging test account password (test account only):");
+ const password=window.prompt(window.ecWalletText("Staging test account password (test account only):"));
  if(!password)return;
- status.textContent="Signing in to staging…";
+ status.textContent=window.ecWalletText("Signing in to staging…");
  const {data,error}=await client.auth.signInWithPassword({email:email.trim(),password});
- if(error){status.textContent="Sign-in failed. Check your staging test credentials.";return;}
+ if(error){status.textContent=window.ecWalletText("Sign-in failed. Check your staging test credentials.");return;}
  session=data.session;await refresh();
 });
 signout.addEventListener("click",async()=>{await client.auth.signOut();session=null;await refresh();});
