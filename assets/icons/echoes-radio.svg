@@ -1,28 +1,39 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
-<title id="title">Echoes Radio</title>
+<title id="title">Echoes Radio — luminous identity</title>
 <defs>
-  <radialGradient id="bg" cx="50%" cy="38%" r="75%"><stop stop-color="#103a50"/><stop offset=".6" stop-color="#061b2a"/><stop offset="1" stop-color="#03101b"/></radialGradient>
-  <linearGradient id="cyan" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#c8fcff"/><stop offset=".42" stop-color="#36e9f6"/><stop offset="1" stop-color="#00a9d4"/></linearGradient>
-  <filter id="soft-glow" x="-35%" y="-35%" width="170%" height="170%"><feGaussianBlur stdDeviation="3"/></filter>
+<radialGradient id="background" cx="50%" cy="43%" r="72%"><stop stop-color="#06354e"/><stop offset=".52" stop-color="#031b2c"/><stop offset="1" stop-color="#010b17"/></radialGradient>
+<linearGradient id="light" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f2ffff"/><stop offset=".23" stop-color="#b2ffff"/><stop offset=".58" stop-color="#00e7ff"/><stop offset="1" stop-color="#00acd8"/></linearGradient>
+<linearGradient id="silver" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff"/><stop offset=".55" stop-color="#f6ffff"/><stop offset=".82" stop-color="#c4faff"/><stop offset="1" stop-color="#39cfff"/></linearGradient>
+<filter id="wide" x="-80%" y="-80%" width="260%" height="260%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="8"/></filter>
+<filter id="halo" x="-65%" y="-65%" width="230%" height="230%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3.2"/></filter>
+<filter id="tiny" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="1.2"/></filter>
 </defs>
-<rect width="512" height="512" rx="90" fill="url(#bg)"/>
-<rect x="10" y="10" width="492" height="492" rx="82" fill="none" stroke="#0acde8" stroke-width="3"/>
-<rect x="17" y="17" width="478" height="478" rx="76" fill="none" stroke="#75edfa" stroke-opacity=".22" stroke-width="1.5"/>
-<g fill="none" stroke="url(#cyan)" stroke-linecap="round">
-  <g filter="url(#soft-glow)" opacity=".65" stroke-width="10">
-    <path d="M80 226 A176 176 0 0 1 432 226"/><path d="M102 217 A154 154 0 0 1 410 217"/><path d="M126 210 A130 130 0 0 1 386 210"/>
-  </g>
-  <path d="M80 226 A176 176 0 0 1 432 226" stroke-width="5"/>
-  <path d="M102 217 A154 154 0 0 1 410 217" stroke-width="3.5"/>
-  <path d="M126 210 A130 130 0 0 1 386 210" stroke-width="2" opacity=".75"/>
+<rect width="512" height="512" rx="66" fill="url(#background)"/>
+<g fill="none" stroke="#00dfff">
+<rect x="26" y="26" width="460" height="460" rx="70" stroke-width="14" opacity=".62" filter="url(#wide)"/>
+<rect x="26" y="26" width="460" height="460" rx="70" stroke-width="7" opacity=".85" filter="url(#halo)"/>
 </g>
-<g stroke="url(#cyan)" stroke-width="7" stroke-linecap="round">
-  <g filter="url(#soft-glow)" opacity=".7" stroke-width="12">
-    <path d="M112 253v14 M136 245v30 M160 236v48 M184 225v70 M208 211v98 M232 196v128 M256 180v160 M280 196v128 M304 211v98 M328 225v70 M352 236v48 M376 245v30 M400 253v14"/>
-  </g>
-  <path d="M112 253v14 M136 245v30 M160 236v48 M184 225v70 M208 211v98 M232 196v128 M256 180v160 M280 196v128 M304 211v98 M328 225v70 M352 236v48 M376 245v30 M400 253v14"/>
+<rect x="26" y="26" width="460" height="460" rx="70" fill="none" stroke="url(#light)" stroke-width="3.4"/>
+<rect x="32" y="32" width="448" height="448" rx="65" fill="none" stroke="#93faff" stroke-opacity=".45" stroke-width="1"/>
+<path d="M39 52 Q55 35 77 35 H435 Q458 35 473 52" fill="none" stroke="#e5ffff" stroke-opacity=".48" stroke-width="2"/>
+<g id="arcs" fill="none" stroke="url(#light)" stroke-linecap="round">
+<path d="M95 232 A161 161 0 0 1 417 232" stroke-width="8"/>
+<path d="M116 229 A140 140 0 0 1 396 229" stroke-width="5"/>
+<path d="M134 225 A122 122 0 0 1 378 225" stroke-width="2.5"/>
 </g>
-<text x="256" y="408" text-anchor="middle" fill="#f5fbff" font-family="Georgia, 'Times New Roman', serif" font-size="67" letter-spacing="-1">ECHOES</text>
-<path d="M113 449h87 M312 449h87" fill="none" stroke="#37dce9" stroke-width="2.5"/>
-<text x="256" y="458" text-anchor="middle" fill="#65edfa" font-family="Arial, sans-serif" font-size="23" letter-spacing="7">RADIO</text>
+<use href="#arcs" filter="url(#wide)" opacity=".65"/>
+<use href="#arcs" filter="url(#halo)" opacity=".92"/>
+<use href="#arcs"/>
+<g id="bars" stroke="url(#light)" stroke-width="8.5" stroke-linecap="round" fill="none">
+<path d="M110 253v10 M130 244v28 M150 234v48 M170 221v74 M190 205v106 M210 224v68 M230 189v138 M256 172v172 M282 189v138 M302 224v68 M322 205v106 M342 221v74 M362 234v48 M382 244v28 M402 253v10"/>
+</g>
+<use href="#bars" filter="url(#wide)" opacity=".62"/>
+<use href="#bars" filter="url(#halo)" opacity=".9"/>
+<use href="#bars"/>
+<text x="256" y="406" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="71" letter-spacing="-1" fill="#00dfff" opacity=".8" filter="url(#halo)">ECHOES</text>
+<text x="256" y="406" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="71" letter-spacing="-1" fill="url(#silver)">ECHOES</text>
+<g stroke="#00dfff" stroke-width="4" filter="url(#halo)" opacity=".8"><path d="M95 444h105 M312 444h105"/></g>
+<path d="M95 444h105 M312 444h105" fill="none" stroke="#47efff" stroke-width="2.2"/>
+<text x="256" y="453" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="23" letter-spacing="7" fill="#00dfff" filter="url(#tiny)">RADIO</text>
+<text x="256" y="453" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="23" letter-spacing="7" fill="#71f7ff">RADIO</text>
 </svg>
