@@ -176,5 +176,7 @@
   "economy.text014": "Marketplace activity can support creators, participating stores and the wider Echoes ecosystem through transparent flows of value.",
   "economy.text015": "Economy connection coming later",
   "cta.ecWalletDemo": "EC Test Wallet",
-  "cta.ecCheckoutDemo": "EC Test Checkout & Refund"
+  "cta.ecCheckoutDemo": "EC Test Checkout & Refund",
+  "economy.ecDemoHeading": "EC TEST ENVIRONMENT",
+  "economy.ecDemoNotice": "Synthetic test credits only. No real payments, purchases or cash refunds."
 }
