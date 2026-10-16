@@ -178,5 +178,11 @@
   "cta.ecWalletDemo": "EC Test Wallet",
   "cta.ecCheckoutDemo": "EC Test Checkout & Refund",
   "economy.ecDemoHeading": "EC TEST ENVIRONMENT",
-  "economy.ecDemoNotice": "Synthetic test credits only. No real payments, purchases or cash refunds."
+  "economy.ecDemoNotice": "Synthetic test credits only. No real payments, purchases or cash refunds.",
+  "economy.rateCurrency": "Currency",
+  "economy.rateCost": "100 EC costs",
+  "economy.ratePerUnit": "EC per 1 unit",
+  "economy.ratesNote": "Fixed reference rates from 12 October 2026. Credit purchases are not yet available.",
+  "cta.demoLink": "Explore the Synthetic Demo",
+  "cta.demoDisclaimer": "Demonstration only. No purchases or payments."
 }
