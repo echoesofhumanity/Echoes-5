@@ -175,12 +175,14 @@
   "economy.text013": "Değerin Dolaşımı",
   "economy.text014": "Pazaryeri faaliyetleri, şeffaf değer akışları yoluyla yaratıcıları, katılımcı mağazaları ve daha geniş Echoes ekosistemini destekleyebilir.",
   "economy.text015": "Ekonomi bağlantısı daha sonra gelecek",
-  "economy.ratesNote": "12 Ekim 2026 tarihli sabit referans oranları. EC satın alma henüz aktif değildir.",
+  "economy.ratesNote": "12 Ekim 2026 tarihli sabit referans kurları. EC satın alma henüz kullanılamıyor.",
   "economy.rateCurrency": "Para birimi",
-  "economy.rateCost": "100 EC bedeli",
-  "economy.ratePerUnit": "1 birim karşılığı EC",
+  "economy.rateCost": "100 EC maliyeti",
+  "economy.ratePerUnit": "1 birim başına EC",
   "cta.ecWalletDemo": "EC Test Cüzdanı",
   "cta.ecCheckoutDemo": "EC Test Satın Alma ve İade",
   "economy.ecDemoHeading": "EC TEST ORTAMI",
-  "economy.ecDemoNotice": "Yalnızca sentetik test kredileri kullanılır. Gerçek ödeme, satın alma veya nakit iadesi yapılmaz."
+  "economy.ecDemoNotice": "Yalnızca sentetik test kredileri kullanılır. Gerçek ödeme, satın alma veya nakit iadesi yapılmaz.",
+  "cta.demoLink": "Sentetik Demoyu Keşfet",
+  "cta.demoDisclaimer": "Yalnızca gösterim amaçlıdır. Satın alma veya ödeme yapılmaz."
 }
