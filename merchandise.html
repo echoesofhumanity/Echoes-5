@@ -27,13 +27,17 @@
         de: ["NUR DEMO — Kein echter Kauf oder Zahlung","Demo-Menge","Demo-Menge verringern","Demo-Menge erhöhen","Demo-Warenkorb aktualisieren","Demo-Warenkorb ansehen →","Demo-Warenkorb in diesem Tab ansehen","Aus dem Demo-Warenkorb entfernt. Keine Bestellung oder Zahlung erstellt.","Demo-Warenkorb aktualisiert. Artikel: ",". Keine Bestellung oder Zahlung erstellt.","Demo-Warenkorb nicht verfügbar. Bitte erneut versuchen.","Im Demo-Warenkorb: ","Noch nicht im Demo-Warenkorb","Zum Demo-Warenkorb hinzufügen"],
         ar: ["عرض تجريبي فقط — لا شراء أو دفع حقيقي","الكمية التجريبية","تقليل الكمية التجريبية","زيادة الكمية التجريبية","تحديث السلة التجريبية","عرض السلة التجريبية ←","عرض السلة التجريبية في هذه الصفحة","أُزيل من السلة التجريبية. لم يُنشأ طلب أو دفع.","تم تحديث السلة التجريبية. عدد العناصر: ",". لم يُنشأ طلب أو دفع.","السلة التجريبية غير متاحة. يرجى المحاولة مجددًا.","في السلة التجريبية: ","ليس في السلة التجريبية بعد","أضف إلى السلة التجريبية"],
         es: ["SOLO DEMO — Sin compras ni pagos reales","Cantidad de demostración","Reducir cantidad","Aumentar cantidad","Actualizar carrito de demostración","Ver carrito de demostración →","Ver carrito de demostración en esta pestaña","Eliminado del carrito de demostración. No se creó ningún pedido ni pago.","Carrito actualizado. Artículos: ",". No se creó ningún pedido ni pago.","Carrito no disponible. Inténtalo de nuevo.","En el carrito de demostración: ","Todavía no está en el carrito de demostración","Añadir al carrito de demostración"],
-        fr: ["DÉMONSTRATION UNIQUEMENT — Aucun achat ni paiement réel","Quantité de démonstration","Diminuer la quantité","Augmenter la quantité","Mettre à jour le panier de démonstration","Voir le panier de démonstration →","Voir le panier de démonstration dans cet onglet","Retiré du panier de démonstration. Aucune commande ni paiement créé.","Panier mis à jour. Articles : ",". Aucune commande ni paiement créé.","Panier indisponible. Veuillez réessayer.","Dans le panier de démonstration : "]
+        fr: ["DÉMONSTRATION UNIQUEMENT — Aucun achat ni paiement réel","Quantité de démonstration","Diminuer la quantité","Augmenter la quantité","Mettre à jour le panier de démonstration","Voir le panier de démonstration →","Voir le panier de démonstration dans cet onglet","Retiré du panier de démonstration. Aucune commande ni paiement créé.","Panier mis à jour. Articles : ",". Aucune commande ni paiement créé.","Panier indisponible. Veuillez réessayer.","Dans le panier de démonstration : ","Pas encore dans le panier de démonstration","Ajouter au panier de démonstration"]
       };
       window.EchoesMerchDetailText = function (key) {
         const lang = (window.EchoesI18n && window.EchoesI18n.getLanguage()) || "en";
         const views = {
           en: {"products.detail002":"Front view · Illustration","products.detail003":"Back concept · Illustrative only"},
-          tr: {"products.detail002":"Ön görünüm · Çizim","products.detail003":"Arka tasarım · Yalnızca çizim"}
+          tr: {"products.detail002":"Ön görünüm · Çizim","products.detail003":"Arka tasarım · Yalnızca çizim"},
+          de: {"products.detail002":"Vorderansicht · Illustration","products.detail003":"Rückansicht · Nur Illustration"},
+          fr: {"products.detail002":"Vue avant · Illustration","products.detail003":"Vue arrière · Illustration uniquement"},
+          es: {"products.detail002":"Vista frontal · Ilustración","products.detail003":"Vista trasera · Solo ilustración"},
+          ar: {"products.detail002":"الواجهة الأمامية · رسم توضيحي","products.detail003":"التصميم الخلفي · توضيحي فقط"}
         };
         return (views[lang] || views.en)[key] || views.en[key] || "";
       };
