@@ -174,5 +174,7 @@
   "economy.text012": "Secure payment connection coming later",
   "economy.text013": "Value in Motion",
   "economy.text014": "Marketplace activity can support creators, participating stores and the wider Echoes ecosystem through transparent flows of value.",
-  "economy.text015": "Economy connection coming later"
+  "economy.text015": "Economy connection coming later",
+  "cta.ecWalletDemo": "EC Test Wallet",
+  "cta.ecCheckoutDemo": "EC Test Checkout & Refund"
 }
