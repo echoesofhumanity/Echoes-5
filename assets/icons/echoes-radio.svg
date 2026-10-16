@@ -2,37 +2,37 @@
 <title id="title">Echoes Radio — luminous identity</title>
 <defs>
 <radialGradient id="background" cx="50%" cy="43%" r="72%"><stop stop-color="#06354e"/><stop offset=".52" stop-color="#031b2c"/><stop offset="1" stop-color="#010b17"/></radialGradient>
-<linearGradient id="light" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f2ffff"/><stop offset=".23" stop-color="#b2ffff"/><stop offset=".58" stop-color="#00e7ff"/><stop offset="1" stop-color="#00acd8"/></linearGradient>
-<linearGradient id="silver" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff"/><stop offset=".55" stop-color="#f6ffff"/><stop offset=".82" stop-color="#c4faff"/><stop offset="1" stop-color="#39cfff"/></linearGradient>
+<linearGradient id="light" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#a5ffff"/><stop offset=".23" stop-color="#45f4ff"/><stop offset=".58" stop-color="#00e9ff"/><stop offset="1" stop-color="#00b8e6"/></linearGradient>
+<linearGradient id="silver" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset=".4" stop-color="#faffff"/><stop offset=".7" stop-color="#e0fbff"/><stop offset="1" stop-color="#5edfff"/></linearGradient>
 <filter id="wide" x="-80%" y="-80%" width="260%" height="260%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="8"/></filter>
 <filter id="halo" x="-65%" y="-65%" width="230%" height="230%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3.2"/></filter>
 <filter id="tiny" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="1.2"/></filter>
 </defs>
 <rect width="512" height="512" rx="66" fill="url(#background)"/>
 <g fill="none" stroke="#00dfff">
-<rect x="26" y="26" width="460" height="460" rx="70" stroke-width="14" opacity=".62" filter="url(#wide)"/>
-<rect x="26" y="26" width="460" height="460" rx="70" stroke-width="7" opacity=".85" filter="url(#halo)"/>
+<rect x="26" y="26" width="460" height="460" rx="70" stroke-width="11" opacity=".42" filter="url(#wide)"/>
+<rect x="26" y="26" width="460" height="460" rx="70" stroke-width="5" opacity=".68" filter="url(#halo)"/>
 </g>
-<rect x="26" y="26" width="460" height="460" rx="70" fill="none" stroke="url(#light)" stroke-width="3.4"/>
+<rect x="26" y="26" width="460" height="460" rx="70" fill="none" stroke="#2beaff" stroke-width="3.4"/>
 <rect x="32" y="32" width="448" height="448" rx="65" fill="none" stroke="#93faff" stroke-opacity=".45" stroke-width="1"/>
-<path d="M39 52 Q55 35 77 35 H435 Q458 35 473 52" fill="none" stroke="#e5ffff" stroke-opacity=".48" stroke-width="2"/>
+<path d="M40 54 Q55 36 77 36 H435 Q457 36 472 54" fill="none" stroke="#9efaff" stroke-opacity=".34" stroke-width="1.4"/>
 <g id="arcs" fill="none" stroke="url(#light)" stroke-linecap="round">
 <path d="M95 232 A161 161 0 0 1 417 232" stroke-width="8"/>
 <path d="M116 229 A140 140 0 0 1 396 229" stroke-width="5"/>
 <path d="M134 225 A122 122 0 0 1 378 225" stroke-width="2.5"/>
 </g>
-<use href="#arcs" filter="url(#wide)" opacity=".65"/>
-<use href="#arcs" filter="url(#halo)" opacity=".92"/>
+<use href="#arcs" filter="url(#wide)" opacity=".37"/>
+<use href="#arcs" filter="url(#halo)" opacity=".58"/>
 <use href="#arcs"/>
 <g id="bars" stroke="url(#light)" stroke-width="8.5" stroke-linecap="round" fill="none">
 <path d="M110 253v10 M130 244v28 M150 234v48 M170 221v74 M190 205v106 M210 224v68 M230 189v138 M256 172v172 M282 189v138 M302 224v68 M322 205v106 M342 221v74 M362 234v48 M382 244v28 M402 253v10"/>
 </g>
-<use href="#bars" filter="url(#wide)" opacity=".62"/>
-<use href="#bars" filter="url(#halo)" opacity=".9"/>
+<use href="#bars" filter="url(#wide)" opacity=".37"/>
+<use href="#bars" filter="url(#halo)" opacity=".62"/>
 <use href="#bars"/>
-<text x="256" y="406" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="71" letter-spacing="-1" fill="#00dfff" opacity=".8" filter="url(#halo)">ECHOES</text>
-<text x="256" y="406" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="71" letter-spacing="-1" fill="url(#silver)">ECHOES</text>
-<g stroke="#00dfff" stroke-width="4" filter="url(#halo)" opacity=".8"><path d="M95 444h105 M312 444h105"/></g>
+<text x="256" y="406" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="71" letter-spacing="-1" fill="#5defff" opacity=".7" filter="url(#halo)">ECHOES</text>
+<text x="256" y="406" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="71" letter-spacing="-1" fill="url(#silver)" stroke="#c8faff" stroke-opacity=".32" stroke-width=".55" paint-order="stroke">ECHOES</text>
+<g stroke="#00dfff" stroke-width="4" filter="url(#halo)" opacity=".58"><path d="M95 444h105 M312 444h105"/></g>
 <path d="M95 444h105 M312 444h105" fill="none" stroke="#47efff" stroke-width="2.2"/>
 <text x="256" y="453" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="23" letter-spacing="7" fill="#00dfff" filter="url(#tiny)">RADIO</text>
 <text x="256" y="453" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="23" letter-spacing="7" fill="#71f7ff">RADIO</text>
