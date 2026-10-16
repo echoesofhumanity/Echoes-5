@@ -178,5 +178,7 @@
   "economy.ratesNote": "أسعار مرجعية ثابتة بتاريخ 12 أكتوبر 2026. شراء أرصدة EC غير متاح بعد.",
   "economy.rateCurrency": "العملة",
   "economy.rateCost": "تكلفة 100 EC",
-  "economy.ratePerUnit": "رصيد EC لكل وحدة"
+  "economy.ratePerUnit": "رصيد EC لكل وحدة",
+  "cta.ecWalletDemo": "محفظة EC التجريبية",
+  "cta.ecCheckoutDemo": "شراء EC التجريبي والاسترداد"
 }
