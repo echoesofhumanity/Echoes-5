@@ -178,5 +178,7 @@
   "economy.ratesNote": "Tipos de referencia fijos del 12 de octubre de 2026. La compra de créditos EC aún no está disponible.",
   "economy.rateCurrency": "Moneda",
   "economy.rateCost": "Coste de 100 EC",
-  "economy.ratePerUnit": "EC por unidad"
+  "economy.ratePerUnit": "EC por unidad",
+  "cta.ecWalletDemo": "Billetera EC de prueba",
+  "cta.ecCheckoutDemo": "Compra y reembolso EC de prueba"
 }
