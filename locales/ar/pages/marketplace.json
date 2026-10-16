@@ -175,12 +175,14 @@
   "economy.text013": "تدفق القيمة",
   "economy.text014": "يمكن لنشاط السوق دعم المبدعين والمتاجر المشاركة ومنظومة Echoes الأوسع من خلال تدفقات قيمة شفافة.",
   "economy.text015": "ربط الاقتصاد قادم لاحقًا",
-  "economy.ratesNote": "أسعار مرجعية ثابتة بتاريخ 12 أكتوبر 2026. شراء أرصدة EC غير متاح بعد.",
+  "economy.ratesNote": "أسعار مرجعية ثابتة بتاريخ 12 أكتوبر 2026. شراء الرصيد غير متاح بعد.",
   "economy.rateCurrency": "العملة",
   "economy.rateCost": "تكلفة 100 EC",
-  "economy.ratePerUnit": "رصيد EC لكل وحدة",
+  "economy.ratePerUnit": "EC لكل وحدة",
   "cta.ecWalletDemo": "محفظة EC التجريبية",
   "cta.ecCheckoutDemo": "شراء EC التجريبي والاسترداد",
   "economy.ecDemoHeading": "بيئة اختبار EC",
-  "economy.ecDemoNotice": "أرصدة اختبار افتراضية فقط. لا مدفوعات أو مشتريات أو استردادات نقدية حقيقية."
+  "economy.ecDemoNotice": "أرصدة اختبار افتراضية فقط. لا مدفوعات أو مشتريات أو استردادات نقدية حقيقية.",
+  "cta.demoLink": "استكشف العرض التجريبي",
+  "cta.demoDisclaimer": "للعرض فقط. لا مشتريات أو مدفوعات."
 }
