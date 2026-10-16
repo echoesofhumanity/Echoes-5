@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><script>if(new URLSearchParams(location.search).get('theme')==='merchandise')document.documentElement.dataset.demoTheme='merchandise';</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Marketplace Synthetic Demo — Echoes of Humanity</title>
@@ -19,6 +19,27 @@ button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-v
 .total{display:flex;justify-content:space-between;gap:12px;font-size:1.3rem;margin:20px 0}
 .status{white-space:pre-line;overflow-wrap:anywhere;background:#0b1d24;border-radius:12px;padding:16px;line-height:1.8}
 .error{color:#ffb6b6}.muted{color:#afc2c4;font-size:.9rem}
+
+/* Merchandise-only visual identity; Marketplace demo remains unchanged. */
+html[data-demo-theme="merchandise"]{background:#09121c;color:#f3efe5}
+html[data-demo-theme="merchandise"] body{background:#09121c;color:#f3efe5}
+html[data-demo-theme="merchandise"] a{color:#dfb98e}
+html[data-demo-theme="merchandise"] .eyebrow{color:#dfb98e}
+html[data-demo-theme="merchandise"] h2{color:#e7bb88}
+html[data-demo-theme="merchandise"] p{color:#c5c3bd}
+html[data-demo-theme="merchandise"] .notice{border-left-color:#dfb98e;background:#211e20}
+html[data-demo-theme="merchandise"] section{border-color:#665343;background:linear-gradient(145deg,#1a2029,#0b1520)}
+html[data-demo-theme="merchandise"] .product{border-bottom-color:#55483e}
+html[data-demo-theme="merchandise"] .product small,html[data-demo-theme="merchandise"] .muted{color:#c5b8a9}
+html[data-demo-theme="merchandise"] input{border-color:#9b8069;background:#111a25;color:#f3efe5}
+html[data-demo-theme="merchandise"] button{border-color:#d6ae81;background:#584032;color:#fff0d8}
+html[data-demo-theme="merchandise"] button:hover:not(:disabled){background:#70503c}
+html[data-demo-theme="merchandise"] button:focus-visible,html[data-demo-theme="merchandise"] input:focus-visible,html[data-demo-theme="merchandise"] a:focus-visible{outline-color:#f5d6a7}
+html[data-demo-theme="merchandise"] .status{background:#151b23}
+html[data-demo-theme="merchandise"] .demo-language summary{border-color:#79634f;background:#221f22;color:#e7bb88}
+html[data-demo-theme="merchandise"] .demo-language-menu{border-color:#79634f;background:#221f22}
+html[data-demo-theme="merchandise"] .demo-language-menu a[aria-current="page"]{background:#564034;color:#fff0d8}
+html[data-demo-theme="merchandise"] .qty-controls .remove{border-color:#9b8069;background:transparent}
 </style>
 </head>
 <body>
