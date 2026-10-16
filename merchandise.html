@@ -76,10 +76,10 @@
           const inside = dialog.querySelector(".echoes-tee-detail__inside");
           if (!inside) return;
           const area = document.createElement("div");
-          area.style.cssText = "margin:22px 0 8px;padding:18px;border:1px solid rgba(112,224,210,.35);border-radius:16px;background:#10252b";
+          area.style.cssText = "margin:22px 0 8px;padding:18px;border:1px solid rgba(223,185,142,.38);border-radius:16px;background:#211d20";
           const label = document.createElement("p");
           label.textContent = window.EchoesMerchDemoText(0);
-          label.style.cssText = "margin:0 0 12px;color:#a4e7df;font-size:.85rem";
+          label.style.cssText = "margin:0 0 12px;color:#dfb98e;font-size:.85rem";
           const quantityRow = document.createElement("div");
           quantityRow.style.cssText = "display:flex;align-items:center;justify-content:center;gap:16px;margin:12px 0 18px";
           const minus = document.createElement("button");
@@ -91,7 +91,7 @@
           amount.style.cssText = "min-width:32px;text-align:center;font-weight:700;font-size:1.2rem;color:#fff";
           [minus, plus].forEach(function (control) {
             control.type = "button";
-            control.style.cssText = "width:52px;min-height:48px;border:1px solid #87dfd5;border-radius:12px;background:#16363d;color:#fff;font-size:1.4rem;cursor:pointer";
+            control.style.cssText = "width:52px;min-height:48px;border:1px solid #bca18b;border-radius:12px;background:#28232a;color:#f3efe5;font-size:1.4rem;cursor:pointer";
           });
           minus.textContent = "−";
           plus.textContent = "+";
@@ -117,13 +117,13 @@
           const button = document.createElement("button");
           button.type = "button";
           button.textContent = window.EchoesMerchDemoText(4);
-          button.style.cssText = "width:100%;min-height:48px;padding:12px;border:1px solid #87dfd5;border-radius:12px;background:#164d4c;color:#fff;font-weight:600;cursor:pointer";
+          button.style.cssText = "width:100%;min-height:48px;padding:12px;border:1px solid #dfb98e;border-radius:12px;background:#76503a;color:#fff0d8;font-weight:600;cursor:pointer";
           const status = document.createElement("p");
           status.setAttribute("role", "status");
           status.setAttribute("aria-live", "polite");
-          status.style.cssText = "margin:10px 0 0;font-size:.85rem;color:#c5e8e3";
+          status.style.cssText = "margin:10px 0 0;font-size:.85rem;color:#e8d4b9";
           const existing = document.createElement("p");
-          existing.style.cssText = "margin:10px 0;color:#a4e7df;font-size:.9rem";
+          existing.style.cssText = "margin:10px 0;color:#dfb98e;font-size:.9rem";
           function refreshExisting() {
             const line = selection.read().find(function (item) { return item.concept_id === entry.concept_id; });
             const savedQuantity = line ? line.quantity : 0;
@@ -142,7 +142,7 @@
           goToCart.href = "marketplace-demo.html?theme=merchandise";
           goToCart.textContent = window.EchoesMerchDemoText(5);
           goToCart.hidden = true;
-          goToCart.style.cssText = "display:block;margin-top:14px;padding:12px;text-align:center;border:1px solid #87dfd5;border-radius:12px;color:#b8f4ec;text-decoration:none";
+          goToCart.style.cssText = "display:block;margin-top:14px;padding:12px;text-align:center;border:1px solid #dfb98e;border-radius:12px;color:#f4d2a7;text-decoration:none";
           goToCart.setAttribute("aria-label", window.EchoesMerchDemoText(6));
           button.addEventListener("click", function () {
             try {
