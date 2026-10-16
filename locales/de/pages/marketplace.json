@@ -176,5 +176,7 @@
   "economy.text014": "Aktivitäten im Marketplace können Kreative, teilnehmende Geschäfte und das gesamte Echoes-Ökosystem durch transparente Wertflüsse unterstützen.",
   "economy.text015": "Wirtschaftsanbindung folgt später",
   "cta.ecWalletDemo": "EC-Test-Wallet",
-  "cta.ecCheckoutDemo": "EC-Testkauf und Rückerstattung"
+  "cta.ecCheckoutDemo": "EC-Testkauf und Rückerstattung",
+  "economy.ecDemoHeading": "EC-TESTUMGEBUNG",
+  "economy.ecDemoNotice": "Nur synthetische Testguthaben. Keine echten Zahlungen, Käufe oder Geldrückerstattungen."
 }
