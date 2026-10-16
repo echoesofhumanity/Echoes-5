@@ -174,5 +174,7 @@
   "economy.text012": "Sichere Zahlungsanbindung folgt später",
   "economy.text013": "Wert im Umlauf",
   "economy.text014": "Aktivitäten im Marketplace können Kreative, teilnehmende Geschäfte und das gesamte Echoes-Ökosystem durch transparente Wertflüsse unterstützen.",
-  "economy.text015": "Wirtschaftsanbindung folgt später"
+  "economy.text015": "Wirtschaftsanbindung folgt später",
+  "cta.ecWalletDemo": "EC-Test-Wallet",
+  "cta.ecCheckoutDemo": "EC-Testkauf und Rückerstattung"
 }
