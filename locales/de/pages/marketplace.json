@@ -178,5 +178,11 @@
   "cta.ecWalletDemo": "EC-Test-Wallet",
   "cta.ecCheckoutDemo": "EC-Testkauf und Rückerstattung",
   "economy.ecDemoHeading": "EC-TESTUMGEBUNG",
-  "economy.ecDemoNotice": "Nur synthetische Testguthaben. Keine echten Zahlungen, Käufe oder Geldrückerstattungen."
+  "economy.ecDemoNotice": "Nur synthetische Testguthaben. Keine echten Zahlungen, Käufe oder Geldrückerstattungen.",
+  "economy.rateCurrency": "Währung",
+  "economy.rateCost": "Kosten für 100 EC",
+  "economy.ratePerUnit": "EC je 1 Einheit",
+  "economy.ratesNote": "Feste Referenzkurse vom 12. Oktober 2026. EC-Käufe sind noch nicht verfügbar.",
+  "cta.demoLink": "Synthetische Demo ansehen",
+  "cta.demoDisclaimer": "Nur Demonstration. Keine Käufe oder Zahlungen."
 }
