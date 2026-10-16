@@ -180,5 +180,7 @@
   "economy.rateCost": "Coste de 100 EC",
   "economy.ratePerUnit": "EC por unidad",
   "cta.ecWalletDemo": "Billetera EC de prueba",
-  "cta.ecCheckoutDemo": "Compra y reembolso EC de prueba"
+  "cta.ecCheckoutDemo": "Compra y reembolso EC de prueba",
+  "economy.ecDemoHeading": "ENTORNO DE PRUEBA EC",
+  "economy.ecDemoNotice": "Solo créditos de prueba simulados. Sin pagos, compras ni reembolsos reales."
 }
