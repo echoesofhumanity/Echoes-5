@@ -180,5 +180,7 @@
   "economy.rateCost": "تكلفة 100 EC",
   "economy.ratePerUnit": "رصيد EC لكل وحدة",
   "cta.ecWalletDemo": "محفظة EC التجريبية",
-  "cta.ecCheckoutDemo": "شراء EC التجريبي والاسترداد"
+  "cta.ecCheckoutDemo": "شراء EC التجريبي والاسترداد",
+  "economy.ecDemoHeading": "بيئة اختبار EC",
+  "economy.ecDemoNotice": "أرصدة اختبار افتراضية فقط. لا مدفوعات أو مشتريات أو استردادات نقدية حقيقية."
 }
