@@ -26,6 +26,7 @@ CREATE TABLE ec_wallet.staging_v2_catalogue_products (
   revision bigint NOT NULL DEFAULT 1 CHECK (revision > 0),
   created_at timestamptz NOT NULL DEFAULT transaction_timestamp(),
   updated_at timestamptz NOT NULL DEFAULT transaction_timestamp(),
+  CONSTRAINT v2_catalogue_product_seller_unique UNIQUE (product_id,seller_id),
   CONSTRAINT v2_catalogue_published_gate CHECK (
     publication_status <> 'published'
     OR (active AND rights_review_status = 'approved' AND policy_review_status = 'approved')
@@ -40,8 +41,8 @@ REVOKE ALL ON ec_wallet.staging_v2_catalogue_products FROM PUBLIC, anon, authent
 -- A future reviewed server-only projection must join staging_sellers and
 -- enforce verified/not-suspended seller, buyer auth, and product eligibility.
 -- Seller suspension model and existing status values need live inspection.
--- IMPORTANT: base multi-item draft currently references staging_products;
--- change its FK to this independent catalogue before ANY V2 migration.
+-- The multi-item draft now references this independent catalogue.
+-- Its composite (product_id,seller_id) FK will prevent seller spoofing.
 -- Reserve/release stock atomically, with deterministic locks and immutable
 -- price snapshots; do not treat this schema as purchase authorization.
 -- No triggers for updated_at/revision or automatic publication are added yet.
