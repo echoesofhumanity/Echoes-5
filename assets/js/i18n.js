@@ -11,7 +11,7 @@
     es: { label: "Español", dir: "ltr", active: true },
     fr: { label: "Français", dir: "ltr", active: true },
     de: { label: "Deutsch", dir: "ltr", active: true },
-    pt: { label: "Português", dir: "ltr", active: false },
+    pt: { label: "Português", dir: "ltr", active: true },
     ru: { label: "Русский", dir: "ltr", active: false },
     zh: { label: "中文", dir: "ltr", active: false },
     hi: { label: "हिन्दी", dir: "ltr", active: false }
