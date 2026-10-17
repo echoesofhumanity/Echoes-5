@@ -23,6 +23,11 @@ Read-only staging pg_proc inspection of functions in public and ec_wallet found 
 ## Accounting boundaries
 The existing ledger is a wallet-delta journal, not demonstrated balanced double-entry accounting. V2 must not represent an EC debit as a fiat charge or seller payout. A separate reviewed multi-seller synthetic payable/allocation journal must balance line allocations to the order total, support reversal/void and have no cash-out semantics. Legacy staging_seller_payables references single-item orders; do not reuse its order FK for V2.
 
+## Verified staging grants and triggers (17 October 2026)
+Read-only pg_catalog inspection confirmed `postgres` and `service_role` have INSERT/UPDATE/DELETE grants on `ec_wallet.ledger`, `wallets`, `staging_orders`, and `staging_products`. RLS is enabled on these tables, but service_role can bypass RLS; do not infer RPC lock enforcement from RLS. Existing `ledger_immutable` is a BEFORE UPDATE OR DELETE trigger calling `ec_wallet.reject_ledger_mutation()`, not an INSERT guard. Existing staging order payable-cancel and staging product verified-write triggers were also found. `reject_ledger_mutation` has a search_path security advisor warning. These findings require review, not unapproved changes to live functions or grants.
+
+**V2 design gate:** inventory all server-side uses of service_role and prohibit direct ledger INSERT outside reviewed posting routines by architecture and least-privilege credentials. A service_role INSERT can bypass the application wallet-lock convention, even though uniqueness indexes still apply. Determine whether a reviewed trigger, dedicated restricted database role, or tightly controlled posting API is the appropriate enforcement before migration. Existing triggers and grants are not changed by this document.
+
 ## Blocking validations
 - Inspect database grants, triggers, every privileged or external ledger writer, and exact function definitions before approving deployment.
 - Review ledger CHECK alteration, global idempotency collisions, event/reversal uniqueness and ledger append-only protections.
