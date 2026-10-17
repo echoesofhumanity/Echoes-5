@@ -28,6 +28,13 @@ Preferred target is a narrow, audited server-owned posting boundary for V2 with 
 - Trusting client prices, seller IDs, totals, wallet IDs or direct client writes.
 - Introducing real payments, fiat conversion, payout or production credentials.
 
+## Verified function EXECUTE grants and mutation guard (17 October 2026)
+Read-only ACL inspection confirms public.ec_staging_checkout, public.ec_staging_cancel_order, public.ec_staging_catalogue, public.ec_staging_my_orders, public.ec_wallet_snapshot and public.ec_wallet_transactions have EXECUTE for authenticated, postgres and service_role; no explicit anon or PUBLIC EXECUTE was found in inspected ACLs. ec_wallet.ensure_my_wallet has authenticated and postgres EXECUTE. ec_wallet.reject_ledger_mutation has postgres EXECUTE. Effective permissions via role membership or schema USAGE were not independently enumerated.
+
+The existing reject_ledger_mutation trigger function body unconditionally raises `Posted EC ledger entries are immutable`; ledger_immutable calls it BEFORE UPDATE OR DELETE. This confirms UPDATE/DELETE blocking for normal enabled-trigger execution, but it does not constrain INSERT or privileged trigger-disabling operations. The function currently has no fixed search_path; advisor flags this, although the inspected body has no unqualified object lookup. Any hardening requires a separately reviewed migration.
+
+V2 proposed RPC grants: REVOKE EXECUTE FROM PUBLIC, anon by default; GRANT EXECUTE to authenticated only for user-facing checkout/cancel, with auth.uid ownership checks, fixed search_path, minimal privilege, and no service_role exposure unless explicitly justified. Note that SECURITY DEFINER ownership and direct service_role table access require independent security review. Do not apply these proposed grants to existing RPCs.
+
 ## Approval sequence
 A. Complete read-only audit of service_role usage, function EXECUTE grants, ledger INSERT paths, and relevant trigger bodies.
 B. Choose a migration approach for V2 operation CHECK and writer isolation, with legacy rollback strategy.
