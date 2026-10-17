@@ -28,8 +28,10 @@ CREATE TABLE ec_wallet.staging_cart_orders_v2 (
 CREATE TABLE ec_wallet.staging_cart_order_lines_v2 (
   line_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id uuid NOT NULL REFERENCES ec_wallet.staging_cart_orders_v2(order_id) ON DELETE RESTRICT,
-  product_id uuid NOT NULL REFERENCES ec_wallet.staging_v2_catalogue_products(product_id) ON DELETE RESTRICT,
-  seller_id uuid NOT NULL REFERENCES ec_wallet.staging_sellers(seller_id) ON DELETE RESTRICT,
+  product_id uuid NOT NULL,
+  seller_id uuid NOT NULL,
+  CONSTRAINT cart_order_lines_v2_product_seller_fk FOREIGN KEY (product_id,seller_id)
+    REFERENCES ec_wallet.staging_v2_catalogue_products(product_id,seller_id) ON DELETE RESTRICT,
   quantity integer NOT NULL CHECK (quantity BETWEEN 1 AND 99),
   unit_price_ec bigint NOT NULL CHECK (unit_price_ec > 0 AND unit_price_ec <= 9007199254740991),
   subtotal_ec bigint NOT NULL CHECK (subtotal_ec > 0 AND subtotal_ec <= 9007199254740991),
@@ -99,7 +101,8 @@ COMMIT;
 -- * server-owned atomic checkout/cancellation and deterministic locking
 -- * append-only event triggers and immutable price snapshots
 -- * order total = sum(lines), seller ownership and stock invariants
--- * enforce line.seller_id = catalogue.seller_id at the server transaction boundary
+-- * product/seller identity is enforced by a composite FK; server must still
+--   verify seller status and product eligibility atomically at checkout
 -- * ensure independent catalogue exists before this dependent draft
 -- * balanced double-entry EC liability journal and reconciliation
 -- * role-isolation tests, concurrent requests, rollback and rollback plan
