@@ -28,7 +28,7 @@ CREATE TABLE ec_wallet.staging_cart_order_lines_v2 (
   order_id uuid NOT NULL REFERENCES ec_wallet.staging_cart_orders_v2(order_id) ON DELETE RESTRICT,
   product_id uuid NOT NULL REFERENCES ec_wallet.staging_products(product_id) ON DELETE RESTRICT,
   seller_id uuid NOT NULL REFERENCES ec_wallet.staging_sellers(seller_id) ON DELETE RESTRICT,
-  quantity integer NOT NULL CHECK (quantity BETWEEN 1 AND 100),
+  quantity integer NOT NULL CHECK (quantity BETWEEN 1 AND 99),
   unit_price_ec bigint NOT NULL CHECK (unit_price_ec > 0),
   subtotal_ec bigint NOT NULL CHECK (subtotal_ec > 0),
   CONSTRAINT cart_order_lines_v2_product_unique UNIQUE (order_id,product_id),
@@ -54,7 +54,7 @@ CREATE TABLE ec_wallet.staging_inventory_reservations_v2 (
   line_id uuid NOT NULL UNIQUE,
   order_id uuid NOT NULL,
   product_id uuid NOT NULL,
-  quantity integer NOT NULL CHECK (quantity BETWEEN 1 AND 100),
+  quantity integer NOT NULL CHECK (quantity BETWEEN 1 AND 99),
   state text NOT NULL DEFAULT 'reserved'
     CHECK (state IN ('reserved','released','consumed')),
   reserved_at timestamptz NOT NULL DEFAULT transaction_timestamp(),
