@@ -44,7 +44,7 @@ html[data-demo-theme="merchandise"] .qty-controls .remove{border-color:#9b8069;b
 </head>
 <body>
 <main>
-<header><div class="demo-topbar"><a class="demo-back" href="marketplace.html" data-demo-i18n="back">← Back to Marketplace</a><details class="demo-language"><summary id="demo-language-current" aria-label="Select language">English</summary><nav class="demo-language-menu" aria-label="Demo language"><a href="?lang=en" data-demo-language="en">English</a><a href="?lang=tr" data-demo-language="tr">Türkçe</a><a href="?lang=es" data-demo-language="es">Español</a><a href="?lang=de" data-demo-language="de">Deutsch</a><a href="?lang=fr" data-demo-language="fr">Français</a><a href="?lang=ar" data-demo-language="ar">العربية</a><a href="?lang=pt" data-demo-language="pt">Português</a></nav></details></div><div class="eyebrow" style="margin-top:32px" data-demo-i18n="eyebrow">Echoes of Humanity · Isolated Test</div>
+<header><div class="demo-topbar"><a class="demo-back" href="marketplace.html" data-demo-i18n="back">← Back to Marketplace</a><details class="demo-language"><summary id="demo-language-current" aria-label="Select language">English</summary><nav class="demo-language-menu" aria-label="Demo language"><a href="?lang=en" data-demo-language="en">English</a><a href="?lang=tr" data-demo-language="tr">Türkçe</a><a href="?lang=es" data-demo-language="es">Español</a><a href="?lang=de" data-demo-language="de">Deutsch</a><a href="?lang=fr" data-demo-language="fr">Français</a><a href="?lang=ar" data-demo-language="ar">العربية</a><a href="?lang=pt" data-demo-language="pt">Português</a><a href="?lang=ru" data-demo-language="ru">Русский</a></nav></details></div><div class="eyebrow" style="margin-top:32px" data-demo-i18n="eyebrow">Echoes of Humanity · Isolated Test</div>
 <h1 data-demo-i18n="title">Marketplace Synthetic Demo</h1>
 <p class="notice"><strong data-demo-i18n="noticeStrong">DEMO ONLY — NO REAL PURCHASES.</strong> <span data-demo-i18n="notice">Products are concepts. No payment, EC transfer, customer data, stock reservation, or real orders. All order states exist only in this browser tab and disappear when it is closed.</span></p>
 </header>
@@ -71,9 +71,9 @@ html[data-demo-theme="merchandise"] .qty-controls .remove{border-color:#9b8069;b
 "use strict";
 const byId=id=>document.getElementById(id);
 const requestedLanguage=new URLSearchParams(location.search).get("lang");
-const demoLanguage=["en","tr","ar","es","fr","de","pt"].includes(requestedLanguage)?requestedLanguage:(["en","tr","ar","es","fr","de","pt"].includes(localStorage.getItem("echoes.language"))?localStorage.getItem("echoes.language"):"en");
+const demoLanguage=["en","tr","ar","es","fr","de","pt","ru"].includes(requestedLanguage)?requestedLanguage:(["en","tr","ar","es","fr","de","pt","ru"].includes(localStorage.getItem("echoes.language"))?localStorage.getItem("echoes.language"):"en");
 let demoStrings={};
-document.getElementById("demo-language-current").textContent=({en:"English",tr:"Türkçe",ar:"العربية",es:"Español",fr:"Français",de:"Deutsch",pt:"Português"})[demoLanguage];
+document.getElementById("demo-language-current").textContent=({en:"English",tr:"Türkçe",ar:"العربية",es:"Español",fr:"Français",de:"Deutsch",pt:"Português",ru:"Русский"})[demoLanguage];
 document.querySelectorAll("[data-demo-language]").forEach(link=>{const u=new URL(link.href);if(new URLSearchParams(location.search).get("theme")==="merchandise")u.searchParams.set("theme","merchandise");link.href=u.pathname+u.search;if(link.getAttribute("data-demo-language")===demoLanguage)link.setAttribute("aria-current","page");});
 try{localStorage.setItem("echoes.language",demoLanguage)}catch(error){}
 const tr=(key,english,values={})=>{
