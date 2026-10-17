@@ -3,6 +3,8 @@
 -- Additive objects; no modifications to existing EC tables or RPCs.
 -- This schema deliberately has NO checkout, cancellation or payment RPC.
 -- Requires review of auth, grants, dependencies and accounting invariants.
+-- DEPENDENCY: review/apply independent staging_v2_catalogue_products draft first.
+-- Never reuse the legacy single-item staging_products purchase identities.
 BEGIN;
 
 CREATE TABLE ec_wallet.staging_cart_orders_v2 (
@@ -11,7 +13,7 @@ CREATE TABLE ec_wallet.staging_cart_orders_v2 (
   idempotency_key uuid NOT NULL,
   request_digest text NOT NULL CHECK (request_digest ~ '^[0-9a-f]{64}$'),
   currency_code text NOT NULL DEFAULT 'EC' CHECK (currency_code = 'EC'),
-  total_ec bigint NOT NULL CHECK (total_ec > 0),
+  total_ec bigint NOT NULL CHECK (total_ec > 0 AND total_ec <= 9007199254740991),
   status text NOT NULL DEFAULT 'created'
     CHECK (status IN ('created','cancelled')),
   created_at timestamptz NOT NULL DEFAULT transaction_timestamp(),
@@ -26,14 +28,14 @@ CREATE TABLE ec_wallet.staging_cart_orders_v2 (
 CREATE TABLE ec_wallet.staging_cart_order_lines_v2 (
   line_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id uuid NOT NULL REFERENCES ec_wallet.staging_cart_orders_v2(order_id) ON DELETE RESTRICT,
-  product_id uuid NOT NULL REFERENCES ec_wallet.staging_products(product_id) ON DELETE RESTRICT,
+  product_id uuid NOT NULL REFERENCES ec_wallet.staging_v2_catalogue_products(product_id) ON DELETE RESTRICT,
   seller_id uuid NOT NULL REFERENCES ec_wallet.staging_sellers(seller_id) ON DELETE RESTRICT,
   quantity integer NOT NULL CHECK (quantity BETWEEN 1 AND 99),
-  unit_price_ec bigint NOT NULL CHECK (unit_price_ec > 0),
-  subtotal_ec bigint NOT NULL CHECK (subtotal_ec > 0),
+  unit_price_ec bigint NOT NULL CHECK (unit_price_ec > 0 AND unit_price_ec <= 9007199254740991),
+  subtotal_ec bigint NOT NULL CHECK (subtotal_ec > 0 AND subtotal_ec <= 9007199254740991),
   CONSTRAINT cart_order_lines_v2_product_unique UNIQUE (order_id,product_id),
   CONSTRAINT cart_order_lines_v2_arithmetic CHECK (
-    unit_price_ec <= 9223372036854775807::bigint / quantity
+    unit_price_ec <= 9007199254740991::bigint / quantity
     AND subtotal_ec = unit_price_ec * quantity
   ),
   CONSTRAINT cart_order_lines_v2_line_order_unique UNIQUE (line_id,order_id,product_id)
@@ -97,6 +99,8 @@ COMMIT;
 -- * server-owned atomic checkout/cancellation and deterministic locking
 -- * append-only event triggers and immutable price snapshots
 -- * order total = sum(lines), seller ownership and stock invariants
+-- * enforce line.seller_id = catalogue.seller_id at the server transaction boundary
+-- * ensure independent catalogue exists before this dependent draft
 -- * balanced double-entry EC liability journal and reconciliation
 -- * role-isolation tests, concurrent requests, rollback and rollback plan
 -- * security review, explicit approval, staging migration execution
