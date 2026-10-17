@@ -64,6 +64,16 @@ CREATE TABLE ec_wallet.staging_inventory_reservations_v2 (
   reserved_at timestamptz NOT NULL DEFAULT transaction_timestamp(),
   expires_at timestamptz NOT NULL,
   released_at timestamptz,
+  consumed_at timestamptz,
+  release_reason text,
+  CONSTRAINT cart_reservations_v2_release_reason CHECK (
+    (state = 'released' AND release_reason IN ('order_cancelled','reservation_expired')) OR
+    (state <> 'released' AND release_reason IS NULL)
+  ),
+  CONSTRAINT cart_reservations_v2_consumption_consistency CHECK (
+    (state = 'consumed' AND consumed_at IS NOT NULL) OR
+    (state <> 'consumed' AND consumed_at IS NULL)
+  ),
   CONSTRAINT cart_reservations_v2_line_fk FOREIGN KEY (line_id,order_id,product_id)
     REFERENCES ec_wallet.staging_cart_order_lines_v2(line_id,order_id,product_id)
     ON DELETE RESTRICT,
@@ -99,6 +109,10 @@ COMMIT;
 
 -- Not yet implemented:
 -- * server-owned atomic checkout/cancellation and deterministic locking
+-- * guarded one-way reservation transitions reserved -> released/consumed;
+--   CHECK constraints alone do not prevent illegal historical transitions
+-- * expiry is NOT an automatic release: order and ledger state must be checked
+-- * consumed reservations must not be restored by ordinary cancellation
 -- * append-only event triggers and immutable price snapshots
 -- * order total = sum(lines), seller ownership and stock invariants
 -- * product/seller identity is enforced by a composite FK; server must still
