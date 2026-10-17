@@ -48,5 +48,12 @@ All steps occur inside a single PostgreSQL function invocation and transaction. 
 - Two-seller order: frozen seller and price snapshots, accurate obligations.
 - Existing one-product EC checkout and wallet RPCs still behave identically.
 
+## Read-only staging verification (17 October 2026)
+Supabase table inventory confirms `ec_wallet.wallets`, `ledger`, `staging_sellers`, `staging_products`, `staging_orders` and `staging_seller_payables` with RLS enabled. Seller `verification_status` accepts `pending`, `verified`, `suspended`: only `verified` qualifies. Existing ledger operations are `topup_settled`, `checkout_debit`, `checkout_reversal`, `refund_credit`, `administrative_correction`; no V2 operation exists. The existing payable table references single-item staging orders and must not be reused for multi-seller V2 lines without redesign.
+
+Security advisor flags five authenticated-executable SECURITY DEFINER RPCs (`ec_staging_cancel_order`, `ec_staging_catalogue`, `ec_staging_checkout`, `ec_staging_my_orders`, `ec_wallet_transactions`); these may be intentional APIs, not proof of vulnerability. Audit their ownership checks, search_path and grants before any new V2 RPC. It also flags mutable search_path on `ec_wallet.reject_ledger_mutation` and disabled leaked-password protection. Do not change existing functions or auth settings without separate approval. The RLS-without-policy findings are consistent with a private RPC-only design, but schema exposure/grants still need verification. Reference: https://supabase.com/docs/guides/database/database-linter
+
+**Not verified:** implementation details of existing wallet row locking, ledger unique indexes, RPC bodies, transaction serialization or double-entry balancing. These remain NO-GO blockers, not presumed safe.
+
 ## Gate
 NO-GO for deploying any v2 checkout until blockers are resolved, an additive migration and rollback plan are reviewed, and synthetic staging tests pass. No production credentials, customer data, money movement or real payouts.
