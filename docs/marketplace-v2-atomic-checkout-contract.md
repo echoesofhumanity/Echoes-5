@@ -53,7 +53,11 @@ Supabase table inventory confirms `ec_wallet.wallets`, `ledger`, `staging_seller
 
 Security advisor flags five authenticated-executable SECURITY DEFINER RPCs (`ec_staging_cancel_order`, `ec_staging_catalogue`, `ec_staging_checkout`, `ec_staging_my_orders`, `ec_wallet_transactions`); these may be intentional APIs, not proof of vulnerability. Audit their ownership checks, search_path and grants before any new V2 RPC. It also flags mutable search_path on `ec_wallet.reject_ledger_mutation` and disabled leaked-password protection. Do not change existing functions or auth settings without separate approval. The RLS-without-policy findings are consistent with a private RPC-only design, but schema exposure/grants still need verification. Reference: https://supabase.com/docs/guides/database/database-linter
 
-**Not verified:** implementation details of existing wallet row locking, ledger unique indexes, RPC bodies, transaction serialization or double-entry balancing. These remain NO-GO blockers, not presumed safe.
+**Verified directly in staging function definitions:** existing `public.ec_staging_checkout` and `public.ec_staging_cancel_order` both derive identity from `auth.uid()`, lock `ec_wallet.wallets` by owner with `FOR UPDATE`, and use `SET search_path TO ''`. Checkout locks the eligible product row and writes order, debit, stock and unvalued payable in one function invocation; cancellation locks wallet and buyer-owned order, verifies original debit, writes reversal and stock restoration, and marks order cancelled. Existing single-item checkout accepts quantities 1–100; V2 remains 1–99. Do not modify the legacy function merely to align these bounds.
+
+**Verified existing unique indexes:** ledger `(wallet_id,idempotency_key)` and `(wallet_id,operation,reference_id)`; staging orders `(buyer_id,idempotency_key)`; wallets `(owner_id)`. These impose cross-operation key collisions unless V2 debit/reversal keys and references are explicitly designed. Never reuse a V2 order id as a reversal idempotency key without checking collisions.
+
+**Still not verified:** every other wallet-writing function, grants and complete role authorization, balanced double-entry accounting, cancellation payable reversal for all states, concurrency under adversarial scheduling. These remain NO-GO blockers.
 
 ## Gate
 NO-GO for deploying any v2 checkout until blockers are resolved, an additive migration and rollback plan are reviewed, and synthetic staging tests pass. No production credentials, customer data, money movement or real payouts.
