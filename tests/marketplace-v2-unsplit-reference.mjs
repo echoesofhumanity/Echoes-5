@@ -29,12 +29,14 @@ export class SyntheticMarketplace {
     let total = 0;
     for (const line of normalized) {
       const p = this.stock.get(line.product);
-      if (!p || p.testOnly !== true || p.active !== true || !Number.isSafeInteger(p.price) || p.price <= 0 || p.quantity < line.quantity) throw Error('Product unavailable');
+      if (!p || p.testOnly !== true || p.active !== true || !Number.isSafeInteger(p.price) || p.price <= 0 || !Number.isSafeInteger(p.quantity) || p.quantity < 0 || p.quantity < line.quantity) throw Error('Product unavailable');
       const subtotal = p.price * line.quantity;
       if (!Number.isSafeInteger(subtotal) || !Number.isSafeInteger(total + subtotal)) throw Error('Amount overflow');
       total += subtotal;
     }
-    if ((this.balances.get(buyer) ?? 0) < total) throw Error('Insufficient EC');
+    const buyerBalance = this.balances.get(buyer);
+    if (!Number.isSafeInteger(buyerBalance) || buyerBalance < 0) throw Error('Invalid EC balance');
+    if (buyerBalance < total) throw Error('Insufficient EC');
     if (!Number.isSafeInteger(now + this.ttlMs)) throw Error('Expiry overflow');
     // In-memory reference only: validate before mutations; database must supply ACID and locks.
     const orderId = identity;
@@ -60,6 +62,6 @@ export class SyntheticMarketplace {
     for (const line of order.lines) this.stock.get(line.product).quantity += line.quantity;
     this.balances.set(buyer, this.balances.get(buyer) + order.total);
     Object.assign(order, { status: 'cancelled', reservation: 'released', clearing: 'voided', reversal: order.total });
-    return { ...order };
+    return { ...order, lines: order.lines.map(line => ({ ...line })) };
   }
 }
