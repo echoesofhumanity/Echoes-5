@@ -32,6 +32,8 @@ DECLARE
   v_seller_status text;
   v_seller_ids uuid[] := ARRAY[]::uuid[];
   v_candidate_seller_id uuid;
+  v_line_id uuid;
+  v_stock_rows integer;
 BEGIN
   IF v_buyer IS NULL OR p_idempotency_key IS NULL THEN
     RAISE EXCEPTION 'Authenticated buyer and request key required' USING ERRCODE='28000';
@@ -133,11 +135,58 @@ BEGIN
   -- reservation expiry policy, cross-writer lock audit and concurrency tests exist.
   RAISE EXCEPTION 'V2 checkout posting intentionally disabled pending accounting and seller-lock review';
 
-  -- Intended same-transaction write sequence (NOT IMPLEMENTED):
-  -- insert order header + immutable lines + reservations; decrement stock;
-  -- insert exactly one V2 ledger debit and reconciled synthetic seller payables;
-  -- insert created event; deferred totals validated at commit.
-  -- Never swallow errors or return success without those writes.
+  -- UNREACHABLE IMPLEMENTATION CANDIDATE: intentionally AFTER the hard
+  -- exception. This code is for static review, not an operational checkout.
+  -- The full transaction must not be enabled until EC debit, multi-seller
+  -- synthetic allocations and rollback/privilege reviews are completed.
+  v_order := pg_catalog.gen_random_uuid();
+  INSERT INTO ec_wallet.staging_cart_orders_v2
+    (order_id,buyer_id,idempotency_key,request_digest,currency_code,total_ec)
+  VALUES (v_order,v_buyer,p_idempotency_key,v_digest,'EC',v_total::bigint);
+
+  -- Re-read only rows already locked by this transaction, in the same order.
+  FOR v_item IN SELECT x.product_id,x.quantity
+    FROM ec_wallet.v2_normalize_cart(p_lines) x ORDER BY x.product_id
+  LOOP
+    SELECT p.product_id,p.seller_id,p.price_ec,p.stock_available
+      INTO v_product
+      FROM ec_wallet.staging_v2_catalogue_products p
+      WHERE p.product_id=v_item.product_id;
+    IF NOT FOUND OR v_product.stock_available < v_item.quantity THEN
+      RAISE EXCEPTION 'Product became unavailable' USING ERRCODE='P0001';
+    END IF;
+    v_subtotal := v_product.price_ec::numeric * v_item.quantity;
+    v_line_id := pg_catalog.gen_random_uuid();
+    INSERT INTO ec_wallet.staging_cart_order_lines_v2
+      (line_id,order_id,product_id,seller_id,quantity,unit_price_ec,subtotal_ec)
+    VALUES (v_line_id,v_order,v_product.product_id,v_product.seller_id,
+            v_item.quantity,v_product.price_ec,v_subtotal::bigint);
+    INSERT INTO ec_wallet.staging_inventory_reservations_v2
+      (line_id,order_id,product_id,quantity,state,expires_at)
+    VALUES (v_line_id,v_order,v_product.product_id,v_item.quantity,
+            'reserved',pg_catalog.transaction_timestamp() + interval '30 minutes');
+    UPDATE ec_wallet.staging_v2_catalogue_products p
+       SET stock_available=p.stock_available-v_item.quantity,
+           revision=p.revision+1,
+           updated_at=pg_catalog.transaction_timestamp()
+     WHERE p.product_id=v_item.product_id
+       AND p.stock_available >= v_item.quantity;
+    GET DIAGNOSTICS v_stock_rows = ROW_COUNT;
+    IF v_stock_rows <> 1 THEN
+      RAISE EXCEPTION 'Stock update count mismatch' USING ERRCODE='P0001';
+    END IF;
+  END LOOP;
+
+  -- IMPORTANT: NO ledger debit or seller allocation is implemented here.
+  -- The following event is intentionally unreachable as well.
+  INSERT INTO ec_wallet.staging_cart_order_events_v2
+    (order_id,actor_id,event_type,event_reference)
+  VALUES (v_order,v_buyer,'created',p_idempotency_key);
+
+  -- SECOND fail-closed stop: prevents returning a false purchase result
+  -- if the earlier guard is accidentally removed during editing.
+  RAISE EXCEPTION 'V2 debit and synthetic seller allocation not implemented';
+  -- No success RETURN is allowed until accounting is fully implemented.
 END
 $body$;
 
