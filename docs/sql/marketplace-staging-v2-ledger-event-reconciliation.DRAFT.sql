@@ -29,8 +29,15 @@ BEGIN
       RETURN NULL;
     END IF;
     v_order_id := NEW.reference_id;
-  ELSE
+  ELSIF TG_TABLE_SCHEMA='ec_wallet'
+        AND TG_TABLE_NAME IN ('staging_cart_orders_v2','staging_cart_order_events_v2') THEN
     v_order_id := NEW.order_id;
+  ELSE
+    RAISE EXCEPTION 'Unexpected V2 reconciliation trigger source';
+  END IF;
+
+  IF v_order_id IS NULL THEN
+    RAISE EXCEPTION 'V2 reconciliation reference is missing';
   END IF;
 
   SELECT o.* INTO v_order
