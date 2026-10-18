@@ -140,9 +140,33 @@ BEGIN
   VALUES (pg_catalog.gen_random_uuid(),v_wallet,v_order.total_ec,
           'cart_checkout_reversal_v2',p_order_id,v_reversal_key);
 
-  -- Missing allocation voiding and order-event reconciliation intentionally
-  -- prevent a successful return. Never remove the guard without them.
-  RAISE EXCEPTION 'V2 allocation voiding and cancellation event not implemented';
+  -- REVIEW-ONLY: this section is unreachable behind the earlier hard stop.
+  -- All writes must succeed or the transaction must roll back.
+  UPDATE ec_wallet.staging_cart_seller_allocations_v2 a
+     SET state='voided',voided_at=pg_catalog.transaction_timestamp()
+   WHERE a.order_id=p_order_id AND a.state='pending';
+  GET DIAGNOSTICS v_rows=ROW_COUNT;
+  IF v_rows <> (SELECT count(DISTINCT l.seller_id)
+                FROM ec_wallet.staging_cart_order_lines_v2 l
+                WHERE l.order_id=p_order_id) THEN
+    RAISE EXCEPTION 'Allocation void count mismatch';
+  END IF;
+
+  UPDATE ec_wallet.staging_cart_orders_v2 o
+     SET status='cancelled',cancelled_at=pg_catalog.transaction_timestamp()
+   WHERE o.order_id=p_order_id AND o.status='created';
+  GET DIAGNOSTICS v_rows=ROW_COUNT;
+  IF v_rows<>1 THEN
+    RAISE EXCEPTION 'Order cancellation count mismatch';
+  END IF;
+
+  INSERT INTO ec_wallet.staging_cart_order_events_v2
+    (order_id,actor_id,event_type,event_reference)
+  VALUES (p_order_id,v_buyer,'cancelled',pg_catalog.gen_random_uuid());
+
+  -- SECOND fail-closed stop: replay verification, allocation transition
+  -- guards and concurrency tests are still missing.
+  RAISE EXCEPTION 'V2 cancellation completion not approved';
 END
 $body$;
 REVOKE ALL ON FUNCTION public.ec_staging_cart_cancel_v2(uuid)
