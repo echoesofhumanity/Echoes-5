@@ -34,6 +34,7 @@ export class SyntheticMarketplace {
       total += subtotal;
     }
     if ((this.balances.get(buyer) ?? 0) < total) throw Error('Insufficient EC');
+    if (!Number.isSafeInteger(now + this.ttlMs)) throw Error('Expiry overflow');
     // In-memory reference only: validate before mutations; database must supply ACID and locks.
     const orderId = identity;
     for (const line of normalized) this.stock.get(line.product).quantity -= line.quantity;
@@ -53,6 +54,8 @@ export class SyntheticMarketplace {
       const p = this.stock.get(line.product);
       if (!p || !Number.isSafeInteger(p.quantity + line.quantity)) throw Error('Restock failed');
     }
+    const balance = this.balances.get(buyer);
+    if (!Number.isSafeInteger(balance) || !Number.isSafeInteger(balance + order.total)) throw Error('Refund overflow');
     for (const line of order.lines) this.stock.get(line.product).quantity += line.quantity;
     this.balances.set(buyer, this.balances.get(buyer) + order.total);
     Object.assign(order, { status: 'cancelled', reservation: 'released', clearing: 'voided', reversal: order.total });
