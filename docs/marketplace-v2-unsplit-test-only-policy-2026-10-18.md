@@ -91,3 +91,28 @@ Existing allocation-dependent SQL candidates were re-read on GitHub main. Preser
 **Proposed staging-only deterministic acceptance examples:** 2 sellers/3 items; duplicate product normalized; last-stock contention; low balance; seller status changes; identical and mismatched idempotency key replay; cancel once and twice; consumed reservation rejection; expired reserved rejection; injected mid-transaction failure; unauthorized buyer; mismatched clearing amount; wrong-wallet ledger; forbidden direct table writes. Compare wallet/ledger, order/lines, stock/reservations, clearing and events after each test. This is a plan, not evidence of execution.
 
 **Verdict: STATIC ADAPTATION BLUEPRINT COMPLETE / SQL RPC IMPLEMENTATION PENDING / RUNTIME NO-GO.**
+
+## Five-file SQL implementation gap review — 2026-10-18
+Scope: read-only comparison of atomic checkout, atomic cancel, unsplit clearing, multi-item schema and ledger/event reconciliation SQL drafts on GitHub main. No SQL executed and no staging or production writes.
+
+| Component | Confirmed candidate | Gap before PostgreSQL acceptance |
+| --- | --- | --- |
+| Checkout | Normalization, buyer wallet lock, seller verification/locks, product locks, stock/balance checks, idempotency-key comparison | Seller allocations still referenced; hard stop; 30-minute expiry hardcoded without policy; no atomic unsplit clearing write, complete replay verification or tested ledger debit |
+| Cancellation | Buyer/order lock, debit checks, reservation/stock restore candidate and replay checks | Seller allocations still referenced; hard stop; no atomic unsplit clearing void; consumed/expired resolution and replay reconciliation require final proof |
+| Clearing | One row per order, matching total and status via deferred candidate checks | No PostgreSQL validation of trigger timing, grants or privileged writer isolation; no integrated checkout/cancel writer |
+| Reservations | State/identity guard draft, no automatic expiry | Guard rejects cancellation release at/after expiry; explicit resolution workflow remains undefined; consumption disabled |
+| Ledger/events | Deferred debit/reversal/event reconciliation candidate | Ledger CHECK rejects V2 operation codes; complete accounting journal and multi-writer/permission review absent |
+
+### Decision gates, not implicit approvals
+1. Approve an explicit reservation lifetime (30 minutes in an older draft is **not** approval).
+2. Specify expired-but-reserved order resolution including whether/how EC is reversed, stock is restored, and who may authorize the transition.
+3. Approve a **synthetic-only** ledger namespace, journal and privileged-writer policy; never infer real settlement or allocations.
+4. Complete global lock-order review (wallet, seller, product, order), grants/RLS/SECURITY DEFINER review and PostgreSQL fixture acceptance A01–A16.
+5. Separately authorize staging DDL and synthetic writes before any test execution. Production and backup remain out of scope.
+
+### Implementation-ready division
+- Isolated checkout: validate and lock -> create immutable order/lines -> reserve and decrement stock -> post single buyer debit -> create exactly one pending unallocated clearing -> created event -> verify replay.
+- Isolated cancel: validate and lock -> prove original debit and pending clearing -> reject consumed/expired reservations -> restore stock and release reservations -> post one full reversal -> void clearing -> cancelled event -> verify replay.
+- Both must be one database transaction, with fail-closed guards retained until tests and explicit deployment authorization.
+
+**Outcome:** static gap review complete. No independent executable synthetic RPC delivered. PostgreSQL acceptance NOT RUN; staging/production UNCHANGED; runtime NO-GO.
