@@ -28,6 +28,8 @@ DECLARE
   v_product record;
   v_subtotal numeric;
   v_lines jsonb;
+  v_seller_id uuid;
+  v_seller_status text;
 BEGIN
   IF v_buyer IS NULL OR p_idempotency_key IS NULL THEN
     RAISE EXCEPTION 'Authenticated buyer and request key required' USING ERRCODE='28000';
@@ -71,7 +73,10 @@ BEGIN
   END IF;
 
   -- Lock products in UUID order, one at a time. Do not rely on unordered IN locks.
-  -- Seller verification is rechecked AFTER each product lock.
+  -- Seller verification is rechecked and row-locked AFTER each product lock.
+  -- IMPORTANT: for carts with several products, product->seller->next product
+  -- can deadlock against other writers. This is NOT a final lock protocol;
+  -- see separate concurrency architecture and do not enable posting.
   FOR v_item IN SELECT x.product_id,x.quantity
     FROM ec_wallet.v2_normalize_cart(p_lines) x ORDER BY x.product_id
   LOOP
@@ -90,10 +95,13 @@ BEGIN
        OR v_product.stock_available < v_item.quantity THEN
       RAISE EXCEPTION 'Product unavailable' USING ERRCODE='P0001';
     END IF;
-    IF NOT EXISTS (
-      SELECT 1 FROM ec_wallet.staging_sellers s
-      WHERE s.seller_id=v_product.seller_id AND s.verification_status='verified'
-    ) THEN
+    -- Lock the seller row while product lock is held. Concurrent seller
+    -- suspension UPDATE must wait until checkout commits or aborts.
+    -- Global lock protocol must be agreed with seller-admin writers first.
+    SELECT seller_id,verification_status INTO v_seller_id,v_seller_status
+      FROM ec_wallet.staging_sellers
+      WHERE seller_id=v_product.seller_id FOR SHARE;
+    IF NOT FOUND OR v_seller_status <> 'verified' THEN
       RAISE EXCEPTION 'Seller not verified' USING ERRCODE='P0001';
     END IF;
     v_subtotal := v_product.price_ec::numeric * v_item.quantity;
@@ -129,8 +137,8 @@ COMMIT;
 -- REVIEW FINDINGS / GATES:
 -- 1. The function is deliberately uncallable by normal clients and raises before posting.
 -- 2. pgcrypto extension schema ('extensions') must be verified read-only.
--- 3. Seller status must be protected by a consistent locking protocol; the
---    existence check above is NOT sufficient against concurrent suspension.
+-- 3. Seller status is now protected by FOR SHARE row locks, but product/seller
+--    interleaving still requires a global deadlock-free lock protocol.
 -- 4. The product lock loop may hold locks for a long cart; test lock timeouts.
 -- 5. Future price snapshot must be captured while product locks are held.
 -- 6. Add strict checkout posting, reversal and payable reconciliation separately.
