@@ -8,7 +8,7 @@ Applies only to independent ec_wallet.staging_v2_catalogue_products and V2 cart 
 ## Atomic checkout — mandatory server transaction
 1. Derive buyer from verified auth context; reject unauthenticated callers. Accept only normalized unique V2 product UUIDs, quantities 1..99 (max 50 lines), and a UUID idempotency key; no client prices/sellers/totals.
 2. Lock a buyer/idempotency coordination row or use a unique-key safe insert strategy. Same key + same canonical digest returns the prior committed result; same key + different digest fails. Concurrent first attempts must serialize without duplicate debit.
-3. Lock wallet and catalogue product rows in one documented global order, product UUID ascending; all wallet-writing RPCs must share the wallet locking discipline. Do not hold locks while calling external services.
+3. Lock the buyer wallet first. The current V2 checkout draft then locks seller rows with `FOR SHARE` in ascending seller UUID order and product rows with `FOR UPDATE` in ascending product UUID order; cancellation locks wallet, order, then product rows in ascending product UUID order. All wallet-writing RPCs must share the wallet locking discipline. Do not hold locks while calling external services. This is a reviewed draft order, not proof of deadlock freedom.
 4. Recheck environment=staging, test_only=true, active/published, rights and policy approvals, seller verification/not suspended, price, revision and available stock under locks. Catalogue display is never authorization.
 5. For each item, guarded UPDATE catalogue SET stock_available=stock_available-quantity, revision=revision+1, updated_at=transaction_timestamp() WHERE product_id=... AND stock_available>=quantity; assert exactly one updated row. Ensure checked arithmetic and aggregate <= JS safe integer.
 6. Within the same database transaction create order, immutable price/seller line snapshots, reservation rows, ledger debit and order event. Assert order sum, wallet balance and ledger idempotency invariants. Commit all or rollback all; no partial order or stock deduction.
@@ -48,3 +48,21 @@ S15 legacy single-item checkout and demo cart regression unchanged.
 
 ## NO-GO
 Do not run draft SQL or activate V2 RPCs before the inventory state machine, ledger accounting, lock-order protocol, access grants, failure tests and migration/rollback review are approved. No real payment, fiat EC redemption, production inventory or shipping.
+
+## Static lock-order trace — 18 October 2026
+Source: current GitHub main V2 checkout/cancel SQL drafts. No PostgreSQL execution or concurrency test.
+
+| Path | Locks acquired before posting | Unresolved competing writer |
+| --- | --- | --- |
+| V2 checkout | buyer wallet FOR UPDATE → seller rows FOR SHARE (seller UUID ascending) → product rows FOR UPDATE (product UUID ascending) | Seller administration that locks a product before seller can invert the order. |
+| V2 cancellation | buyer wallet FOR UPDATE → buyer-owned order FOR UPDATE → product rows FOR UPDATE (product UUID ascending) | Stock administration or other order writer must be inventoried. |
+| Allocation void trigger | parent order FOR UPDATE during allocation update | Cancellation already holds order; a privileged direct allocation update may not. |
+| Legacy single-item checkout | buyer wallet FOR UPDATE → legacy product FOR UPDATE | Shared wallet contention requires regression testing; V2 and legacy use distinct product tables. |
+| Legacy cancellation | buyer wallet FOR UPDATE → legacy order FOR UPDATE → legacy stock update | Same-wallet operations serialize only if all writers lock wallet first. |
+
+### Required corrections before GO
+1. Inventory every server-side and privileged seller, product, wallet and allocation writer; record its lock order. No blanket claim of global ordering until this is complete.
+2. Forbid product→seller inversion relative to V2 checkout seller→product locks, or redesign all relevant writers under one agreed protocol.
+3. Verify cancellation order→product acquisition against inventory administration and reservation transition triggers.
+4. Test two buyers with reversed cart ordering, two buyers sharing a seller, cancellation/checkout on the same wallet, and concurrent administrative seller/stock updates. Use bounded lock timeouts and inspect deadlock/rollback results.
+5. The hard-stop SQL guards remain in place; the static trace is not a staging test or deployment authorization.
