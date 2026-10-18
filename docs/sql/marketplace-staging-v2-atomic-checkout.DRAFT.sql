@@ -34,6 +34,7 @@ DECLARE
   v_candidate_seller_id uuid;
   v_line_id uuid;
   v_stock_rows integer;
+  v_debit_entry_id uuid;
 BEGIN
   IF v_buyer IS NULL OR p_idempotency_key IS NULL THEN
     RAISE EXCEPTION 'Authenticated buyer and request key required' USING ERRCODE='28000';
@@ -177,7 +178,22 @@ BEGIN
     END IF;
   END LOOP;
 
-  -- IMPORTANT: NO ledger debit or seller allocation is implemented here.
+  -- FINANCIAL WRITE CANDIDATE: still unreachable due to the hard stop above.
+  -- Ledger CHECK currently excludes 'cart_checkout_debit_v2'; an explicitly
+  -- reviewed migration must add this operation BEFORE any activation.
+  -- Wallet lock was acquired before balance check; use one debit per order.
+  v_debit_entry_id := pg_catalog.gen_random_uuid();
+  INSERT INTO ec_wallet.ledger
+    (entry_id,wallet_id,delta_ec,operation,reference_id,idempotency_key)
+  VALUES
+    (v_debit_entry_id,v_wallet,-v_total::bigint,'cart_checkout_debit_v2',
+     v_order,p_idempotency_key);
+
+  -- Multi-seller allocations are deliberately NOT guessed or written here.
+  -- The approved integer EC split policy and per-seller totals must be
+  -- implemented atomically; reconciliation triggers will reject missing rows.
+  -- A synthetic payable projection is NOT a double-entry accounting journal.
+
   -- The following event is intentionally unreachable as well.
   INSERT INTO ec_wallet.staging_cart_order_events_v2
     (order_id,actor_id,event_type,event_reference)
@@ -185,7 +201,7 @@ BEGIN
 
   -- SECOND fail-closed stop: prevents returning a false purchase result
   -- if the earlier guard is accidentally removed during editing.
-  RAISE EXCEPTION 'V2 debit and synthetic seller allocation not implemented';
+  RAISE EXCEPTION 'V2 seller allocation policy and balanced accounting not implemented';
   -- No success RETURN is allowed until accounting is fully implemented.
 END
 $body$;
@@ -201,5 +217,6 @@ COMMIT;
 --    writers for inverse lock order before enabling any posting.
 -- 4. The product lock loop may hold locks for a long cart; test lock timeouts.
 -- 5. Future price snapshot must be captured while product locks are held.
--- 6. Add strict checkout posting, reversal and payable reconciliation separately.
+-- 6. Debit INSERT is drafted but unreachable and current ledger CHECK rejects
+--    its V2 operation; seller allocation, cancellation and journal remain blocked.
 -- 7. Existing single-item checkout is untouched; no real payments.
