@@ -73,6 +73,21 @@ BEGIN
     RAISE EXCEPTION 'Reservation state prevents cancellation' USING ERRCODE='P0001';
   END IF;
 
+  -- Validate all synthetic seller allocations before attempting reversal.
+  IF (SELECT coalesce(sum(a.gross_ec::numeric),0)
+      FROM ec_wallet.staging_cart_seller_allocations_v2 a
+      WHERE a.order_id=p_order_id AND a.state='pending')
+      <> v_order.total_ec::numeric
+     OR (SELECT count(*) FROM ec_wallet.staging_cart_seller_allocations_v2 a
+         WHERE a.order_id=p_order_id AND a.state='pending')
+        <> (SELECT count(DISTINCT l.seller_id)
+            FROM ec_wallet.staging_cart_order_lines_v2 l
+            WHERE l.order_id=p_order_id)
+     OR EXISTS (SELECT 1 FROM ec_wallet.staging_cart_seller_allocations_v2 a
+                WHERE a.order_id=p_order_id AND a.state<>'pending') THEN
+    RAISE EXCEPTION 'Seller allocations do not reconcile for cancellation';
+  END IF;
+
   -- The order and wallet locks serialize buyer cancellation, but product
   -- locks must obey the globally reviewed protocol before activation.
   -- Candidate per-product restock and release, deterministic UUID order:
