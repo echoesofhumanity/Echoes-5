@@ -97,6 +97,29 @@ BEGIN
     RAISE EXCEPTION 'Reservation state prevents cancellation' USING ERRCODE='P0001';
   END IF;
 
+  -- Fail closed on missing, duplicated or orphaned reservation rows.
+  IF NOT EXISTS (
+      SELECT 1 FROM ec_wallet.staging_cart_order_lines_v2 l
+       WHERE l.order_id=p_order_id
+     )
+     OR EXISTS (
+       SELECT 1 FROM ec_wallet.staging_cart_order_lines_v2 l
+       LEFT JOIN ec_wallet.staging_inventory_reservations_v2 r
+         ON r.line_id=l.line_id
+       WHERE l.order_id=p_order_id
+       GROUP BY l.line_id,l.quantity
+       HAVING count(r.reservation_id)<>1
+          OR coalesce(max(r.quantity),0)<>l.quantity
+     )
+     OR EXISTS (
+       SELECT 1 FROM ec_wallet.staging_inventory_reservations_v2 r
+       LEFT JOIN ec_wallet.staging_cart_order_lines_v2 l
+         ON l.line_id=r.line_id AND l.order_id=r.order_id
+       WHERE r.order_id=p_order_id AND l.line_id IS NULL
+     ) THEN
+    RAISE EXCEPTION 'V2 reservation cardinality mismatch';
+  END IF;
+
   -- Validate all synthetic seller allocations before attempting reversal.
   IF (SELECT coalesce(sum(a.gross_ec::numeric),0)
       FROM ec_wallet.staging_cart_seller_allocations_v2 a
