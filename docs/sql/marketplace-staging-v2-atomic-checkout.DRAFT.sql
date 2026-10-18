@@ -72,6 +72,35 @@ BEGIN
     IF v_existing.request_digest <> v_digest THEN
       RAISE EXCEPTION 'Idempotency key reused for another cart' USING ERRCODE='23505';
     END IF;
+    -- Replaying an order must not hide a missing debit, event or broken
+    -- immutable line total. A cancelled order also needs its reversal.
+    IF v_existing.status NOT IN ('created','cancelled')
+       OR NOT EXISTS (
+         SELECT 1 FROM ec_wallet.staging_cart_order_lines_v2 l
+         WHERE l.order_id=v_existing.order_id
+       )
+       OR (SELECT coalesce(sum(l.subtotal_ec::numeric),0)
+           FROM ec_wallet.staging_cart_order_lines_v2 l
+           WHERE l.order_id=v_existing.order_id)<>v_existing.total_ec::numeric
+       OR (SELECT count(*) FROM ec_wallet.ledger l
+           WHERE l.wallet_id=v_wallet
+             AND l.operation='cart_checkout_debit_v2'
+             AND l.reference_id=v_existing.order_id
+             AND l.delta_ec=-v_existing.total_ec)<>1
+       OR (SELECT count(*) FROM ec_wallet.staging_cart_order_events_v2 e
+           WHERE e.order_id=v_existing.order_id AND e.event_type='created')<>1
+       OR (v_existing.status='cancelled' AND (
+           (SELECT count(*) FROM ec_wallet.ledger l
+            WHERE l.wallet_id=v_wallet
+              AND l.operation='cart_checkout_reversal_v2'
+              AND l.reference_id=v_existing.order_id
+              AND l.delta_ec=v_existing.total_ec)<>1
+           OR (SELECT count(*) FROM ec_wallet.staging_cart_order_events_v2 e
+               WHERE e.order_id=v_existing.order_id AND e.event_type='cancelled')<>1
+       ))
+    THEN
+      RAISE EXCEPTION 'Checkout replay evidence incomplete; manual review';
+    END IF;
     order_id := v_existing.order_id;
     total_ec := v_existing.total_ec;
     replayed := true;
