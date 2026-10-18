@@ -48,3 +48,12 @@ Project: echoes-response-staging (ymxpbkviadypsvahrqwt). A read-only information
 **V2 NO-GO:** Do not enable V2 ledger posting while direct service_role INSERT remains an unreviewed alternative to the authorized checkout/cancellation transaction. Existing legacy services may depend on these grants: DO NOT revoke privileges without a caller inventory and regression plan.
 
 Next review-only checks: inventory existing ledger triggers, RLS, CHECK and UNIQUE constraints; inspect current legacy RPC owner and SECURITY DEFINER privileges; map all server-side writers; design least-privilege dedicated V2 writer and negative tests (wrong wallet, duplicate debit, forged reversal, direct INSERT). Approval required before any grants, DDL or synthetic writes.
+
+## Verified ledger triggers and constraints — staging read-only, 18 October 2026
+- Active trigger: ledger_immutable BEFORE DELETE OR UPDATE FOR EACH ROW, calls ec_wallet.reject_ledger_mutation(). Its enabled flag is O (normal origin execution).
+- CHECK ledger_delta_ec_check: delta_ec <> 0.
+- CHECK ledger_operation_check: operation in topup_settled, checkout_debit, checkout_reversal, refund_credit, administrative_correction. V2 debit/reversal codes are NOT accepted.
+- Unique constraints: (wallet_id,idempotency_key) and (wallet_id,operation,reference_id); entry_id is primary key; wallet_id FK to wallets.
+- The UPDATE/DELETE trigger does NOT guard INSERT, nor does it prove that privileged roles cannot disable triggers or TRUNCATE. Existing service_role grants include INSERT and TRUNCATE, so no claim of fully isolated ledger writes is justified.
+- Read-only inspection of RLS and function ownership was attempted but not completed in this pass. Do not infer their settings.
+- Next action: inspect function definitions/ownership and RLS using separate read-only queries; determine how legacy operations rely on service_role before considering any permission change. No migrations or grants executed.
