@@ -116,6 +116,51 @@ REVOKE ALL ON ec_wallet.staging_inventory_reservations_v2 FROM PUBLIC,anon,authe
 
 COMMIT;
 
+-- APPROVED POLICY / REVIEW-ONLY transition candidate (2026-10-18).
+-- No automatic release at expires_at. Only explicit order cancellation
+-- may release a reserved reservation in this synthetic demo.
+-- This candidate remains behind the top-level RAISE EXCEPTION guard.
+CREATE FUNCTION ec_wallet.v2_reservation_transition_guard()
+RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER SET search_path = ''
+AS $fn$
+BEGIN
+  IF TG_OP='DELETE' THEN
+    RAISE EXCEPTION 'V2 reservation deletion prohibited';
+  END IF;
+  IF TG_OP='UPDATE' THEN
+    IF NEW.reservation_id IS DISTINCT FROM OLD.reservation_id
+       OR NEW.line_id IS DISTINCT FROM OLD.line_id
+       OR NEW.order_id IS DISTINCT FROM OLD.order_id
+       OR NEW.product_id IS DISTINCT FROM OLD.product_id
+       OR NEW.quantity IS DISTINCT FROM OLD.quantity
+       OR NEW.reserved_at IS DISTINCT FROM OLD.reserved_at
+       OR NEW.expires_at IS DISTINCT FROM OLD.expires_at
+       OR OLD.state <> 'reserved'
+       OR NEW.state NOT IN ('released','consumed') THEN
+      RAISE EXCEPTION 'Invalid V2 reservation transition';
+    END IF;
+    IF NEW.state='released' AND (
+       NEW.release_reason IS DISTINCT FROM 'order_cancelled'
+       OR NEW.released_at IS NULL OR NEW.consumed_at IS NOT NULL
+       OR transaction_timestamp() >= OLD.expires_at) THEN
+      RAISE EXCEPTION 'Reservation cancellation release not permitted';
+    END IF;
+    IF NEW.state='consumed' THEN
+      RAISE EXCEPTION 'Reservation consumption requires separately approved operation';
+    END IF;
+  END IF;
+  RETURN NEW;
+END
+$fn$;
+
+CREATE TRIGGER v2_reservation_before_update_delete
+BEFORE UPDATE OR DELETE ON ec_wallet.staging_inventory_reservations_v2
+FOR EACH ROW EXECUTE FUNCTION ec_wallet.v2_reservation_transition_guard();
+
+-- Transition guard is not a complete authorization boundary: ownership,
+-- order state, exact-once stock/EC posting, privileges and deferred
+-- reconciliation must be enforced by a separately reviewed atomic RPC.
+
 -- Not yet implemented:
 -- * server-owned atomic checkout/cancellation and deterministic locking
 -- * guarded one-way reservation transitions reserved -> released/consumed;
