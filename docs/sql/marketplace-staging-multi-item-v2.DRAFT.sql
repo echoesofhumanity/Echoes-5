@@ -5,6 +5,13 @@
 -- Requires review of auth, grants, dependencies and accounting invariants.
 -- DEPENDENCY: review/apply independent staging_v2_catalogue_products draft first.
 -- Never reuse the legacy single-item staging_products purchase identities.
+-- Deliberately fail before any DDL, even if pasted into SQL editor.
+DO $review$
+BEGIN
+  RAISE EXCEPTION 'REVIEW ONLY: V2 multi-item schema not approved';
+END
+$review$;
+
 BEGIN;
 
 CREATE TABLE ec_wallet.staging_cart_orders_v2 (
@@ -50,11 +57,13 @@ CREATE TABLE ec_wallet.staging_cart_order_events_v2 (
   event_type text NOT NULL CHECK (event_type IN ('created','cancelled')),
   occurred_at timestamptz NOT NULL DEFAULT transaction_timestamp(),
   event_reference uuid NOT NULL,
-  CONSTRAINT cart_order_events_v2_event_reference_unique UNIQUE (order_id,event_reference)
+  CONSTRAINT cart_order_events_v2_event_reference_unique UNIQUE (order_id,event_reference),
+  CONSTRAINT cart_order_events_v2_one_per_type UNIQUE (order_id,event_type)
 );
 
 CREATE TABLE ec_wallet.staging_inventory_reservations_v2 (
   reservation_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  -- Exactly one reservation per immutable order line; existing UNIQUE.
   line_id uuid NOT NULL UNIQUE,
   order_id uuid NOT NULL,
   product_id uuid NOT NULL,
