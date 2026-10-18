@@ -62,9 +62,60 @@ CREATE TRIGGER v2_unsplit_clearing_before_update_delete
 BEFORE UPDATE OR DELETE ON ec_wallet.staging_cart_unsplit_clearing_v2
 FOR EACH ROW EXECUTE FUNCTION ec_wallet.v2_unsplit_clearing_transition_guard();
 
--- NOT IMPLEMENTED: deferred cross-object checks that enforce exactly one
--- clearing row per order, amount_ec=order.total_ec, pending iff created,
--- voided iff cancelled, and one original debit / one reversal as applicable.
+-- REVIEW-ONLY deferred order/clearing reconciliation candidate.
+-- The top-level review guard remains in place: none of this is deployable.
+CREATE FUNCTION ec_wallet.v2_assert_unsplit_clearing()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = ''
+AS $fn$
+DECLARE
+  v_order_id uuid;
+  v_order ec_wallet.staging_cart_orders_v2%ROWTYPE;
+  v_count bigint;
+  v_amount numeric;
+  v_bad_count bigint;
+BEGIN
+  IF TG_TABLE_SCHEMA <> 'ec_wallet'
+     OR TG_TABLE_NAME NOT IN ('staging_cart_orders_v2','staging_cart_unsplit_clearing_v2') THEN
+    RAISE EXCEPTION 'Unexpected clearing trigger source';
+  END IF;
+  v_order_id := NEW.order_id;
+  SELECT o.* INTO v_order
+  FROM ec_wallet.staging_cart_orders_v2 o WHERE o.order_id=v_order_id;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Clearing order missing';
+  END IF;
+  SELECT count(*),coalesce(sum(c.amount_ec::numeric),0),
+         count(*) FILTER (WHERE c.currency_code<>'EC'
+             OR c.policy_code<>'UNSPLIT-TEST-ONLY-v0'
+             OR c.test_only IS DISTINCT FROM true
+             OR (v_order.status='created' AND c.state<>'pending')
+             OR (v_order.status='cancelled' AND c.state<>'voided'))
+  INTO v_count,v_amount,v_bad_count
+  FROM ec_wallet.staging_cart_unsplit_clearing_v2 c
+  WHERE c.order_id=v_order_id;
+  IF v_count<>1 OR v_amount<>v_order.total_ec::numeric OR v_bad_count<>0 THEN
+    RAISE EXCEPTION 'V2 unallocated clearing/order mismatch';
+  END IF;
+  RETURN NULL;
+END
+$fn$;
+
+CREATE CONSTRAINT TRIGGER v2_unsplit_check_order
+AFTER INSERT OR UPDATE ON ec_wallet.staging_cart_orders_v2
+DEFERRABLE INITIALLY DEFERRED FOR EACH ROW
+EXECUTE FUNCTION ec_wallet.v2_assert_unsplit_clearing();
+
+CREATE CONSTRAINT TRIGGER v2_unsplit_check_clearing
+AFTER INSERT OR UPDATE ON ec_wallet.staging_cart_unsplit_clearing_v2
+DEFERRABLE INITIALLY DEFERRED FOR EACH ROW
+EXECUTE FUNCTION ec_wallet.v2_assert_unsplit_clearing();
+
+REVOKE ALL ON FUNCTION ec_wallet.v2_assert_unsplit_clearing()
+FROM PUBLIC,anon,authenticated,service_role;
+
+-- Implemented above as an unexecuted review candidate: one clearing row,
+-- matching order amount and status. Ledger debit/reversal checks remain separate,
+-- and privileged writer / TRUNCATE protections require independent review.
 -- Existing allocation reconciliation is incompatible with this model:
 -- it MUST NOT be installed alongside this candidate without a reviewed
 -- mutually exclusive migration manifest and replacement invariants.
