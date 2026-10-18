@@ -83,3 +83,12 @@ This supersedes the earlier generic phase order; it is NOT an executable migrati
 - The rounding test vectors are exact-integer arithmetic checks, NOT PostgreSQL tests.
 - SQL review drafts contain intentional RAISE EXCEPTION blockers. Do not concatenate them and execute; a future migration must be assembled and separately reviewed with an explicit user approval.
 - No staging DDL, synthetic inserts, grants, function deployment or production changes are authorized by this document.
+
+## Concurrent checkout/cancel lock-order audit (18 October 2026)
+Static review of current V2 SQL drafts (not a PostgreSQL concurrency test):
+- V2 checkout: buyer wallet FOR UPDATE; idempotency lookup; seller rows FOR SHARE in seller UUID order; V2 product rows FOR UPDATE in product UUID order; ledger balance read; guarded transaction writes.
+- V2 cancel: buyer wallet FOR UPDATE; buyer-owned order FOR UPDATE; ledger and reservation/allocation evidence; V2 product rows FOR UPDATE in product UUID order; hard-stop before writes.
+- Legacy single-item checkout: buyer wallet FOR UPDATE then eligible product FOR UPDATE. Legacy cancellation: wallet then legacy order FOR UPDATE, later stock update.
+- Same-buyer wallet lock serializes requests sharing that wallet; different buyers can contend on V2 products and seller rows. This alone does NOT prove a globally deadlock-free protocol.
+
+Before activation: inventory administrative stock/seller writers and their lock order; ensure seller/product updates cannot take product locks before seller locks when V2 checkout takes seller first; test two buyers buying same SKU, cross-seller carts in reversed input order, checkout vs cancel, two simultaneous cancels, legacy vs V2 same wallet, lock timeout/rollback and stock conservation. No live SQL tests or staging writes authorized.
