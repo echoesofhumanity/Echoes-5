@@ -60,3 +60,21 @@ test('refund integer overflow does not partially restore stock', () => {
   assert.equal(m.orders.get(o.orderId).status, 'created');
   assert.equal(m.orders.get(o.orderId).clearing, 'pending');
 });
+
+test('external stock fixture cannot mutate internal inventory', () => {
+  const stock = { a: { quantity: 3, price: 10, active: true, testOnly: true } };
+  const m = new SyntheticMarketplace({ ttlMs: 100, stock, balances: { buyer: 100 } });
+  stock.a.quantity = 999;
+  assert.equal(m.stock.get('a').quantity, 3);
+  m.checkout({ buyer: 'buyer', key: 'k', lines: [{ product: 'a', quantity: 1 }], now: 0 });
+  assert.equal(stock.a.quantity, 999);
+});
+test('mutating checkout or replay response cannot corrupt order evidence', () => {
+  const m = make(); const o = m.checkout(request);
+  o.lines[0].quantity = 99;
+  const replay = m.checkout(request);
+  replay.lines[0].quantity = 88;
+  assert.deepEqual(m.orders.get(o.orderId).lines, [{ product: 'a', quantity: 2 }, { product: 'b', quantity: 1 }]);
+  m.cancel({ buyer: 'buyer', orderId: o.orderId, now: 2000 });
+  assert.equal(m.stock.get('a').quantity, 3);
+});
