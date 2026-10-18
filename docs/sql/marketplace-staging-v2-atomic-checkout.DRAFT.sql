@@ -216,17 +216,18 @@ BEGIN
      WHERE l.order_id=v_order
      GROUP BY l.seller_id ORDER BY l.seller_id
   LOOP
-    -- Deterministic rounding: floor seller and humanitarian shares,
-    -- allocate the integer remainder to operating share. A separate
-    -- review must ensure rounding never exceeds the 3% operating cap.
-    v_seller_ec := pg_catalog.floor(
-      v_allocation.gross_ec::numeric*v_policy_seller_bps/10000)::bigint;
+    -- Operating share is rounded DOWN first so it can never exceed
+    -- its policy rate or the absolute 3% ceiling for small EC totals.
+    -- Humanitarian share is rounded DOWN next. The seller receives the
+    -- residual EC units; no fractional credits are created.
+    v_operating_ec := pg_catalog.floor(
+      v_allocation.gross_ec::numeric*v_policy_operating_bps/10000)::bigint;
     v_humanitarian_ec := pg_catalog.floor(
       v_allocation.gross_ec::numeric*v_policy_humanitarian_bps/10000)::bigint;
-    v_operating_ec := v_allocation.gross_ec-v_seller_ec-v_humanitarian_ec;
-    IF v_operating_ec::numeric*10000 >
+    v_seller_ec := v_allocation.gross_ec-v_operating_ec-v_humanitarian_ec;
+    IF v_seller_ec<0 OR v_operating_ec::numeric*10000 >
        v_allocation.gross_ec::numeric*300 THEN
-      RAISE EXCEPTION 'Allocation rounding exceeds operating cap';
+      RAISE EXCEPTION 'Allocation violates operating cap or balance';
     END IF;
     INSERT INTO ec_wallet.staging_cart_seller_allocations_v2
       (order_id,seller_id,gross_ec,seller_ec,humanitarian_ec,operating_ec)
