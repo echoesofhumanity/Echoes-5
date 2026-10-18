@@ -1,0 +1,32 @@
+name: Marketplace V2 synthetic reference tests
+
+on:
+  push:
+    paths:
+      - 'tests/marketplace-v2-unsplit-reference.mjs'
+      - 'tests/marketplace-v2-unsplit-reference.test.mjs'
+      - '.github/workflows/marketplace-v2-unsplit-reference.yml'
+  pull_request:
+    paths:
+      - 'tests/marketplace-v2-unsplit-reference.mjs'
+      - 'tests/marketplace-v2-unsplit-reference.test.mjs'
+      - '.github/workflows/marketplace-v2-unsplit-reference.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-reference:
+    name: Offline synthetic checkout/cancel
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run isolated Node test suite (no Supabase credentials)
+        run: node --test tests/marketplace-v2-unsplit-reference.test.mjs
