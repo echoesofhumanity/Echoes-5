@@ -186,7 +186,21 @@ BEGIN
             FROM ec_wallet.staging_cart_order_lines_v2 l
             WHERE l.order_id=p_order_id)
      OR EXISTS (SELECT 1 FROM ec_wallet.staging_cart_seller_allocations_v2 a
-                WHERE a.order_id=p_order_id AND a.state<>'pending') THEN
+                WHERE a.order_id=p_order_id AND a.state<>'pending')
+     OR EXISTS (
+       SELECT 1 FROM (
+         SELECT l.seller_id,sum(l.subtotal_ec::numeric) AS gross
+         FROM ec_wallet.staging_cart_order_lines_v2 l
+         WHERE l.order_id=p_order_id GROUP BY l.seller_id
+       ) expected
+       FULL JOIN (
+         SELECT a.seller_id,sum(a.gross_ec::numeric) AS gross
+         FROM ec_wallet.staging_cart_seller_allocations_v2 a
+         WHERE a.order_id=p_order_id GROUP BY a.seller_id
+       ) actual USING (seller_id)
+       WHERE expected.seller_id IS NULL OR actual.seller_id IS NULL
+          OR expected.gross<>actual.gross
+     ) THEN
     RAISE EXCEPTION 'Seller allocations do not reconcile for cancellation';
   END IF;
 
