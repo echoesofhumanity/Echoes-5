@@ -121,3 +121,18 @@ FROM PUBLIC,anon,authenticated,service_role;
 -- mutually exclusive migration manifest and replacement invariants.
 -- No standalone INSERT/UPDATE RPC or grants are supplied.
 COMMIT;
+
+-- 2026-10-19 REVIEW FINDING / CHECKOUT-CANCEL INTEGRATION BLOCKER:
+-- The deferred order/clearing trigger checks final order status and clearing
+-- state, but is not a complete authorization or accounting mechanism.
+-- Integration MUST also prove exactly one buyer debit, exactly one created
+-- event, and on cancellation exactly one matching reversal and cancelled event.
+-- The ledger/event reconciliation DRAFT supplies a candidate for those proofs,
+-- but its V2 operation names are excluded by the current ledger CHECK.
+-- Existing seller-allocation reconciliation must be EXCLUDED from the
+-- UNSPLIT-TEST-ONLY migration manifest; do not install both models.
+-- A single transaction must write order, lines, reservation, stock, buyer
+-- debit, unallocated pending clearing and event; cancellation must reverse
+-- all affected records together. Any error must roll back all writes.
+-- Never remove the top-level RAISE EXCEPTION as a shortcut to activation.
+-- No SQL execution, staging writes or production changes are authorized.
