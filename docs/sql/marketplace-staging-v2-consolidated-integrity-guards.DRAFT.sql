@@ -58,8 +58,7 @@ DECLARE
   v_actual numeric;
   v_count integer;
 BEGIN
-  v_order_id := CASE WHEN TG_TABLE_NAME = 'staging_cart_orders_v2'
-                     THEN NEW.order_id ELSE NEW.order_id END;
+  v_order_id := NEW.order_id;
   SELECT o.total_ec INTO v_expected
     FROM ec_wallet.staging_cart_orders_v2 o
     WHERE o.order_id = v_order_id;
@@ -146,6 +145,9 @@ BEGIN
   RETURN NEW;
 END $$;
 
+REVOKE ALL ON FUNCTION ec_wallet.v2_guard_reservation_mutation()
+  FROM PUBLIC, anon, authenticated;
+
 CREATE TRIGGER v2_reservation_insert_guard
 BEFORE INSERT ON ec_wallet.staging_inventory_reservations_v2
 FOR EACH ROW EXECUTE FUNCTION ec_wallet.v2_guard_reservation_mutation();
@@ -204,6 +206,10 @@ COMMIT;
 -- * All functions use fixed empty search_path; audit EXECUTE/default PUBLIC grants.
 -- * Trigger guards are not a substitute for atomic server-owned RPCs.
 -- * Service-role direct INSERT to ledger remains an unresolved isolation risk.
+-- * SECURITY NOTE: INSERT on event/line/order tables is still protected by grants
+--   and future server-owned RPCs, not by immutable UPDATE/DELETE triggers.
+-- * REVOKE of trigger function EXECUTE does not prevent privileged owners from
+--   modifying triggers; review schema CREATE and service_role privileges.
 -- * No automated expiry or consumed-order cancellation is authorized.
 -- * Test constraint-trigger order totals, last-stock race, duplicate idempotency,
 --   one reversal per order, failure rollback, and legacy checkout regression.
