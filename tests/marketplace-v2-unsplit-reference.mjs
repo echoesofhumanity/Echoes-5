@@ -5,7 +5,7 @@ export class SyntheticMarketplace {
   constructor({ stock, balances, ttlMs }) {
     if (!Number.isSafeInteger(ttlMs) || ttlMs <= 0) throw Error('Approved synthetic TTL required');
     this.ttlMs = ttlMs;
-    this.stock = new Map(Object.entries(stock));
+    this.stock = new Map(Object.entries(stock).map(([id, item]) => [id, { ...item }]));
     this.balances = new Map(Object.entries(balances));
     this.orders = new Map();
     this.keys = new Map();
@@ -23,7 +23,8 @@ export class SyntheticMarketplace {
     const prior = this.keys.get(identity);
     if (prior) {
       if (prior.digest !== digest) throw Error('Idempotency conflict');
-      return { ...this.orders.get(prior.orderId), replayed: true };
+      const saved = this.orders.get(prior.orderId);
+      return { ...saved, lines: saved.lines.map(line => ({ ...line })), replayed: true };
     }
     let total = 0;
     for (const line of normalized) {
@@ -42,12 +43,12 @@ export class SyntheticMarketplace {
     const order = { orderId, buyer, lines: normalized, total, status: 'created', expiresAt: now + this.ttlMs, reservation: 'reserved', clearing: 'pending', debit: -total, reversal: 0, replayed: false };
     this.orders.set(orderId, order);
     this.keys.set(identity, { digest, orderId });
-    return { ...order };
+    return { ...order, lines: order.lines.map(line => ({ ...line })) };
   }
   cancel({ buyer, orderId, now }) {
     const order = this.orders.get(orderId);
     if (!order || order.buyer !== buyer) throw Error('Order not found');
-    if (order.status === 'cancelled') return { ...order, replayed: true };
+    if (order.status === 'cancelled') return { ...order, lines: order.lines.map(line => ({ ...line })), replayed: true };
     if (!Number.isSafeInteger(now) || now >= order.expiresAt) throw Error('Expired reservation: manual resolution required');
     if (order.reservation !== 'reserved' || order.clearing !== 'pending') throw Error('Order not cancellable');
     for (const line of order.lines) {
