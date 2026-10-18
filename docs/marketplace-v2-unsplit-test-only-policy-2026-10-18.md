@@ -69,3 +69,12 @@ User approved the following five rules for the temporary V2 synthetic demo (desi
 - No real fulfillment, payout, economic split or production changes are authorized.
 
 Status: RESERVATION POLICY APPROVED / IMPLEMENTATION AND POSTGRESQL TESTS PENDING / RUNTIME NO-GO.
+
+## Final pre-implementation dependency review (2026-10-18)
+The reservation transition guard was moved inside the existing review-only SQL transaction in commit 03632cf3698a716565aaddd8caf701c2dbda8888. This is a static correction, not PostgreSQL verification.
+
+**Critical incompatibility to resolve before authoring runnable synthetic checkout/cancel:** the approved policy requires reserved->released on cancellation and no automatic expiry release; the candidate guard currently rejects release at or after expires_at. This is intentionally conservative, but means an expired reserved order has no ordinary cancellation route. A separately reviewed expiry-resolution/refund protocol is required, not an ad hoc override.
+
+**Execution sequence (future, approval gated):** validate independent catalogue and V2 order/line/event/reservation DDL; review reservation guard and unallocated clearing DDL/trigger; review ledger operation code migration and event reconciliation; author isolated synthetic-only checkout/cancel with deterministic lock ordering and rollback; inspect privileged writer and RLS/grants; execute only on expressly authorized staging with deterministic fixtures; record A01–A16 and concurrency results. Seller-allocation DRAFTs must be excluded from the unsplit test migration manifest.
+
+**Current blockers:** (1) no tested PostgreSQL migration, (2) no separate synthetic checkout/cancel implementations, (3) unapproved V2 ledger code migration and journal, (4) incomplete privileged writer/concurrency audit, (5) expired-reservation resolution not specified, (6) no explicit staging-write approval. **RUNTIME NO-GO**.
