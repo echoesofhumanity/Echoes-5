@@ -82,6 +82,55 @@ BEGIN
        OR (SELECT coalesce(sum(l.subtotal_ec::numeric),0)
            FROM ec_wallet.staging_cart_order_lines_v2 l
            WHERE l.order_id=v_existing.order_id)<>v_existing.total_ec::numeric
+       OR EXISTS (
+         SELECT 1 FROM ec_wallet.staging_cart_order_lines_v2 l
+         LEFT JOIN ec_wallet.staging_inventory_reservations_v2 r
+           ON r.line_id=l.line_id AND r.order_id=l.order_id
+         WHERE l.order_id=v_existing.order_id
+         GROUP BY l.line_id,l.product_id,l.quantity
+         HAVING count(r.reservation_id)<>1
+            OR coalesce(max(r.quantity),0)<>l.quantity
+            OR count(r.reservation_id) FILTER
+               (WHERE r.product_id=l.product_id)<>1
+       )
+       OR EXISTS (
+         SELECT 1 FROM ec_wallet.staging_inventory_reservations_v2 r
+         LEFT JOIN ec_wallet.staging_cart_order_lines_v2 l
+           ON l.line_id=r.line_id AND l.order_id=r.order_id
+         WHERE r.order_id=v_existing.order_id AND l.line_id IS NULL
+       )
+       OR (SELECT count(*) FROM ec_wallet.staging_cart_seller_allocations_v2 a
+           WHERE a.order_id=v_existing.order_id)
+          <> (SELECT count(DISTINCT l.seller_id)
+              FROM ec_wallet.staging_cart_order_lines_v2 l
+              WHERE l.order_id=v_existing.order_id)
+       OR EXISTS (
+         SELECT 1 FROM (
+           SELECT l.seller_id,sum(l.subtotal_ec::numeric) AS gross
+           FROM ec_wallet.staging_cart_order_lines_v2 l
+           WHERE l.order_id=v_existing.order_id GROUP BY l.seller_id
+         ) expected
+         FULL JOIN (
+           SELECT a.seller_id,sum(a.gross_ec::numeric) AS gross
+           FROM ec_wallet.staging_cart_seller_allocations_v2 a
+           WHERE a.order_id=v_existing.order_id GROUP BY a.seller_id
+         ) actual USING (seller_id)
+         WHERE expected.seller_id IS NULL OR actual.seller_id IS NULL
+           OR expected.gross<>actual.gross
+       )
+       OR EXISTS (
+         SELECT 1 FROM ec_wallet.staging_inventory_reservations_v2 r
+         WHERE r.order_id=v_existing.order_id
+           AND ((v_existing.status='created' AND r.state<>'reserved')
+             OR (v_existing.status='cancelled'
+                 AND (r.state<>'released' OR r.release_reason<>'order_cancelled')))
+       )
+       OR EXISTS (
+         SELECT 1 FROM ec_wallet.staging_cart_seller_allocations_v2 a
+         WHERE a.order_id=v_existing.order_id
+           AND ((v_existing.status='created' AND a.state<>'pending')
+             OR (v_existing.status='cancelled' AND a.state<>'voided'))
+       )
        OR (SELECT count(*) FROM ec_wallet.ledger l
            WHERE l.wallet_id=v_wallet
              AND l.operation='cart_checkout_debit_v2'
