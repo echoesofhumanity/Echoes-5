@@ -56,3 +56,30 @@ Any duplicate trigger assembly, unreviewed SQL execution, privileged ledger writ
 
 ## Next implementation deliverable
 Produce ONE consolidated, review-only staging migration with explicit fail-closed execution guard, deduplicated triggers, verified dependencies and a separate rollback/test harness. This document is not that migration and does not authorize execution.
+
+## Updated dependency graph and explicit NO-GO (18 October 2026)
+This supersedes the earlier generic phase order; it is NOT an executable migration.
+
+1. Read-only baseline: staging extensions, ledger CHECK, grants, role ownership, legacy RPC signatures, table presence.
+2. Independent V2 catalogue table.
+3. Multi-item order/line/event/reservation tables (now fail-closed, one event per order and type; reservation line_id already UNIQUE).
+4. Synthetic seller allocation table, then allocation transition guards.
+5. Consolidated order/line/event/reservation guards. DO NOT apply the three overlapping legacy guard drafts.
+6. Deferred allocation reconciliation guards (requires allocation table and lines).
+7. Cart normalization function (must precede checkout function).
+8. Reviewed ledger operation CHECK extension and audited ledger writer isolation. Existing CHECK does not admit cart_checkout_debit_v2 or cart_checkout_reversal_v2.
+9. Checkout and cancel functions only after approved allocation policy, lock-order audit and full posting/replay reconciliation. Both currently hard-raise; checkout policy basis-point variables are deliberately NULL.
+10. RPC grants LAST and only after fully verified execution, security and tests; grants draft currently hard-raises.
+
+### Cross-object acceptance invariants
+- Every order has 1..50 immutable lines, each with exactly one reservation, and exactly one created event.
+- Exactly one allocation per distinct seller; per-seller gross equals its immutable line subtotals, total allocations equals order total.
+- Every created order has one matching wallet debit of -total_ec; every cancelled order has exactly one matching +total_ec reversal and one cancelled event.
+- Cancelled orders have only released reservations (reason order_cancelled), voided allocations, no duplicate restock.
+- Existing deferred allocation reconciliation does NOT enforce wallet debit or event count. Add reviewed cross-object checks before enabling RPCs.
+- Global lock order, ledger writer permissions, and legacy checkout compatibility must be tested under concurrency.
+
+### Evidence and approval boundary
+- The rounding test vectors are exact-integer arithmetic checks, NOT PostgreSQL tests.
+- SQL review drafts contain intentional RAISE EXCEPTION blockers. Do not concatenate them and execute; a future migration must be assembled and separately reviewed with an explicit user approval.
+- No staging DDL, synthetic inserts, grants, function deployment or production changes are authorized by this document.
