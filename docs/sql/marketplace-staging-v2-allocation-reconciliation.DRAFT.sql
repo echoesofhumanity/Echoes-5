@@ -48,6 +48,17 @@ BEGIN
     ) actual USING (seller_id)
     WHERE expected.seller_id IS NULL OR actual.seller_id IS NULL
       OR expected.gross <> actual.gross;
+  -- Gross totals alone do not prove that every allocation component is
+  -- balanced. Numeric casts avoid bigint overflow in aggregate arithmetic.
+  IF EXISTS (
+    SELECT 1 FROM ec_wallet.staging_cart_seller_allocations_v2 a
+    WHERE a.order_id=v_order_id
+      AND (a.seller_ec::numeric + a.humanitarian_ec::numeric
+           + a.operating_ec::numeric <> a.gross_ec::numeric
+           OR a.operating_ec::numeric * 100 > a.gross_ec::numeric * 3)
+  ) THEN
+    RAISE EXCEPTION 'V2 allocation components unbalanced or operating cap exceeded';
+  END IF;
   IF v_seller_count=0 OR v_total::numeric<>v_line_total
      OR v_total::numeric<>v_allocation_total OR v_bad_seller_count<>0 THEN
     RAISE EXCEPTION 'V2 allocation/line/order totals do not reconcile';
