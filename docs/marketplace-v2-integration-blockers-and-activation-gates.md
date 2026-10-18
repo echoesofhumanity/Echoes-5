@@ -14,8 +14,8 @@ Status: review-only; NO SQL execution, no grants, no staging/production changes.
 1. Checkout inserts order, lines, reservations and debit but DOES NOT insert seller allocations. Deferred reconciliation would reject commit. A versioned, approved integer-EC distribution policy and deterministic rounding are needed. Do not invent percentages.
 2. Existing ledger operation CHECK excludes cart_checkout_debit_v2 and cart_checkout_reversal_v2. Review and approve an isolated migration with no changes to legacy operation semantics.
 3. Both RPC drafts intentionally raise exceptions before writes and again at their ends; both SQL files also fail before DDL. They are not operational.
-4. The cancellation replay branch checks reversal and state, but must additionally require at least one order line, a reservation for every line, exactly one reservation per line, one allocation per seller, and one original debit; otherwise vacuous empty-set checks could accept corrupt records.
-5. Cancellation validates reservation states but not duplicate reservations per line. Releasing duplicates could over-credit inventory. Enforce one-to-one uniqueness at schema level and validate counts in RPC.
+4. The cancellation replay branch now checks original debit, nonempty lines, reservation cardinality and seller allocation counts; independent PostgreSQL tests and stricter financial reconciliation are still required.
+5. The V2 schema already declares reservation.line_id UNIQUE. Cancellation and replay drafts now also check reservation cardinality and orphan rows; these remain untested in PostgreSQL.
 6. Allocation transition trigger locks the parent order FOR UPDATE; audit lock hierarchy with wallet -> order -> seller -> product across all writers. Checkout currently wallet -> seller -> product; cancellation wallet -> order -> product. Ensure no inverse locks or deadlocks.
 7. Reservation expiry is a timestamp, not an approved automatic release/refund policy. No expiry worker or auto-refund is authorized.
 8. Direct service-role/table-owner writes and ledger write privileges require audit; a row trigger is not sufficient to guarantee all writers acquire wallet locks.
@@ -34,3 +34,9 @@ G. Run staging tests; only after green results connect the V2 demo UI. Productio
 
 ## Non-goals
 No real payments, no live payout, no production migration, no alteration of existing single-item checkout, no new financial distribution percentages.
+
+## Schema hardening completed in draft
+- V2 multi-item schema now begins with an intentional fail-closed guard.
+- V2 event table now has UNIQUE(order_id,event_type) in addition to its event-reference uniqueness, preventing multiple created or cancelled events for one order.
+- Reservation line_id UNIQUE was already present; do not create a duplicate constraint.
+- These changes exist only on GitHub main and have not been migrated to staging.
