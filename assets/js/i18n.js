@@ -76,7 +76,9 @@
     return response.json();
   };
 
+  let translationRequestId = 0;
   const translatePage = async (language = getLanguage()) => {
+    const requestId = ++translationRequestId;
     const page = document.body && document.body.dataset.page;
     if (!page) return;
     const code = isActive(language) ? normalizeLanguage(language) : DEFAULT_LANGUAGE;
@@ -96,6 +98,7 @@
           loadComponentDictionary(code, "header"),
           loadComponentDictionary(code, "footer")
         ]);
+    if (requestId !== translationRequestId || code !== getLanguage()) return;
     const fallbackSource = Object.assign({}, fallback, headerFallback, footerFallback);
     const selectedSource = Object.assign({}, selected, headerSelected, footerSelected);
     document.querySelectorAll("[data-i18n]").forEach((element) => {
