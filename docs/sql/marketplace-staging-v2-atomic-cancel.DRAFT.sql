@@ -94,6 +94,21 @@ BEGIN
        OR (SELECT coalesce(sum(a.gross_ec::numeric),0)
            FROM ec_wallet.staging_cart_seller_allocations_v2 a
            WHERE a.order_id=p_order_id)<>v_order.total_ec::numeric
+       OR EXISTS (
+         SELECT 1
+         FROM (
+           SELECT l.seller_id,sum(l.subtotal_ec::numeric) AS gross
+           FROM ec_wallet.staging_cart_order_lines_v2 l
+           WHERE l.order_id=p_order_id GROUP BY l.seller_id
+         ) expected
+         FULL JOIN (
+           SELECT a.seller_id,sum(a.gross_ec::numeric) AS gross
+           FROM ec_wallet.staging_cart_seller_allocations_v2 a
+           WHERE a.order_id=p_order_id GROUP BY a.seller_id
+         ) actual USING (seller_id)
+         WHERE expected.seller_id IS NULL OR actual.seller_id IS NULL
+           OR expected.gross<>actual.gross
+       )
        OR (SELECT count(*) FROM ec_wallet.ledger l
            WHERE l.wallet_id=v_wallet AND l.operation='cart_checkout_debit_v2'
              AND l.reference_id=p_order_id
@@ -212,7 +227,8 @@ BEGIN
        SET stock_available=p.stock_available+v_reservation.quantity,
            revision=p.revision+1,
            updated_at=pg_catalog.transaction_timestamp()
-     WHERE p.product_id=v_reservation.product_id;
+     WHERE p.product_id=v_reservation.product_id
+       AND p.stock_available <= 2147483647 - v_reservation.quantity;
     GET DIAGNOSTICS v_rows=ROW_COUNT;
     IF v_rows<>1 THEN
       RAISE EXCEPTION 'Stock restoration mismatch';
