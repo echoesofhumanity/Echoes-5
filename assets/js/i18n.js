@@ -13,7 +13,7 @@
     de: { label: "Deutsch", dir: "ltr", active: true },
     pt: { label: "Português", dir: "ltr", active: true },
     ru: { label: "Русский", dir: "ltr", active: true },
-    zh: { label: "中文", dir: "ltr", active: false },
+    zh: { label: "简体中文", dir: "ltr", active: true },
     hi: { label: "हिन्दी", dir: "ltr", active: false }
   });
 
