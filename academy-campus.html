@@ -2,13 +2,13 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Academy Campus Preview — Echoes of Humanity</title>
 <meta name="description" content="Echoes Academy learning campus: schools and proposed programs. Preview only; enrollment is not yet available.">
-<link rel="stylesheet" href="assets/css/core.css?v=a73a9986">
+<link rel="stylesheet" href="assets/css/core.css?v=a73a9986"><link rel="stylesheet" href="assets/css/echoes-universe.css"><link rel="stylesheet" href="assets/css/header-cinematic.css?v=a029bcf">
 <style>
 :root{color-scheme:dark}body{margin:0;background:#081321;color:#f3f4f3;font-family:Inter,system-ui,sans-serif;line-height:1.6}.campus{max-width:1180px;margin:auto;padding:64px 22px 100px}.topline{color:#67d4c8;text-transform:uppercase;letter-spacing:.18em;font-size:.8rem;font-weight:700}.intro{max-width:780px;margin-bottom:40px}h1{font-size:clamp(2.5rem,6vw,5rem);line-height:1.06;letter-spacing:-.04em;margin:18px 0}h2{font-size:1.5rem}p{color:#b6c6d1}.note{border-left:3px solid #67d4c8;padding:14px 18px;background:#122333;border-radius:0 12px 12px 0}.filters{display:flex;gap:12px;flex-wrap:wrap;margin:30px 0}button,input{font:inherit}button{border:1px solid #375165;background:#152839;color:#f3f4f3;padding:10px 16px;border-radius:999px;cursor:pointer}button[aria-pressed=true]{border-color:#67d4c8;background:#164b4b}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #67d4c8;outline-offset:3px}input{background:#122333;border:1px solid #375165;color:white;padding:12px 16px;border-radius:12px;width:min(100%,360px)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:18px}.card{border:1px solid #304659;border-radius:18px;background:linear-gradient(145deg,#15283b,#0b1b2b);padding:25px;min-height:180px}.card h3{font-size:1.22rem;margin:10px 0}.tag{color:#7edfd2;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}.card p{margin-bottom:0}.back{color:#83e0d4;text-decoration:none}.muted{color:#a9bbc8}.section{margin-top:58px}.count{font-size:.9rem;color:#a9bbc8}#empty{display:none}.footer{margin-top:65px;border-top:1px solid #304659;padding-top:25px;color:#9fb0be}@media(prefers-reduced-motion:no-preference){.card{transition:transform .25s,border-color .25s}.card:hover{transform:translateY(-3px);border-color:#67d4c8}}
 /* Echoes Academy visual continuity — scoped to this page */
 :root{--echoes-card-accent-rgb:95,208,197;--echoes-ease:cubic-bezier(.16,1,.3,1);--echoes-card-radius:22px;--echoes-card-border:rgba(95,208,197,.17);--echoes-card-border-active:rgba(95,208,197,.46);--echoes-card-shadow:0 22px 64px rgba(0,0,0,.24)}
 body{background:radial-gradient(ellipse 85% 38% at 50% 0%,rgba(95,208,197,.105),transparent 78%),radial-gradient(ellipse 65% 38% at 50% 100%,rgba(125,190,204,.07),transparent 80%),#06111d}
-.campus{text-align:center}
+.campus{position:relative;z-index:20;text-align:center}.site-header{position:relative;z-index:100}.footer{position:relative;z-index:20}
 .intro{margin-left:auto;margin-right:auto}
 h1{color:#f3efe5;text-wrap:balance}
 h2{color:#f3efe5;text-wrap:balance}
@@ -33,7 +33,7 @@ section>h2{margin-bottom:24px}
 @media(hover:none) and (pointer:coarse){.card:active{transform:translateY(-2px);border-color:var(--echoes-card-border-active)}}
 @media(prefers-reduced-motion:reduce){.card,.filters button{transition:none}.card::after{animation:none}.card:hover,.card:active,.filters button:hover{transform:none}}
 </style></head>
-<body><main class="campus">
+<body data-page="academy-campus"><div data-component="header"></div><main class="campus">
 <a class="back" href="academy.html">← Echoes Academy</a>
 <div class="intro"><p class="topline">Echoes Academy / Campus V1</p><h1>Learn. Create. Strengthen Humanity.</h1><p>Explore the proposed schools and pilot programs of Echoes Academy — an inclusive learning ecosystem built on dignity, compassion, knowledge and opportunity.</p>
 <div class="note" role="status"><strong>Campus preview</strong> — These are planned learning programs, not open courses. Enrollment, video lessons, assessments and certificates are not yet active.</div></div>
@@ -43,8 +43,9 @@ section>h2{margin-bottom:24px}
 <div class="filters" role="group" aria-label="Filter programs"><button type="button" data-filter="all" aria-pressed="true">All</button><button type="button" data-filter="certificate" aria-pressed="false">Certificates</button><button type="button" data-filter="guided" aria-pressed="false">Guided learning</button><button type="button" data-filter="lab" aria-pressed="false">Creative labs</button></div>
 <p id="count" class="count" aria-live="polite"></p><div id="programs" class="grid"></div><p id="empty">No programs match your search.</p></section>
 <footer class="footer">Echoes of Humanity · One World. One Human Family. · Preview data only; no personal information is collected by this page.</footer>
-</main><script>
+</main><div data-component="footer"></div><script src="assets/js/i18n.js?v=12e62b4"></script><script src="assets/js/navigation.js"></script><script src="assets/js/echoes-universe.js"></script><script src="assets/js/symphony.js"></script><script>
 (function(){'use strict';
+Promise.all([fetch('components/header/header.html'),fetch('components/footer/footer.html')]).then(async responses=>{if(responses.some(r=>!r.ok))throw Error('Shared components unavailable');const html=await Promise.all(responses.map(r=>r.text()));document.querySelector('[data-component="header"]').innerHTML=html[0];document.querySelector('[data-component="footer"]').innerHTML=html[1];document.dispatchEvent(new CustomEvent('echoes:layout-ready'));}).catch(console.error);
 const schools=[
 ['Human Dignity & Protection','Human rights, safeguarding, family support and ethical care.'],
 ['Entrepreneurship & Economic Empowerment','Financial literacy, entrepreneurship and fair opportunity.'],
