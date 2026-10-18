@@ -125,3 +125,10 @@ The project owner requested the appropriate safe path, without choosing a durati
 **Engineering work that may proceed without business-policy approval:** prepare isolated fail-closed function skeletons and fixture-based test scripts; prove schema/trigger compilation in an explicitly authorized disposable PostgreSQL environment; check debit/reversal namespace, balanced synthetic journal, grants, row security, privileged writers, lock order, replay and concurrency. No real order, economic allocation, seller entitlement or production deployment.
 
 **Gate status:** reservation TTL approval pending; expiry resolution policy pending; isolated unsplit RPC implementation pending; PostgreSQL tests pending; staging write authorization absent. RUNTIME NO-GO.
+
+## Verified GitHub-content static safety check — 2026-10-19
+Five SQL DRAFT files were fetched directly from GitHub main and evaluated in-memory against the 20 assertions of the offline safety checker. Result: **20/20 static assertions passed**; **one warning**: the allocation-based legacy V2 checkout DRAFT still contains an unapproved hard-coded 30-minute reservation lifetime. This is a warning, not an approved policy.
+
+**Verification limits:** Git clone could not run in the isolated execution environment because DNS resolution for github.com was unavailable. Consequently the committed Node.js script was **not executed end-to-end**. The same conditions were evaluated independently against fetched file contents. No SQL parsing, PostgreSQL compilation, transactional or concurrency tests were run. These static passes do **not** authorize activation.
+
+**Next concrete engineering gate:** create isolated synthetic-only checkout/cancel function candidates after ledger namespace, journal, reservation TTL configuration and lock-order contracts are reconciled; preserve hard stops and no staging writes until separately approved. Runtime NO-GO.
