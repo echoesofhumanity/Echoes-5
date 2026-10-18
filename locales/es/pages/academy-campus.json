@@ -1,1 +1,101 @@
-{}
+{
+  "back": "← Echoes Academy",
+  "eyebrow": "Echoes Academy / Campus V1",
+  "title": "Aprender. Crear. Fortalecer la humanidad.",
+  "intro": "Explora las escuelas y los programas piloto previstos de Echoes Academy: un ecosistema inclusivo de aprendizaje basado en la dignidad, la compasión, el conocimiento y las oportunidades.",
+  "noticeTitle": "Vista previa del campus",
+  "notice": "Estos programas educativos están previstos, pero todavía no admiten inscripciones. Las clases en vídeo, las evaluaciones y los certificados aún no están disponibles.",
+  "schoolsHeading": "Ocho escuelas. Un propósito humano.",
+  "programsHeading": "Explora los programas piloto",
+  "programsIntro": "Hay distintos formatos: certificados, aprendizaje guiado, laboratorios creativos y talleres.",
+  "searchLabel": "Buscar programas",
+  "searchPlaceholder": "Buscar por título o tema…",
+  "all": "Todos",
+  "certificate": "Certificados",
+  "guided": "Aprendizaje guiado",
+  "lab": "Laboratorios creativos",
+  "empty": "No se encontraron programas que coincidan con la búsqueda.",
+  "count": "programas previstos",
+  "footer": "Echoes of Humanity · Un mundo. Una familia humana. · Solo datos de demostración; esta página no recopila información personal.",
+  "school": "Escuela",
+  "planned": "Previsto",
+  "type_certificate": "Certificado",
+  "type_guided": "Aprendizaje guiado",
+  "type_lab": "Laboratorio creativo",
+  "schools": [
+    [
+      "Dignidad humana y protección",
+      "Derechos humanos, protección, apoyo familiar y atención ética."
+    ],
+    [
+      "Emprendimiento y autonomía económica",
+      "Educación financiera, emprendimiento e igualdad de oportunidades."
+    ],
+    [
+      "Medios, artes y narración",
+      "Cine, radiodifusión, periodismo, música y narración responsable."
+    ],
+    [
+      "Juventud y habilidades del futuro",
+      "Empatía, carácter, liderazgo, seguridad digital y competencias futuras."
+    ],
+    [
+      "Economía creativa y artesanía",
+      "Diseño, artesanía, negocios creativos y preparación para el mercado."
+    ],
+    [
+      "Tecnología e innovación responsable",
+      "Alfabetización digital, programación, IA y accesibilidad."
+    ],
+    [
+      "Paz e impacto social",
+      "Diálogo, resiliencia comunitaria, voluntariado y sostenibilidad."
+    ],
+    [
+      "Aprendizaje permanente y desarrollo personal",
+      "Idiomas, comunicación, bienestar y formación continua."
+    ]
+  ],
+  "programs": [
+    [
+      "El arte de ser humano",
+      "Jóvenes · adaptado a la edad",
+      "Empatía, compasión, dignidad, límites saludables y responsabilidad social."
+    ],
+    [
+      "Crianza consciente y protección infantil",
+      "Familias y adultos que trabajan con menores",
+      "Sensibilización sobre protección infantil, escucha segura, prevención y derivación adecuada. Requiere revisión de especialistas antes de publicarse."
+    ],
+    [
+      "De la creatividad a la oportunidad económica",
+      "Creadores adultos y futuros emprendedores",
+      "Desarrollo de habilidades creativas, comercio ético y preparación para el mercado; sin promesas de ingresos."
+    ],
+    [
+      "Jóvenes creadores y medios del futuro",
+      "Jóvenes · participación protegida",
+      "Narración creativa, audio, vídeo y ciudadanía digital con salvaguardias de publicación."
+    ],
+    [
+      "Educación financiera para la vida cotidiana",
+      "Público general",
+      "Presupuestos, decisiones responsables y autonomía económica."
+    ],
+    [
+      "IA responsable y seguridad digital",
+      "Público general",
+      "Conocimientos de IA, privacidad, desinformación y prácticas digitales responsables."
+    ],
+    [
+      "Diálogo pacífico y acción comunitaria",
+      "Participantes comunitarios",
+      "Comunicación no violenta, diálogo intercultural y acción local colaborativa."
+    ],
+    [
+      "Comunicación entre culturas",
+      "Público general",
+      "Escucha, comprensión intercultural y comunicación inclusiva."
+    ]
+  ]
+}
