@@ -39,9 +39,33 @@ BEGIN
     RAISE EXCEPTION 'Order not found' USING ERRCODE='P0001';
   END IF;
   IF v_order.status='cancelled' THEN
-    -- This replay is safe ONLY after the original cancellation transaction
-    -- committed. Verify reversal and allocation void evidence in final RPC.
-    RAISE EXCEPTION 'Cancellation replay evidence verification not implemented';
+    -- The order row is locked. Replay only after verifying ALL committed
+    -- cancellation evidence; never create a second refund or restock.
+    SELECT count(*),coalesce(sum(l.delta_ec::numeric),0)
+      INTO v_reversal_count,v_reversal_amount FROM ec_wallet.ledger l
+     WHERE l.wallet_id=v_wallet AND l.operation='cart_checkout_reversal_v2'
+       AND l.reference_id=p_order_id;
+    IF v_reversal_count<>1 OR v_reversal_amount<>v_order.total_ec::numeric
+       OR v_order.cancelled_at IS NULL
+       OR EXISTS (
+         SELECT 1 FROM ec_wallet.staging_inventory_reservations_v2 r
+         WHERE r.order_id=p_order_id AND
+           (r.state<>'released' OR r.release_reason<>'order_cancelled')
+       )
+       OR EXISTS (
+         SELECT 1 FROM ec_wallet.staging_cart_seller_allocations_v2 a
+         WHERE a.order_id=p_order_id AND a.state<>'voided'
+       )
+       OR (SELECT count(*) FROM ec_wallet.staging_cart_order_events_v2 e
+           WHERE e.order_id=p_order_id AND e.event_type='cancelled')<>1
+    THEN
+      RAISE EXCEPTION 'Cancelled order evidence incomplete; manual review';
+    END IF;
+    order_id := p_order_id;
+    cancelled := true;
+    replayed := true;
+    RETURN NEXT;
+    RETURN;
   END IF;
   IF v_order.status<>'created' THEN
     RAISE EXCEPTION 'Order not cancellable' USING ERRCODE='P0001';
