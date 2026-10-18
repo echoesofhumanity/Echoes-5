@@ -1,1 +1,101 @@
-{}
+{
+  "back": "← Echoes Academy",
+  "eyebrow": "Echoes Academy / Campus V1",
+  "title": "Aprender. Criar. Fortalecer a humanidade.",
+  "intro": "Explore as escolas e os programas-piloto previstos da Echoes Academy — um ecossistema de aprendizagem inclusivo, assente na dignidade, na compaixão, no conhecimento e nas oportunidades.",
+  "noticeTitle": "Pré-visualização do campus",
+  "notice": "Estes programas de aprendizagem estão planeados, mas as inscrições ainda não estão abertas. As videoaulas, avaliações e certificados ainda não estão disponíveis.",
+  "schoolsHeading": "Oito escolas. Um propósito humano.",
+  "programsHeading": "Explorar programas-piloto",
+  "programsIntro": "Os formatos variam: certificados, aprendizagem orientada, laboratórios criativos e oficinas.",
+  "searchLabel": "Pesquisar programas",
+  "searchPlaceholder": "Pesquisar título ou tema…",
+  "all": "Todos",
+  "certificate": "Certificados",
+  "guided": "Aprendizagem orientada",
+  "lab": "Laboratórios criativos",
+  "empty": "Nenhum programa corresponde à sua pesquisa.",
+  "count": "programas planeados",
+  "footer": "Echoes of Humanity · Um mundo. Uma família humana. · Apenas dados de pré-visualização; esta página não recolhe informações pessoais.",
+  "school": "Escola",
+  "planned": "Planeado",
+  "type_certificate": "Certificado",
+  "type_guided": "Aprendizagem orientada",
+  "type_lab": "Laboratório criativo",
+  "schools": [
+    [
+      "Dignidade humana e proteção",
+      "Direitos humanos, proteção, apoio familiar e cuidados éticos."
+    ],
+    [
+      "Empreendedorismo e autonomia económica",
+      "Literacia financeira, empreendedorismo e oportunidades justas."
+    ],
+    [
+      "Media, artes e narrativas",
+      "Cinema, radiodifusão, jornalismo, música e narrativas responsáveis."
+    ],
+    [
+      "Juventude e competências do futuro",
+      "Empatia, caráter, liderança, segurança digital e competências futuras."
+    ],
+    [
+      "Economia criativa e artesanato",
+      "Design, artesanato, negócios criativos e preparação para o mercado."
+    ],
+    [
+      "Tecnologia e inovação responsável",
+      "Literacia digital, programação, inteligência artificial e acessibilidade."
+    ],
+    [
+      "Paz e impacto social",
+      "Diálogo, resiliência comunitária, voluntariado e sustentabilidade."
+    ],
+    [
+      "Aprendizagem ao longo da vida e desenvolvimento pessoal",
+      "Línguas, comunicação, bem-estar e educação contínua."
+    ]
+  ],
+  "programs": [
+    [
+      "A arte de ser humano",
+      "Jovens · adequado à idade",
+      "Empatia, compaixão, dignidade, limites saudáveis e responsabilidade social."
+    ],
+    [
+      "Parentalidade consciente e proteção infantil",
+      "Pais e adultos que trabalham com crianças",
+      "Sensibilização para a proteção infantil, escuta segura, prevenção e encaminhamento adequado. Requer avaliação especializada antes da publicação."
+    ],
+    [
+      "Da criatividade à oportunidade económica",
+      "Criadores adultos e aspirantes a empreendedores",
+      "Desenvolver competências criativas, comércio ético e preparação para o mercado, sem promessas de rendimento."
+    ],
+    [
+      "Jovens criadores e media do futuro",
+      "Jovens · participação protegida",
+      "Narrativas criativas, áudio, vídeo e cidadania digital com salvaguardas de publicação."
+    ],
+    [
+      "Literacia financeira para o dia a dia",
+      "Público geral",
+      "Orçamentação, decisões responsáveis e autonomia económica."
+    ],
+    [
+      "IA responsável e segurança digital",
+      "Público geral",
+      "Literacia em IA, privacidade, desinformação e práticas digitais responsáveis."
+    ],
+    [
+      "Diálogo pacífico e ação comunitária",
+      "Participantes da comunidade",
+      "Comunicação não violenta, diálogo intercultural e ação local colaborativa."
+    ],
+    [
+      "Comunicação entre culturas",
+      "Público geral",
+      "Escuta, compreensão intercultural e comunicação inclusiva."
+    ]
+  ]
+}
