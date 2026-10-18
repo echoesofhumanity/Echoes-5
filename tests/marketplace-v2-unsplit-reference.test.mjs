@@ -78,3 +78,22 @@ test('mutating checkout or replay response cannot corrupt order evidence', () =>
   m.cancel({ buyer: 'buyer', orderId: o.orderId, now: 2000 });
   assert.equal(m.stock.get('a').quantity, 3);
 });
+
+test('invalid stock quantity fails closed before EC debit', () => {
+  const m = make(); m.stock.get('b').quantity = NaN;
+  assert.throws(() => m.checkout(request), /Product unavailable/);
+  assert.equal(m.balances.get('buyer'), 100);
+  assert.equal(m.stock.get('a').quantity, 3);
+});
+test('invalid buyer EC balance fails closed before stock decrement', () => {
+  const m = make(); m.balances.set('buyer', NaN);
+  assert.throws(() => m.checkout(request), /Invalid EC balance/);
+  assert.equal(m.stock.get('a').quantity, 3);
+  assert.equal(m.orders.size, 0);
+});
+test('cancellation response mutation does not change stored order', () => {
+  const m = make(); const o = m.checkout(request);
+  const cancelled = m.cancel({ buyer: 'buyer', orderId: o.orderId, now: 2000 });
+  cancelled.lines[0].quantity = 99;
+  assert.equal(m.orders.get(o.orderId).lines[0].quantity, 2);
+});
