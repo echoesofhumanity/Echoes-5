@@ -1,1 +1,101 @@
-{}
+{
+  "back": "← Echoes Academy",
+  "eyebrow": "Echoes Academy / Campus V1",
+  "title": "Lernen. Gestalten. Die Menschheit stärken.",
+  "intro": "Entdecke die geplanten Schulen und Pilotprogramme der Echoes Academy – ein inklusives Lernökosystem, das auf Würde, Mitgefühl, Wissen und Chancen beruht.",
+  "noticeTitle": "Campus-Vorschau",
+  "notice": "Diese Bildungsprogramme sind geplant; eine Anmeldung ist noch nicht möglich. Videokurse, Prüfungen und Zertifikate sind derzeit nicht verfügbar.",
+  "schoolsHeading": "Acht Schulen. Ein menschliches Ziel.",
+  "programsHeading": "Pilotprogramme entdecken",
+  "programsIntro": "Unterschiedliche Formate: Zertifikate, begleitetes Lernen, Kreativlabore und Workshops.",
+  "searchLabel": "Programme suchen",
+  "searchPlaceholder": "Titel oder Thema suchen…",
+  "all": "Alle",
+  "certificate": "Zertifikate",
+  "guided": "Begleitetes Lernen",
+  "lab": "Kreativlabore",
+  "empty": "Keine passenden Programme gefunden.",
+  "count": "geplante Programme",
+  "footer": "Echoes of Humanity · Eine Welt. Eine Menschheitsfamilie. · Nur Vorschaudaten; diese Seite erfasst keine personenbezogenen Daten.",
+  "school": "Schule",
+  "planned": "Geplant",
+  "type_certificate": "Zertifikat",
+  "type_guided": "Begleitetes Lernen",
+  "type_lab": "Kreativlabor",
+  "schools": [
+    [
+      "Menschenwürde und Schutz",
+      "Menschenrechte, Schutzmaßnahmen, Familienhilfe und ethische Fürsorge."
+    ],
+    [
+      "Unternehmertum und wirtschaftliche Selbstbestimmung",
+      "Finanzbildung, Unternehmertum und faire Chancen."
+    ],
+    [
+      "Medien, Kunst und Geschichten",
+      "Film, Rundfunk, Journalismus, Musik und verantwortungsvolles Erzählen."
+    ],
+    [
+      "Jugend und Zukunftskompetenzen",
+      "Empathie, Charakter, Führung, digitale Sicherheit und Zukunftskompetenzen."
+    ],
+    [
+      "Kreativwirtschaft und Handwerk",
+      "Design, Handwerk, kreative Unternehmen und Vorbereitung auf den Marktplatz."
+    ],
+    [
+      "Technologie und verantwortungsvolle Innovation",
+      "Digitale Bildung, Programmierung, KI und Barrierefreiheit."
+    ],
+    [
+      "Frieden und gesellschaftliche Wirkung",
+      "Dialog, gesellschaftliche Widerstandskraft, Ehrenamt und Nachhaltigkeit."
+    ],
+    [
+      "Lebenslanges Lernen und persönliche Entwicklung",
+      "Sprachen, Kommunikation, Wohlbefinden und Weiterbildung."
+    ]
+  ],
+  "programs": [
+    [
+      "Die Kunst, Mensch zu sein",
+      "Jugendliche · altersgerecht",
+      "Empathie, Mitgefühl, Würde, gesunde Grenzen und soziale Verantwortung."
+    ],
+    [
+      "Bewusste Elternschaft und Kinderschutz",
+      "Eltern und Erwachsene, die mit Kindern arbeiten",
+      "Bewusstsein für Kinderschutz, sicheres Zuhören, Prävention und angemessene Weitervermittlung. Vor Veröffentlichung ist eine fachliche Prüfung erforderlich."
+    ],
+    [
+      "Von Kreativität zu wirtschaftlichen Chancen",
+      "Erwachsene Kreative und angehende Unternehmer",
+      "Kreative Fähigkeiten, ethischer Handel und Vorbereitung auf den Marktplatz – ohne Einkommensversprechen."
+    ],
+    [
+      "Junge Kreative und Medien der Zukunft",
+      "Jugendliche · geschützte Teilnahme",
+      "Kreatives Erzählen, Audio, Video und digitale Bürgerschaft mit Schutzmaßnahmen bei Veröffentlichungen."
+    ],
+    [
+      "Finanzwissen für den Alltag",
+      "Allgemeine Lernende",
+      "Budgetplanung, verantwortungsvolle Entscheidungen und wirtschaftliche Selbstbestimmung."
+    ],
+    [
+      "Verantwortungsvolle KI und digitale Sicherheit",
+      "Allgemeine Lernende",
+      "KI-Kompetenz, Datenschutz, Desinformation und verantwortungsvolle digitale Praktiken."
+    ],
+    [
+      "Friedlicher Dialog und gemeinschaftliches Handeln",
+      "Mitglieder der Gemeinschaft",
+      "Gewaltfreie Kommunikation, interkultureller Dialog und gemeinsames lokales Handeln."
+    ],
+    [
+      "Interkulturelle Kommunikation",
+      "Allgemeine Lernende",
+      "Zuhören, interkulturelles Verständnis und inklusive Kommunikation."
+    ]
+  ]
+}
