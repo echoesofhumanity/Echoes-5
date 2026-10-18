@@ -52,3 +52,20 @@ These are **interface and transaction contracts**, not executable functions. The
 4. Produce separate fail-closed SQL drafts and deterministic fixtures, then request explicit staging-only write authorization before PostgreSQL tests.
 
 Status: **CONTRACT DOCUMENTED; SQL IMPLEMENTATION NOT YET CREATED; RUNTIME NO-GO**.
+
+## Approved synthetic reservation lifecycle — 2026-10-18
+User approved the following five rules for the temporary V2 synthetic demo (design approval only, not permission to run migrations or write staging data):
+1. Successful checkout atomically decrements available stock and creates exactly one reserved reservation per immutable order line.
+2. Cancellation may release only reservations that have not been consumed, restores each stock quantity once, reverses the full EC debit once, and voids the unallocated clearing record in the same transaction.
+3. Reaching `expires_at` is **not** an automatic cancellation, stock release, or EC refund. Expiry is a condition requiring verification of order, reservation, ledger and clearing states before any separately authorized transition. Until an expiry handler is designed, expired-but-reserved records remain unchanged; the cancellation path must reject them rather than guess.
+4. A consumed reservation cannot be cancelled through the ordinary cancellation RPC. Any return/refund requires a separately specified and authorized procedure.
+5. Checkout/cancel replay must be idempotent; duplicate stock restoration, debit, reversal, or clearing void is forbidden.
+
+### Implementation constraints
+- Preserve the existing fail-closed SQL guards and disabled posting paths. This approval does not authorize staging writes.
+- The current reservation CHECKs do not enforce one-way transitions; add a guarded transition candidate with immutable order/line/product/quantity/time identity, `reserved -> released` for cancellation only and `reserved -> consumed` only through a future separately authorized consumption operation.
+- `released` and `consumed` are terminal in this demo. A release requires `release_reason='order_cancelled'` and a timestamp; `reservation_expired` must **not** be used as an automatic release path.
+- Deferred order/reservation/clearing/ledger checks and a global lock-order audit remain mandatory; concurrency and rollback have not been tested.
+- No real fulfillment, payout, economic split or production changes are authorized.
+
+Status: RESERVATION POLICY APPROVED / IMPLEMENTATION AND POSTGRESQL TESTS PENDING / RUNTIME NO-GO.
