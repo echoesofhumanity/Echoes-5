@@ -1,1 +1,101 @@
-{}
+{
+  "back": "← Echoes Academy",
+  "eyebrow": "Echoes Academy / Campus V1",
+  "title": "Apprendre. Créer. Renforcer l'humanité.",
+  "intro": "Découvrez les écoles et les programmes pilotes envisagés par Echoes Academy : un écosystème d'apprentissage inclusif fondé sur la dignité, la compassion, le savoir et les possibilités.",
+  "noticeTitle": "Aperçu du campus",
+  "notice": "Ces programmes sont en préparation et les inscriptions ne sont pas ouvertes. Les cours vidéo, les évaluations et les certificats ne sont pas encore disponibles.",
+  "schoolsHeading": "Huit écoles. Une même ambition humaine.",
+  "programsHeading": "Découvrir les programmes pilotes",
+  "programsIntro": "Différents formats : certificats, apprentissage accompagné, laboratoires créatifs et ateliers.",
+  "searchLabel": "Rechercher un programme",
+  "searchPlaceholder": "Rechercher un titre ou un sujet…",
+  "all": "Tous",
+  "certificate": "Certificats",
+  "guided": "Apprentissage accompagné",
+  "lab": "Laboratoires créatifs",
+  "empty": "Aucun programme ne correspond à votre recherche.",
+  "count": "programmes prévus",
+  "footer": "Echoes of Humanity · Un monde. Une famille humaine. · Données de démonstration uniquement ; cette page ne collecte aucune donnée personnelle.",
+  "school": "École",
+  "planned": "En préparation",
+  "type_certificate": "Certificat",
+  "type_guided": "Apprentissage accompagné",
+  "type_lab": "Laboratoire créatif",
+  "schools": [
+    [
+      "Dignité humaine et protection",
+      "Droits humains, protection, soutien aux familles et accompagnement éthique."
+    ],
+    [
+      "Entrepreneuriat et autonomie économique",
+      "Éducation financière, entrepreneuriat et égalité des chances."
+    ],
+    [
+      "Médias, arts et récits",
+      "Cinéma, audiovisuel, journalisme, musique et narration responsable."
+    ],
+    [
+      "Jeunesse et compétences d'avenir",
+      "Empathie, valeurs, leadership, sécurité numérique et compétences de demain."
+    ],
+    [
+      "Économie créative et artisanat",
+      "Design, artisanat, entreprises créatives et préparation au marché."
+    ],
+    [
+      "Technologie et innovation responsable",
+      "Culture numérique, programmation, intelligence artificielle et accessibilité."
+    ],
+    [
+      "Paix et impact social",
+      "Dialogue, résilience des communautés, bénévolat et durabilité."
+    ],
+    [
+      "Apprentissage tout au long de la vie",
+      "Langues, communication, bien-être et formation continue."
+    ]
+  ],
+  "programs": [
+    [
+      "L'art d'être humain",
+      "Jeunes · adapté à l'âge",
+      "Empathie, compassion, dignité, limites saines et responsabilité sociale."
+    ],
+    [
+      "Parentalité consciente et protection de l'enfance",
+      "Parents et adultes travaillant avec des enfants",
+      "Sensibilisation à la protection de l'enfance, écoute sécurisante, prévention et orientation appropriée. Une validation par des spécialistes est requise avant publication."
+    ],
+    [
+      "De la créativité aux possibilités économiques",
+      "Créateurs adultes et futurs entrepreneurs",
+      "Développer ses compétences créatives, le commerce éthique et la préparation au marché, sans promesse de revenus."
+    ],
+    [
+      "Jeunes créateurs et médias de demain",
+      "Jeunes · participation encadrée",
+      "Création de récits, audio, vidéo et citoyenneté numérique avec des garanties pour la publication."
+    ],
+    [
+      "Éducation financière au quotidien",
+      "Tous publics",
+      "Budget, décisions responsables et autonomie économique."
+    ],
+    [
+      "IA responsable et sécurité numérique",
+      "Tous publics",
+      "Culture de l'IA, confidentialité, désinformation et pratiques numériques responsables."
+    ],
+    [
+      "Dialogue pacifique et action communautaire",
+      "Membres des communautés",
+      "Communication non violente, dialogue interculturel et action locale collaborative."
+    ],
+    [
+      "Communication interculturelle",
+      "Tous publics",
+      "Écoute, compréhension interculturelle et communication inclusive."
+    ]
+  ]
+}
