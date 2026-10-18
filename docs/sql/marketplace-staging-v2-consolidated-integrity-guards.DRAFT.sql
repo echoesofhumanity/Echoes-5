@@ -58,6 +58,8 @@ DECLARE
   v_actual numeric;
   v_count integer;
 BEGIN
+  -- Both order-header and line triggers use NEW.order_id; the parent
+  -- header remains present because V2 order deletion is prohibited.
   v_order_id := NEW.order_id;
   SELECT o.total_ec INTO v_expected
     FROM ec_wallet.staging_cart_orders_v2 o
