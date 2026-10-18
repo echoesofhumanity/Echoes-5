@@ -38,6 +38,18 @@ BEGIN
   IF NOT FOUND THEN
     RAISE EXCEPTION 'V2 ledger/event evidence references missing order';
   END IF;
+  -- A V2 ledger entry must belong to the order buyer's wallet, not merely
+  -- share the order UUID. Reject wrong-wallet entries, including privileged
+  -- direct inserts, when the ledger INSERT trigger fires.
+  IF TG_TABLE_SCHEMA='ec_wallet' AND TG_TABLE_NAME='ledger'
+     AND NEW.operation IN ('cart_checkout_debit_v2','cart_checkout_reversal_v2')
+     AND NOT EXISTS (
+       SELECT 1 FROM ec_wallet.wallets w
+       WHERE w.wallet_id=NEW.wallet_id AND w.owner_id=v_order.buyer_id
+     ) THEN
+    RAISE EXCEPTION 'V2 ledger entry wallet does not belong to order buyer';
+  END IF;
+
   SELECT count(*),max(w.wallet_id) INTO v_wallet_count,v_wallet_id
     FROM ec_wallet.wallets w WHERE w.owner_id=v_order.buyer_id;
   IF v_wallet_count<>1 THEN
@@ -54,6 +66,16 @@ BEGIN
     FROM ec_wallet.ledger l
    WHERE l.wallet_id=v_wallet_id AND l.reference_id=v_order_id
      AND l.operation='cart_checkout_reversal_v2';
+  -- Cross-wallet entries must not be silently ignored by buyer-wallet sums.
+  -- This also catches invalid V2 rows already present before an order update.
+  IF EXISTS (
+    SELECT 1 FROM ec_wallet.ledger l
+    WHERE l.reference_id=v_order_id
+      AND l.operation IN ('cart_checkout_debit_v2','cart_checkout_reversal_v2')
+      AND l.wallet_id IS DISTINCT FROM v_wallet_id
+  ) THEN
+    RAISE EXCEPTION 'V2 ledger evidence contains foreign-wallet entries';
+  END IF;
   SELECT count(*) FILTER (WHERE e.event_type='created'),
          count(*) FILTER (WHERE e.event_type='cancelled')
     INTO v_created_count,v_cancelled_count
@@ -107,7 +129,7 @@ COMMIT;
 -- 2. Existing ledger operation CHECK excludes V2 codes.
 -- 3. Existing legacy ledger schema/trigger permissions must be inspected
 --    before attaching a trigger to ec_wallet.ledger.
--- 4. Cross-wallet malicious V2 entries and privileged direct writes require
---    a separate negative test; this checks only the buyer wallet.
+-- 4. Foreign-wallet V2 entries are rejected by this candidate trigger,
+--    but privileged trigger bypass and concurrent writers still need tests.
 -- 5. Reservation/allocations reconciliation remains separate.
 -- 6. No SQL has been executed or permission to deploy granted.
