@@ -57,3 +57,12 @@ Next review-only checks: inventory existing ledger triggers, RLS, CHECK and UNIQ
 - The UPDATE/DELETE trigger does NOT guard INSERT, nor does it prove that privileged roles cannot disable triggers or TRUNCATE. Existing service_role grants include INSERT and TRUNCATE, so no claim of fully isolated ledger writes is justified.
 - Read-only inspection of RLS and function ownership was attempted but not completed in this pass. Do not infer their settings.
 - Next action: inspect function definitions/ownership and RLS using separate read-only queries; determine how legacy operations rely on service_role before considering any permission change. No migrations or grants executed.
+
+## Verified RLS and function ownership — staging read-only, 18 October 2026
+- ec_wallet.ledger: relrowsecurity=true, relforcerowsecurity=false, table owner postgres.
+- pg_policies returned ZERO policies for ec_wallet.ledger. Do not mistake enabled RLS for isolation from privileged roles.
+- ec_wallet.reject_ledger_mutation(): SECURITY INVOKER (prosecdef=false), owner postgres.
+- Legacy public.ec_staging_checkout(uuid,integer,uuid), ec_staging_cancel_order(uuid), ec_staging_catalogue(), ec_staging_my_orders() are SECURITY DEFINER, owner postgres. Preserve legacy behavior.
+- This confirms that a postgres-owned privileged function boundary already exists. It does not establish that all existing service_role or backend writes are isolated.
+- V2 activation remains NO-GO until service-role writer inventory, SECURITY DEFINER caller/EXECUTE audit, ledger INSERT control, and legacy regression tests are complete.
+- No SQL changes, grants, data writes or production access were performed in this review.
