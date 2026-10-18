@@ -66,3 +66,8 @@ Next review-only checks: inventory existing ledger triggers, RLS, CHECK and UNIQ
 - This confirms that a postgres-owned privileged function boundary already exists. It does not establish that all existing service_role or backend writes are isolated.
 - V2 activation remains NO-GO until service-role writer inventory, SECURITY DEFINER caller/EXECUTE audit, ledger INSERT control, and legacy regression tests are complete.
 - No SQL changes, grants, data writes or production access were performed in this review.
+
+## Verified public RPC EXECUTE ACL — staging read-only, 18 October 2026
+The four legacy functions public.ec_staging_checkout(uuid,integer,uuid), ec_staging_cancel_order(uuid), ec_staging_catalogue(), and ec_staging_my_orders() have explicit EXECUTE grants to authenticated and service_role, but not anon. The functions are postgres-owned SECURITY DEFINER (verified separately). The V2 public.ec_staging_cart_checkout_v2 and ec_staging_cart_cancel_v2 were absent from this catalog query; they remain GitHub review drafts, not deployed RPCs.
+
+Security conclusion: preserving these legacy grants is necessary until regression tests and caller mapping are complete. EXECUTE authorization alone does not prove row ownership enforcement inside the function; review actual function bodies next. service_role retains direct ec_wallet.ledger INSERT and other privileges; public RPC ACLs do not resolve that exposure. No grants or data were changed.
