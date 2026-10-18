@@ -19,3 +19,8 @@ Decision: User approved a temporary synthetic accounting-flow model with NO sell
 
 ## Current verdict
 **DESIGN DECISION RECORDED; EXECUTION NO-GO.** No migration, grants, fixture inserts, staging writes, or production actions authorized by this decision alone.
+
+## Consolidated test acceptance criteria
+The future isolated staging test must assert one unallocated clearing record per V2 order, with amount equal to order total. A created order requires pending clearing; a cancelled order requires voided clearing. Cancellation must produce exactly one original debit and one equal reversal, one cancellation event, and one stock restoration per reserved line. Repeated cancellation must not post again. Failed transactions must leave no partial records. These criteria are NOT yet PostgreSQL-tested.
+
+Do not install the seller-allocation reconciliation simultaneously with the unsplit test model. The current checkout and cancellation drafts depend on seller allocations and therefore require separately reviewed test-only alternatives; setting distribution percentages to zero is not a valid workaround.
