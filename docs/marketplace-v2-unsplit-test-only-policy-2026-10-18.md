@@ -116,3 +116,12 @@ Scope: read-only comparison of atomic checkout, atomic cancel, unsplit clearing,
 - Both must be one database transaction, with fail-closed guards retained until tests and explicit deployment authorization.
 
 **Outcome:** static gap review complete. No independent executable synthetic RPC delivered. PostgreSQL acceptance NOT RUN; staging/production UNCHANGED; runtime NO-GO.
+
+## Safe path selected — policy-neutral reservation lifetime (2026-10-18)
+The project owner requested the appropriate safe path, without choosing a duration or granting staging-write authority. Therefore **do not adopt the older hard-coded 30-minute interval as policy**. Keep the earlier allocation-based checkout candidate disabled and unchanged. The future isolated unsplit checkout must accept a versioned, administrator-approved synthetic reservation TTL from a staging-only configuration, validate it before posting, and reject checkout while that configuration is absent. No duration, expiry job or automatic refund is inferred.
+
+**Expired reservation resolution:** expiry is a review signal only. Do not auto-release stock, cancel orders, reverse EC or void clearing. The existing cancellation guard remains conservative and rejects an expired reserved reservation. A separate expiry-resolution operation must be specified, reviewed, and explicitly approved before implementation. The system must never leave a financial reversal or stock restoration half-completed; use one transaction and immutable audit evidence.
+
+**Engineering work that may proceed without business-policy approval:** prepare isolated fail-closed function skeletons and fixture-based test scripts; prove schema/trigger compilation in an explicitly authorized disposable PostgreSQL environment; check debit/reversal namespace, balanced synthetic journal, grants, row security, privileged writers, lock order, replay and concurrency. No real order, economic allocation, seller entitlement or production deployment.
+
+**Gate status:** reservation TTL approval pending; expiry resolution policy pending; isolated unsplit RPC implementation pending; PostgreSQL tests pending; staging write authorization absent. RUNTIME NO-GO.
