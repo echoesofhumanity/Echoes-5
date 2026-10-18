@@ -35,3 +35,20 @@ Required isolated test-only adaptation, not yet implemented:
 - Preserve fail-closed guards. Do not activate or silently modify the seller-allocation checkout/cancel variants; instead review separately named synthetic-only RPC candidates with explicit staging approval.
 - Test matrix: success, identical replay, changed-cart idempotency conflict, insufficient EC, seller unverified, stock exhaustion, two concurrent buyers for last item, concurrent checkout/cancel, repeated cancel, consumed reservation, rollback on injected error, foreign-wallet ledger, unauthorized role, trigger/grant bypass audit.
 - A complete migration/rollback plan, double-entry accounting boundary and PostgreSQL execution evidence are outstanding. Current status: STATIC DESIGN / RUNTIME NO-GO.
+
+## Synthetic-only RPC candidate contracts (separate from existing RPCs)
+These are **interface and transaction contracts**, not executable functions. The existing V2 checkout/cancel SQL and all hard stops stay untouched.
+
+**Checkout candidate**: `ec_wallet.staging_cart_checkout_unsplit_test_v2(p_request_key uuid, p_cart jsonb)`. Actor identity must be derived from authenticated server context; never trust a supplied buyer ID. Normalize the cart deterministically; bind request digest to buyer and idempotency key. Acquire buyer wallet lock, then product locks in ascending UUID order, with seller eligibility verified against concurrent state. Confirm EC sufficiency and available stock. In one transaction create order, lines, reservations, original buyer debit, creation event and exactly one unallocated clearing record equal to the order total. No allocation rows or seller entitlements. On replay return the original result only after validating digest and all evidence; reject inconsistent evidence.
+
+**Cancel candidate**: `ec_wallet.staging_cart_cancel_unsplit_test_v2(p_order_id uuid, p_request_key uuid)`. Derive actor and verify ownership; lock buyer wallet, order and product rows in the documented global order. Reject consumed or already expired/released reservations unless an explicitly approved policy covers them. Confirm original debit, one pending clearing record, all lines/reservations and absence of reversal. In one transaction release reservations, restore stock, post one equal and opposite buyer reversal, void clearing and append cancellation event. A replay validates complete evidence without a second refund or stock change. Cancellation and checkout must be tested for concurrency and deadlocks.
+
+**Safety and accounting boundary**: these are future *staging-only synthetic* operations; no real payments, seller allocation, withdrawal, EC distribution, production changes, or automatic settlement. The existing ledger CHECK does not allow proposed V2 operations. No test-only function may be activated until a reviewed ledger-code migration, privileged writer isolation, trigger behavior, authorization and rollback plan exist. A clearing row is not a double-entry liability journal.
+
+**Decision gates before SQL implementation or execution**:
+1. Confirm reservation expiry, cancellation and consumption transitions.
+2. Define an auditable test-only liability journal or formally limit the test to buyer-side EC movement, with the accounting gap clearly labelled.
+3. Verify complete dependency order, privileges, ownership, deferred trigger behavior and concurrency lock protocol.
+4. Produce separate fail-closed SQL drafts and deterministic fixtures, then request explicit staging-only write authorization before PostgreSQL tests.
+
+Status: **CONTRACT DOCUMENTED; SQL IMPLEMENTATION NOT YET CREATED; RUNTIME NO-GO**.
