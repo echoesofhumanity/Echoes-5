@@ -3,6 +3,12 @@
 -- Additive, isolated tables. Existing staging_products, staging_sellers and
 -- single-item checkout RPC remain unchanged.
 -- Requires schema, grants, accounting, RPC and security review before approval.
+-- Deliberate fail-closed barrier: never apply this DRAFT directly.
+DO $review$
+BEGIN
+  RAISE EXCEPTION 'REVIEW ONLY: independent V2 catalogue not approved';
+END
+$review$;
 BEGIN;
 
 CREATE TABLE ec_wallet.staging_v2_catalogue_products (
