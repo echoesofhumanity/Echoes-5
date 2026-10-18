@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Academy Campus Preview — Echoes of Humanity</title>
+<meta name="description" content="Echoes Academy learning campus: schools and proposed programs. Preview only; enrollment is not yet available.">
+<link rel="stylesheet" href="assets/css/core.css?v=a73a9986">
+<style>
+:root{color-scheme:dark}body{margin:0;background:#081321;color:#f3f4f3;font-family:Inter,system-ui,sans-serif;line-height:1.6}.campus{max-width:1180px;margin:auto;padding:64px 22px 100px}.topline{color:#67d4c8;text-transform:uppercase;letter-spacing:.18em;font-size:.8rem;font-weight:700}.intro{max-width:780px;margin-bottom:40px}h1{font-size:clamp(2.5rem,6vw,5rem);line-height:1.06;letter-spacing:-.04em;margin:18px 0}h2{font-size:1.5rem}p{color:#b6c6d1}.note{border-left:3px solid #67d4c8;padding:14px 18px;background:#122333;border-radius:0 12px 12px 0}.filters{display:flex;gap:12px;flex-wrap:wrap;margin:30px 0}button,input{font:inherit}button{border:1px solid #375165;background:#152839;color:#f3f4f3;padding:10px 16px;border-radius:999px;cursor:pointer}button[aria-pressed=true]{border-color:#67d4c8;background:#164b4b}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #67d4c8;outline-offset:3px}input{background:#122333;border:1px solid #375165;color:white;padding:12px 16px;border-radius:12px;width:min(100%,360px)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:18px}.card{border:1px solid #304659;border-radius:18px;background:linear-gradient(145deg,#15283b,#0b1b2b);padding:25px;min-height:180px}.card h3{font-size:1.22rem;margin:10px 0}.tag{color:#7edfd2;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}.card p{margin-bottom:0}.back{color:#83e0d4;text-decoration:none}.muted{color:#a9bbc8}.section{margin-top:58px}.count{font-size:.9rem;color:#a9bbc8}#empty{display:none}.footer{margin-top:65px;border-top:1px solid #304659;padding-top:25px;color:#9fb0be}@media(prefers-reduced-motion:no-preference){.card{transition:transform .25s,border-color .25s}.card:hover{transform:translateY(-3px);border-color:#67d4c8}}
+</style></head>
+<body><main class="campus">
+<a class="back" href="academy.html">← Echoes Academy</a>
+<div class="intro"><p class="topline">Echoes Academy / Campus V1</p><h1>Learn. Create. Strengthen Humanity.</h1><p>Explore the proposed schools and pilot programs of Echoes Academy — an inclusive learning ecosystem built on dignity, compassion, knowledge and opportunity.</p>
+<div class="note" role="status"><strong>Campus preview</strong> — These are planned learning programs, not open courses. Enrollment, video lessons, assessments and certificates are not yet active.</div></div>
+<section aria-labelledby="schools-heading"><h2 id="schools-heading">Eight schools. One human purpose.</h2><div id="schools" class="grid"></div></section>
+<section class="section" aria-labelledby="programs-heading"><h2 id="programs-heading">Explore pilot programs</h2><p>Program formats differ: certificates, guided learning, creative labs and workshops.</p>
+<label for="program-search">Search programs</label><div><input id="program-search" type="search" placeholder="Search title or subject…" autocomplete="off"></div>
+<div class="filters" role="group" aria-label="Filter programs"><button type="button" data-filter="all" aria-pressed="true">All</button><button type="button" data-filter="certificate" aria-pressed="false">Certificates</button><button type="button" data-filter="guided" aria-pressed="false">Guided learning</button><button type="button" data-filter="lab" aria-pressed="false">Creative labs</button></div>
+<p id="count" class="count" aria-live="polite"></p><div id="programs" class="grid"></div><p id="empty">No programs match your search.</p></section>
+<footer class="footer">Echoes of Humanity · One World. One Human Family. · Preview data only; no personal information is collected by this page.</footer>
+</main><script>
+(function(){'use strict';
+const schools=[
+['Human Dignity & Protection','Human rights, safeguarding, family support and ethical care.'],
+['Entrepreneurship & Economic Empowerment','Financial literacy, entrepreneurship and fair opportunity.'],
+['Media, Arts & Storytelling','Film, broadcasting, journalism, music and responsible storytelling.'],
+['Youth & Future Skills','Empathy, character, leadership, digital safety and future skills.'],
+['Creative Economy & Craftsmanship','Design, craft, creative business and marketplace readiness.'],
+['Technology & Responsible Innovation','Digital literacy, programming, AI and accessibility.'],
+['Peace & Social Impact','Dialogue, community resilience, volunteering and sustainability.'],
+['Lifelong Learning & Personal Growth','Languages, communication, wellbeing and continuing education.']
+];
+const programs=[
+{title:'The Art of Being Human',school:3,type:'guided',audience:'Youth · age-adapted',description:'Empathy, compassion, dignity, healthy boundaries and social responsibility.'},
+{title:'Conscious Parenting & Child Safeguarding',school:0,type:'certificate',audience:'Parents and adults working with children',description:'Child protection awareness, safe listening, prevention and appropriate referral. Requires expert review before release.'},
+{title:'From Creativity to Economic Opportunity',school:4,type:'certificate',audience:'Adult creators and aspiring entrepreneurs',description:'Develop creative skills, ethical commerce and practical marketplace readiness; no earnings promise.'},
+{title:'Young Creators & Future Media',school:2,type:'lab',audience:'Youth · safeguarded participation',description:'Creative storytelling, audio, video and digital citizenship with publication safeguards.'},
+{title:'Financial Literacy for Everyday Life',school:1,type:'guided',audience:'General learners',description:'Budgeting, responsible decisions and economic agency.'},
+{title:'Responsible AI & Digital Safety',school:5,type:'guided',audience:'General learners',description:'AI literacy, privacy, misinformation and responsible digital practices.'},
+{title:'Peaceful Dialogue & Community Action',school:6,type:'lab',audience:'Community participants',description:'Nonviolent communication, intercultural dialogue and collaborative local action.'},
+{title:'Communication Across Cultures',school:7,type:'guided',audience:'General learners',description:'Listening, intercultural understanding and inclusive communication.'}
+];
+const make=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;e.textContent=txt;return e};
+const schoolHost=document.getElementById('schools');
+schools.forEach((s,i)=>{const c=make('article','card','');c.append(make('span','tag','School '+String(i+1).padStart(2,'0')),make('h3','',s[0]),make('p','',s[1]));schoolHost.append(c)});
+const host=document.getElementById('programs'),search=document.getElementById('program-search'),buttons=[...document.querySelectorAll('[data-filter]')];let filter='all';
+function render(){host.replaceChildren();const q=search.value.trim().toLocaleLowerCase();const visible=programs.filter(p=>(filter==='all'||p.type===filter)&&[p.title,p.description,schools[p.school][0],p.audience].join(' ').toLocaleLowerCase().includes(q));visible.forEach(p=>{const c=make('article','card','');c.append(make('span','tag',p.type+' · Planned'),make('h3','',p.title),make('div','muted',schools[p.school][0]+' · '+p.audience),make('p','',p.description));host.append(c)});document.getElementById('count').textContent=visible.length+' planned program'+(visible.length===1?'':'s');document.getElementById('empty').style.display=visible.length?'none':'block'}
+search.addEventListener('input',render);buttons.forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.filter;buttons.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));render()}));render();
+})();
+</script></body></html>
