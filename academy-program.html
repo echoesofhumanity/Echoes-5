@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Program Preview — Echoes Academy</title><meta name="description" content="Planned Echoes Academy program overview. Enrollment and lessons are not open.">
+<link rel="stylesheet" href="assets/css/core.css"><link rel="stylesheet" href="assets/css/echoes-universe.css"><link rel="stylesheet" href="assets/css/header-cinematic.css">
+<style>
+:root{color-scheme:dark}body{margin:0;background:#081321;color:#f3f4f3;font:16px/1.65 Inter,system-ui,sans-serif}.campus-detail{max-width:960px;margin:auto;padding:64px 22px 100px}.back{color:#83e0d4}.eyebrow{color:#67d4c8;letter-spacing:.12em;text-transform:uppercase;font-size:.8rem}h1{font-size:clamp(2.1rem,5vw,4rem);line-height:1.1}h2{font-size:1.4rem}p,li{color:#c0cbd4}.notice,.panel{border:1px solid #375165;border-radius:18px;background:#122333;padding:22px;margin:24px 0}.notice{border-inline-start:4px solid #67d4c8}.meta{color:#80e0d3}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:18px}.grid .panel{margin:0}a:focus-visible{outline:3px solid #67d4c8;outline-offset:4px}body[data-page="academy-program"] .site-brand-mark::before{content:none!important}html[dir=rtl] .campus-detail{text-align:right}
+</style></head><body data-page="academy-program"><div data-component="header"></div><main class="campus-detail">
+<a class="back" href="academy-campus.html" id="back">← Academy Campus</a>
+<p class="eyebrow" id="eyebrow">Echoes Academy / Planned program</p>
+<h1 id="program-title">Program preview</h1><p class="meta" id="program-meta"></p>
+<div class="notice" role="status" id="notice">This program is a concept preview only. Enrollment, lessons, assessments and certificates are not available.</div>
+<section class="panel"><h2 id="about-title">About this program</h2><p id="description"></p></section>
+<div class="grid"><section class="panel"><h2 id="outcomes-title">Proposed learning outcomes</h2><ul id="outcomes"></ul></section><section class="panel"><h2 id="modules-title">Indicative learning modules</h2><ol id="modules"></ol></section></div>
+<p id="safeguard"></p></main><div data-component="footer"></div>
+<script src="assets/js/i18n.js?v=12e62b4"></script><script src="assets/js/navigation.js"></script><script>
+(function(){'use strict';
+Promise.all([fetch('components/header/header.html'),fetch('components/footer/footer.html')]).then(async function(res){const html=await Promise.all(res.map(r=>r.ok?r.text():''));document.querySelector('[data-component="header"]').innerHTML=html[0];document.querySelector('[data-component="footer"]').innerHTML=html[1];document.dispatchEvent(new CustomEvent('echoes:layout-ready'));}).catch(console.warn);
+const slugs=['art-of-being-human','conscious-parenting-child-safeguarding','creativity-economic-opportunity','young-creators-future-media','financial-literacy-everyday-life','responsible-ai-digital-safety','peaceful-dialogue-community-action','communication-across-cultures'];
+const outcomes=[
+['Recognize dignity, empathy and healthy boundaries.','Practice respectful communication.','Identify ways to contribute responsibly.'],
+['Recognize child safeguarding concerns.','Practice safe listening and appropriate referral.','Understand limits of non-specialist support.'],
+['Identify creative strengths and audiences.','Explore ethical commerce fundamentals.','Plan realistic next steps without income guarantees.'],
+['Practice responsible storytelling.','Recognize consent and publishing safeguards.','Explore audio and video production concepts.'],
+['Describe everyday budgeting principles.','Evaluate financial choices and risks.','Practice informed financial decision-making.'],
+['Identify common AI opportunities and limitations.','Recognize privacy and misinformation risks.','Apply responsible digital habits.'],
+['Practice nonviolent communication.','Explore intercultural dialogue.','Outline a collaborative community initiative.'],
+['Practice active listening.','Recognize cultural perspectives.','Use inclusive communication techniques.']
+];
+const modules=[
+['Dignity and empathy','Healthy boundaries','Responsible community participation'],
+['Safeguarding principles','Safe listening and referral','Prevention and specialist review'],
+['Creative skills and value','Ethical marketplace basics','Practical planning'],
+['Storytelling foundations','Audio and video exploration','Consent and publication safety'],
+['Budgeting basics','Everyday financial decisions','Economic agency'],
+['AI fundamentals','Privacy and misinformation','Digital safety habits'],
+['Dialogue and listening','Nonviolent communication','Community action planning'],
+['Active listening','Cultural understanding','Inclusive communication']
+];
+const ui={
+en:['← Academy Campus','Planned program','About this program','Proposed learning outcomes','Indicative learning modules','This program is a concept preview only. Enrollment, lessons, assessments and certificates are not available.','Safeguarding, accessibility and expert review are required before any public release.','Program not found.'],
+tr:['← Akademi Kampüsü','Planlanan program','Program hakkında','Önerilen öğrenme kazanımları','Taslak eğitim modülleri','Bu program yalnızca kavramsal önizlemedir. Kayıt, dersler, değerlendirmeler ve sertifikalar henüz aktif değildir.','Yayımlanmadan önce güvenlik, erişilebilirlik ve uzman değerlendirmesi gereklidir.','Program bulunamadı.'],
+es:['← Campus de Academy','Programa previsto','Sobre el programa','Resultados de aprendizaje propuestos','Módulos orientativos','Esta es solo una vista previa. La inscripción, las clases, las evaluaciones y los certificados no están disponibles.','Antes de publicarse se requieren medidas de protección, accesibilidad y revisión experta.','Programa no encontrado.'],
+fr:['← Campus Academy','Programme prévu','À propos du programme','Objectifs pédagogiques proposés','Modules indicatifs','Aperçu conceptuel uniquement. Les inscriptions, cours, évaluations et certificats ne sont pas disponibles.','Une validation spécialisée des mesures de protection et de l’accessibilité est nécessaire avant publication.','Programme introuvable.'],
+de:['← Academy Campus','Geplantes Programm','Über dieses Programm','Vorgesehene Lernziele','Vorgesehene Lernmodule','Dies ist nur eine Programmvorschau. Anmeldung, Unterricht, Prüfungen und Zertifikate sind nicht verfügbar.','Vor Veröffentlichung sind Schutzmaßnahmen, Barrierefreiheit und fachliche Prüfung erforderlich.','Programm nicht gefunden.'],
+pt:['← Campus Academy','Programa planeado','Sobre o programa','Resultados de aprendizagem propostos','Módulos indicativos','Esta é apenas uma pré-visualização. Inscrições, aulas, avaliações e certificados ainda não estão disponíveis.','Antes da publicação, são necessárias salvaguardas, acessibilidade e revisão especializada.','Programa não encontrado.'],
+ru:['← Кампус Academy','Планируемая программа','О программе','Предполагаемые результаты обучения','Предварительные учебные модули','Это только предварительное описание. Запись, занятия, оценивание и сертификаты пока недоступны.','Перед публикацией необходимы меры защиты, доступность и экспертная проверка.','Программа не найдена.'],
+ar:['← حرم الأكاديمية','برنامج مخطط له','عن البرنامج','نواتج التعلم المقترحة','وحدات التعلم الأولية','هذه معاينة أولية فقط. التسجيل والدروس والتقييمات والشهادات غير متاحة بعد.','يلزم ضمان الحماية وإمكانية الوصول ومراجعة الخبراء قبل النشر.','البرنامج غير موجود.'],
+zh:['← 学院校园','规划中的课程','课程简介','预期学习成果','拟定学习模块','本页仅为课程概念预览。报名、课程、评估和证书功能尚未开放。','正式发布前须完成安全保障、无障碍和专家审核。','未找到课程。']
+};
+const index=slugs.indexOf(new URLSearchParams(location.search).get('program'));let request=0;
+async function render(){const code=window.EchoesI18n?.getLanguage()||'en',t=ui[code]||ui.en,id=++request;let dictionary=null;try{const response=await fetch('locales/'+encodeURIComponent(code)+'/pages/academy-campus.json');if(response.ok)dictionary=await response.json()}catch(e){}if(id!==request)return;
+document.getElementById('back').textContent=t[0];document.getElementById('eyebrow').textContent=t[1];document.getElementById('about-title').textContent=t[2];document.getElementById('outcomes-title').textContent=t[3];document.getElementById('modules-title').textContent=t[4];document.getElementById('notice').textContent=t[5];document.getElementById('safeguard').textContent=t[6];
+const fallback=["The Art of Being Human","Conscious Parenting & Child Safeguarding","From Creativity to Economic Opportunity","Young Creators & Future Media","Financial Literacy for Everyday Life","Responsible AI & Digital Safety","Peaceful Dialogue & Community Action","Communication Across Cultures"];
+const programs=dictionary?.programs;if(index<0){document.getElementById('program-title').textContent=t[7];document.querySelector('.grid').hidden=true;return}
+const p=Array.isArray(programs)&&programs[index]||[fallback[index],'', ''];document.getElementById('program-title').textContent=p[0];document.getElementById('program-meta').textContent=p[1];document.getElementById('description').textContent=p[2];document.getElementById('outcomes').replaceChildren(...outcomes[index].map(x=>{const li=document.createElement('li');li.textContent=x;return li}));document.getElementById('modules').replaceChildren(...modules[index].map(x=>{const li=document.createElement('li');li.textContent=x;return li}));document.documentElement.lang=code;document.title=p[0]+' — Echoes Academy';
+}
+document.addEventListener('echoes:language-change',render);render();
+})();
+</script></body></html>
