@@ -144,7 +144,7 @@ BEGIN
   IF EXISTS (
     SELECT 1 FROM ec_wallet.staging_cart_order_lines_v2 l
     LEFT JOIN ec_wallet.staging_inventory_reservations_v2 r
-      ON r.line_id=l.line_id
+      ON r.line_id=l.line_id AND r.order_id=l.order_id
     WHERE l.order_id=p_order_id
       AND (r.reservation_id IS NULL OR r.state<>'reserved'
            OR r.quantity<>l.quantity OR r.product_id<>l.product_id)
@@ -160,11 +160,13 @@ BEGIN
      OR EXISTS (
        SELECT 1 FROM ec_wallet.staging_cart_order_lines_v2 l
        LEFT JOIN ec_wallet.staging_inventory_reservations_v2 r
-         ON r.line_id=l.line_id
+         ON r.line_id=l.line_id AND r.order_id=l.order_id
        WHERE l.order_id=p_order_id
-       GROUP BY l.line_id,l.quantity
+       GROUP BY l.line_id,l.quantity,l.product_id
        HAVING count(r.reservation_id)<>1
           OR coalesce(max(r.quantity),0)<>l.quantity
+          OR count(r.reservation_id) FILTER
+             (WHERE r.product_id=l.product_id AND r.state='reserved')<>1
      )
      OR EXISTS (
        SELECT 1 FROM ec_wallet.staging_inventory_reservations_v2 r
