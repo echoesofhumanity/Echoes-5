@@ -30,6 +30,8 @@ DECLARE
   v_lines jsonb;
   v_seller_id uuid;
   v_seller_status text;
+  v_seller_ids uuid[] := ARRAY[]::uuid[];
+  v_candidate_seller_id uuid;
 BEGIN
   IF v_buyer IS NULL OR p_idempotency_key IS NULL THEN
     RAISE EXCEPTION 'Authenticated buyer and request key required' USING ERRCODE='28000';
@@ -72,11 +74,26 @@ BEGIN
     RAISE EXCEPTION 'Wallet idempotency key already used' USING ERRCODE='23505';
   END IF;
 
-  -- Lock products in UUID order, one at a time. Do not rely on unordered IN locks.
-  -- Seller verification is rechecked and row-locked AFTER each product lock.
-  -- IMPORTANT: for carts with several products, product->seller->next product
-  -- can deadlock against other writers. This is NOT a final lock protocol;
-  -- see separate concurrency architecture and do not enable posting.
+  -- Discover seller IDs WITHOUT treating the read as eligibility evidence.
+  -- All seller locks are acquired before any product lock.
+  FOR v_candidate_seller_id IN
+    SELECT DISTINCT p.seller_id
+    FROM ec_wallet.staging_v2_catalogue_products p
+    JOIN ec_wallet.v2_normalize_cart(p_lines) x ON x.product_id=p.product_id
+    ORDER BY p.seller_id
+  LOOP
+    SELECT s.verification_status INTO v_seller_status
+    FROM ec_wallet.staging_sellers s
+    WHERE s.seller_id=v_candidate_seller_id FOR SHARE;
+    IF NOT FOUND OR v_seller_status <> 'verified' THEN
+      RAISE EXCEPTION 'Seller not verified' USING ERRCODE='P0001';
+    END IF;
+    v_seller_ids := pg_catalog.array_append(v_seller_ids,v_candidate_seller_id);
+  END LOOP;
+
+  -- Now lock every product in ascending UUID order. A concurrent seller
+  -- reassignment invalidates the preliminary seller set: abort, never lock
+  -- a new seller out of order. The caller may retry with a new transaction.
   FOR v_item IN SELECT x.product_id,x.quantity
     FROM ec_wallet.v2_normalize_cart(p_lines) x ORDER BY x.product_id
   LOOP
@@ -95,14 +112,8 @@ BEGIN
        OR v_product.stock_available < v_item.quantity THEN
       RAISE EXCEPTION 'Product unavailable' USING ERRCODE='P0001';
     END IF;
-    -- Lock the seller row while product lock is held. Concurrent seller
-    -- suspension UPDATE must wait until checkout commits or aborts.
-    -- Global lock protocol must be agreed with seller-admin writers first.
-    SELECT seller_id,verification_status INTO v_seller_id,v_seller_status
-      FROM ec_wallet.staging_sellers
-      WHERE seller_id=v_product.seller_id FOR SHARE;
-    IF NOT FOUND OR v_seller_status <> 'verified' THEN
-      RAISE EXCEPTION 'Seller not verified' USING ERRCODE='P0001';
+    IF NOT (v_product.seller_id = ANY(v_seller_ids)) THEN
+      RAISE EXCEPTION 'Seller changed during checkout; retry' USING ERRCODE='40001';
     END IF;
     v_subtotal := v_product.price_ec::numeric * v_item.quantity;
     v_total := v_total + v_subtotal;
@@ -119,7 +130,7 @@ BEGIN
 
   -- HARD IMPLEMENTATION BLOCKER: do not allow even an approved migration
   -- to authorize checkout until atomic seller allocation, debit namespace,
-  -- reservation expiry policy, seller lock protocol and concurrency tests exist.
+  -- reservation expiry policy, cross-writer lock audit and concurrency tests exist.
   RAISE EXCEPTION 'V2 checkout posting intentionally disabled pending accounting and seller-lock review';
 
   -- Intended same-transaction write sequence (NOT IMPLEMENTED):
@@ -137,8 +148,8 @@ COMMIT;
 -- REVIEW FINDINGS / GATES:
 -- 1. The function is deliberately uncallable by normal clients and raises before posting.
 -- 2. pgcrypto extension schema ('extensions') must be verified read-only.
--- 3. Seller status is now protected by FOR SHARE row locks, but product/seller
---    interleaving still requires a global deadlock-free lock protocol.
+-- 3. Seller locks now precede product locks; still audit admin and legacy
+--    writers for inverse lock order before enabling any posting.
 -- 4. The product lock loop may hold locks for a long cart; test lock timeouts.
 -- 5. Future price snapshot must be captured while product locks are held.
 -- 6. Add strict checkout posting, reversal and payable reconciliation separately.
