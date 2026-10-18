@@ -12,6 +12,10 @@ const files = {
   reconciliation: 'docs/sql/marketplace-staging-v2-ledger-event-reconciliation.DRAFT.sql'
 };
 let failed = 0;
+let warnings = 0;
+function warn(label, condition) {
+  if (condition) { warnings++; process.stdout.write(`WARN ${label}\n`); }
+}
 function check(label, ok) {
   process.stdout.write(`${ok ? 'PASS' : 'FAIL'} ${label}\n`);
   if (!ok) failed++;
@@ -32,10 +36,10 @@ const cancel = readFileSync(new URL(files.cancel, root), 'utf8');
 const reservation = readFileSync(new URL(files.reservations, root), 'utf8');
 check('checkout: internal posting hard stop', /RAISE EXCEPTION 'V2 checkout posting intentionally disabled/.test(checkout));
 check('cancel: internal posting hard stop', /RAISE EXCEPTION 'V2 cancellation posting intentionally disabled/.test(cancel));
-check('checkout: unapproved 30 minute expiry flagged', /interval '30 minutes'/.test(checkout));
+warn('legacy V2 checkout contains an unapproved hard-coded 30-minute reservation lifetime; DO NOT ACTIVATE', /interval '30 minutes'/.test(checkout));
 check('reservation: expiry cannot automatically release', /transaction_timestamp\(\) >= OLD\.expires_at/.test(reservation));
 check('reservation: consumption blocked', /Reservation consumption requires separately approved operation/.test(reservation));
 check('unsplit: no seller allocation in clearing DDL', !/INSERT INTO ec_wallet\.staging_cart_seller_allocations_v2/i.test(
   readFileSync(new URL(files.clearing, root), 'utf8')));
-process.stdout.write(`Static checks: ${failed ? 'FAILED' : 'PASSED'}; PostgreSQL/runtime NOT tested.\n`);
+process.stdout.write(`Static checks: ${failed ? 'FAILED' : 'PASSED'}; warnings: ${warnings}; PostgreSQL/runtime NOT tested.\n`);
 exit(failed ? 1 : 0);
