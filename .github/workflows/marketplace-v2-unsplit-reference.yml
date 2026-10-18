@@ -6,6 +6,8 @@ on:
       - 'tests/marketplace-v2-unsplit-reference.mjs'
       - 'tests/marketplace-v2-unsplit-reference.test.mjs'
       - '.github/workflows/marketplace-v2-unsplit-reference.yml'
+      - 'scripts/check-marketplace-v2-unsplit-integration.mjs'
+      - 'docs/sql/marketplace-staging-v2-*.DRAFT.sql'
   pull_request:
     paths:
       - 'tests/marketplace-v2-unsplit-reference.mjs'
@@ -30,3 +32,5 @@ jobs:
           node-version: '22'
       - name: Run isolated Node test suite (no Supabase credentials)
         run: node --test tests/marketplace-v2-unsplit-reference.test.mjs
+      - name: Verify draft integration remains fail-closed
+        run: node scripts/check-marketplace-v2-unsplit-integration.mjs
