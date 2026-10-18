@@ -48,7 +48,7 @@
 
   const start=async()=>{
     try{
-      await loadScript("assets/js/i18n.js?v=33e4e1d");
+      await loadScript("assets/js/i18n.js?v=b208449");
       await load('[data-component="header"]',"components/header/header.html");
       await load('[data-section="hero"]',"sections/"+page+"/hero.html");
 
