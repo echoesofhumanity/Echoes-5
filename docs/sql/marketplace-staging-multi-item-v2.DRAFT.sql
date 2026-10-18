@@ -114,8 +114,6 @@ REVOKE ALL ON ec_wallet.staging_cart_order_lines_v2 FROM PUBLIC,anon,authenticat
 REVOKE ALL ON ec_wallet.staging_cart_order_events_v2 FROM PUBLIC,anon,authenticated;
 REVOKE ALL ON ec_wallet.staging_inventory_reservations_v2 FROM PUBLIC,anon,authenticated;
 
-COMMIT;
-
 -- APPROVED POLICY / REVIEW-ONLY transition candidate (2026-10-18).
 -- No automatic release at expires_at. Only explicit order cancellation
 -- may release a reserved reservation in this synthetic demo.
@@ -160,6 +158,8 @@ FOR EACH ROW EXECUTE FUNCTION ec_wallet.v2_reservation_transition_guard();
 -- Transition guard is not a complete authorization boundary: ownership,
 -- order state, exact-once stock/EC posting, privileges and deferred
 -- reconciliation must be enforced by a separately reviewed atomic RPC.
+
+COMMIT;
 
 -- Not yet implemented:
 -- * server-owned atomic checkout/cancellation and deterministic locking
