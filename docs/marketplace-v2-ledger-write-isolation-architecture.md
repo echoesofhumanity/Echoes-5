@@ -41,3 +41,10 @@ B. Choose a migration approach for V2 operation CHECK and writer isolation, with
 C. Review V2 synthetic accounting and cancellation idempotency; add tests for simultaneous checkout, retry, last unit, service-role bypass and rollback.
 D. Approve and execute on staging only in a separate explicit step; verify old single-item RPCs.
 E. Keep production NO-GO until independent security, legal, financial and operational gates pass.
+
+## Verified staging privilege finding — 18 October 2026 (read-only)
+Project: echoes-response-staging (ymxpbkviadypsvahrqwt). A read-only information_schema.role_table_grants query confirms service_role has SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES and TRIGGER privileges on ec_wallet.ledger. This is a privilege inventory, NOT proof that immutable triggers or RLS can be bypassed. No write was attempted.
+
+**V2 NO-GO:** Do not enable V2 ledger posting while direct service_role INSERT remains an unreviewed alternative to the authorized checkout/cancellation transaction. Existing legacy services may depend on these grants: DO NOT revoke privileges without a caller inventory and regression plan.
+
+Next review-only checks: inventory existing ledger triggers, RLS, CHECK and UNIQUE constraints; inspect current legacy RPC owner and SECURITY DEFINER privileges; map all server-side writers; design least-privilege dedicated V2 writer and negative tests (wrong wallet, duplicate debit, forged reversal, direct INSERT). Approval required before any grants, DDL or synthetic writes.
