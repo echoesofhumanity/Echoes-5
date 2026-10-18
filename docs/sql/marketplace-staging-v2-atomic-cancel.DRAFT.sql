@@ -206,6 +206,21 @@ BEGIN
     RAISE EXCEPTION 'Seller allocations do not reconcile for cancellation';
   END IF;
 
+  -- The creation event must exist exactly once, and a cancellation event
+  -- must not precede the cancellation posting. Check before any stock lock.
+  IF (SELECT count(*) FROM ec_wallet.staging_cart_order_events_v2 e
+      WHERE e.order_id=p_order_id AND e.event_type='created')<>1
+     OR EXISTS (
+       SELECT 1 FROM ec_wallet.staging_cart_order_events_v2 e
+       WHERE e.order_id=p_order_id AND e.event_type='cancelled'
+     )
+     OR (SELECT coalesce(sum(l.subtotal_ec::numeric),0)
+         FROM ec_wallet.staging_cart_order_lines_v2 l
+         WHERE l.order_id=p_order_id)<>v_order.total_ec::numeric
+  THEN
+    RAISE EXCEPTION 'V2 cancellation pre-posting order/event evidence mismatch';
+  END IF;
+
   -- The order and wallet locks serialize buyer cancellation, but product
   -- locks must obey the globally reviewed protocol before activation.
   -- Candidate per-product restock and release, deterministic UUID order:
