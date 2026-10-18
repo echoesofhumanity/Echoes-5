@@ -80,3 +80,17 @@ Before any staging write, inspect `pg_proc`/ `pg_get_functiondef` for functions 
 
 ### Decision
 NO-GO for V2 posting: external and deployed administrative writers are not yet exhaustively inventoried. No production or staging change is authorized.
+
+## Staging function-body read-only audit — 18 October 2026
+Project: `ymxpbkviadypsvahrqwt`. Evidence: SELECT-only inspection of `pg_proc` source/metadata; no SQL changes or test transactions.
+
+| Existing deployed function | Verified lock/write sequence | Residual concern |
+| --- | --- | --- |
+| `public.ec_staging_checkout` | buyer wallet `FOR UPDATE` → legacy product `FOR UPDATE` → order insert → ledger debit → legacy stock UPDATE → `staging_register_unvalued_payable` (order `FOR UPDATE`) | Seller verified via EXISTS but not locked; concurrent seller verification changes need an eligibility-race test. |
+| `public.ec_staging_cancel_order` | buyer wallet `FOR UPDATE` → legacy order `FOR UPDATE` → reversal ledger insert → legacy stock UPDATE → payable void → order cancelled | Product UPDATE takes a write lock; no explicit product `FOR UPDATE` before reversal, but transaction rollback remains atomic. |
+| `ec_wallet.staging_register_unvalued_payable` | joins legacy order/product/seller; `FOR UPDATE OF o` on order, then payable INSERT | Re-locks order after checkout acquired product; inspect administrative payable writers for possible inverse lock order. |
+| `ec_wallet.require_verified_staging_product` | trigger validates verified seller using EXISTS | No seller row lock in inspected body. |
+
+All four public legacy staging RPCs found in `pg_proc` metadata (`ec_staging_checkout`, `ec_staging_cancel_order`, `ec_staging_catalogue`, `ec_staging_my_orders`) are owned by `postgres` and SECURITY DEFINER. This is a privilege-review requirement, not evidence of an exploit. Additional staging functions and trigger bindings have not been exhaustively audited; seller/stock administrative writers remain unknown.
+
+**Lock design consequence:** V2 checkout's wallet→seller FOR SHARE→V2 product FOR UPDATE path differs from legacy wallet→legacy product FOR UPDATE→order path, though their catalogues are separate. Preserve legacy behavior; do not rewrite it solely to align the V2 draft. Audit seller status updates and privileged writers before V2 activation. **NO-GO remains.**
