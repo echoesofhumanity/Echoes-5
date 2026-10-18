@@ -66,3 +66,17 @@ Source: current GitHub main V2 checkout/cancel SQL drafts. No PostgreSQL executi
 3. Verify cancellation order→product acquisition against inventory administration and reservation transition triggers.
 4. Test two buyers with reversed cart ordering, two buyers sharing a seller, cancellation/checkout on the same wallet, and concurrent administrative seller/stock updates. Use bounded lock timeouts and inspect deadlock/rollback results.
 5. The hard-stop SQL guards remain in place; the static trace is not a staging test or deployment authorization.
+
+## Repository writer discovery — 18 October 2026
+Search scope: GitHub code-search results on Echoes-5 main for `staging_v2_catalogue_products`, `staging_sellers FOR UPDATE`, `ec_wallet.wallets FOR UPDATE`, and `stock_available`. Code search is not an exhaustive audit of every database function or privileged writer.
+
+- V2 catalogue stock mutation: identified in guarded checkout/cancellation DRAFT SQL; no deployed V2 RPC evidenced by this repository search.
+- Seller row lock: V2 checkout DRAFT explicitly uses `FOR SHARE`; no matching admin seller `FOR UPDATE` writer was established by the searched results. **Unknown is not absent.**
+- Buyer wallet row lock: checkout and cancellation DRAFTs use `FOR UPDATE`; existing legacy checkout/cancel are separately documented to lock wallet first.
+- Repository search does not inspect deployed staging functions, SQL-editor scripts, external services, or privileged manual operations. Their lock order remains **UNVERIFIED**.
+
+### Required staging read-only catalogue inventory
+Before any staging write, inspect `pg_proc`/ `pg_get_functiondef` for functions mentioning `staging_sellers`, `staging_products`, `staging_v2_catalogue_products`, `wallets` and `ledger`; inspect `pg_trigger` for relevant table triggers, and privileges for privileged writers. Use read-only SELECT queries only, in staging project `ymxpbkviadypsvahrqwt`. Record each writer's actual lock order and ownership; do not infer safety from missing GitHub search hits.
+
+### Decision
+NO-GO for V2 posting: external and deployed administrative writers are not yet exhaustively inventoried. No production or staging change is authorized.
