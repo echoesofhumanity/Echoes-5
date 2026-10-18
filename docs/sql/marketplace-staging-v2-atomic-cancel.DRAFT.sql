@@ -61,6 +61,46 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Cancelled order evidence incomplete; manual review';
     END IF;
+    -- A cancelled order must have complete immutable line/reservation
+    -- evidence. Empty sets cannot satisfy replay verification.
+    IF NOT EXISTS (
+         SELECT 1 FROM ec_wallet.staging_cart_order_lines_v2 l
+         WHERE l.order_id=p_order_id
+       )
+       OR EXISTS (
+         SELECT 1 FROM ec_wallet.staging_cart_order_lines_v2 l
+         LEFT JOIN ec_wallet.staging_inventory_reservations_v2 r
+           ON r.line_id=l.line_id AND r.order_id=l.order_id
+         WHERE l.order_id=p_order_id
+         GROUP BY l.line_id,l.quantity,l.product_id
+         HAVING count(r.reservation_id)<>1
+            OR coalesce(max(r.quantity),0)<>l.quantity
+            OR count(r.reservation_id) FILTER
+                 (WHERE r.product_id=l.product_id
+                    AND r.state='released'
+                    AND r.release_reason='order_cancelled')<>1
+       )
+       OR EXISTS (
+         SELECT 1 FROM ec_wallet.staging_inventory_reservations_v2 r
+         LEFT JOIN ec_wallet.staging_cart_order_lines_v2 l
+           ON l.line_id=r.line_id AND l.order_id=r.order_id
+         WHERE r.order_id=p_order_id AND l.line_id IS NULL
+       )
+       OR (SELECT count(*) FROM ec_wallet.staging_cart_seller_allocations_v2 a
+           WHERE a.order_id=p_order_id)
+          <> (SELECT count(DISTINCT l.seller_id)
+              FROM ec_wallet.staging_cart_order_lines_v2 l
+              WHERE l.order_id=p_order_id)
+       OR (SELECT coalesce(sum(a.gross_ec::numeric),0)
+           FROM ec_wallet.staging_cart_seller_allocations_v2 a
+           WHERE a.order_id=p_order_id)<>v_order.total_ec::numeric
+       OR (SELECT count(*) FROM ec_wallet.ledger l
+           WHERE l.wallet_id=v_wallet AND l.operation='cart_checkout_debit_v2'
+             AND l.reference_id=p_order_id
+             AND l.delta_ec=-v_order.total_ec)<>1
+    THEN
+      RAISE EXCEPTION 'Cancelled order replay evidence incomplete';
+    END IF;
     order_id := p_order_id;
     cancelled := true;
     replayed := true;
