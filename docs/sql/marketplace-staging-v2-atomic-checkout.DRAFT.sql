@@ -35,6 +35,14 @@ DECLARE
   v_line_id uuid;
   v_stock_rows integer;
   v_debit_entry_id uuid;
+  v_allocation record;
+  v_seller_ec bigint;
+  v_humanitarian_ec bigint;
+  v_operating_ec bigint;
+  -- Intentionally unset: versioned policy approval required.
+  v_policy_seller_bps integer := NULL;
+  v_policy_humanitarian_bps integer := NULL;
+  v_policy_operating_bps integer := NULL;
 BEGIN
   IF v_buyer IS NULL OR p_idempotency_key IS NULL THEN
     RAISE EXCEPTION 'Authenticated buyer and request key required' USING ERRCODE='28000';
@@ -189,10 +197,43 @@ BEGIN
     (v_debit_entry_id,v_wallet,-v_total::bigint,'cart_checkout_debit_v2',
      v_order,p_idempotency_key);
 
-  -- Multi-seller allocations are deliberately NOT guessed or written here.
-  -- The approved integer EC split policy and per-seller totals must be
-  -- implemented atomically; reconciliation triggers will reject missing rows.
-  -- A synthetic payable projection is NOT a double-entry accounting journal.
+  -- Candidate per-seller synthetic allocation posting. The three policy
+  -- variables remain NULL until an approved, versioned policy is supplied.
+  -- Basis points (10,000 = 100%) avoid floating-point EC calculations.
+  IF v_policy_seller_bps IS NULL OR v_policy_humanitarian_bps IS NULL
+     OR v_policy_operating_bps IS NULL
+     OR v_policy_seller_bps<0 OR v_policy_humanitarian_bps<0
+     OR v_policy_operating_bps<0
+     OR v_policy_seller_bps+v_policy_humanitarian_bps+
+        v_policy_operating_bps<>10000
+     OR v_policy_operating_bps>300 THEN
+    RAISE EXCEPTION 'Approved V2 allocation policy is required';
+  END IF;
+
+  FOR v_allocation IN
+    SELECT l.seller_id,sum(l.subtotal_ec::numeric)::bigint AS gross_ec
+      FROM ec_wallet.staging_cart_order_lines_v2 l
+     WHERE l.order_id=v_order
+     GROUP BY l.seller_id ORDER BY l.seller_id
+  LOOP
+    -- Deterministic rounding: floor seller and humanitarian shares,
+    -- allocate the integer remainder to operating share. A separate
+    -- review must ensure rounding never exceeds the 3% operating cap.
+    v_seller_ec := pg_catalog.floor(
+      v_allocation.gross_ec::numeric*v_policy_seller_bps/10000)::bigint;
+    v_humanitarian_ec := pg_catalog.floor(
+      v_allocation.gross_ec::numeric*v_policy_humanitarian_bps/10000)::bigint;
+    v_operating_ec := v_allocation.gross_ec-v_seller_ec-v_humanitarian_ec;
+    IF v_operating_ec::numeric*10000 >
+       v_allocation.gross_ec::numeric*300 THEN
+      RAISE EXCEPTION 'Allocation rounding exceeds operating cap';
+    END IF;
+    INSERT INTO ec_wallet.staging_cart_seller_allocations_v2
+      (order_id,seller_id,gross_ec,seller_ec,humanitarian_ec,operating_ec)
+    VALUES (v_order,v_allocation.seller_id,v_allocation.gross_ec,
+            v_seller_ec,v_humanitarian_ec,v_operating_ec);
+  END LOOP;
+  -- Synthetic payable projection only, not a balanced settlement journal.
 
   -- The following event is intentionally unreachable as well.
   INSERT INTO ec_wallet.staging_cart_order_events_v2
