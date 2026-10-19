@@ -245,6 +245,28 @@
           status.setAttribute("role", "status");
           status.setAttribute("aria-live", "polite");
           status.style.cssText = "margin:10px 0 0;font-size:.85rem;color:#e8d4b9";
+          const inlineTotal = document.createElement("p");
+          inlineTotal.style.cssText = "margin:12px 0;color:#f2e7d9;font-weight:700;text-align:center";
+          inlineTotal.setAttribute("aria-live", "polite");
+          function refreshInlineTotal() {
+            try {
+              const selected = selection.read();
+              if (!selected.length) {
+                inlineTotal.textContent = "EC: 0";
+                return;
+              }
+              const calculated = window.EchoesMarketplaceCart.calculate(demoProducts,
+                selected.map(function (line) {
+                  const product = productsByConcept.get(line.concept_id);
+                  if (!product) throw new Error("Unknown merchandise selection");
+                  return { product_id: product.product_id, quantity: line.quantity };
+                }));
+              const language = (window.EchoesI18n && window.EchoesI18n.getLanguage()) || "en";
+              inlineTotal.textContent = "EC: " + calculated.total_ec.toLocaleString(language);
+            } catch (error) {
+              inlineTotal.textContent = window.EchoesMerchDemoText(10);
+            }
+          }
           const existing = document.createElement("p");
           existing.dataset.echoesMerchExisting = "";
           existing.style.cssText = "margin:10px 0;color:#dfb98e;font-size:.9rem";
@@ -261,8 +283,10 @@
           if (opener) opener.addEventListener("click", function () {
             status.textContent = "";
             refreshExisting();
+            refreshInlineTotal();
           });
           refreshExisting();
+          refreshInlineTotal();
           button.addEventListener("click", function () {
             try {
               const lines = selection.setQuantity(entry.concept_id, quantity);
@@ -272,11 +296,12 @@
                 : window.EchoesMerchDemoText(8) + total + window.EchoesMerchDemoText(9);
               refreshExisting();
               refreshCartSafely();
+              refreshInlineTotal();
             } catch (error) {
               status.textContent = window.EchoesMerchDemoText(10);
             }
           });
-          area.append(label, existing, quantityRow, button, status);
+          area.append(label, existing, quantityRow, button, status, inlineTotal);
           inside.appendChild(area);
         });
       } catch (error) {
