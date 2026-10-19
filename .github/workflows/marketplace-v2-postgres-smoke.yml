@@ -8,6 +8,7 @@ on:
       - 'tests/marketplace-v2-postgres-cancel-race.sh'
       - 'tests/marketplace-v2-real-schema.sql'
       - 'tests/marketplace-v2-real-rpc.sql'
+      - 'tests/marketplace-v2-real-security.sql'
       - '.github/workflows/marketplace-v2-postgres-smoke.yml'
   workflow_dispatch:
 permissions:
@@ -45,3 +46,4 @@ jobs:
           bash tests/marketplace-v2-postgres-cancel-race.sh
           psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-real-schema.sql
           psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-real-rpc.sql
+          psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-real-security.sql
