@@ -156,7 +156,32 @@
           }
         }
         refreshCartSafely();
-        document.addEventListener("echoes:languagechange", refreshCartSafely);
+        document.addEventListener("echoes:languagechange", function () {
+          refreshCartSafely();
+          document.querySelectorAll("[data-echoes-merch-quantity-label]").forEach(function (node) {
+            node.setAttribute("aria-label", window.EchoesMerchDemoText(1));
+          });
+          document.querySelectorAll("[data-echoes-merch-minus]").forEach(function (node) {
+            node.setAttribute("aria-label", window.EchoesMerchDemoText(2));
+          });
+          document.querySelectorAll("[data-echoes-merch-plus]").forEach(function (node) {
+            node.setAttribute("aria-label", window.EchoesMerchDemoText(3));
+          });
+          document.querySelectorAll("[data-echoes-merch-detail]").forEach(function (area) {
+            const label = area.querySelector("[data-echoes-merch-label]");
+            const existing = area.querySelector("[data-echoes-merch-existing]");
+            const button = area.querySelector("[data-echoes-merch-button]");
+            const status = area.querySelector("[data-echoes-merch-status]");
+            if (label) label.textContent = window.EchoesMerchDemoText(0);
+            if (existing) {
+              const id = area.dataset.echoesMerchDetail;
+              const line = selection.read().find(function (item) { return item.concept_id === id; });
+              existing.textContent = line ? window.EchoesMerchDemoText(11) + line.quantity : window.EchoesMerchDemoText(12);
+              if (button) button.textContent = window.EchoesMerchDemoText(line ? 4 : 13);
+            }
+            if (status) status.textContent = "";
+          });
+        });
         const detailIds = ["echoes-tee-detail", "echoes-hoodie-detail", "echoes-bottle-detail", "echoes-notebook-detail"];
         detailIds.forEach(function (detailId, index) {
           const dialog = document.getElementById(detailId);
@@ -167,8 +192,10 @@
           const inside = dialog.querySelector(".echoes-tee-detail__inside");
           if (!inside) return;
           const area = document.createElement("div");
+          area.dataset.echoesMerchDetail = entry.concept_id;
           area.style.cssText = "margin:22px 0 8px;padding:18px;border:1px solid rgba(223,185,142,.38);border-radius:16px;background:#211d20";
           const label = document.createElement("p");
+          label.dataset.echoesMerchLabel = "";
           label.textContent = window.EchoesMerchDemoText(0);
           label.style.cssText = "margin:0 0 12px;color:#dfb98e;font-size:.85rem";
           const quantityRow = document.createElement("div");
@@ -176,6 +203,7 @@
           const minus = document.createElement("button");
           const plus = document.createElement("button");
           const amount = document.createElement("output");
+          amount.dataset.echoesMerchQuantityLabel = "";
           let quantity = 1;
           amount.textContent = String(quantity);
           amount.setAttribute("aria-label", window.EchoesMerchDemoText(1));
@@ -184,6 +212,8 @@
             control.type = "button";
             control.style.cssText = "width:52px;min-height:48px;border:1px solid #bca18b;border-radius:12px;background:#28232a;color:#f3efe5;font-size:1.4rem;cursor:pointer";
           });
+          minus.dataset.echoesMerchMinus = "";
+          plus.dataset.echoesMerchPlus = "";
           minus.textContent = "−";
           plus.textContent = "+";
           minus.setAttribute("aria-label", window.EchoesMerchDemoText(2));
@@ -206,14 +236,17 @@
           refreshQuantity();
           quantityRow.append(minus, amount, plus);
           const button = document.createElement("button");
+          button.dataset.echoesMerchButton = "";
           button.type = "button";
           button.textContent = window.EchoesMerchDemoText(4);
           button.style.cssText = "width:100%;min-height:48px;padding:12px;border:1px solid #dfb98e;border-radius:12px;background:#76503a;color:#fff0d8;font-weight:600;cursor:pointer";
           const status = document.createElement("p");
+          status.dataset.echoesMerchStatus = "";
           status.setAttribute("role", "status");
           status.setAttribute("aria-live", "polite");
           status.style.cssText = "margin:10px 0 0;font-size:.85rem;color:#e8d4b9";
           const existing = document.createElement("p");
+          existing.dataset.echoesMerchExisting = "";
           existing.style.cssText = "margin:10px 0;color:#dfb98e;font-size:.9rem";
           function refreshExisting() {
             const line = selection.read().find(function (item) { return item.concept_id === entry.concept_id; });
