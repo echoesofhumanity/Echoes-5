@@ -17,7 +17,7 @@ on:
       - 'tests/marketplace-v2-foreign-cancel.sql'
       - 'tests/marketplace-v2-bridge.test.mjs'
       - 'assets/js/marketplace-v2-bridge.js'
-      - 'marketplace-demo.html'
+      - 'merchandise.html'
       - '.github/workflows/marketplace-v2-postgres-smoke.yml'
   workflow_dispatch:
 permissions:
