@@ -1,0 +1,27 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const {createService}=require('./synthetic-lms-service.cjs');
+const fixture=n=>JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures',n),'utf8'));
+const d=fixture('lms-synthetic-v1.json'),c=fixture('instructional-content-synthetic-v1.json');
+const s=createService(d,c),learner=d.actors.find(x=>x.id==='synthetic-learner-a'),other=d.actors.find(x=>x.id==='synthetic-learner-b'),visitor=d.actors.find(x=>x.role==='visitor');
+const tests=[];
+const test=(name,fn)=>tests.push([name,fn]);
+test('eight programs available',()=>assert.equal(s.listPrograms('en').length,8));
+test('nine language catalogs available',()=>{for(const l of d.localeCodes)assert.equal(s.listPrograms(l).length,8);});
+test('program detail is preview only',()=>assert.equal(s.getProgram(c.programSlug,'tr').enrollmentEnabled,false));
+test('localized modules available',()=>assert.equal(s.listModules(c.programSlug,'zh').length,1));
+test('localized lessons available',()=>assert.equal(s.listLessons(c.modules[0].id,'ar').length,1));
+test('unrelated program has no draft modules',()=>assert.deepEqual(s.listModules(d.programs[1].slug,'en'),[]));
+test('unsupported language rejected',()=>assert.throws(()=>s.listPrograms('xx'),/unsupported_locale/));
+test('unknown program rejected',()=>assert.throws(()=>s.getProgram('missing','en'),/not_found/));
+test('unknown module rejected',()=>assert.throws(()=>s.listLessons('missing','en'),/not_found/));
+test('initial progress not started',()=>assert.equal(s.readProgress(learner,c.lessons[0].id).state,'not_started'));
+test('synthetic progress update works',()=>assert.equal(s.simulateProgress(learner,c.lessons[0].id,'in_progress').persisted,false));
+test('progress remains learner isolated',()=>assert.equal(s.readProgress(other,c.lessons[0].id).state,'not_started'));
+test('visitor cannot update progress',()=>assert.throws(()=>s.simulateProgress(visitor,c.lessons[0].id,'completed'),/forbidden/));
+test('enrollment disabled',()=>assert.throws(()=>s.enroll(),/enrollment_disabled/));
+test('credentials disabled',()=>assert.throws(()=>s.issueCredential(),/credentials_disabled/));
+let failed=0;for(const [name,fn] of tests){try{fn();console.log('PASS',name);}catch(e){failed++;console.error('FAIL',name,e.message);}}
+console.log(`${tests.length-failed}/${tests.length} synthetic service checks passed`);if(failed)process.exitCode=1;
