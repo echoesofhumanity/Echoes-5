@@ -47,7 +47,7 @@
   }
 
   async function load(url) {
-    const response = await fetch(url || "assets/data/marketplace-demo-catalog.json", {
+    const response = await fetch(url || "assets/data/marketplace-catalog.json", {
       cache: "no-store",
       credentials: "same-origin"
     });
