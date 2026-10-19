@@ -219,7 +219,8 @@
             const line = selection.read().find(function (item) { return item.concept_id === entry.concept_id; });
             const savedQuantity = line ? line.quantity : 0;
             existing.textContent = line ? window.EchoesMerchDemoText(11) + savedQuantity : window.EchoesMerchDemoText(12);
-            quantity = savedQuantity;
+            // New concepts start at one; zero remains available via the minus button for removal.
+            quantity = line ? savedQuantity : 1;
             refreshQuantity();
             button.textContent = savedQuantity ? window.EchoesMerchDemoText(4) : window.EchoesMerchDemoText(13);
           }
