@@ -76,6 +76,36 @@
         }
         const selection = window.EchoesMarketplaceDemoSelection;
         if (!selection) return;
+        // Single-storefront, read-only selection summary; never authorizes checkout.
+        const cartSummary = document.createElement("aside");
+        cartSummary.setAttribute("aria-live", "polite");
+        cartSummary.style.cssText = "max-width:760px;margin:22px auto;padding:18px;border:1px solid #806752;border-radius:16px;background:#1d1b20;color:#f2e7d9;text-align:center";
+        const cartTitle = document.createElement("strong");
+        const cartCount = document.createElement("p");
+        const cartNotice = document.createElement("p");
+        cartNotice.style.cssText = "font-size:.85rem;opacity:.8";
+        cartSummary.append(cartTitle, cartCount, cartNotice);
+        const cartTranslations = {
+          en:["Selected merchandise","Items selected: ","Concept preview only. Checkout and payment are unavailable."],
+          tr:["Seçilen ürünler","Seçilen ürün adedi: ","Yalnızca kavramsal ön izleme. Satın alma ve ödeme kullanılamıyor."],
+          de:["Ausgewählte Artikel","Ausgewählte Anzahl: ","Nur Konzeptvorschau. Kauf und Zahlung nicht verfügbar."],
+          fr:["Articles sélectionnés","Quantité sélectionnée : ","Aperçu conceptuel uniquement. Achat et paiement indisponibles."],
+          es:["Artículos seleccionados","Cantidad seleccionada: ","Solo vista conceptual. Compra y pago no disponibles."],
+          pt:["Artigos selecionados","Quantidade selecionada: ","Apenas prévia conceitual. Compra e pagamento indisponíveis."],
+          ru:["Выбранные товары","Выбрано единиц: ","Только концептуальный просмотр. Покупка и оплата недоступны."],
+          ar:["المنتجات المختارة","عدد المنتجات: ","معاينة تصورية فقط. الشراء والدفع غير متاحين."],
+          zh:["已选商品","已选数量：","仅供概念预览，暂不支持购买或付款。"]
+        };
+        function refreshCartSummary() {
+          const language = (window.EchoesI18n && window.EchoesI18n.getLanguage()) || "en";
+          const words = cartTranslations[language] || cartTranslations.en;
+          cartTitle.textContent = words[0];
+          cartCount.textContent = words[1] + selection.read().reduce(function (sum, line) { return sum + line.quantity; }, 0);
+          cartNotice.textContent = words[2];
+        }
+        const productMount = document.querySelector('[data-section="products"]');
+        if (productMount) productMount.insertAdjacentElement("afterend", cartSummary);
+        refreshCartSummary();
         const detailIds = ["echoes-tee-detail", "echoes-hoodie-detail", "echoes-bottle-detail", "echoes-notebook-detail"];
         detailIds.forEach(function (detailId, index) {
           const dialog = document.getElementById(detailId);
@@ -156,6 +186,7 @@
                 ? window.EchoesMerchDemoText(7)
                 : window.EchoesMerchDemoText(8) + total + window.EchoesMerchDemoText(9);
               refreshExisting();
+              refreshCartSummary();
             } catch (error) {
               status.textContent = window.EchoesMerchDemoText(10);
             }
