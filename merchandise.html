@@ -156,8 +156,7 @@
           }
         }
         refreshCartSafely();
-        document.addEventListener("echoes:language-changed", refreshCartSafely);
-        document.addEventListener("echoes:language-change", refreshCartSafely);
+        document.addEventListener("echoes:languagechange", refreshCartSafely);
         const detailIds = ["echoes-tee-detail", "echoes-hoodie-detail", "echoes-bottle-detail", "echoes-notebook-detail"];
         detailIds.forEach(function (detailId, index) {
           const dialog = document.getElementById(detailId);
