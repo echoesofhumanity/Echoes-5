@@ -8,23 +8,42 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      TEST_ACCESS_TOKEN: ${{ secrets.MARKETPLACE_V2_STAGING_USER_TOKEN }}
+      STAGING_PUBLISHABLE_KEY: ${{ secrets.MARKETPLACE_V2_STAGING_PUBLISHABLE_KEY }}
+      STAGING_TEST_EMAIL: ${{ secrets.MARKETPLACE_V2_STAGING_TEST_EMAIL }}
+      STAGING_TEST_PASSWORD: ${{ secrets.MARKETPLACE_V2_STAGING_TEST_PASSWORD }}
     steps:
-      - name: Verify valid staging user is recognized but checkout remains disabled
+      - name: Verify staging login and disabled checkout
         shell: bash
         run: |
           set -euo pipefail
-          if [[ -z "$TEST_ACCESS_TOKEN" ]]; then
-            echo "::error::Configure staging-only MARKETPLACE_V2_STAGING_USER_TOKEN secret."
+          for key in STAGING_PUBLISHABLE_KEY STAGING_TEST_EMAIL STAGING_TEST_PASSWORD; do
+            if [[ -z "${!key}" ]]; then
+              echo "::error::Missing staging secret: $key"
+              exit 1
+            fi
+          done
+          base="https://ymxpbkviadypsvahrqwt.supabase.co"
+          payload="$(jq -nc --arg email "$STAGING_TEST_EMAIL" --arg password "$STAGING_TEST_PASSWORD" '{email:$email,password:$password}')"
+          auth_response="$(mktemp)"
+          gate_response="$(mktemp)"
+          trap 'rm -f "$auth_response" "$gate_response"' EXIT
+          auth_status="$(curl --silent --show-error --max-time 25 --output "$auth_response" --write-out '%{http_code}' -X POST "$base/auth/v1/token?grant_type=password" -H "apikey: $STAGING_PUBLISHABLE_KEY" -H 'Content-Type: application/json' --data "$payload")"
+          unset payload
+          if [[ "$auth_status" != 200 ]]; then
+            echo "::error::Staging Auth login failed (HTTP $auth_status)."
             exit 1
           fi
-          echo "::add-mask::$TEST_ACCESS_TOKEN"
-          output="$(mktemp)"
-          trap 'rm -f "$output"' EXIT
-          status="$(curl --silent --show-error --max-time 25 --output "$output" --write-out '%{http_code}' -X POST 'https://ymxpbkviadypsvahrqwt.supabase.co/functions/v1/marketplace-v2-staging-gate' -H "Authorization: Bearer $TEST_ACCESS_TOKEN" -H 'Content-Type: application/json' --data '{"operation":"checkout"}')"
-          if [[ "$status" != 403 ]]; then
-            echo "::error::Expected HTTP 403, got $status"
+          token="$(jq -er '.access_token | select(type=="string" and length>20)' "$auth_response")"
+          echo "::add-mask::$token"
+          rm -f "$auth_response"
+          gate_status="$(curl --silent --show-error --max-time 25 --output "$gate_response" --write-out '%{http_code}' -X POST "$base/functions/v1/marketplace-v2-staging-gate" -H "apikey: $STAGING_PUBLISHABLE_KEY" -H "Authorization: Bearer $token" -H 'Content-Type: application/json' --data '{"operation":"checkout"}')"
+          unset token
+          if [[ "$gate_status" != 403 ]]; then
+            echo "::error::Checkout must remain disabled; expected HTTP 403, got $gate_status."
             exit 1
           fi
-          jq -e '.identity_verified == true and .code == "MARKETPLACE_V2_NOT_ENABLED"' "$output" >/dev/null
-          echo "PASS: staging identity verified; checkout still disabled."
+          if ! jq -e '.identity_verified == true and .code == "MARKETPLACE_V2_NOT_ENABLED" and (.user_id | type == "string" and length > 0)' "$gate_response" >/dev/null; then
+            echo "::error::Identity verification or closed-checkout assertion failed."
+            exit 1
+          fi
+          echo "PASS: verified staging identity; checkout disabled (403)."
