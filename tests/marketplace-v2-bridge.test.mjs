@@ -17,10 +17,12 @@ test('V2 bridge fails closed and never initiates a network request',async()=>{
  await assert.rejects(b.cancel({}),/disabled/);
  assert.equal(calls,0);
 });
-test('Marketplace demo preserves local synthetic checkout state',()=>{
- const html=readFileSync(new URL('../marketplace-demo.html',import.meta.url),'utf8');
- assert.match(html,/marketplace-demo-order\.js/);
- assert.match(html,/marketplace-v2-bridge\.js/);
- assert.match(html,/EchoesMarketplaceDemoOrder\.create/);
+test('Original Merchandise remains read-only and uses canonical Marketplace modules',()=>{
+ const html=readFileSync(new URL('../merchandise.html',import.meta.url),'utf8');
+ assert.match(html,/assets\/js\/marketplace-catalog\.js/);
+ assert.match(html,/assets\/js\/marketplace-cart\.js/);
+ assert.match(html,/assets\/js\/marketplace-selection\.js/);
+ assert.match(html,/Checkout and payment are unavailable/);
+ assert.doesNotMatch(html,/marketplace-demo-(?:catalog|cart|selection|order)\.js/);
  assert.doesNotMatch(source,/\.rpc\s*\(|\bfetch\s*\(/);
 });
