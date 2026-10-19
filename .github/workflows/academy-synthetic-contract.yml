@@ -1,0 +1,28 @@
+name: Academy Synthetic Contract
+
+on:
+  push:
+    paths:
+      - 'academy-tests/**'
+      - '.github/workflows/academy-synthetic-contract.yml'
+  pull_request:
+    paths:
+      - 'academy-tests/**'
+      - '.github/workflows/academy-synthetic-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-contract:
+    name: Offline Academy synthetic contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run synthetic LMS checks
+        run: node academy-tests/check-synthetic-contract.cjs
