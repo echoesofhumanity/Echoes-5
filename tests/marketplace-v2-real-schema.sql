@@ -20,11 +20,9 @@ CREATE TABLE v2_real.wallets (
  fixture_buyer_id uuid NOT NULL UNIQUE,
  opening_ec bigint NOT NULL CHECK(opening_ec BETWEEN 0 AND 9007199254740991),
  balance_ec bigint NOT NULL CHECK(balance_ec BETWEEN 0 AND 9007199254740991),
- test_only boolean NOT NULL DEFAULT true CHECK(test_only),
- CHECK(opening_ec=balance_ec) NOT VALID
+ test_only boolean NOT NULL DEFAULT true CHECK(test_only)
 );
 -- Opening equality cannot be a persistent CHECK after spending: use an INSERT guard.
-ALTER TABLE v2_real.wallets DROP CONSTRAINT wallets_check;
 CREATE FUNCTION v2_real.guard_wallet_open() RETURNS trigger LANGUAGE plpgsql SET search_path='' AS $$
 BEGIN
  IF NEW.opening_ec<>NEW.balance_ec THEN RAISE EXCEPTION 'invalid opening balance'; END IF;
