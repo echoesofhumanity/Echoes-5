@@ -48,7 +48,7 @@ html[data-demo-theme="merchandise"] .qty-controls .remove{border-color:#9b8069;b
 <h1 data-demo-i18n="title">Marketplace Synthetic Demo</h1>
 <p class="notice"><strong data-demo-i18n="noticeStrong">DEMO ONLY — NO REAL PURCHASES.</strong> <span data-demo-i18n="notice">Products are concepts. No payment, EC transfer, customer data, stock reservation, or real orders. All order states exist only in this browser tab and disappear when it is closed.</span></p>
 </header>
-<section aria-labelledby="products-heading"><h2 id="products-heading" data-demo-i18n="products">Concept products</h2><div id="products" aria-live="polite" data-demo-i18n="loading">Loading synthetic catalogue…</div></section>
+<section aria-labelledby="products-heading"><h2 id="products-heading" data-demo-i18n="products">Concept products</h2><p class="muted" id="demo-product-hint">Ürün miktarını buradan seçebilirsiniz; başka sayfaya gitmeniz gerekmez. / Select quantities here without leaving this page.</p><div id="products" aria-live="polite" data-demo-i18n="loading">Loading synthetic catalogue…</div></section>
 <section aria-labelledby="cart-heading"><h2 id="cart-heading" data-demo-i18n="cart">Synthetic cart</h2>
 <div id="cart-summary" class="status" aria-live="polite" data-demo-i18n="emptyCart">Your demo cart is empty.</div>
 <div class="total"><span data-demo-i18n="total">EC total</span><strong id="total">0 EC</strong></div>
@@ -152,11 +152,11 @@ function refreshVisibleProducts(){
  document.querySelectorAll("#products .product").forEach(function(row){
   const input=row.querySelector("input");
   const visible=!!input&&Number(input.value)>0;
-  row.hidden=!visible;
+  row.hidden=false;
   if(visible)count++;
  });
  const empty=byId("empty-cart-products");
- if(empty)empty.hidden=count>0;
+ if(empty)empty.hidden=true;
  byId("calculate").disabled=count===0||!!order;
 }
 function quantityChanged(){
@@ -236,9 +236,8 @@ window.EchoesMarketplaceDemoCatalog.load().then(function(items){
  }
  const empty=document.createElement("p");
  empty.id="empty-cart-products";empty.className="muted";empty.hidden=true;
- empty.textContent=tr("emptyProducts","Your demo cart is empty. Add a concept product from Merchandise to begin.");
- const browse=document.createElement("a");browse.href="merchandise.html";browse.textContent=tr("browse","Browse Merchandise →");
- empty.append(document.createElement("br"),browse);parent.append(empty);
+ empty.textContent=tr("emptyProducts","Choose a concept product below to start.");
+ parent.append(empty);
  const saved = window.EchoesMarketplaceDemoSelection.read();
  if(saved.length){
   const byConcept = new Map(products.map(p=>[p.concept_id,p]));
