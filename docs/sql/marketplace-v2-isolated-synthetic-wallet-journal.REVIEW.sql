@@ -37,8 +37,7 @@ CREATE TABLE ec_wallet.staging_v2_test_journal (
   test_only boolean NOT NULL DEFAULT true CHECK (test_only IS TRUE),
   recorded_at timestamptz NOT NULL DEFAULT transaction_timestamp(),
   UNIQUE (wallet_id, request_key),
-  UNIQUE (wallet_id, order_id, operation),
-  CONSTRAINT v2_test_journal_distinct_request_key CHECK (request_key <> order_id)
+  UNIQUE (wallet_id, order_id, operation)
 );
 
 CREATE INDEX staging_v2_test_journal_order_idx
