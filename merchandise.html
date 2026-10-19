@@ -386,13 +386,19 @@
             try {
               refreshCartSafely();
               refreshOrderPanel();
-              if (typeof dialog.close === "function" && dialog.open) dialog.close();
               const target = document.getElementById("echoes-synthetic-checkout");
-              if (target) {
-                target.scrollIntoView({behavior:"smooth",block:"start"});
-                target.setAttribute("tabindex","-1");
-                target.focus({preventScroll:true});
-              }
+              if (!target || !target.isConnected) throw new Error("Synthetic cart section unavailable");
+              // Closing a modal can restore focus and scroll to the product opener.
+              // Move focus only after close, then set the final document scroll position.
+              if (typeof dialog.close === "function" && dialog.open) dialog.close();
+              requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                  target.setAttribute("tabindex","-1");
+                  target.focus({preventScroll:true});
+                  const top = target.getBoundingClientRect().top + window.scrollY - 16;
+                  window.scrollTo({top:Math.max(0,top),behavior:"instant"});
+                });
+              });
             } catch (error) {
               status.textContent = window.EchoesMerchDemoText(10);
             }
