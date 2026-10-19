@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "1.0.0",
+  "synthetic": true,
+  "publicationState": "draft",
+  "programSlug": "art-of-being-human",
+  "course": {
+    "id": "synthetic-course-1",
+    "revisionId": "synthetic-course-revision-1",
+    "status": "draft",
+    "delivery": "preview_only",
+    "accreditationClaim": false
+  },
+  "modules": [
+    {
+      "id": "synthetic-module-1",
+      "stableKey": "dignity-and-empathy",
+      "position": 1,
+      "status": "draft",
+      "locales": {
+        "en": {
+          "title": "[SYNTHETIC en] Module 1",
+          "summary": "[SYNTHETIC en] Outline only"
+        },
+        "tr": {
+          "title": "[SYNTHETIC tr] Module 1",
+          "summary": "[SYNTHETIC tr] Outline only"
+        },
+        "es": {
+          "title": "[SYNTHETIC es] Module 1",
+          "summary": "[SYNTHETIC es] Outline only"
+        },
+        "fr": {
+          "title": "[SYNTHETIC fr] Module 1",
+          "summary": "[SYNTHETIC fr] Outline only"
+        },
+        "de": {
+          "title": "[SYNTHETIC de] Module 1",
+          "summary": "[SYNTHETIC de] Outline only"
+        },
+        "pt": {
+          "title": "[SYNTHETIC pt] Module 1",
+          "summary": "[SYNTHETIC pt] Outline only"
+        },
+        "ru": {
+          "title": "[SYNTHETIC ru] Module 1",
+          "summary": "[SYNTHETIC ru] Outline only"
+        },
+        "ar": {
+          "title": "[SYNTHETIC ar] Module 1",
+          "summary": "[SYNTHETIC ar] Outline only"
+        },
+        "zh": {
+          "title": "[SYNTHETIC zh] Module 1",
+          "summary": "[SYNTHETIC zh] Outline only"
+        }
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "synthetic-lesson-1",
+      "moduleId": "synthetic-module-1",
+      "stableKey": "understanding-human-dignity",
+      "position": 1,
+      "status": "draft",
+      "type": "reading",
+      "bodyRef": null,
+      "mediaAssetId": null,
+      "assessmentId": null,
+      "locales": {
+        "en": {
+          "title": "[SYNTHETIC en] Lesson 1",
+          "summary": "[SYNTHETIC en] No real instruction",
+          "transcriptRef": null,
+          "captionRef": null
+        },
+        "tr": {
+          "title": "[SYNTHETIC tr] Lesson 1",
+          "summary": "[SYNTHETIC tr] No real instruction",
+          "transcriptRef": null,
+          "captionRef": null
+        },
+        "es": {
+          "title": "[SYNTHETIC es] Lesson 1",
+          "summary": "[SYNTHETIC es] No real instruction",
+          "transcriptRef": null,
+          "captionRef": null
+        },
+        "fr": {
+          "title": "[SYNTHETIC fr] Lesson 1",
+          "summary": "[SYNTHETIC fr] No real instruction",
+          "transcriptRef": null,
+          "captionRef": null
+        },
+        "de": {
+          "title": "[SYNTHETIC de] Lesson 1",
+          "summary": "[SYNTHETIC de] No real instruction",
+          "transcriptRef": null,
+          "captionRef": null
+        },
+        "pt": {
+          "title": "[SYNTHETIC pt] Lesson 1",
+          "summary": "[SYNTHETIC pt] No real instruction",
+          "transcriptRef": null,
+          "captionRef": null
+        },
+        "ru": {
+          "title": "[SYNTHETIC ru] Lesson 1",
+          "summary": "[SYNTHETIC ru] No real instruction",
+          "transcriptRef": null,
+          "captionRef": null
+        },
+        "ar": {
+          "title": "[SYNTHETIC ar] Lesson 1",
+          "summary": "[SYNTHETIC ar] No real instruction",
+          "transcriptRef": null,
+          "captionRef": null
+        },
+        "zh": {
+          "title": "[SYNTHETIC zh] Lesson 1",
+          "summary": "[SYNTHETIC zh] No real instruction",
+          "transcriptRef": null,
+          "captionRef": null
+        }
+      }
+    }
+  ],
+  "access": {
+    "enrollmentEnabled": false,
+    "progressTrackingEnabled": false,
+    "credentialIssuanceEnabled": false
+  },
+  "review": {
+    "subject": "pending",
+    "accessibility": "pending",
+    "safeguarding": "pending"
+  }
+}
