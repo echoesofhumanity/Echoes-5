@@ -31,4 +31,8 @@ jobs:
           check_denied "malformed JWT" -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer not-a-valid-jwt' --data '{}'
           check_denied "forged JWT" -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJub25lIn0.eyJzdWIiOiJmb3JnZWQifQ.' --data '{}'
           check_denied "syntactically valid forged JWT" -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwYTEiLCJyb2xlIjoiYXV0aGVudGljYXRlZCJ9.invalidsignature' --data '{}'
-          echo "Negative HTTP checks passed; no authenticated checkout tested."
+          for operation in checkout cancel; do
+            check_denied "$operation without JWT" -X POST -H 'Content-Type: application/json' --data "{\"operation\":\"$operation\"}"
+            check_denied "$operation with invalid signature" -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwYTEiLCJyb2xlIjoiYXV0aGVudGljYXRlZCJ9.invalidsignature' --data "{\"operation\":\"$operation\"}"
+          done
+          echo "PASS: unauthenticated and invalid-signature requests rejected for checkout and cancel."
