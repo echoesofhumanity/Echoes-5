@@ -20,6 +20,35 @@ function authorize(actor,action,resource){
   if(action==='credential.issue')return actor.role==='credential_service'&&resource.verifiedCompletion===true&&resource.assessmentPassed===true&&resource.coursePublished===true;
   return false;
 }
+
+// Independent fixture validator for negative/mutation tests. Synthetic fixtures only.
+function validateFixture(fixture){
+  const errors=[];
+  if(fixture.synthetic!==true)errors.push('not_synthetic');
+  if(!Array.isArray(fixture.schools)||!Array.isArray(fixture.programs)){errors.push('missing_collections');return errors;}
+  const schoolIds=fixture.schools.map(s=>s.id);
+  const programIds=fixture.programs.map(p=>p.id);
+  const slugs=fixture.programs.map(p=>p.slug);
+  if(!unique(schoolIds)||!unique(programIds)||!unique(slugs))errors.push('duplicate_identity');
+  const schools=new Set(schoolIds);
+  const courses=new Map((fixture.courses||[]).map(c=>[c.revisionId,c]));
+  for(const p of fixture.programs){
+    if(!schools.has(p.schoolId))errors.push('missing_school');
+    for(const code of expectedLanguages){
+      const l=p.locales?.[code];
+      if(!l||['title','audience','description'].some(k=>typeof l[k]!=='string'||!l[k].trim())||
+         ['learning_outcomes','module_outline'].some(k=>!Array.isArray(l[k])||l[k].length!==3||l[k].some(v=>typeof v!=='string'||!v.trim())))
+        errors.push('incomplete_locale:'+code);
+    }
+  }
+  for(const e of fixture.enrollments||[]){
+    const c=courses.get(e.courseRevisionId);
+    if(!c||c.status!=='published')errors.push('unpublished_enrollment');
+  }
+  return errors;
+}
+function mutated(change){const copy=structuredClone(data);change(copy);return copy;}
+
 test('synthetic-only data',()=>{assert.equal(data.synthetic,true);assert.ok(data.actors.every(x=>x.id.startsWith('synthetic-')));assert.equal(data.credentials.length,0);});
 test('exactly eight stable schools and programs',()=>{assert.equal(data.schools.length,8);assert.equal(data.programs.length,8);assert.deepEqual(data.programs.map(x=>x.slug),expectedSlugs);assert.ok(unique(data.programs.map(x=>x.slug)));assert.ok(unique(data.programs.map(x=>x.id)));});
 test('all program-school relationships resolve',()=>{const ids=new Set(data.schools.map(x=>x.id));for(const p of data.programs)assert.ok(ids.has(p.schoolId),p.slug);});
@@ -30,5 +59,12 @@ test('draft courses cannot have active enrollments',()=>{assert.equal(data.enrol
 test('instructors cannot approve their own work',()=>{const instructor=data.actors[3],reviewer=data.actors[4],course={authorId:instructor.id,assignedInstructorId:instructor.id,status:'in_review'};assert.equal(authorize(instructor,'course.approve',course),false);assert.equal(authorize(reviewer,'course.approve',course),true);});
 test('publication requires independent safeguards',()=>{const publisher=data.actors[5];const course={status:'approved',subjectApproved:true,accessibilityApproved:true,requiresSafeguarding:true,safeguardingApproved:false};assert.equal(authorize(publisher,'course.publish',course),false);course.safeguardingApproved=true;assert.equal(authorize(publisher,'course.publish',course),true);assert.equal(authorize(data.actors[3],'course.publish',course),false);});
 test('credential issuance requires server role and verified success',()=>{const service=data.actors[6];const evidence={verifiedCompletion:true,assessmentPassed:true,coursePublished:true};assert.equal(authorize(service,'credential.issue',evidence),true);assert.equal(authorize(data.actors[5],'credential.issue',evidence),false);assert.equal(authorize(service,'credential.issue',{...evidence,assessmentPassed:false}),false);});
+test('negative: duplicate program identity rejected',()=>{const f=mutated(x=>{x.programs[1].id=x.programs[0].id;});assert.ok(validateFixture(f).includes('duplicate_identity'));});
+test('negative: orphan school reference rejected',()=>{const f=mutated(x=>{x.programs[0].schoolId='synthetic-school-missing';});assert.ok(validateFixture(f).includes('missing_school'));});
+test('negative: missing Chinese translation rejected',()=>{const f=mutated(x=>{delete x.programs[0].locales.zh;});assert.ok(validateFixture(f).includes('incomplete_locale:zh'));});
+test('negative: empty Arabic outcome rejected',()=>{const f=mutated(x=>{x.programs[0].locales.ar.learning_outcomes[1]='';});assert.ok(validateFixture(f).includes('incomplete_locale:ar'));});
+test('negative: active enrollment into draft rejected',()=>{const f=mutated(x=>{x.enrollments.push({id:'synthetic-invalid',learnerId:'synthetic-learner-a',courseRevisionId:'synthetic-course-revision-1',status:'active'});});assert.ok(validateFixture(f).includes('unpublished_enrollment'));});
+test('negative: credential without verified assessment rejected',()=>{const service=data.actors[6];assert.equal(authorize(service,'credential.issue',{verifiedCompletion:true,assessmentPassed:false,coursePublished:true}),false);});
+test('positive: unchanged synthetic fixture validates',()=>{assert.deepEqual(validateFixture(data),[]);});
 let failed=0;for(const [name,fn] of tests){try{fn();console.log('PASS',name);}catch(err){failed++;console.error('FAIL',name,err.message);}}
 console.log(`${tests.length-failed}/${tests.length} synthetic contract checks passed`);if(failed)process.exitCode=1;
