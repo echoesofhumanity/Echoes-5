@@ -142,7 +142,22 @@
         }
         const productMount = document.querySelector('[data-section="products"]');
         if (productMount) productMount.insertAdjacentElement("afterend", cartSummary);
-        refreshCartSummary();
+        function refreshCartSafely() {
+          try {
+            refreshCartSummary();
+            document.body.dataset.merchandiseCartStatus = "ready";
+          } catch (error) {
+            document.body.dataset.merchandiseCartStatus = "unavailable";
+            cartLines.replaceChildren();
+            cartCount.textContent = "";
+            cartTotal.textContent = "";
+            cartNotice.textContent = window.EchoesMerchDemoText(10);
+            console.warn("Merchandise selection summary unavailable", error);
+          }
+        }
+        refreshCartSafely();
+        document.addEventListener("echoes:language-changed", refreshCartSafely);
+        document.addEventListener("echoes:language-change", refreshCartSafely);
         const detailIds = ["echoes-tee-detail", "echoes-hoodie-detail", "echoes-bottle-detail", "echoes-notebook-detail"];
         detailIds.forEach(function (detailId, index) {
           const dialog = document.getElementById(detailId);
@@ -223,7 +238,7 @@
                 ? window.EchoesMerchDemoText(7)
                 : window.EchoesMerchDemoText(8) + total + window.EchoesMerchDemoText(9);
               refreshExisting();
-              refreshCartSummary();
+              refreshCartSafely();
             } catch (error) {
               status.textContent = window.EchoesMerchDemoText(10);
             }
