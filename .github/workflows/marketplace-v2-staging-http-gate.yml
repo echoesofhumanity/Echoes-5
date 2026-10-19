@@ -1,0 +1,33 @@
+name: Marketplace V2 staging HTTP deny gate
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/marketplace-v2-staging-http-gate.yml'
+permissions:
+  contents: read
+jobs:
+  negative-http:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check staging gateway rejects unauthenticated requests
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://ymxpbkviadypsvahrqwt.supabase.co/functions/v1/marketplace-v2-staging-gate"
+          check_denied() {
+            local label="$1"
+            shift
+            local code
+            code="$(curl --silent --show-error --location --max-time 20 --output /dev/null --write-out '%{http_code}' "$@" "$url")"
+            echo "$label: HTTP $code"
+            case "$code" in
+              401|403) ;;
+              *) echo "::error::$label expected HTTP 401/403, received $code"; exit 1 ;;
+            esac
+          }
+          check_denied "missing authorization" -X POST -H 'Content-Type: application/json' --data '{}'
+          check_denied "malformed JWT" -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer not-a-valid-jwt' --data '{}'
+          check_denied "forged JWT" -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJub25lIn0.eyJzdWIiOiJmb3JnZWQifQ.' --data '{}'
+          echo "Negative HTTP checks passed; no authenticated checkout tested."
