@@ -8,14 +8,14 @@ Run locally from the repository root with Node.js (no packages or internet requi
 node academy-tests/check-synthetic-contract.cjs
 ```
 
-Expected: 9/9 synthetic contract checks passed (when fixture and code remain consistent).
+Expected: 10/10 synthetic contract checks passed (when fixture and code remain consistent).
 
 ## Coverage
 - Eight stable program slugs and eight schools.
 - School/program relationship integrity and duplicate prevention.
 - Nine locale objects and required text fields (synthetic placeholder content, NOT production translations).
 - No enrollment or credential activation for planned previews.
-- Learner record isolation, instructor self-approval prohibition, publication review gates, credential server-role requirements.
+- Learner record isolation, denial of enrollment into draft courses, cross-learner enrollment denial, instructor self-approval prohibition, publication review gates, credential server-role requirements.
 
 ## Important limitations
 - Tests evaluate an illustrative `authorize()` policy function, NOT actual database RLS, Supabase, real auth, or production API behavior.
