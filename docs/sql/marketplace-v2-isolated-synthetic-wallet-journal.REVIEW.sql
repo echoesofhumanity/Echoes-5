@@ -150,16 +150,20 @@ DECLARE
   reversal_count bigint;
   debit_total numeric;
   reversal_total numeric;
+  wrong_owner_count bigint;
 BEGIN
   SELECT * INTO o FROM ec_wallet.staging_cart_orders_v2 WHERE order_id=NEW.order_id;
   IF NOT FOUND THEN RAISE EXCEPTION 'V2 order missing'; END IF;
   SELECT count(*) FILTER (WHERE operation='checkout_debit'),
          count(*) FILTER (WHERE operation='checkout_reversal'),
          coalesce(sum(delta_ec::numeric) FILTER (WHERE operation='checkout_debit'),0),
-         coalesce(sum(delta_ec::numeric) FILTER (WHERE operation='checkout_reversal'),0)
-    INTO debit_count,reversal_count,debit_total,reversal_total
-  FROM ec_wallet.staging_v2_test_journal WHERE order_id=o.order_id;
-  IF debit_count<>1 OR debit_total<>-o.total_ec::numeric
+         coalesce(sum(delta_ec::numeric) FILTER (WHERE operation='checkout_reversal'),0),
+         count(*) FILTER (WHERE w.fixture_buyer_id IS DISTINCT FROM o.buyer_id)
+    INTO debit_count,reversal_count,debit_total,reversal_total,wrong_owner_count
+  FROM ec_wallet.staging_v2_test_journal j
+  JOIN ec_wallet.staging_v2_test_wallets w ON w.wallet_id=j.wallet_id
+  WHERE j.order_id=o.order_id;
+  IF wrong_owner_count<>0 OR debit_count<>1 OR debit_total<>-o.total_ec::numeric
      OR reversal_count<>CASE WHEN o.status='cancelled' THEN 1 ELSE 0 END
      OR reversal_total<>CASE WHEN o.status='cancelled' THEN o.total_ec::numeric ELSE 0 END
   THEN RAISE EXCEPTION 'V2 order journal mismatch'; END IF;
