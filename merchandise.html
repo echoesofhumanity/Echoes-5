@@ -18,6 +18,8 @@
   <div data-component="footer"></div>
   <script src="assets/js/layout.js?v=cbf1199"></script>
   <script src="assets/js/merchandise-catalog.js?v=92a43e3"></script>
+  <script src="assets/js/marketplace-demo-catalog.js"></script>
+  <script src="assets/js/marketplace-demo-cart.js"></script>
   <script src="assets/js/marketplace-demo-selection.js?v=08dfae8"></script>
   <script>
     (function () {
@@ -86,21 +88,16 @@
         cartLines.style.cssText = "list-style:none;padding:0;margin:12px 0;text-align:left";
         const cartTotal = document.createElement("p");
         cartTotal.style.cssText = "font-weight:700";
-        const priceByConcept = new Map([
-          ["one-humanity-tee",1990],
-          ["echoes-hoodie",2490],
-          ["one-world-bottle",1490],
-          ["humanity-notebook",990]
-        ]);
-        const titleByConcept = new Map([
-          ["one-humanity-tee","One Humanity Tee"],
-          ["echoes-hoodie","Echoes Hoodie"],
-          ["one-world-bottle","One World Bottle"],
-          ["humanity-notebook","Humanity Notebook"]
-        ]);
-        if (entries.length !== priceByConcept.size || entries.some(function (entry) {
-          return !priceByConcept.has(entry.concept_id) || entry.checkout_enabled !== false;
-        })) return;
+        // Reuse the existing validated synthetic catalog and calculation engine.
+        const demoProducts = await window.EchoesMarketplaceDemoCatalog.load();
+        const productsByConcept = new Map(demoProducts.map(function (product) {
+          return [product.concept_id, product];
+        }));
+        if (entries.length !== demoProducts.length || entries.some(function (entry) {
+          const product = productsByConcept.get(entry.concept_id);
+          return !product || product.product_id !== entry.database_product_id.toLowerCase() ||
+            product.checkout_enabled !== false;
+        })) throw new Error("Merchandise and synthetic catalog identities differ");
         const cartNotice = document.createElement("p");
         cartNotice.style.cssText = "font-size:.85rem;opacity:.8";
         cartSummary.append(cartTitle, cartCount, cartLines, cartTotal, cartNotice);
@@ -119,21 +116,27 @@
           const language = (window.EchoesI18n && window.EchoesI18n.getLanguage()) || "en";
           const words = cartTranslations[language] || cartTranslations.en;
           cartTitle.textContent = words[0];
-          cartCount.textContent = words[1] + selection.read().reduce(function (sum, line) { return sum + line.quantity; }, 0);
+          const selected = selection.read();
+          cartCount.textContent = words[1] + selected.reduce(function (sum, line) { return sum + line.quantity; }, 0);
           cartLines.replaceChildren();
           let totalEC = 0;
-          selection.read().forEach(function (line) {
-            const price = priceByConcept.get(line.concept_id);
-            if (!Number.isSafeInteger(price) || !Number.isSafeInteger(line.quantity) ||
-                line.quantity < 1 || line.quantity > 99) return;
-            const subtotal = price * line.quantity;
-            if (!Number.isSafeInteger(totalEC + subtotal)) return;
-            totalEC += subtotal;
-            const item = document.createElement("li");
-            item.style.cssText = "padding:8px 0;border-bottom:1px solid #655448";
-            item.textContent = titleByConcept.get(line.concept_id) + " × " + line.quantity + " — " + subtotal.toLocaleString(language) + " EC";
-            cartLines.appendChild(item);
-          });
+          if (selected.length) {
+            const calculated = window.EchoesMarketplaceDemoCart.calculate(demoProducts,
+              selected.map(function (line) {
+                const product = productsByConcept.get(line.concept_id);
+                if (!product) throw new Error("Unknown merchandise selection");
+                return { product_id: product.product_id, quantity: line.quantity };
+              }));
+            totalEC = calculated.total_ec;
+            calculated.lines.forEach(function (line) {
+              const product = demoProducts.find(function (item) { return item.product_id === line.product_id; });
+              const item = document.createElement("li");
+              item.style.cssText = "padding:8px 0;border-bottom:1px solid #655448";
+              item.textContent = product.title + " × " + line.quantity + " — " +
+                line.subtotal_ec.toLocaleString(language) + " EC";
+              cartLines.appendChild(item);
+            });
+          }
           cartTotal.textContent = "EC: " + totalEC.toLocaleString(language);
           cartNotice.textContent = words[2];
         }
