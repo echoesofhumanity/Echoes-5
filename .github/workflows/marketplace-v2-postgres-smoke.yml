@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'tests/marketplace-v2-postgres-smoke.sql'
+      - 'tests/marketplace-v2-postgres-multicart.sql'
       - '.github/workflows/marketplace-v2-postgres-smoke.yml'
   workflow_dispatch:
 permissions:
@@ -33,4 +34,6 @@ jobs:
           PGUSER: fixture
           PGPASSWORD: fixture-only
           PGDATABASE: fixture
-        run: psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-postgres-smoke.sql
+        run: |
+          psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-postgres-smoke.sql
+          psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-postgres-multicart.sql
