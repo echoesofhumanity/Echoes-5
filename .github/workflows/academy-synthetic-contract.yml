@@ -28,5 +28,6 @@ jobs:
         run: |
           node academy-tests/check-synthetic-contract.cjs
           node academy-tests/check-instructional-content.cjs
+          node academy-tests/check-synthetic-service.cjs
           node academy-tests/check-lms-prototype.cjs
           node academy-tests/check-offline-service.cjs
