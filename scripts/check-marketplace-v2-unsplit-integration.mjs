@@ -38,23 +38,23 @@ check('legacy cancel cannot complete', () => {
 });
 const journal = readFileSync(new URL('../docs/sql/marketplace-v2-isolated-synthetic-wallet-journal.REVIEW.sql', import.meta.url), 'utf8');
 check('isolated journal first statement blocks deployment', () => {
-  const first = journal.replace(/^(?:(?:\\s+)|(?:--[^\\n]*(?:\\n|$))|(?:\\/\\*[\\s\\S]*?\\*\\/))*/, '');
-  assert.match(first, /^DO\\s+\\$review\\$/i);
-  assert.match(first.slice(0, first.indexOf('$review$;', 8) + 9), /RAISE\\s+EXCEPTION/i);
+  const first = journal.replace(/^(?:(?:\s+)|(?:--[^\n]*(?:\n|$))|(?:\/\*[\s\S]*?\*\/))*/, '');
+  assert.match(first, /^DO\s+\$review\$/i);
+  assert.match(first.slice(0, first.indexOf('$review$;', 8) + 9), /RAISE\s+EXCEPTION/i);
 });
 check('isolated journal cannot link legacy wallet or ledger', () => {
-  assert.doesNotMatch(journal, /REFERENCES\\s+ec_wallet\\.(?:wallets|ledger)\\s*\\(/i);
-  assert.match(journal, /REFERENCES ec_wallet\\.staging_v2_test_wallets\\(wallet_id\\)/);
+  assert.doesNotMatch(journal, /REFERENCES\s+ec_wallet\.(?:wallets|ledger)\s*\(/i);
+  assert.match(journal, /REFERENCES ec_wallet\.staging_v2_test_wallets\(wallet_id\)/);
 });
 check('test wallet opening balance and immutable identity are guarded', () => {
-  assert.match(journal, /NEW\\.balance_ec IS DISTINCT FROM NEW\\.opening_ec/);
-  assert.match(journal, /NEW\\.fixture_buyer_id IS DISTINCT FROM OLD\\.fixture_buyer_id/);
-  assert.match(journal, /BEFORE INSERT OR UPDATE OR DELETE ON ec_wallet\\.staging_v2_test_wallets/);
+  assert.match(journal, /NEW\.balance_ec IS DISTINCT FROM NEW\.opening_ec/);
+  assert.match(journal, /NEW\.fixture_buyer_id IS DISTINCT FROM OLD\.fixture_buyer_id/);
+  assert.match(journal, /BEFORE INSERT OR UPDATE OR DELETE ON ec_wallet\.staging_v2_test_wallets/);
 });
 check('journal append-only, test-only and private by default', () => {
-  assert.match(journal, /BEFORE UPDATE OR DELETE ON ec_wallet\\.staging_v2_test_journal/);
+  assert.match(journal, /BEFORE UPDATE OR DELETE ON ec_wallet\.staging_v2_test_journal/);
   assert.match(journal, /FORCE ROW LEVEL SECURITY/g);
-  assert.match(journal, /REVOKE ALL ON ec_wallet\\.staging_v2_test_journal FROM PUBLIC, anon, authenticated, service_role/);
+  assert.match(journal, /REVOKE ALL ON ec_wallet\.staging_v2_test_journal FROM PUBLIC, anon, authenticated, service_role/);
 });
 console.log('Static review checks passed:', checks);
 console.log('NO-GO: legacy allocation-based RPC drafts are incompatible with UNSPLIT; no DB execution performed.');
