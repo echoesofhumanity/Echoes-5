@@ -1,0 +1,53 @@
+name: Marketplace V2 demo final acceptance
+on:
+  push:
+    paths:
+      - '.github/workflows/marketplace-v2-demo-acceptance.yml'
+      - 'marketplace-demo.html'
+      - 'assets/js/marketplace-demo-*.js'
+      - 'assets/js/marketplace-v2-bridge.js'
+      - 'assets/data/marketplace-demo-catalog.json'
+      - 'tests/marketplace-demo-*.test.js'
+      - 'tests/marketplace-v2-bridge.test.mjs'
+      - 'tests/marketplace-v2-unsplit-reference*.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  demo-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Catalogue, cart, order, V2 reference and fail-closed boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tests/marketplace-demo-catalog.test.js
+          node tests/marketplace-demo-cart.test.js
+          node tests/marketplace-demo-order.test.js
+          node tests/marketplace-demo-selection.test.js
+          node --test tests/marketplace-v2-bridge.test.mjs tests/marketplace-v2-unsplit-reference.test.mjs
+      - name: Verify demo wiring and no live V2 checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          import assert from 'node:assert/strict';
+          const html = readFileSync('marketplace-demo.html','utf8');
+          const bridge = readFileSync('assets/js/marketplace-v2-bridge.js','utf8');
+          for (const id of ['create','confirm','fulfill','cancel','status']) {
+            assert.match(html,new RegExp('id="'+id+'"'), 'Missing demo control '+id);
+          }
+          for (const file of ['marketplace-demo-selection.js','marketplace-demo-catalog.js','marketplace-demo-cart.js','marketplace-demo-order.js','marketplace-v2-bridge.js']) {
+            assert.ok(html.includes('assets/js/'+file), 'Missing demo dependency '+file);
+          }
+          assert.match(html,/DEMO ONLY — NO REAL PURCHASES/);
+          assert.match(bridge,/checkout_enabled:\s*false/);
+          assert.match(bridge,/production_enabled:\s*false/);
+          assert.match(bridge,/checkout:\s*disabled/);
+          assert.match(bridge,/cancel:\s*disabled/);
+          assert.doesNotMatch(bridge,/fetch\s*\(|supabase\.co|service_role/i);
+          console.log('PASS: public synthetic demo wired; live V2 checkout/cancel fail closed.');
+          NODE
