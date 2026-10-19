@@ -92,11 +92,58 @@ CREATE TRIGGER staging_v2_test_journal_no_mutation
   BEFORE UPDATE OR DELETE ON ec_wallet.staging_v2_test_journal
   FOR EACH ROW EXECUTE FUNCTION ec_wallet.v2_reject_test_journal_mutation();
 
+-- Deferred balance invariant: a transaction that changes a synthetic wallet
+-- or appends a journal entry must end with the exact journal-derived balance.
+-- This is an additional guard, NOT authorization to write or deploy.
+CREATE FUNCTION ec_wallet.v2_assert_test_wallet_journal_balance()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = ''
+AS $balance_guard$
+DECLARE
+  v_wallet_id uuid;
+  v_opening bigint;
+  v_balance bigint;
+  v_expected numeric;
+BEGIN
+  IF TG_TABLE_SCHEMA <> 'ec_wallet' OR
+     TG_TABLE_NAME NOT IN ('staging_v2_test_wallets', 'staging_v2_test_journal') THEN
+    RAISE EXCEPTION 'Unexpected synthetic balance trigger source';
+  END IF;
+  v_wallet_id := NEW.wallet_id;
+  SELECT w.opening_ec, w.balance_ec INTO v_opening, v_balance
+  FROM ec_wallet.staging_v2_test_wallets w
+  WHERE w.wallet_id = v_wallet_id;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Synthetic wallet missing';
+  END IF;
+  SELECT v_opening::numeric + COALESCE(SUM(j.delta_ec::numeric), 0)
+    INTO v_expected
+  FROM ec_wallet.staging_v2_test_journal j
+  WHERE j.wallet_id = v_wallet_id;
+  IF v_expected <> v_balance::numeric THEN
+    RAISE EXCEPTION 'Synthetic wallet/journal balance mismatch';
+  END IF;
+  RETURN NULL;
+END
+$balance_guard$;
+
+REVOKE ALL ON FUNCTION ec_wallet.v2_assert_test_wallet_journal_balance()
+  FROM PUBLIC, anon, authenticated, service_role;
+
+CREATE CONSTRAINT TRIGGER staging_v2_test_wallet_balance_check
+  AFTER INSERT OR UPDATE ON ec_wallet.staging_v2_test_wallets
+  DEFERRABLE INITIALLY DEFERRED FOR EACH ROW
+  EXECUTE FUNCTION ec_wallet.v2_assert_test_wallet_journal_balance();
+
+CREATE CONSTRAINT TRIGGER staging_v2_test_journal_balance_check
+  AFTER INSERT ON ec_wallet.staging_v2_test_journal
+  DEFERRABLE INITIALLY DEFERRED FOR EACH ROW
+  EXECUTE FUNCTION ec_wallet.v2_assert_test_wallet_journal_balance();
+
 -- REVIEW BLOCKERS:
 -- 1. Wallet opening equality is guarded at INSERT; balance UPDATE is not yet
 --    limited to a trusted RPC, and must not be exposed to clients.
--- 2. opening balance + SUM(journal deltas) = current balance needs deferred
---    reconciliation and a trusted single-writer transaction contract.
+-- 2. Deferred journal-derived balance reconciliation is drafted above, but
+--    requires PostgreSQL execution tests and a trusted single-writer RPC.
 -- 3. RLS policies and SECURITY DEFINER RPC privileges are intentionally absent.
 -- 4. No SQL grants or execution authority for any caller are supplied.
 -- 5. Do not remove the initial review guard to "activate" this draft.
