@@ -1,6 +1,9 @@
 name: Marketplace V2 staging positive identity
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/marketplace-v2-staging-positive-identity.yml'
 permissions:
   contents: read
 jobs:
@@ -12,7 +15,7 @@ jobs:
       STAGING_TEST_EMAIL: ${{ secrets.MARKETPLACE_V2_STAGING_TEST_EMAIL }}
       STAGING_TEST_PASSWORD: ${{ secrets.MARKETPLACE_V2_STAGING_TEST_PASSWORD }}
     steps:
-      - name: Verify staging login and disabled checkout
+      - name: Verify staging identity matches gateway and both operations stay disabled
         shell: bash
         run: |
           set -euo pipefail
@@ -26,7 +29,8 @@ jobs:
           payload="$(jq -nc --arg email "$STAGING_TEST_EMAIL" --arg password "$STAGING_TEST_PASSWORD" '{email:$email,password:$password}')"
           auth_response="$(mktemp)"
           gate_response="$(mktemp)"
-          trap 'rm -f "$auth_response" "$gate_response"' EXIT
+          user_response="$(mktemp)"
+          trap 'rm -f "$auth_response" "$gate_response" "$user_response"' EXIT
           auth_status="$(curl --silent --show-error --max-time 25 --output "$auth_response" --write-out '%{http_code}' -X POST "$base/auth/v1/token?grant_type=password" -H "apikey: $STAGING_PUBLISHABLE_KEY" -H 'Content-Type: application/json' --data "$payload")"
           unset payload
           if [[ "$auth_status" != 200 ]]; then
@@ -36,6 +40,13 @@ jobs:
           token="$(jq -er '.access_token | select(type=="string" and length>20)' "$auth_response")"
           echo "::add-mask::$token"
           rm -f "$auth_response"
+          user_status="$(curl --silent --show-error --max-time 25 --output "$user_response" --write-out '%{http_code}' "$base/auth/v1/user" -H "apikey: $STAGING_PUBLISHABLE_KEY" -H "Authorization: Bearer $token")"
+          if [[ "$user_status" != 200 ]]; then
+            echo "::error::Staging user identity lookup failed (HTTP $user_status)."
+            exit 1
+          fi
+          expected_user_id="$(jq -er '.id | select(type=="string" and length>0)' "$user_response")"
+          rm -f "$user_response"
           for operation in checkout cancel; do
             gate_status="$(curl --silent --show-error --max-time 25 --output "$gate_response" --write-out '%{http_code}' -X POST "$base/functions/v1/marketplace-v2-staging-gate" -H "apikey: $STAGING_PUBLISHABLE_KEY" -H "Authorization: Bearer $token" -H 'Content-Type: application/json' --data "{\"operation\":\"$operation\"}")"
             if [[ "$gate_status" != 403 ]]; then
@@ -46,6 +57,11 @@ jobs:
               echo "::error::Identity verification or closed-$operation assertion failed."
               exit 1
             fi
-            echo "PASS: verified staging identity; $operation disabled (403)."
+            actual_user_id="$(jq -er '.user_id' "$gate_response")"
+            if [[ "$actual_user_id" != "$expected_user_id" ]]; then
+              echo "::error::$operation gateway identity does not match Auth user identity."
+              exit 1
+            fi
+            echo "PASS: verified staging identity matches Auth; $operation disabled (403)."
           done
           unset token
