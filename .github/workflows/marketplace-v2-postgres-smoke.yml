@@ -14,6 +14,7 @@ on:
       - 'tests/marketplace-v2-least-privilege.sql'
       - 'tests/marketplace-v2-scoped-rls.sql'
       - 'tests/marketplace-v2-order-ownership-rls.sql'
+      - 'tests/marketplace-v2-foreign-cancel.sql'
       - 'tests/marketplace-v2-bridge.test.mjs'
       - 'assets/js/marketplace-v2-bridge.js'
       - 'marketplace-demo.html'
@@ -60,4 +61,5 @@ jobs:
           psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-least-privilege.sql
           psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-scoped-rls.sql
           psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-order-ownership-rls.sql
+          psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-foreign-cancel.sql
           node --test tests/marketplace-v2-bridge.test.mjs
