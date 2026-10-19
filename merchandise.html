@@ -372,7 +372,34 @@
               status.textContent = window.EchoesMerchDemoText(10);
             }
           });
-          area.append(label, existing, quantityRow, button, status, inlineTotal);
+          const goToOrder = document.createElement("button");
+          goToOrder.type = "button";
+          goToOrder.dataset.echoesMerchGoOrder = "";
+          goToOrder.style.cssText = "display:block;width:100%;min-height:48px;margin:14px 0 0;padding:12px;border:1px solid #dfb98e;border-radius:12px;background:#29465b;color:#fff;font-weight:700;cursor:pointer";
+          function updateGoToOrder() {
+            const language = (window.EchoesI18n && window.EchoesI18n.getLanguage()) || "en";
+            const captions = {tr:"Sentetik sepete geç →",en:"Go to synthetic cart →",de:"Zum Testwarenkorb →",fr:"Voir le panier fictif →",es:"Ir al carrito sintético →",pt:"Ir para o carrinho sintético →",ru:"Перейти в тестовую корзину →",ar:"الانتقال إلى السلة التجريبية ←",zh:"前往模拟购物车 →"};
+            goToOrder.textContent = captions[language] || captions.en;
+            goToOrder.disabled = !selection.read().length;
+          }
+          goToOrder.addEventListener("click", function () {
+            try {
+              refreshCartSafely();
+              refreshOrderPanel();
+              if (typeof dialog.close === "function" && dialog.open) dialog.close();
+              const target = document.getElementById("echoes-synthetic-checkout");
+              if (target) {
+                target.scrollIntoView({behavior:"smooth",block:"start"});
+                target.setAttribute("tabindex","-1");
+                target.focus({preventScroll:true});
+              }
+            } catch (error) {
+              status.textContent = window.EchoesMerchDemoText(10);
+            }
+          });
+          document.addEventListener("echoes:languagechange", updateGoToOrder);
+          updateGoToOrder();
+          area.append(label, existing, quantityRow, button, status, inlineTotal, goToOrder);
           inside.appendChild(area);
         });
       } catch (error) {
