@@ -82,9 +82,28 @@
         cartSummary.style.cssText = "max-width:760px;margin:22px auto;padding:18px;border:1px solid #806752;border-radius:16px;background:#1d1b20;color:#f2e7d9;text-align:center";
         const cartTitle = document.createElement("strong");
         const cartCount = document.createElement("p");
+        const cartLines = document.createElement("ul");
+        cartLines.style.cssText = "list-style:none;padding:0;margin:12px 0;text-align:left";
+        const cartTotal = document.createElement("p");
+        cartTotal.style.cssText = "font-weight:700";
+        const priceByConcept = new Map([
+          ["one-humanity-tee",1990],
+          ["echoes-hoodie",2490],
+          ["one-world-bottle",1490],
+          ["humanity-notebook",990]
+        ]);
+        const titleByConcept = new Map([
+          ["one-humanity-tee","One Humanity Tee"],
+          ["echoes-hoodie","Echoes Hoodie"],
+          ["one-world-bottle","One World Bottle"],
+          ["humanity-notebook","Humanity Notebook"]
+        ]);
+        if (entries.length !== priceByConcept.size || entries.some(function (entry) {
+          return !priceByConcept.has(entry.concept_id) || entry.checkout_enabled !== false;
+        })) return;
         const cartNotice = document.createElement("p");
         cartNotice.style.cssText = "font-size:.85rem;opacity:.8";
-        cartSummary.append(cartTitle, cartCount, cartNotice);
+        cartSummary.append(cartTitle, cartCount, cartLines, cartTotal, cartNotice);
         const cartTranslations = {
           en:["Selected merchandise","Items selected: ","Concept preview only. Checkout and payment are unavailable."],
           tr:["Seçilen ürünler","Seçilen ürün adedi: ","Yalnızca kavramsal ön izleme. Satın alma ve ödeme kullanılamıyor."],
@@ -101,6 +120,21 @@
           const words = cartTranslations[language] || cartTranslations.en;
           cartTitle.textContent = words[0];
           cartCount.textContent = words[1] + selection.read().reduce(function (sum, line) { return sum + line.quantity; }, 0);
+          cartLines.replaceChildren();
+          let totalEC = 0;
+          selection.read().forEach(function (line) {
+            const price = priceByConcept.get(line.concept_id);
+            if (!Number.isSafeInteger(price) || !Number.isSafeInteger(line.quantity) ||
+                line.quantity < 1 || line.quantity > 99) return;
+            const subtotal = price * line.quantity;
+            if (!Number.isSafeInteger(totalEC + subtotal)) return;
+            totalEC += subtotal;
+            const item = document.createElement("li");
+            item.style.cssText = "padding:8px 0;border-bottom:1px solid #655448";
+            item.textContent = titleByConcept.get(line.concept_id) + " × " + line.quantity + " — " + subtotal.toLocaleString(language) + " EC";
+            cartLines.appendChild(item);
+          });
+          cartTotal.textContent = "EC: " + totalEC.toLocaleString(language);
           cartNotice.textContent = words[2];
         }
         const productMount = document.querySelector('[data-section="products"]');
