@@ -1,0 +1,30 @@
+name: Marketplace V2 staging positive identity
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  identity-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TEST_ACCESS_TOKEN: ${{ secrets.MARKETPLACE_V2_STAGING_USER_TOKEN }}
+    steps:
+      - name: Verify valid staging user is recognized but checkout remains disabled
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "$TEST_ACCESS_TOKEN" ]]; then
+            echo "::error::Configure staging-only MARKETPLACE_V2_STAGING_USER_TOKEN secret."
+            exit 1
+          fi
+          echo "::add-mask::$TEST_ACCESS_TOKEN"
+          output="$(mktemp)"
+          trap 'rm -f "$output"' EXIT
+          status="$(curl --silent --show-error --max-time 25 --output "$output" --write-out '%{http_code}' -X POST 'https://ymxpbkviadypsvahrqwt.supabase.co/functions/v1/marketplace-v2-staging-gate' -H "Authorization: Bearer $TEST_ACCESS_TOKEN" -H 'Content-Type: application/json' --data '{"operation":"checkout"}')"
+          if [[ "$status" != 403 ]]; then
+            echo "::error::Expected HTTP 403, got $status"
+            exit 1
+          fi
+          jq -e '.identity_verified == true and .code == "MARKETPLACE_V2_NOT_ENABLED"' "$output" >/dev/null
+          echo "PASS: staging identity verified; checkout still disabled."
