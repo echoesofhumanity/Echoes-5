@@ -18,9 +18,9 @@
   <div data-component="footer"></div>
   <script src="assets/js/layout.js?v=cbf1199"></script>
   <script src="assets/js/merchandise-catalog.js?v=92a43e3"></script>
-  <script src="assets/js/marketplace-demo-catalog.js"></script>
-  <script src="assets/js/marketplace-demo-cart.js"></script>
-  <script src="assets/js/marketplace-demo-selection.js?v=08dfae8"></script>
+  <script src="assets/js/marketplace-catalog.js"></script>
+  <script src="assets/js/marketplace-cart.js"></script>
+  <script src="assets/js/marketplace-selection.js?v=08dfae8"></script>
   <script>
     (function () {
       const labels = {
@@ -76,7 +76,7 @@
           console.warn("Merchandise catalog/card identity mismatch");
           return;
         }
-        const selection = window.EchoesMarketplaceDemoSelection;
+        const selection = window.EchoesMarketplaceSelection;
         if (!selection) return;
         // Single-storefront, read-only selection summary; never authorizes checkout.
         const cartSummary = document.createElement("aside");
@@ -89,7 +89,7 @@
         const cartTotal = document.createElement("p");
         cartTotal.style.cssText = "font-weight:700";
         // Reuse the existing validated synthetic catalog and calculation engine.
-        const demoProducts = await window.EchoesMarketplaceDemoCatalog.load();
+        const demoProducts = await window.EchoesMarketplaceCatalog.load();
         const productsByConcept = new Map(demoProducts.map(function (product) {
           return [product.concept_id, product];
         }));
@@ -121,7 +121,7 @@
           cartLines.replaceChildren();
           let totalEC = 0;
           if (selected.length) {
-            const calculated = window.EchoesMarketplaceDemoCart.calculate(demoProducts,
+            const calculated = window.EchoesMarketplaceCart.calculate(demoProducts,
               selected.map(function (line) {
                 const product = productsByConcept.get(line.concept_id);
                 if (!product) throw new Error("Unknown merchandise selection");
