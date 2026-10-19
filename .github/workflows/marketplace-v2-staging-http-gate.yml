@@ -30,4 +30,5 @@ jobs:
           check_denied "missing authorization" -X POST -H 'Content-Type: application/json' --data '{}'
           check_denied "malformed JWT" -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer not-a-valid-jwt' --data '{}'
           check_denied "forged JWT" -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJub25lIn0.eyJzdWIiOiJmb3JnZWQifQ.' --data '{}'
+          check_denied "syntactically valid forged JWT" -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwYTEiLCJyb2xlIjoiYXV0aGVudGljYXRlZCJ9.invalidsignature' --data '{}'
           echo "Negative HTTP checks passed; no authenticated checkout tested."
