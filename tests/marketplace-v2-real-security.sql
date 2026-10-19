@@ -33,4 +33,5 @@ BEGIN
  END;
 END $$;
 RESET ROLE;
+REVOKE USAGE ON SCHEMA v2_real FROM v2_untrusted;
 DROP ROLE v2_untrusted;
