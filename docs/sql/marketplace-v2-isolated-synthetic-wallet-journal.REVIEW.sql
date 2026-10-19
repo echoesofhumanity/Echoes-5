@@ -139,6 +139,44 @@ CREATE CONSTRAINT TRIGGER staging_v2_test_journal_balance_check
   DEFERRABLE INITIALLY DEFERRED FOR EACH ROW
   EXECUTE FUNCTION ec_wallet.v2_assert_test_wallet_journal_balance();
 
+-- Reconcile each synthetic order to exactly one debit and, if cancelled,
+-- exactly one equal reversal. No legacy EC ledger is touched.
+CREATE FUNCTION ec_wallet.v2_assert_test_order_entries()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = ''
+AS $fn$
+DECLARE
+  o ec_wallet.staging_cart_orders_v2%ROWTYPE;
+  debit_count bigint;
+  reversal_count bigint;
+  debit_total numeric;
+  reversal_total numeric;
+BEGIN
+  SELECT * INTO o FROM ec_wallet.staging_cart_orders_v2 WHERE order_id=NEW.order_id;
+  IF NOT FOUND THEN RAISE EXCEPTION 'V2 order missing'; END IF;
+  SELECT count(*) FILTER (WHERE operation='checkout_debit'),
+         count(*) FILTER (WHERE operation='checkout_reversal'),
+         coalesce(sum(delta_ec::numeric) FILTER (WHERE operation='checkout_debit'),0),
+         coalesce(sum(delta_ec::numeric) FILTER (WHERE operation='checkout_reversal'),0)
+    INTO debit_count,reversal_count,debit_total,reversal_total
+  FROM ec_wallet.staging_v2_test_journal WHERE order_id=o.order_id;
+  IF debit_count<>1 OR debit_total<>-o.total_ec::numeric
+     OR reversal_count<>CASE WHEN o.status='cancelled' THEN 1 ELSE 0 END
+     OR reversal_total<>CASE WHEN o.status='cancelled' THEN o.total_ec::numeric ELSE 0 END
+  THEN RAISE EXCEPTION 'V2 order journal mismatch'; END IF;
+  RETURN NULL;
+END
+$fn$;
+REVOKE ALL ON FUNCTION ec_wallet.v2_assert_test_order_entries()
+FROM PUBLIC,anon,authenticated,service_role;
+CREATE CONSTRAINT TRIGGER staging_v2_order_entries_check
+AFTER INSERT OR UPDATE ON ec_wallet.staging_cart_orders_v2
+DEFERRABLE INITIALLY DEFERRED FOR EACH ROW
+EXECUTE FUNCTION ec_wallet.v2_assert_test_order_entries();
+CREATE CONSTRAINT TRIGGER staging_v2_journal_entries_check
+AFTER INSERT ON ec_wallet.staging_v2_test_journal
+DEFERRABLE INITIALLY DEFERRED FOR EACH ROW
+EXECUTE FUNCTION ec_wallet.v2_assert_test_order_entries();
+
 -- REVIEW BLOCKERS:
 -- 1. Wallet opening equality is guarded at INSERT; balance UPDATE is not yet
 --    limited to a trusted RPC, and must not be exposed to clients.
