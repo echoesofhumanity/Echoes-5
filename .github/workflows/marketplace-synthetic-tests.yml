@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - 'marketplace-demo.html'
+      - 'merchandise.html'
+      - 'assets/data/marketplace-catalog.json'
+      - 'assets/js/marketplace-*.js'
+      - 'tests/marketplace-cart.test.js'
       - 'assets/data/marketplace-demo-catalog.json'
       - 'assets/js/marketplace-demo-*.js'
       - 'tests/marketplace-demo-*.test.js'
@@ -23,6 +27,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Verify Node.js runtime
         run: node --version
+      - name: Validate shared Marketplace catalogue and cart
+        run: node tests/marketplace-cart.test.js
       - name: Validate synthetic catalogue
         run: node tests/marketplace-demo-catalog.test.js
       - name: Validate synthetic cart
