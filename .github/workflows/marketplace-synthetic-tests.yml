@@ -4,15 +4,11 @@ on:
   push:
     branches: [main]
     paths:
-      - 'marketplace-demo.html'
       - 'merchandise.html'
       - 'assets/data/marketplace-catalog.json'
       - 'assets/js/marketplace-*.js'
       - 'tests/marketplace-cart.test.js'
       - 'tests/marketplace-selection.test.js'
-      - 'assets/data/marketplace-demo-catalog.json'
-      - 'assets/js/marketplace-demo-*.js'
-      - 'tests/marketplace-demo-*.test.js'
       - '.github/workflows/marketplace-synthetic-tests.yml'
   workflow_dispatch:
 
@@ -39,9 +35,3 @@ jobs:
         run: node tests/marketplace-cart.test.js
       - name: Validate shared Marketplace selection
         run: node tests/marketplace-selection.test.js
-      - name: Validate synthetic catalogue
-        run: node tests/marketplace-demo-catalog.test.js
-      - name: Validate synthetic cart
-        run: node tests/marketplace-demo-cart.test.js
-      - name: Validate synthetic order lifecycle
-        run: node tests/marketplace-demo-order.test.js
