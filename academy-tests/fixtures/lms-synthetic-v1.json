@@ -1,0 +1,1258 @@
+{
+  "schemaVersion": "1.0.0",
+  "synthetic": true,
+  "localeCodes": [
+    "en",
+    "tr",
+    "es",
+    "fr",
+    "de",
+    "pt",
+    "ru",
+    "ar",
+    "zh"
+  ],
+  "schools": [
+    {
+      "id": "synthetic-school-1",
+      "slug": "human-dignity-protection",
+      "status": "planned"
+    },
+    {
+      "id": "synthetic-school-2",
+      "slug": "entrepreneurship-economic-empowerment",
+      "status": "planned"
+    },
+    {
+      "id": "synthetic-school-3",
+      "slug": "media-arts-storytelling",
+      "status": "planned"
+    },
+    {
+      "id": "synthetic-school-4",
+      "slug": "youth-future-skills",
+      "status": "planned"
+    },
+    {
+      "id": "synthetic-school-5",
+      "slug": "creative-economy-craftsmanship",
+      "status": "planned"
+    },
+    {
+      "id": "synthetic-school-6",
+      "slug": "technology-responsible-innovation",
+      "status": "planned"
+    },
+    {
+      "id": "synthetic-school-7",
+      "slug": "peace-social-impact",
+      "status": "planned"
+    },
+    {
+      "id": "synthetic-school-8",
+      "slug": "lifelong-learning-personal-growth",
+      "status": "planned"
+    }
+  ],
+  "programs": [
+    {
+      "id": "synthetic-program-1",
+      "slug": "art-of-being-human",
+      "schoolId": "synthetic-school-4",
+      "status": "planned",
+      "revision": 1,
+      "locales": {
+        "en": {
+          "title": "[SYNTHETIC en] art-of-being-human",
+          "audience": "[SYNTHETIC en] audience",
+          "description": "[SYNTHETIC en] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC en] outcome 1",
+            "[SYNTHETIC en] outcome 2",
+            "[SYNTHETIC en] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC en] module 1",
+            "[SYNTHETIC en] module 2",
+            "[SYNTHETIC en] module 3"
+          ]
+        },
+        "tr": {
+          "title": "[SYNTHETIC tr] art-of-being-human",
+          "audience": "[SYNTHETIC tr] audience",
+          "description": "[SYNTHETIC tr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC tr] outcome 1",
+            "[SYNTHETIC tr] outcome 2",
+            "[SYNTHETIC tr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC tr] module 1",
+            "[SYNTHETIC tr] module 2",
+            "[SYNTHETIC tr] module 3"
+          ]
+        },
+        "es": {
+          "title": "[SYNTHETIC es] art-of-being-human",
+          "audience": "[SYNTHETIC es] audience",
+          "description": "[SYNTHETIC es] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC es] outcome 1",
+            "[SYNTHETIC es] outcome 2",
+            "[SYNTHETIC es] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC es] module 1",
+            "[SYNTHETIC es] module 2",
+            "[SYNTHETIC es] module 3"
+          ]
+        },
+        "fr": {
+          "title": "[SYNTHETIC fr] art-of-being-human",
+          "audience": "[SYNTHETIC fr] audience",
+          "description": "[SYNTHETIC fr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC fr] outcome 1",
+            "[SYNTHETIC fr] outcome 2",
+            "[SYNTHETIC fr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC fr] module 1",
+            "[SYNTHETIC fr] module 2",
+            "[SYNTHETIC fr] module 3"
+          ]
+        },
+        "de": {
+          "title": "[SYNTHETIC de] art-of-being-human",
+          "audience": "[SYNTHETIC de] audience",
+          "description": "[SYNTHETIC de] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC de] outcome 1",
+            "[SYNTHETIC de] outcome 2",
+            "[SYNTHETIC de] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC de] module 1",
+            "[SYNTHETIC de] module 2",
+            "[SYNTHETIC de] module 3"
+          ]
+        },
+        "pt": {
+          "title": "[SYNTHETIC pt] art-of-being-human",
+          "audience": "[SYNTHETIC pt] audience",
+          "description": "[SYNTHETIC pt] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC pt] outcome 1",
+            "[SYNTHETIC pt] outcome 2",
+            "[SYNTHETIC pt] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC pt] module 1",
+            "[SYNTHETIC pt] module 2",
+            "[SYNTHETIC pt] module 3"
+          ]
+        },
+        "ru": {
+          "title": "[SYNTHETIC ru] art-of-being-human",
+          "audience": "[SYNTHETIC ru] audience",
+          "description": "[SYNTHETIC ru] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ru] outcome 1",
+            "[SYNTHETIC ru] outcome 2",
+            "[SYNTHETIC ru] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ru] module 1",
+            "[SYNTHETIC ru] module 2",
+            "[SYNTHETIC ru] module 3"
+          ]
+        },
+        "ar": {
+          "title": "[SYNTHETIC ar] art-of-being-human",
+          "audience": "[SYNTHETIC ar] audience",
+          "description": "[SYNTHETIC ar] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ar] outcome 1",
+            "[SYNTHETIC ar] outcome 2",
+            "[SYNTHETIC ar] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ar] module 1",
+            "[SYNTHETIC ar] module 2",
+            "[SYNTHETIC ar] module 3"
+          ]
+        },
+        "zh": {
+          "title": "[SYNTHETIC zh] art-of-being-human",
+          "audience": "[SYNTHETIC zh] audience",
+          "description": "[SYNTHETIC zh] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC zh] outcome 1",
+            "[SYNTHETIC zh] outcome 2",
+            "[SYNTHETIC zh] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC zh] module 1",
+            "[SYNTHETIC zh] module 2",
+            "[SYNTHETIC zh] module 3"
+          ]
+        }
+      }
+    },
+    {
+      "id": "synthetic-program-2",
+      "slug": "conscious-parenting-child-safeguarding",
+      "schoolId": "synthetic-school-1",
+      "status": "planned",
+      "revision": 1,
+      "locales": {
+        "en": {
+          "title": "[SYNTHETIC en] conscious-parenting-child-safeguarding",
+          "audience": "[SYNTHETIC en] audience",
+          "description": "[SYNTHETIC en] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC en] outcome 1",
+            "[SYNTHETIC en] outcome 2",
+            "[SYNTHETIC en] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC en] module 1",
+            "[SYNTHETIC en] module 2",
+            "[SYNTHETIC en] module 3"
+          ]
+        },
+        "tr": {
+          "title": "[SYNTHETIC tr] conscious-parenting-child-safeguarding",
+          "audience": "[SYNTHETIC tr] audience",
+          "description": "[SYNTHETIC tr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC tr] outcome 1",
+            "[SYNTHETIC tr] outcome 2",
+            "[SYNTHETIC tr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC tr] module 1",
+            "[SYNTHETIC tr] module 2",
+            "[SYNTHETIC tr] module 3"
+          ]
+        },
+        "es": {
+          "title": "[SYNTHETIC es] conscious-parenting-child-safeguarding",
+          "audience": "[SYNTHETIC es] audience",
+          "description": "[SYNTHETIC es] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC es] outcome 1",
+            "[SYNTHETIC es] outcome 2",
+            "[SYNTHETIC es] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC es] module 1",
+            "[SYNTHETIC es] module 2",
+            "[SYNTHETIC es] module 3"
+          ]
+        },
+        "fr": {
+          "title": "[SYNTHETIC fr] conscious-parenting-child-safeguarding",
+          "audience": "[SYNTHETIC fr] audience",
+          "description": "[SYNTHETIC fr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC fr] outcome 1",
+            "[SYNTHETIC fr] outcome 2",
+            "[SYNTHETIC fr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC fr] module 1",
+            "[SYNTHETIC fr] module 2",
+            "[SYNTHETIC fr] module 3"
+          ]
+        },
+        "de": {
+          "title": "[SYNTHETIC de] conscious-parenting-child-safeguarding",
+          "audience": "[SYNTHETIC de] audience",
+          "description": "[SYNTHETIC de] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC de] outcome 1",
+            "[SYNTHETIC de] outcome 2",
+            "[SYNTHETIC de] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC de] module 1",
+            "[SYNTHETIC de] module 2",
+            "[SYNTHETIC de] module 3"
+          ]
+        },
+        "pt": {
+          "title": "[SYNTHETIC pt] conscious-parenting-child-safeguarding",
+          "audience": "[SYNTHETIC pt] audience",
+          "description": "[SYNTHETIC pt] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC pt] outcome 1",
+            "[SYNTHETIC pt] outcome 2",
+            "[SYNTHETIC pt] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC pt] module 1",
+            "[SYNTHETIC pt] module 2",
+            "[SYNTHETIC pt] module 3"
+          ]
+        },
+        "ru": {
+          "title": "[SYNTHETIC ru] conscious-parenting-child-safeguarding",
+          "audience": "[SYNTHETIC ru] audience",
+          "description": "[SYNTHETIC ru] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ru] outcome 1",
+            "[SYNTHETIC ru] outcome 2",
+            "[SYNTHETIC ru] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ru] module 1",
+            "[SYNTHETIC ru] module 2",
+            "[SYNTHETIC ru] module 3"
+          ]
+        },
+        "ar": {
+          "title": "[SYNTHETIC ar] conscious-parenting-child-safeguarding",
+          "audience": "[SYNTHETIC ar] audience",
+          "description": "[SYNTHETIC ar] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ar] outcome 1",
+            "[SYNTHETIC ar] outcome 2",
+            "[SYNTHETIC ar] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ar] module 1",
+            "[SYNTHETIC ar] module 2",
+            "[SYNTHETIC ar] module 3"
+          ]
+        },
+        "zh": {
+          "title": "[SYNTHETIC zh] conscious-parenting-child-safeguarding",
+          "audience": "[SYNTHETIC zh] audience",
+          "description": "[SYNTHETIC zh] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC zh] outcome 1",
+            "[SYNTHETIC zh] outcome 2",
+            "[SYNTHETIC zh] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC zh] module 1",
+            "[SYNTHETIC zh] module 2",
+            "[SYNTHETIC zh] module 3"
+          ]
+        }
+      }
+    },
+    {
+      "id": "synthetic-program-3",
+      "slug": "creativity-economic-opportunity",
+      "schoolId": "synthetic-school-5",
+      "status": "planned",
+      "revision": 1,
+      "locales": {
+        "en": {
+          "title": "[SYNTHETIC en] creativity-economic-opportunity",
+          "audience": "[SYNTHETIC en] audience",
+          "description": "[SYNTHETIC en] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC en] outcome 1",
+            "[SYNTHETIC en] outcome 2",
+            "[SYNTHETIC en] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC en] module 1",
+            "[SYNTHETIC en] module 2",
+            "[SYNTHETIC en] module 3"
+          ]
+        },
+        "tr": {
+          "title": "[SYNTHETIC tr] creativity-economic-opportunity",
+          "audience": "[SYNTHETIC tr] audience",
+          "description": "[SYNTHETIC tr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC tr] outcome 1",
+            "[SYNTHETIC tr] outcome 2",
+            "[SYNTHETIC tr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC tr] module 1",
+            "[SYNTHETIC tr] module 2",
+            "[SYNTHETIC tr] module 3"
+          ]
+        },
+        "es": {
+          "title": "[SYNTHETIC es] creativity-economic-opportunity",
+          "audience": "[SYNTHETIC es] audience",
+          "description": "[SYNTHETIC es] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC es] outcome 1",
+            "[SYNTHETIC es] outcome 2",
+            "[SYNTHETIC es] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC es] module 1",
+            "[SYNTHETIC es] module 2",
+            "[SYNTHETIC es] module 3"
+          ]
+        },
+        "fr": {
+          "title": "[SYNTHETIC fr] creativity-economic-opportunity",
+          "audience": "[SYNTHETIC fr] audience",
+          "description": "[SYNTHETIC fr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC fr] outcome 1",
+            "[SYNTHETIC fr] outcome 2",
+            "[SYNTHETIC fr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC fr] module 1",
+            "[SYNTHETIC fr] module 2",
+            "[SYNTHETIC fr] module 3"
+          ]
+        },
+        "de": {
+          "title": "[SYNTHETIC de] creativity-economic-opportunity",
+          "audience": "[SYNTHETIC de] audience",
+          "description": "[SYNTHETIC de] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC de] outcome 1",
+            "[SYNTHETIC de] outcome 2",
+            "[SYNTHETIC de] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC de] module 1",
+            "[SYNTHETIC de] module 2",
+            "[SYNTHETIC de] module 3"
+          ]
+        },
+        "pt": {
+          "title": "[SYNTHETIC pt] creativity-economic-opportunity",
+          "audience": "[SYNTHETIC pt] audience",
+          "description": "[SYNTHETIC pt] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC pt] outcome 1",
+            "[SYNTHETIC pt] outcome 2",
+            "[SYNTHETIC pt] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC pt] module 1",
+            "[SYNTHETIC pt] module 2",
+            "[SYNTHETIC pt] module 3"
+          ]
+        },
+        "ru": {
+          "title": "[SYNTHETIC ru] creativity-economic-opportunity",
+          "audience": "[SYNTHETIC ru] audience",
+          "description": "[SYNTHETIC ru] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ru] outcome 1",
+            "[SYNTHETIC ru] outcome 2",
+            "[SYNTHETIC ru] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ru] module 1",
+            "[SYNTHETIC ru] module 2",
+            "[SYNTHETIC ru] module 3"
+          ]
+        },
+        "ar": {
+          "title": "[SYNTHETIC ar] creativity-economic-opportunity",
+          "audience": "[SYNTHETIC ar] audience",
+          "description": "[SYNTHETIC ar] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ar] outcome 1",
+            "[SYNTHETIC ar] outcome 2",
+            "[SYNTHETIC ar] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ar] module 1",
+            "[SYNTHETIC ar] module 2",
+            "[SYNTHETIC ar] module 3"
+          ]
+        },
+        "zh": {
+          "title": "[SYNTHETIC zh] creativity-economic-opportunity",
+          "audience": "[SYNTHETIC zh] audience",
+          "description": "[SYNTHETIC zh] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC zh] outcome 1",
+            "[SYNTHETIC zh] outcome 2",
+            "[SYNTHETIC zh] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC zh] module 1",
+            "[SYNTHETIC zh] module 2",
+            "[SYNTHETIC zh] module 3"
+          ]
+        }
+      }
+    },
+    {
+      "id": "synthetic-program-4",
+      "slug": "young-creators-future-media",
+      "schoolId": "synthetic-school-3",
+      "status": "planned",
+      "revision": 1,
+      "locales": {
+        "en": {
+          "title": "[SYNTHETIC en] young-creators-future-media",
+          "audience": "[SYNTHETIC en] audience",
+          "description": "[SYNTHETIC en] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC en] outcome 1",
+            "[SYNTHETIC en] outcome 2",
+            "[SYNTHETIC en] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC en] module 1",
+            "[SYNTHETIC en] module 2",
+            "[SYNTHETIC en] module 3"
+          ]
+        },
+        "tr": {
+          "title": "[SYNTHETIC tr] young-creators-future-media",
+          "audience": "[SYNTHETIC tr] audience",
+          "description": "[SYNTHETIC tr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC tr] outcome 1",
+            "[SYNTHETIC tr] outcome 2",
+            "[SYNTHETIC tr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC tr] module 1",
+            "[SYNTHETIC tr] module 2",
+            "[SYNTHETIC tr] module 3"
+          ]
+        },
+        "es": {
+          "title": "[SYNTHETIC es] young-creators-future-media",
+          "audience": "[SYNTHETIC es] audience",
+          "description": "[SYNTHETIC es] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC es] outcome 1",
+            "[SYNTHETIC es] outcome 2",
+            "[SYNTHETIC es] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC es] module 1",
+            "[SYNTHETIC es] module 2",
+            "[SYNTHETIC es] module 3"
+          ]
+        },
+        "fr": {
+          "title": "[SYNTHETIC fr] young-creators-future-media",
+          "audience": "[SYNTHETIC fr] audience",
+          "description": "[SYNTHETIC fr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC fr] outcome 1",
+            "[SYNTHETIC fr] outcome 2",
+            "[SYNTHETIC fr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC fr] module 1",
+            "[SYNTHETIC fr] module 2",
+            "[SYNTHETIC fr] module 3"
+          ]
+        },
+        "de": {
+          "title": "[SYNTHETIC de] young-creators-future-media",
+          "audience": "[SYNTHETIC de] audience",
+          "description": "[SYNTHETIC de] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC de] outcome 1",
+            "[SYNTHETIC de] outcome 2",
+            "[SYNTHETIC de] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC de] module 1",
+            "[SYNTHETIC de] module 2",
+            "[SYNTHETIC de] module 3"
+          ]
+        },
+        "pt": {
+          "title": "[SYNTHETIC pt] young-creators-future-media",
+          "audience": "[SYNTHETIC pt] audience",
+          "description": "[SYNTHETIC pt] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC pt] outcome 1",
+            "[SYNTHETIC pt] outcome 2",
+            "[SYNTHETIC pt] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC pt] module 1",
+            "[SYNTHETIC pt] module 2",
+            "[SYNTHETIC pt] module 3"
+          ]
+        },
+        "ru": {
+          "title": "[SYNTHETIC ru] young-creators-future-media",
+          "audience": "[SYNTHETIC ru] audience",
+          "description": "[SYNTHETIC ru] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ru] outcome 1",
+            "[SYNTHETIC ru] outcome 2",
+            "[SYNTHETIC ru] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ru] module 1",
+            "[SYNTHETIC ru] module 2",
+            "[SYNTHETIC ru] module 3"
+          ]
+        },
+        "ar": {
+          "title": "[SYNTHETIC ar] young-creators-future-media",
+          "audience": "[SYNTHETIC ar] audience",
+          "description": "[SYNTHETIC ar] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ar] outcome 1",
+            "[SYNTHETIC ar] outcome 2",
+            "[SYNTHETIC ar] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ar] module 1",
+            "[SYNTHETIC ar] module 2",
+            "[SYNTHETIC ar] module 3"
+          ]
+        },
+        "zh": {
+          "title": "[SYNTHETIC zh] young-creators-future-media",
+          "audience": "[SYNTHETIC zh] audience",
+          "description": "[SYNTHETIC zh] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC zh] outcome 1",
+            "[SYNTHETIC zh] outcome 2",
+            "[SYNTHETIC zh] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC zh] module 1",
+            "[SYNTHETIC zh] module 2",
+            "[SYNTHETIC zh] module 3"
+          ]
+        }
+      }
+    },
+    {
+      "id": "synthetic-program-5",
+      "slug": "financial-literacy-everyday-life",
+      "schoolId": "synthetic-school-2",
+      "status": "planned",
+      "revision": 1,
+      "locales": {
+        "en": {
+          "title": "[SYNTHETIC en] financial-literacy-everyday-life",
+          "audience": "[SYNTHETIC en] audience",
+          "description": "[SYNTHETIC en] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC en] outcome 1",
+            "[SYNTHETIC en] outcome 2",
+            "[SYNTHETIC en] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC en] module 1",
+            "[SYNTHETIC en] module 2",
+            "[SYNTHETIC en] module 3"
+          ]
+        },
+        "tr": {
+          "title": "[SYNTHETIC tr] financial-literacy-everyday-life",
+          "audience": "[SYNTHETIC tr] audience",
+          "description": "[SYNTHETIC tr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC tr] outcome 1",
+            "[SYNTHETIC tr] outcome 2",
+            "[SYNTHETIC tr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC tr] module 1",
+            "[SYNTHETIC tr] module 2",
+            "[SYNTHETIC tr] module 3"
+          ]
+        },
+        "es": {
+          "title": "[SYNTHETIC es] financial-literacy-everyday-life",
+          "audience": "[SYNTHETIC es] audience",
+          "description": "[SYNTHETIC es] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC es] outcome 1",
+            "[SYNTHETIC es] outcome 2",
+            "[SYNTHETIC es] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC es] module 1",
+            "[SYNTHETIC es] module 2",
+            "[SYNTHETIC es] module 3"
+          ]
+        },
+        "fr": {
+          "title": "[SYNTHETIC fr] financial-literacy-everyday-life",
+          "audience": "[SYNTHETIC fr] audience",
+          "description": "[SYNTHETIC fr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC fr] outcome 1",
+            "[SYNTHETIC fr] outcome 2",
+            "[SYNTHETIC fr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC fr] module 1",
+            "[SYNTHETIC fr] module 2",
+            "[SYNTHETIC fr] module 3"
+          ]
+        },
+        "de": {
+          "title": "[SYNTHETIC de] financial-literacy-everyday-life",
+          "audience": "[SYNTHETIC de] audience",
+          "description": "[SYNTHETIC de] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC de] outcome 1",
+            "[SYNTHETIC de] outcome 2",
+            "[SYNTHETIC de] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC de] module 1",
+            "[SYNTHETIC de] module 2",
+            "[SYNTHETIC de] module 3"
+          ]
+        },
+        "pt": {
+          "title": "[SYNTHETIC pt] financial-literacy-everyday-life",
+          "audience": "[SYNTHETIC pt] audience",
+          "description": "[SYNTHETIC pt] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC pt] outcome 1",
+            "[SYNTHETIC pt] outcome 2",
+            "[SYNTHETIC pt] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC pt] module 1",
+            "[SYNTHETIC pt] module 2",
+            "[SYNTHETIC pt] module 3"
+          ]
+        },
+        "ru": {
+          "title": "[SYNTHETIC ru] financial-literacy-everyday-life",
+          "audience": "[SYNTHETIC ru] audience",
+          "description": "[SYNTHETIC ru] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ru] outcome 1",
+            "[SYNTHETIC ru] outcome 2",
+            "[SYNTHETIC ru] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ru] module 1",
+            "[SYNTHETIC ru] module 2",
+            "[SYNTHETIC ru] module 3"
+          ]
+        },
+        "ar": {
+          "title": "[SYNTHETIC ar] financial-literacy-everyday-life",
+          "audience": "[SYNTHETIC ar] audience",
+          "description": "[SYNTHETIC ar] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ar] outcome 1",
+            "[SYNTHETIC ar] outcome 2",
+            "[SYNTHETIC ar] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ar] module 1",
+            "[SYNTHETIC ar] module 2",
+            "[SYNTHETIC ar] module 3"
+          ]
+        },
+        "zh": {
+          "title": "[SYNTHETIC zh] financial-literacy-everyday-life",
+          "audience": "[SYNTHETIC zh] audience",
+          "description": "[SYNTHETIC zh] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC zh] outcome 1",
+            "[SYNTHETIC zh] outcome 2",
+            "[SYNTHETIC zh] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC zh] module 1",
+            "[SYNTHETIC zh] module 2",
+            "[SYNTHETIC zh] module 3"
+          ]
+        }
+      }
+    },
+    {
+      "id": "synthetic-program-6",
+      "slug": "responsible-ai-digital-safety",
+      "schoolId": "synthetic-school-6",
+      "status": "planned",
+      "revision": 1,
+      "locales": {
+        "en": {
+          "title": "[SYNTHETIC en] responsible-ai-digital-safety",
+          "audience": "[SYNTHETIC en] audience",
+          "description": "[SYNTHETIC en] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC en] outcome 1",
+            "[SYNTHETIC en] outcome 2",
+            "[SYNTHETIC en] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC en] module 1",
+            "[SYNTHETIC en] module 2",
+            "[SYNTHETIC en] module 3"
+          ]
+        },
+        "tr": {
+          "title": "[SYNTHETIC tr] responsible-ai-digital-safety",
+          "audience": "[SYNTHETIC tr] audience",
+          "description": "[SYNTHETIC tr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC tr] outcome 1",
+            "[SYNTHETIC tr] outcome 2",
+            "[SYNTHETIC tr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC tr] module 1",
+            "[SYNTHETIC tr] module 2",
+            "[SYNTHETIC tr] module 3"
+          ]
+        },
+        "es": {
+          "title": "[SYNTHETIC es] responsible-ai-digital-safety",
+          "audience": "[SYNTHETIC es] audience",
+          "description": "[SYNTHETIC es] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC es] outcome 1",
+            "[SYNTHETIC es] outcome 2",
+            "[SYNTHETIC es] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC es] module 1",
+            "[SYNTHETIC es] module 2",
+            "[SYNTHETIC es] module 3"
+          ]
+        },
+        "fr": {
+          "title": "[SYNTHETIC fr] responsible-ai-digital-safety",
+          "audience": "[SYNTHETIC fr] audience",
+          "description": "[SYNTHETIC fr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC fr] outcome 1",
+            "[SYNTHETIC fr] outcome 2",
+            "[SYNTHETIC fr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC fr] module 1",
+            "[SYNTHETIC fr] module 2",
+            "[SYNTHETIC fr] module 3"
+          ]
+        },
+        "de": {
+          "title": "[SYNTHETIC de] responsible-ai-digital-safety",
+          "audience": "[SYNTHETIC de] audience",
+          "description": "[SYNTHETIC de] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC de] outcome 1",
+            "[SYNTHETIC de] outcome 2",
+            "[SYNTHETIC de] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC de] module 1",
+            "[SYNTHETIC de] module 2",
+            "[SYNTHETIC de] module 3"
+          ]
+        },
+        "pt": {
+          "title": "[SYNTHETIC pt] responsible-ai-digital-safety",
+          "audience": "[SYNTHETIC pt] audience",
+          "description": "[SYNTHETIC pt] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC pt] outcome 1",
+            "[SYNTHETIC pt] outcome 2",
+            "[SYNTHETIC pt] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC pt] module 1",
+            "[SYNTHETIC pt] module 2",
+            "[SYNTHETIC pt] module 3"
+          ]
+        },
+        "ru": {
+          "title": "[SYNTHETIC ru] responsible-ai-digital-safety",
+          "audience": "[SYNTHETIC ru] audience",
+          "description": "[SYNTHETIC ru] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ru] outcome 1",
+            "[SYNTHETIC ru] outcome 2",
+            "[SYNTHETIC ru] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ru] module 1",
+            "[SYNTHETIC ru] module 2",
+            "[SYNTHETIC ru] module 3"
+          ]
+        },
+        "ar": {
+          "title": "[SYNTHETIC ar] responsible-ai-digital-safety",
+          "audience": "[SYNTHETIC ar] audience",
+          "description": "[SYNTHETIC ar] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ar] outcome 1",
+            "[SYNTHETIC ar] outcome 2",
+            "[SYNTHETIC ar] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ar] module 1",
+            "[SYNTHETIC ar] module 2",
+            "[SYNTHETIC ar] module 3"
+          ]
+        },
+        "zh": {
+          "title": "[SYNTHETIC zh] responsible-ai-digital-safety",
+          "audience": "[SYNTHETIC zh] audience",
+          "description": "[SYNTHETIC zh] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC zh] outcome 1",
+            "[SYNTHETIC zh] outcome 2",
+            "[SYNTHETIC zh] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC zh] module 1",
+            "[SYNTHETIC zh] module 2",
+            "[SYNTHETIC zh] module 3"
+          ]
+        }
+      }
+    },
+    {
+      "id": "synthetic-program-7",
+      "slug": "peaceful-dialogue-community-action",
+      "schoolId": "synthetic-school-7",
+      "status": "planned",
+      "revision": 1,
+      "locales": {
+        "en": {
+          "title": "[SYNTHETIC en] peaceful-dialogue-community-action",
+          "audience": "[SYNTHETIC en] audience",
+          "description": "[SYNTHETIC en] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC en] outcome 1",
+            "[SYNTHETIC en] outcome 2",
+            "[SYNTHETIC en] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC en] module 1",
+            "[SYNTHETIC en] module 2",
+            "[SYNTHETIC en] module 3"
+          ]
+        },
+        "tr": {
+          "title": "[SYNTHETIC tr] peaceful-dialogue-community-action",
+          "audience": "[SYNTHETIC tr] audience",
+          "description": "[SYNTHETIC tr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC tr] outcome 1",
+            "[SYNTHETIC tr] outcome 2",
+            "[SYNTHETIC tr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC tr] module 1",
+            "[SYNTHETIC tr] module 2",
+            "[SYNTHETIC tr] module 3"
+          ]
+        },
+        "es": {
+          "title": "[SYNTHETIC es] peaceful-dialogue-community-action",
+          "audience": "[SYNTHETIC es] audience",
+          "description": "[SYNTHETIC es] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC es] outcome 1",
+            "[SYNTHETIC es] outcome 2",
+            "[SYNTHETIC es] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC es] module 1",
+            "[SYNTHETIC es] module 2",
+            "[SYNTHETIC es] module 3"
+          ]
+        },
+        "fr": {
+          "title": "[SYNTHETIC fr] peaceful-dialogue-community-action",
+          "audience": "[SYNTHETIC fr] audience",
+          "description": "[SYNTHETIC fr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC fr] outcome 1",
+            "[SYNTHETIC fr] outcome 2",
+            "[SYNTHETIC fr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC fr] module 1",
+            "[SYNTHETIC fr] module 2",
+            "[SYNTHETIC fr] module 3"
+          ]
+        },
+        "de": {
+          "title": "[SYNTHETIC de] peaceful-dialogue-community-action",
+          "audience": "[SYNTHETIC de] audience",
+          "description": "[SYNTHETIC de] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC de] outcome 1",
+            "[SYNTHETIC de] outcome 2",
+            "[SYNTHETIC de] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC de] module 1",
+            "[SYNTHETIC de] module 2",
+            "[SYNTHETIC de] module 3"
+          ]
+        },
+        "pt": {
+          "title": "[SYNTHETIC pt] peaceful-dialogue-community-action",
+          "audience": "[SYNTHETIC pt] audience",
+          "description": "[SYNTHETIC pt] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC pt] outcome 1",
+            "[SYNTHETIC pt] outcome 2",
+            "[SYNTHETIC pt] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC pt] module 1",
+            "[SYNTHETIC pt] module 2",
+            "[SYNTHETIC pt] module 3"
+          ]
+        },
+        "ru": {
+          "title": "[SYNTHETIC ru] peaceful-dialogue-community-action",
+          "audience": "[SYNTHETIC ru] audience",
+          "description": "[SYNTHETIC ru] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ru] outcome 1",
+            "[SYNTHETIC ru] outcome 2",
+            "[SYNTHETIC ru] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ru] module 1",
+            "[SYNTHETIC ru] module 2",
+            "[SYNTHETIC ru] module 3"
+          ]
+        },
+        "ar": {
+          "title": "[SYNTHETIC ar] peaceful-dialogue-community-action",
+          "audience": "[SYNTHETIC ar] audience",
+          "description": "[SYNTHETIC ar] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ar] outcome 1",
+            "[SYNTHETIC ar] outcome 2",
+            "[SYNTHETIC ar] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ar] module 1",
+            "[SYNTHETIC ar] module 2",
+            "[SYNTHETIC ar] module 3"
+          ]
+        },
+        "zh": {
+          "title": "[SYNTHETIC zh] peaceful-dialogue-community-action",
+          "audience": "[SYNTHETIC zh] audience",
+          "description": "[SYNTHETIC zh] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC zh] outcome 1",
+            "[SYNTHETIC zh] outcome 2",
+            "[SYNTHETIC zh] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC zh] module 1",
+            "[SYNTHETIC zh] module 2",
+            "[SYNTHETIC zh] module 3"
+          ]
+        }
+      }
+    },
+    {
+      "id": "synthetic-program-8",
+      "slug": "communication-across-cultures",
+      "schoolId": "synthetic-school-8",
+      "status": "planned",
+      "revision": 1,
+      "locales": {
+        "en": {
+          "title": "[SYNTHETIC en] communication-across-cultures",
+          "audience": "[SYNTHETIC en] audience",
+          "description": "[SYNTHETIC en] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC en] outcome 1",
+            "[SYNTHETIC en] outcome 2",
+            "[SYNTHETIC en] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC en] module 1",
+            "[SYNTHETIC en] module 2",
+            "[SYNTHETIC en] module 3"
+          ]
+        },
+        "tr": {
+          "title": "[SYNTHETIC tr] communication-across-cultures",
+          "audience": "[SYNTHETIC tr] audience",
+          "description": "[SYNTHETIC tr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC tr] outcome 1",
+            "[SYNTHETIC tr] outcome 2",
+            "[SYNTHETIC tr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC tr] module 1",
+            "[SYNTHETIC tr] module 2",
+            "[SYNTHETIC tr] module 3"
+          ]
+        },
+        "es": {
+          "title": "[SYNTHETIC es] communication-across-cultures",
+          "audience": "[SYNTHETIC es] audience",
+          "description": "[SYNTHETIC es] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC es] outcome 1",
+            "[SYNTHETIC es] outcome 2",
+            "[SYNTHETIC es] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC es] module 1",
+            "[SYNTHETIC es] module 2",
+            "[SYNTHETIC es] module 3"
+          ]
+        },
+        "fr": {
+          "title": "[SYNTHETIC fr] communication-across-cultures",
+          "audience": "[SYNTHETIC fr] audience",
+          "description": "[SYNTHETIC fr] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC fr] outcome 1",
+            "[SYNTHETIC fr] outcome 2",
+            "[SYNTHETIC fr] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC fr] module 1",
+            "[SYNTHETIC fr] module 2",
+            "[SYNTHETIC fr] module 3"
+          ]
+        },
+        "de": {
+          "title": "[SYNTHETIC de] communication-across-cultures",
+          "audience": "[SYNTHETIC de] audience",
+          "description": "[SYNTHETIC de] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC de] outcome 1",
+            "[SYNTHETIC de] outcome 2",
+            "[SYNTHETIC de] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC de] module 1",
+            "[SYNTHETIC de] module 2",
+            "[SYNTHETIC de] module 3"
+          ]
+        },
+        "pt": {
+          "title": "[SYNTHETIC pt] communication-across-cultures",
+          "audience": "[SYNTHETIC pt] audience",
+          "description": "[SYNTHETIC pt] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC pt] outcome 1",
+            "[SYNTHETIC pt] outcome 2",
+            "[SYNTHETIC pt] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC pt] module 1",
+            "[SYNTHETIC pt] module 2",
+            "[SYNTHETIC pt] module 3"
+          ]
+        },
+        "ru": {
+          "title": "[SYNTHETIC ru] communication-across-cultures",
+          "audience": "[SYNTHETIC ru] audience",
+          "description": "[SYNTHETIC ru] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ru] outcome 1",
+            "[SYNTHETIC ru] outcome 2",
+            "[SYNTHETIC ru] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ru] module 1",
+            "[SYNTHETIC ru] module 2",
+            "[SYNTHETIC ru] module 3"
+          ]
+        },
+        "ar": {
+          "title": "[SYNTHETIC ar] communication-across-cultures",
+          "audience": "[SYNTHETIC ar] audience",
+          "description": "[SYNTHETIC ar] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC ar] outcome 1",
+            "[SYNTHETIC ar] outcome 2",
+            "[SYNTHETIC ar] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC ar] module 1",
+            "[SYNTHETIC ar] module 2",
+            "[SYNTHETIC ar] module 3"
+          ]
+        },
+        "zh": {
+          "title": "[SYNTHETIC zh] communication-across-cultures",
+          "audience": "[SYNTHETIC zh] audience",
+          "description": "[SYNTHETIC zh] preview only",
+          "learning_outcomes": [
+            "[SYNTHETIC zh] outcome 1",
+            "[SYNTHETIC zh] outcome 2",
+            "[SYNTHETIC zh] outcome 3"
+          ],
+          "module_outline": [
+            "[SYNTHETIC zh] module 1",
+            "[SYNTHETIC zh] module 2",
+            "[SYNTHETIC zh] module 3"
+          ]
+        }
+      }
+    }
+  ],
+  "actors": [
+    {
+      "id": "synthetic-visitor",
+      "role": "visitor"
+    },
+    {
+      "id": "synthetic-learner-a",
+      "role": "learner"
+    },
+    {
+      "id": "synthetic-learner-b",
+      "role": "learner"
+    },
+    {
+      "id": "synthetic-instructor",
+      "role": "instructor"
+    },
+    {
+      "id": "synthetic-reviewer",
+      "role": "subject_reviewer"
+    },
+    {
+      "id": "synthetic-publisher",
+      "role": "publisher"
+    },
+    {
+      "id": "synthetic-credential-service",
+      "role": "credential_service"
+    }
+  ],
+  "enrollments": [
+    {
+      "id": "synthetic-enrollment-a",
+      "learnerId": "synthetic-learner-a",
+      "courseRevisionId": "synthetic-course-revision-1",
+      "status": "active"
+    }
+  ],
+  "courses": [
+    {
+      "id": "synthetic-course-1",
+      "programId": "synthetic-program-1",
+      "revisionId": "synthetic-course-revision-1",
+      "status": "draft"
+    }
+  ],
+  "credentials": []
+}
