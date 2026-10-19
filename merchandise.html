@@ -148,12 +148,6 @@
             refreshExisting();
           });
           refreshExisting();
-          const goToCart = document.createElement("a");
-          goToCart.href = "marketplace-demo.html?theme=merchandise";
-          goToCart.textContent = window.EchoesMerchDemoText(5);
-          goToCart.hidden = true;
-          goToCart.style.cssText = "display:block;margin-top:14px;padding:12px;text-align:center;border:1px solid #dfb98e;border-radius:12px;color:#f4d2a7;text-decoration:none";
-          goToCart.setAttribute("aria-label", window.EchoesMerchDemoText(6));
           button.addEventListener("click", function () {
             try {
               const lines = selection.setQuantity(entry.concept_id, quantity);
@@ -161,13 +155,12 @@
               status.textContent = quantity === 0
                 ? window.EchoesMerchDemoText(7)
                 : window.EchoesMerchDemoText(8) + total + window.EchoesMerchDemoText(9);
-              goToCart.hidden = total === 0;
               refreshExisting();
             } catch (error) {
               status.textContent = window.EchoesMerchDemoText(10);
             }
           });
-          area.append(label, existing, quantityRow, button, status, goToCart);
+          area.append(label, existing, quantityRow, button, status);
           inside.appendChild(area);
         });
       } catch (error) {
