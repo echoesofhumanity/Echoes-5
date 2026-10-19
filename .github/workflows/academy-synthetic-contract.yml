@@ -25,4 +25,6 @@ jobs:
         with:
           node-version: '22'
       - name: Run synthetic LMS checks
-        run: node academy-tests/check-synthetic-contract.cjs
+        run: |
+          node academy-tests/check-synthetic-contract.cjs
+          node academy-tests/check-instructional-content.cjs
