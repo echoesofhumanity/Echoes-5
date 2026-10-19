@@ -5,6 +5,7 @@ on:
       - 'tests/marketplace-v2-postgres-smoke.sql'
       - 'tests/marketplace-v2-postgres-multicart.sql'
       - 'tests/marketplace-v2-postgres-concurrency.sh'
+      - 'tests/marketplace-v2-postgres-cancel-race.sh'
       - '.github/workflows/marketplace-v2-postgres-smoke.yml'
   workflow_dispatch:
 permissions:
@@ -39,3 +40,4 @@ jobs:
           psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-postgres-smoke.sql
           psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-postgres-multicart.sql
           bash tests/marketplace-v2-postgres-concurrency.sh
+          bash tests/marketplace-v2-postgres-cancel-race.sh
