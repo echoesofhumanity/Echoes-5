@@ -36,14 +36,16 @@ jobs:
           token="$(jq -er '.access_token | select(type=="string" and length>20)' "$auth_response")"
           echo "::add-mask::$token"
           rm -f "$auth_response"
-          gate_status="$(curl --silent --show-error --max-time 25 --output "$gate_response" --write-out '%{http_code}' -X POST "$base/functions/v1/marketplace-v2-staging-gate" -H "apikey: $STAGING_PUBLISHABLE_KEY" -H "Authorization: Bearer $token" -H 'Content-Type: application/json' --data '{"operation":"checkout"}')"
+          for operation in checkout cancel; do
+            gate_status="$(curl --silent --show-error --max-time 25 --output "$gate_response" --write-out '%{http_code}' -X POST "$base/functions/v1/marketplace-v2-staging-gate" -H "apikey: $STAGING_PUBLISHABLE_KEY" -H "Authorization: Bearer $token" -H 'Content-Type: application/json' --data "{\"operation\":\"$operation\"}")"
+            if [[ "$gate_status" != 403 ]]; then
+              echo "::error::$operation must remain disabled; expected HTTP 403, got $gate_status."
+              exit 1
+            fi
+            if ! jq -e '.identity_verified == true and .code == "MARKETPLACE_V2_NOT_ENABLED" and (.user_id | type == "string" and length > 0)' "$gate_response" >/dev/null; then
+              echo "::error::Identity verification or closed-$operation assertion failed."
+              exit 1
+            fi
+            echo "PASS: verified staging identity; $operation disabled (403)."
+          done
           unset token
-          if [[ "$gate_status" != 403 ]]; then
-            echo "::error::Checkout must remain disabled; expected HTTP 403, got $gate_status."
-            exit 1
-          fi
-          if ! jq -e '.identity_verified == true and .code == "MARKETPLACE_V2_NOT_ENABLED" and (.user_id | type == "string" and length > 0)' "$gate_response" >/dev/null; then
-            echo "::error::Identity verification or closed-checkout assertion failed."
-            exit 1
-          fi
-          echo "PASS: verified staging identity; checkout disabled (403)."
