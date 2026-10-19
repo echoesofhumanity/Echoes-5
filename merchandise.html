@@ -21,6 +21,7 @@
   <script src="assets/js/marketplace-catalog.js"></script>
   <script src="assets/js/marketplace-cart.js"></script>
   <script src="assets/js/marketplace-selection.js?v=08dfae8"></script>
+  <script src="assets/js/marketplace-synthetic-order.js"></script>
   <script>
     (function () {
       const labels = {
@@ -140,8 +141,77 @@
           cartTotal.textContent = "EC: " + totalEC.toLocaleString(language);
           cartNotice.textContent = words[2];
         }
+        // Original storefront's local-only synthetic order flow.
+        const orderPanel = document.createElement("section");
+        orderPanel.style.cssText = "max-width:760px;margin:22px auto;padding:22px;border:1px solid #806752;border-radius:16px;background:#151b23;color:#f2e7d9;text-align:center";
+        orderPanel.id = "echoes-synthetic-checkout";
+        const orderHeading = document.createElement("h2");
+        const orderReview = document.createElement("div");
+        orderReview.style.cssText = "white-space:pre-line;text-align:left;line-height:1.8;margin:14px 0";
+        const orderState = document.createElement("p");
+        orderState.setAttribute("role","status");
+        orderState.setAttribute("aria-live","polite");
+        const orderButtons = ["calculate","create","confirm","cancel"].map(function(action){
+          const button=document.createElement("button");
+          button.type="button";
+          button.dataset.orderAction=action;
+          button.style.cssText="display:block;width:100%;min-height:48px;margin:10px 0;padding:12px;border-radius:12px;border:1px solid #dfb98e;background:#76503a;color:white;font-weight:600";
+          return button;
+        });
+        orderPanel.append(orderHeading,orderReview,...orderButtons,orderState);
+        function orderWords(){
+          const lang=(window.EchoesI18n&&window.EchoesI18n.getLanguage())||"en";
+          const words={
+            en:["Synthetic cart","Calculate demo cart","Create synthetic order","Confirm demo order","Cancel demo order","Select a product first.","Synthetic order created: ","Synthetic order confirmed: ","Synthetic order cancelled: ","Simulation only. No real order, payment or EC transfer.","Total: ","Order status: "],
+            tr:["Sentetik sepet","Demo sepetini hesapla","Sentetik sipariş oluştur","Demo siparişini onayla","Demo siparişini iptal et","Önce ürün seçin.","Sentetik sipariş oluşturuldu: ","Sentetik sipariş onaylandı: ","Sentetik sipariş iptal edildi: ","Yalnızca simülasyon. Gerçek sipariş, ödeme veya EC transferi yok.","Toplam: ","Sipariş durumu: "],
+            de:["Synthetischer Warenkorb","Demo-Warenkorb berechnen","Testbestellung erstellen","Testbestellung bestätigen","Testbestellung stornieren","Zuerst Artikel auswählen.","Testbestellung erstellt: ","Testbestellung bestätigt: ","Testbestellung storniert: ","Nur Simulation. Keine echte Bestellung, Zahlung oder EC-Übertragung.","Gesamt: ","Bestellstatus: "],
+            fr:["Panier synthétique","Calculer le panier démo","Créer une commande fictive","Confirmer la commande fictive","Annuler la commande fictive","Sélectionnez un article.","Commande fictive créée : ","Commande fictive confirmée : ","Commande fictive annulée : ","Simulation uniquement. Aucun achat, paiement ou transfert EC réel.","Total : ","Statut : "],
+            es:["Carrito sintético","Calcular carrito demo","Crear pedido sintético","Confirmar pedido demo","Cancelar pedido demo","Selecciona un producto.","Pedido sintético creado: ","Pedido confirmado: ","Pedido cancelado: ","Solo simulación. Sin pedido, pago ni transferencia EC real.","Total: ","Estado: "],
+            pt:["Carrinho sintético","Calcular carrinho demo","Criar pedido sintético","Confirmar pedido demo","Cancelar pedido demo","Selecione um produto.","Pedido sintético criado: ","Pedido confirmado: ","Pedido cancelado: ","Apenas simulação. Sem pedido, pagamento ou transferência EC real.","Total: ","Estado: "],
+            ru:["Синтетическая корзина","Рассчитать демо-корзину","Создать тестовый заказ","Подтвердить тестовый заказ","Отменить тестовый заказ","Сначала выберите товар.","Тестовый заказ создан: ","Заказ подтверждён: ","Заказ отменён: ","Только симуляция. Без реального заказа, оплаты или перевода EC.","Итого: ","Статус: "],
+            ar:["سلة اصطناعية","حساب السلة التجريبية","إنشاء طلب تجريبي","تأكيد الطلب التجريبي","إلغاء الطلب التجريبي","اختر منتجًا أولاً.","تم إنشاء الطلب: ","تم تأكيد الطلب: ","تم إلغاء الطلب: ","محاكاة فقط. لا طلب أو دفع أو تحويل EC حقيقي.","الإجمالي: ","الحالة: "],
+            zh:["模拟购物车","计算模拟购物车","创建模拟订单","确认模拟订单","取消模拟订单","请先选择商品。","模拟订单已创建：","模拟订单已确认：","模拟订单已取消：","仅供模拟，不涉及真实订单、付款或 EC 转账。","总计：","订单状态："]
+          };return words[lang]||words.en;
+        }
+        function calculatedSelection(){
+          const selected=selection.read();
+          if(!selected.length)return null;
+          return window.EchoesMarketplaceCart.calculate(demoProducts,selected.map(function(line){
+            const product=productsByConcept.get(line.concept_id);
+            if(!product)throw Error("Unknown product");
+            return {product_id:product.product_id,quantity:line.quantity};
+          }));
+        }
+        function refreshOrderPanel(){
+          const words=orderWords(), cart=calculatedSelection(), order=window.EchoesMarketplaceSyntheticOrder.status();
+          orderHeading.textContent=words[0];
+          orderButtons.forEach(function(button,i){button.textContent=words[i+1]});
+          orderReview.textContent=cart?cart.lines.map(function(line){
+            const product=demoProducts.find(function(p){return p.product_id===line.product_id});
+            return product.title+" × "+line.quantity+" — "+line.subtotal_ec.toLocaleString()+" EC";
+          }).join("\n")+"\n"+words[10]+cart.total_ec.toLocaleString()+" EC":words[5];
+          if(order)orderReview.textContent+="\n"+words[11]+order.status+" ("+order.id+")";
+          orderButtons[0].disabled=!cart;
+          orderButtons[1].disabled=!cart||!!(order&&order.status!=="cancelled");
+          orderButtons[2].disabled=!order||order.status!=="created";
+          orderButtons[3].disabled=!order||!["created","confirmed"].includes(order.status);
+        }
+        orderButtons.forEach(function(button){
+          button.addEventListener("click",function(){
+            try{
+              const action=button.dataset.orderAction, words=orderWords(), engine=window.EchoesMarketplaceSyntheticOrder;
+              if(action==="calculate"){if(!calculatedSelection())throw Error(words[5]);orderState.textContent=words[9];}
+              else if(action==="create"){const order=engine.create(calculatedSelection());orderState.textContent=words[6]+order.id;}
+              else if(action==="confirm"){const order=engine.confirm();orderState.textContent=words[7]+order.id;}
+              else if(action==="cancel"){const order=engine.cancel();orderState.textContent=words[8]+order.id;}
+              refreshOrderPanel();
+            }catch(error){orderState.textContent=error.message||orderWords()[5];}
+          });
+        });
+        refreshOrderPanel();
+        document.addEventListener("echoes:languagechange",refreshOrderPanel);
         const productMount = document.querySelector('[data-section="products"]');
-        if (productMount) productMount.insertAdjacentElement("afterend", cartSummary);
+        if (productMount) { productMount.insertAdjacentElement("afterend", cartSummary); cartSummary.insertAdjacentElement("afterend", orderPanel); }
         function refreshCartSafely() {
           try {
             refreshCartSummary();
@@ -297,6 +367,7 @@
               refreshExisting();
               refreshCartSafely();
               refreshInlineTotal();
+              refreshOrderPanel();
             } catch (error) {
               status.textContent = window.EchoesMerchDemoText(10);
             }
