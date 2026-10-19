@@ -10,6 +10,7 @@ on:
       - 'tests/marketplace-v2-real-rpc.sql'
       - 'tests/marketplace-v2-real-security.sql'
       - 'tests/marketplace-v2-real-auth-boundary.sql'
+      - 'tests/marketplace-v2-real-jwt-boundary.sql'
       - '.github/workflows/marketplace-v2-postgres-smoke.yml'
   workflow_dispatch:
 permissions:
@@ -49,3 +50,4 @@ jobs:
           psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-real-rpc.sql
           psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-real-security.sql
           psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-real-auth-boundary.sql
+          psql -X -v ON_ERROR_STOP=1 -f tests/marketplace-v2-real-jwt-boundary.sql
