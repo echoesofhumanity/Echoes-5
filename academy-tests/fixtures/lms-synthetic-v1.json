@@ -1238,14 +1238,7 @@
       "role": "credential_service"
     }
   ],
-  "enrollments": [
-    {
-      "id": "synthetic-enrollment-a",
-      "learnerId": "synthetic-learner-a",
-      "courseRevisionId": "synthetic-course-revision-1",
-      "status": "active"
-    }
-  ],
+  "enrollments": [],
   "courses": [
     {
       "id": "synthetic-course-1",
@@ -1254,5 +1247,14 @@
       "status": "draft"
     }
   ],
-  "credentials": []
+  "credentials": [],
+  "rejectedEnrollmentAttempts": [
+    {
+      "id": "synthetic-rejected-enrollment-draft",
+      "learnerId": "synthetic-learner-a",
+      "courseRevisionId": "synthetic-course-revision-1",
+      "expectedDecision": "deny",
+      "reason": "course_not_published"
+    }
+  ]
 }
