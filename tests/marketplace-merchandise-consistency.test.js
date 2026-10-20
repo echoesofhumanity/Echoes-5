@@ -32,12 +32,16 @@ assert.match(bridge,/production_enabled:\s*false/);
 assert.match(bridge,/connection:\s*"disabled"/);
 assert.doesNotMatch(bridge,/fetch\s*\(|supabase\.co|createClient\s*\(/i);
 assert.match(selection,/echoes_marketplace_synthetic_cart_v1/);
-assert.equal(catalog.length,4);
-assert.equal(merchandise.length,4);
-for(const item of catalog){
+assert.equal(catalog.mode,"synthetic_demo");
+assert.equal(catalog.checkout_enabled,false);
+assert.ok(Array.isArray(catalog.products));
+assert.ok(Array.isArray(merchandise.products));
+assert.equal(catalog.products.length,4);
+assert.equal(merchandise.products.length,4);
+for(const item of catalog.products){
  assert.equal(item.checkout_enabled,false);
  assert.equal(item.published,false);
- const match=merchandise.find(x=>x.concept_id===item.concept_id);
+ const match=merchandise.products.find(x=>x.concept_id===item.concept_id);
  assert.ok(match,"Missing matching merchandise product "+item.concept_id);
  assert.equal(match.database_product_id.toLowerCase(),item.product_id);
  assert.equal(match.checkout_enabled,false);
