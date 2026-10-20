@@ -17,6 +17,9 @@ on:
       - 'tests/marketplace-selection.test.js'
       - 'tests/marketplace-synthetic-order.test.js'
       - 'tests/marketplace-language-switch-contract.test.js'
+      - 'tests/marketplace-merchandise-consistency.test.js'
+      - 'sections/marketplace/stores.html'
+      - 'sections/marketplace/storefronts.html'
       - 'assets/js/i18n.js'
       - 'tests/marketplace-single-demo-boundary.test.js'
       - '.github/workflows/marketplace-synthetic-tests.yml'
@@ -54,6 +57,7 @@ jobs:
           node --check tests/marketplace-selection.test.js
           node --check tests/marketplace-synthetic-order.test.js
           node --check tests/marketplace-language-switch-contract.test.js
+          node --check tests/marketplace-merchandise-consistency.test.js
           node --check tests/marketplace-single-demo-boundary.test.js
       - name: Validate shared Marketplace catalogue and cart
         run: node tests/marketplace-cart.test.js
@@ -63,6 +67,8 @@ jobs:
         run: node tests/marketplace-selection.test.js
       - name: Validate synthetic order lifecycle and reversals
         run: node tests/marketplace-synthetic-order.test.js
+      - name: Guard Marketplace and Merchandise page consistency
+        run: node tests/marketplace-merchandise-consistency.test.js
       - name: Guard nine-language dynamic Merchandise updates
         run: node tests/marketplace-language-switch-contract.test.js
       - name: Guard canonical single-demo integration and old links
