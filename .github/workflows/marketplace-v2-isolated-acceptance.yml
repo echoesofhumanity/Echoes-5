@@ -42,3 +42,5 @@ jobs:
         run: psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 -f tests/fixtures/echoes-v2-installed-core.sql
       - name: Run real V2 checkout/cancel concurrent acceptance
         run: python tests/marketplace-v2-core-acceptance.py
+      - name: Check isolated role access and row policies
+        run: python tests/marketplace-v2-security-boundary.py
