@@ -189,16 +189,82 @@
           }));
         }
         function refreshOrderPanel(){
-          const words=orderWords(), cart=calculatedSelection(), order=window.EchoesMarketplaceSyntheticOrder.status();
+          const words=orderWords(),cart=calculatedSelection(),order=window.EchoesMarketplaceSyntheticOrder.status();
+          const active=!!order&&["created","confirmed"].includes(order.status);
+          const lang=(window.EchoesI18n&&window.EchoesI18n.getLanguage())||"en";
+          const terms={
+            tr:["Azalt","Artır","Kaldır","Miktar","Sipariş geçmişi","Sepet boş"],
+            en:["Decrease","Increase","Remove","Quantity","Order history","Cart is empty"],
+            de:["Verringern","Erhöhen","Entfernen","Menge","Bestellverlauf","Warenkorb leer"],
+            fr:["Diminuer","Augmenter","Retirer","Quantité","Historique","Panier vide"],
+            es:["Reducir","Aumentar","Quitar","Cantidad","Historial","Carrito vacío"],
+            pt:["Diminuir","Aumentar","Remover","Quantidade","Histórico","Carrinho vazio"],
+            ru:["Уменьшить","Увеличить","Удалить","Количество","История","Корзина пуста"],
+            ar:["تقليل","زيادة","إزالة","الكمية","السجل","السلة فارغة"],
+            zh:["减少","增加","移除","数量","订单记录","购物车为空"]
+          }[lang]||["Decrease","Increase","Remove","Quantity","Order history","Cart is empty"];
           orderHeading.textContent=words[0];
-          orderButtons.forEach(function(button,i){button.textContent=i===3?({tr:"Demo siparişini tamamla",en:"Complete demo order",de:"Testbestellung abschließen",fr:"Terminer la commande fictive",es:"Completar pedido demo",pt:"Concluir pedido demo",ru:"Завершить тестовый заказ",ar:"إكمال الطلب التجريبي",zh:"完成模拟订单"}[(window.EchoesI18n&&window.EchoesI18n.getLanguage())||"en"]||"Complete demo order"):words[i<3?i+1:4]});
-          orderReview.textContent=cart?cart.lines.map(function(line){
-            const product=demoProducts.find(function(p){return p.product_id===line.product_id});
-            return product.title+" × "+line.quantity+" — "+line.subtotal_ec.toLocaleString()+" EC";
-          }).join("\n")+"\n"+words[10]+cart.total_ec.toLocaleString()+" EC":words[5];
-          if(order)orderReview.textContent+="\n"+words[11]+order.status+" ("+order.id+")"+"\n"+order.history.map(function(x){return x.to;}).join(" → ");
-          orderButtons[0].disabled=!cart;
-          orderButtons[1].disabled=!cart||!!(order&&order.status!=="cancelled");
+          closeOrder.setAttribute("aria-label",lang==="tr"?"Sepeti kapat":"Close synthetic cart");
+          orderButtons.forEach(function(button,i){
+            button.textContent=i===3?({tr:"Demo siparişini tamamla",en:"Complete demo order",de:"Testbestellung abschließen",fr:"Terminer la commande fictive",es:"Completar pedido demo",pt:"Concluir pedido demo",ru:"Завершить тестовый заказ",ar:"إكمال الطلب التجريبي",zh:"完成模拟订单"}[lang]||"Complete demo order"):words[i<3?i+1:4];
+          });
+          orderReview.replaceChildren();
+          if(cart){
+            cart.lines.forEach(function(line){
+              const product=demoProducts.find(function(p){return p.product_id===line.product_id});
+              if(!product)return;
+              const row=document.createElement("div");
+              row.style.cssText="padding:12px 0;border-bottom:1px solid #806752";
+              const name=document.createElement("strong");
+              name.textContent=product.title+" — "+line.subtotal_ec.toLocaleString(lang)+" EC";
+              name.style.display="block";
+              const controls=document.createElement("div");
+              controls.style.cssText="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px";
+              const minus=document.createElement("button"),plus=document.createElement("button"),remove=document.createElement("button"),quantity=document.createElement("input");
+              quantity.type="number";quantity.min="0";quantity.max="99";quantity.step="1";quantity.value=String(line.quantity);
+              quantity.disabled=active;
+              quantity.setAttribute("aria-label",terms[3]+": "+product.title);
+              quantity.style.cssText="box-sizing:border-box;width:70px;min-height:44px;text-align:center;border:1px solid #dfb98e;border-radius:8px;background:#24313b;color:white;font-size:16px";
+              [minus,plus,remove].forEach(function(button){
+                button.type="button";button.style.cssText="min-width:44px;min-height:44px;padding:8px;border:1px solid #dfb98e;border-radius:8px;background:#29465b;color:white";
+              });
+              minus.textContent="−";plus.textContent="+";remove.textContent=terms[2];
+              minus.setAttribute("aria-label",terms[0]+": "+product.title);
+              plus.setAttribute("aria-label",terms[1]+": "+product.title);
+              remove.setAttribute("aria-label",terms[2]+": "+product.title);
+              minus.disabled=active||line.quantity<=1;
+              plus.disabled=active||line.quantity>=99;
+              remove.disabled=active;
+              function changeQuantity(value){
+                try{
+                  if(active||!Number.isSafeInteger(value)||value<0||value>99)throw Error("Invalid demo quantity");
+                  selection.setQuantity(product.concept_id,value);
+                  refreshCartSafely();
+                  refreshOrderPanel();
+                  orderState.textContent="";
+                }catch(error){orderState.textContent=error.message||words[5];quantity.value=String(line.quantity);}
+              }
+              minus.addEventListener("click",function(){changeQuantity(line.quantity-1);});
+              plus.addEventListener("click",function(){changeQuantity(line.quantity+1);});
+              remove.addEventListener("click",function(){changeQuantity(0);});
+              quantity.addEventListener("change",function(){changeQuantity(Number(quantity.value));});
+              controls.append(minus,quantity,plus,remove);
+              row.append(name,controls);orderReview.append(row);
+            });
+            const total=document.createElement("p");
+            total.style.fontWeight="700";
+            total.textContent=words[10]+cart.total_ec.toLocaleString(lang)+" EC";
+            orderReview.append(total);
+          }else{
+            const empty=document.createElement("p");empty.textContent=terms[5];orderReview.append(empty);
+          }
+          if(order){
+            const history=document.createElement("p");
+            history.textContent=words[11]+order.status+" ("+order.id+")"+"\n"+terms[4]+": "+order.history.map(function(x){return x.to;}).join(" → ");
+            orderReview.append(history);
+          }
+          orderButtons[0].disabled=!cart||active;
+          orderButtons[1].disabled=!cart||active;
           orderButtons[2].disabled=!order||order.status!=="created";
           orderButtons[3].disabled=!order||order.status!=="confirmed";
           orderButtons[4].disabled=!order||!["created","confirmed"].includes(order.status);
