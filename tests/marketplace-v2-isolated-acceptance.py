@@ -49,8 +49,15 @@ def test_concurrency(dsn):
                     q.execute("SELECT echoes_v2_synthetic.checkout(%s,%s,%s::jsonb)",(buyer,uuid.uuid4(),json.dumps([{'product_id':str(product),'qty':1}])))
                     q.fetchone()
             outcome='ok'
+        except psycopg.Error as e:
+            # Reject expected business-rule failure only; timeout, deadlock, auth or SQL errors are test failures.
+            msg=str(e).lower()
+            if e.sqlstate == 'P0001' and ('stock' in msg or 'quantity' in msg or 'inventory' in msg):
+                outcome='rejected:insufficient stock'
+            else:
+                outcome='error:'+str(e).splitlines()[0][:150]
         except Exception as e:
-            outcome='rejected:'+str(e).splitlines()[0][:150]
+            outcome='error:'+str(e).splitlines()[0][:150]
         with lock: results.append(outcome)
     t1=threading.Thread(target=worker,args=(buyer_a,))
     t2=threading.Thread(target=worker,args=(buyer_b,))
@@ -72,6 +79,8 @@ def test_concurrency(dsn):
 
 def test_http():
     base=require('TEST_SUPABASE_URL').rstrip('/')
+    if any(x in base for x in ('ymxpbkviadypsvahrqwt','nlawhidxubnmoxtcxbiq')):
+        raise RuntimeError('BLOCKED: protected Supabase API target')
     key=require('TEST_ANON_KEY')
     a=require('TEST_USER_A_JWT')
     b=require('TEST_USER_B_JWT')
@@ -88,7 +97,7 @@ def test_http():
         except urllib.error.HTTPError as e:
             if e.code not in (401,403,404):raise RuntimeError(f'FAIL: unexpected HTTP {e.code} for {label}')
             print(f'PASS: private RPC denied for {label} (HTTP {e.code})')
-    print('GATE OPEN: positive signed-JWT checkout/cancel cannot be certified without approved exposed API entry point')
+    print('INCOMPLETE: JWT tokens were supplied but their validity and positive authenticated checkout/cancel were NOT established; requires separately approved API entry point')
 
 if __name__=='__main__':
     try:main()
