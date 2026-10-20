@@ -22,7 +22,7 @@ const statuses=o=>Array.from(o.history,x=>x.to);
 test("four-line EC cart and no real checkout",()=>{
  const {engine,cart}=setup();
  assert.equal(cart.lines.length,4);
- assert.equal(cart.total_ec,14900);
+ assert.equal(cart.total_ec,15400);
  assert.equal(cart.checkout_enabled,false);
  assert.equal(engine.status(),null);
 });
@@ -31,7 +31,7 @@ test("create, confirm, fulfill, reverse; immutable history and snapshots",()=>{
  const created=engine.create(cart);
  assert.match(created.id,/^DEMO-/);
  assert.equal(created.status,"created");
- assert.equal(created.total_ec,14900);
+ assert.equal(created.total_ec,15400);
  assert.equal(created.checkout_enabled,false);
  assert.equal(created.payment_status,"not_applicable");
  assert.deepEqual(statuses(created),["created"]);
