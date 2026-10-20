@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'merchandise.html'
+      - 'marketplace.html'
+      - 'storefront.html'
+      - 'sections/merchandise/products.html'
       - 'assets/data/marketplace-catalog.json'
       - 'assets/js/marketplace-*.js'
       - 'tests/marketplace-cart.test.js'
@@ -35,7 +38,20 @@ jobs:
           grep -Fq 'assets/js/marketplace-cart.js' merchandise.html
           grep -Fq 'assets/js/marketplace-selection.js' merchandise.html
           grep -Fq 'assets/data/marketplace-catalog.json' assets/js/marketplace-catalog.js
-          if grep -Eq 'marketplace-demo-(catalog|cart|selection)\\.js' merchandise.html; then exit 1; fi
+          if grep -Eq 'marketplace-demo-(catalog|cart|selection|order)\.js|marketplace-demo\.html' merchandise.html; then exit 1; fi
+      - name: Check JavaScript syntax before executing tests
+        run: |
+          node --check assets/js/marketplace-catalog.js
+          node --check assets/js/merchandise-catalog.js
+          node --check assets/js/marketplace-cart.js
+          node --check assets/js/marketplace-selection.js
+          node --check assets/js/marketplace-synthetic-order.js
+          node --check assets/js/marketplace-v2-bridge.js
+          node --check tests/marketplace-cart.test.js
+          node --check tests/marketplace-catalog-cart-integration.test.js
+          node --check tests/marketplace-selection.test.js
+          node --check tests/marketplace-synthetic-order.test.js
+          node --check tests/marketplace-single-demo-boundary.test.js
       - name: Validate shared Marketplace catalogue and cart
         run: node tests/marketplace-cart.test.js
       - name: Validate all four products and quantity boundaries
