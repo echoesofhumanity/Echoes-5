@@ -12,6 +12,7 @@ on:
       - 'assets/data/merchandise-catalog.json'
       - 'assets/js/merchandise-catalog.js'
       - 'tests/marketplace-selection.test.js'
+      - 'tests/marketplace-synthetic-order.test.js'
       - 'tests/marketplace-single-demo-boundary.test.js'
       - '.github/workflows/marketplace-synthetic-tests.yml'
   workflow_dispatch:
@@ -41,5 +42,7 @@ jobs:
         run: node tests/marketplace-catalog-cart-integration.test.js
       - name: Validate shared Marketplace selection
         run: node tests/marketplace-selection.test.js
+      - name: Validate synthetic order lifecycle and reversals
+        run: node tests/marketplace-synthetic-order.test.js
       - name: Guard canonical single-demo integration and old links
         run: node tests/marketplace-single-demo-boundary.test.js
