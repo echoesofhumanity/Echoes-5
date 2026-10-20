@@ -1,0 +1,45 @@
+/* Cross-page Marketplace/Merchandise boundary. Static offline regression. */
+"use strict";
+const assert=require("node:assert/strict");
+const fs=require("node:fs");
+const path=require("node:path");
+const root=path.resolve(__dirname,"..");
+const read=p=>fs.readFileSync(path.join(root,p),"utf8");
+const marketplace=read("marketplace.html");
+const merch=read("merchandise.html");
+const storefront=read("storefront.html");
+const stores=read("sections/marketplace/stores.html");
+const fronts=read("sections/marketplace/storefronts.html");
+const bridge=read("assets/js/marketplace-v2-bridge.js");
+const selection=read("assets/js/marketplace-selection.js");
+const catalog=JSON.parse(read("assets/data/marketplace-catalog.json"));
+const merchandise=JSON.parse(read("assets/data/merchandise-catalog.json"));
+assert.match(marketplace,/data-page="marketplace"/);
+assert.match(merch,/data-page="merchandise"/);
+assert.match(storefront,/data-page="storefront"/);
+assert.match(stores,/href="merchandise\.html"/);
+assert.match(fronts,/href="merchandise\.html"/);
+assert.match(fronts,/href="storefront\.html"/);
+assert.match(storefront,/href="marketplace\.html"/);
+assert.match(merch,/assets\/js\/marketplace-selection\.js/);
+assert.match(merch,/assets\/js\/marketplace-cart\.js/);
+assert.match(merch,/assets\/js\/marketplace-synthetic-order\.js/);
+assert.match(merch,/id\s*=\s*"echoes-synthetic-checkout"/);
+assert.match(merch,/goToOrder\.addEventListener\("click"/);
+assert.doesNotMatch([marketplace,merch,storefront,stores,fronts].join("\n"),/marketplace-demo\.html|marketplace-demo-(?:catalog|cart|selection|order)\.js/);
+assert.match(bridge,/checkout_enabled:\s*false/);
+assert.match(bridge,/production_enabled:\s*false/);
+assert.match(bridge,/connection:\s*"disabled"/);
+assert.doesNotMatch(bridge,/fetch\s*\(|supabase\.co|createClient\s*\(/i);
+assert.match(selection,/echoes_marketplace_synthetic_cart_v1/);
+assert.equal(catalog.length,4);
+assert.equal(merchandise.length,4);
+for(const item of catalog){
+ assert.equal(item.checkout_enabled,false);
+ assert.equal(item.published,false);
+ const match=merchandise.find(x=>x.concept_id===item.concept_id);
+ assert.ok(match,"Missing matching merchandise product "+item.concept_id);
+ assert.equal(match.database_product_id.toLowerCase(),item.product_id);
+ assert.equal(match.checkout_enabled,false);
+}
+console.log("PASS Marketplace/Merchandise routes, one cart, four identities, and disabled remote checkout");
