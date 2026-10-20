@@ -17,6 +17,15 @@ for(const lang of languages){
  assert.match(merch,new RegExp('\\b'+lang+':\\s*"[^"]+"'),"cart navigation caption missing "+lang);
 }
 assert.match(merch,/document\.addEventListener\("echoes:language-change",\s*updateGoToOrder\)|document\.addEventListener\("echoes:language-change",\s*function\s*\(\)\s*\{\s*updateGoToOrder\(\)/);
+const guidanceBlock=merch.split("const guidance={")[1]?.split("const help=guidance")[0];
+assert.ok(guidanceBlock,"order guidance dictionary missing");
+for(const lang of languages){
+ const match=guidanceBlock.match(new RegExp("\\b"+lang+":\\s*(\\[[^\\]]+\\])"));
+ assert.ok(match,"missing order status guidance for "+lang);
+ const values=JSON.parse(match[1]);
+ assert.equal(values.length,5,"five lifecycle guidance states for "+lang);
+ assert.ok(values.every(value=>typeof value==="string"&&value.trim()),"empty order guidance "+lang);
+}
 assert.match(merch,/document\.addEventListener\("echoes:language-change",\s*refreshOrderPanel\)/);
 assert.match(merch,/document\.addEventListener\("echoes:language-change",\s*refreshInlineTotal\)/);
 console.log("PASS nine-language dynamic Merchandise refresh uses the canonical portal event");
