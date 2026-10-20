@@ -208,7 +208,7 @@
             zh:["减少","增加","移除","数量","订单记录","购物车为空"]
           }[lang]||["Decrease","Increase","Remove","Quantity","Order history","Cart is empty"];
           orderHeading.textContent=words[0];
-          closeOrder.setAttribute("aria-label",lang==="tr"?"Sepeti kapat":"Close synthetic cart");
+          closeOrder.setAttribute("aria-label",({tr:"Sepeti kapat",en:"Close synthetic cart",de:"Warenkorb schließen",fr:"Fermer le panier",es:"Cerrar carrito",pt:"Fechar carrinho",ru:"Закрыть корзину",ar:"إغلاق السلة",zh:"关闭购物车"}[lang]||"Close synthetic cart"));
           orderButtons.forEach(function(button,i){
             button.textContent=i===3?({tr:"Demo siparişini tamamla",en:"Complete demo order",de:"Testbestellung abschließen",fr:"Terminer la commande fictive",es:"Completar pedido demo",pt:"Concluir pedido demo",ru:"Завершить тестовый заказ",ar:"إكمال الطلب التجريبي",zh:"完成模拟订单"}[lang]||"Complete demo order"):words[i<3?i+1:4];
           });
