@@ -209,6 +209,35 @@
             button.textContent=i===3?({tr:"Demo siparişini tamamla",en:"Complete demo order",de:"Testbestellung abschließen",fr:"Terminer la commande fictive",es:"Completar pedido demo",pt:"Concluir pedido demo",ru:"Завершить тестовый заказ",ar:"إكمال الطلب التجريبي",zh:"完成模拟订单"}[lang]||"Complete demo order"):words[i<3?i+1:4];
           });
           orderReview.replaceChildren();
+          // All four validated catalogue products must remain selectable from the cart,
+          // including products not yet present in the current selection.
+          const available=demoProducts.filter(function(product){
+            return !selection.read().some(function(line){return line.concept_id===product.concept_id;});
+          });
+          if(available.length&&!active){
+            const picker=document.createElement("div");
+            picker.style.cssText="padding:12px 0;margin:8px 0 16px;border-bottom:1px solid #806752";
+            const pickerLabel=document.createElement("strong");
+            pickerLabel.textContent=({tr:"Başka ürün ekle",en:"Add another product",de:"Weiteres Produkt hinzufügen",fr:"Ajouter un autre article",es:"Añadir otro producto",pt:"Adicionar outro produto",ru:"Добавить другой товар",ar:"إضافة منتج آخر",zh:"添加其他商品"}[lang]||"Add another product");
+            pickerLabel.style.display="block";
+            picker.append(pickerLabel);
+            available.forEach(function(product){
+              const add=document.createElement("button");
+              add.type="button";
+              add.textContent="+ "+product.title+" — "+product.price_ec.toLocaleString(lang)+" EC";
+              add.style.cssText="display:block;width:100%;min-height:48px;margin:10px 0;padding:10px;border:1px solid #dfb98e;border-radius:10px;background:#29465b;color:white;text-align:left";
+              add.addEventListener("click",function(){
+                try{
+                  selection.setQuantity(product.concept_id,1);
+                  refreshCartSafely();
+                  refreshOrderPanel();
+                  orderState.textContent="";
+                }catch(error){orderState.textContent=error.message||words[5];}
+              });
+              picker.append(add);
+            });
+            orderReview.append(picker);
+          }
           if(cart){
             cart.lines.forEach(function(line){
               const product=demoProducts.find(function(p){return p.product_id===line.product_id});
