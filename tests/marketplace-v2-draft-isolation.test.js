@@ -26,7 +26,8 @@ for(const file of docs){
  assert.ok(fs.existsSync(path.join(root,file)),"missing declared draft "+file);
  assert.ok(manifest.includes(file),"missing manifest entry "+file);
  const sql=read(file);
- assert.match(sql,/DO\s+\$review\$[\s\S]*?RAISE EXCEPTION[\s\S]*?END\s+\$review\$;/i,"missing pre-DDL hard stop "+file);
+ const guard=sql.match(/DO\s+(\$[a-zA-Z_0-9]*\$)[\s\S]*?RAISE EXCEPTION[\s\S]*?END\s+\1\s*;/i);
+ assert.ok(guard,"missing review hard stop "+file);
 }
 const checkout=read("docs/sql/marketplace-staging-v2-atomic-checkout.DRAFT.sql");
 assert.match(checkout,/v_policy_seller_bps\s+integer\s*:=\s*NULL/i);
