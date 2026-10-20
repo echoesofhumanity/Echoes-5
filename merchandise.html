@@ -309,7 +309,14 @@
           });
           const guidance={
             tr:["Sepet hesaplanabilir. Sipariş oluşturmak için ikinci düğmeye basın.","Sipariş oluşturuldu. Şimdi onaylayabilir veya iptal edebilirsiniz.","Sipariş onaylandı. Tamamlayabilir veya iptal edebilirsiniz.","Sipariş tamamlandı. Yeni sentetik sipariş oluşturabilirsiniz.","Sipariş iptal edildi. Yeni sentetik sipariş oluşturabilirsiniz."],
-            en:["Cart is ready. Create a synthetic order next.","Order created. Confirm or cancel it.","Order confirmed. Complete or cancel it.","Order completed. You may create a new synthetic order.","Order cancelled. You may create a new synthetic order."]
+            en:["Cart is ready. Create a synthetic order next.","Order created. Confirm or cancel it.","Order confirmed. Complete or cancel it.","Order completed. You may create a new synthetic order.","Order cancelled. You may create a new synthetic order."],
+            de:["Warenkorb bereit. Erstellen Sie als Nächstes eine Testbestellung.","Bestellung erstellt. Bestätigen oder stornieren.","Bestellung bestätigt. Abschließen oder stornieren.","Bestellung abgeschlossen. Neue Testbestellung möglich.","Bestellung storniert. Neue Testbestellung möglich."],
+            es:["Carrito listo. Cree un pedido de demostración.","Pedido creado. Confirme o cancele.","Pedido confirmado. Complete o cancele.","Pedido completado. Puede crear otro pedido.","Pedido cancelado. Puede crear otro pedido."],
+            fr:["Panier prêt. Créez une commande fictive.","Commande créée. Confirmez ou annulez.","Commande confirmée. Terminez ou annulez.","Commande terminée. Nouvelle commande possible.","Commande annulée. Nouvelle commande possible."],
+            pt:["Carrinho pronto. Crie um pedido de demonstração.","Pedido criado. Confirme ou cancele.","Pedido confirmado. Conclua ou cancele.","Pedido concluído. Pode criar outro pedido.","Pedido cancelado. Pode criar outro pedido."],
+            ru:["Корзина готова. Создайте демонстрационный заказ.","Заказ создан. Подтвердите или отмените.","Заказ подтверждён. Завершите или отмените.","Заказ завершён. Можно создать новый.","Заказ отменён. Можно создать новый."],
+            ar:["السلة جاهزة. أنشئ طلبًا تجريبيًا.","تم إنشاء الطلب. أكده أو ألغِه.","تم تأكيد الطلب. أكمله أو ألغِه.","اكتمل الطلب. يمكنك إنشاء طلب جديد.","أُلغي الطلب. يمكنك إنشاء طلب جديد."],
+            zh:["购物车已准备就绪。请创建模拟订单。","订单已创建。请确认或取消。","订单已确认。请完成或取消。","订单已完成。可以创建新订单。","订单已取消。可以创建新订单。"]
           };
           const help=guidance[lang]||guidance.en;
           if(!order)orderState.textContent=cart?help[0]:words[5];
