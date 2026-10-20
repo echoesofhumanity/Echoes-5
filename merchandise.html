@@ -333,7 +333,7 @@
           });
         });
         refreshOrderPanel();
-        document.addEventListener("echoes:languagechange",refreshOrderPanel);
+        document.addEventListener("echoes:language-change",refreshOrderPanel);
         const productMount = document.querySelector('[data-section="products"]');
         if (productMount) { productMount.insertAdjacentElement("afterend", cartSummary); cartSummary.insertAdjacentElement("afterend", orderPanel); }
         function refreshCartSafely() {
@@ -350,7 +350,7 @@
           }
         }
         refreshCartSafely();
-        document.addEventListener("echoes:languagechange", function () {
+        document.addEventListener("echoes:language-change", function () {
           refreshCartSafely();
           document.querySelectorAll("[data-echoes-merch-quantity-label]").forEach(function (node) {
             node.setAttribute("aria-label", window.EchoesMerchDemoText(1));
@@ -445,7 +445,7 @@
           inlineTotal.style.cssText = "margin:12px 0;color:#f2e7d9;font-weight:700;text-align:center";
           inlineTotal.setAttribute("aria-live", "polite");
           // Localized preview refresh is also needed when the page language changes.
-          document.addEventListener("echoes:languagechange", refreshInlineTotal);
+          document.addEventListener("echoes:language-change", refreshInlineTotal);
           function refreshInlineTotal() {
             // Product detail shows the current unsaved quantity preview.
             // The separate cart summary continues to use saved selection only.
@@ -516,7 +516,7 @@
               status.textContent = window.EchoesMerchDemoText(10);
             }
           });
-          document.addEventListener("echoes:languagechange", function () {
+          document.addEventListener("echoes:language-change", function () {
             updateGoToOrder();
             // Refresh the open detail immediately, not only when reopened.
             label.textContent = window.EchoesMerchDemoText(0);
