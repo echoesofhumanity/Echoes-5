@@ -44,3 +44,5 @@ jobs:
         run: python tests/marketplace-v2-core-acceptance.py
       - name: Check isolated role access and row policies
         run: python tests/marketplace-v2-security-boundary.py
+      - name: Check two buyer order-chain RLS isolation
+        run: python tests/marketplace-v2-two-buyer-rls.py
