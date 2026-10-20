@@ -164,7 +164,9 @@
         closeOrder.setAttribute("aria-label","Close synthetic cart");
         closeOrder.style.cssText="float:right;min-width:48px;min-height:48px;border:1px solid #dfb98e;border-radius:12px;background:#29465b;color:white;font-size:1.5rem";
         closeOrder.addEventListener("click",function(){orderPanel.close();});
-        orderPanel.append(closeOrder,orderHeading,orderReview,...orderButtons,orderState);
+        orderState.style.cssText="position:sticky;bottom:0;z-index:2;min-height:44px;padding:12px;border:1px solid #806752;border-radius:10px;background:#24313b;color:#fff;text-align:left;white-space:pre-line";
+        orderState.textContent="Demo only — no real payment.";
+        orderPanel.append(closeOrder,orderHeading,orderReview,orderState,...orderButtons);
         function orderWords(){
           const lang=(window.EchoesI18n&&window.EchoesI18n.getLanguage())||"en";
           const words={
@@ -297,6 +299,20 @@
           orderButtons[2].disabled=!order||order.status!=="created";
           orderButtons[3].disabled=!order||order.status!=="confirmed";
           orderButtons[4].disabled=!order||!["created","confirmed"].includes(order.status);
+          orderButtons.forEach(function(button){
+            button.style.opacity=button.disabled?".42":"1";
+            button.style.cursor=button.disabled?"not-allowed":"pointer";
+          });
+          const guidance={
+            tr:["Sepet hesaplanabilir. Sipariş oluşturmak için ikinci düğmeye basın.","Sipariş oluşturuldu. Şimdi onaylayabilir veya iptal edebilirsiniz.","Sipariş onaylandı. Tamamlayabilir veya iptal edebilirsiniz.","Sipariş tamamlandı. Yeni sentetik sipariş oluşturabilirsiniz.","Sipariş iptal edildi. Yeni sentetik sipariş oluşturabilirsiniz."],
+            en:["Cart is ready. Create a synthetic order next.","Order created. Confirm or cancel it.","Order confirmed. Complete or cancel it.","Order completed. You may create a new synthetic order.","Order cancelled. You may create a new synthetic order."]
+          };
+          const help=guidance[lang]||guidance.en;
+          if(!order)orderState.textContent=cart?help[0]:words[5];
+          else if(order.status==="created")orderState.textContent=help[1]+"\n"+order.id;
+          else if(order.status==="confirmed")orderState.textContent=help[2]+"\n"+order.id;
+          else if(order.status==="fulfilled")orderState.textContent=help[3]+"\n"+order.id;
+          else if(order.status==="cancelled")orderState.textContent=help[4]+"\n"+order.id;
         }
         orderButtons.forEach(function(button){
           button.addEventListener("click",function(){
@@ -308,7 +324,7 @@
               else if(action==="fulfill"){const order=engine.fulfill();orderState.textContent="DEMO: "+order.status+" ("+order.id+")";}
               else if(action==="cancel"){const order=engine.cancel();orderState.textContent=words[8]+order.id;}
               refreshOrderPanel();
-            }catch(error){orderState.textContent=error.message||orderWords()[5];}
+            }catch(error){orderState.textContent="Demo error: "+(error.message||orderWords()[5]);console.warn("Synthetic order action failed",error);}
           });
         });
         refreshOrderPanel();
