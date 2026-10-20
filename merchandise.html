@@ -146,6 +146,8 @@
         orderPanel.style.cssText = "box-sizing:border-box;width:min(760px,calc(100% - 24px));max-height:calc(100dvh - 32px);overflow:auto;margin:auto;padding:22px;border:1px solid #806752;border-radius:16px;background:#151b23;color:#f2e7d9;text-align:center";
         orderPanel.id = "echoes-synthetic-checkout";
         const orderHeading = document.createElement("h2");
+        orderHeading.id = "echoes-synthetic-checkout-title";
+        orderPanel.setAttribute("aria-labelledby", orderHeading.id);
         const orderReview = document.createElement("div");
         orderReview.style.cssText = "white-space:pre-line;text-align:left;line-height:1.8;margin:14px 0";
         const orderState = document.createElement("p");
@@ -254,6 +256,7 @@
               const minus=document.createElement("button"),plus=document.createElement("button"),remove=document.createElement("button"),quantity=document.createElement("input");
               quantity.type="number";quantity.min="0";quantity.max="99";quantity.step="1";quantity.value=String(line.quantity);
               quantity.disabled=active;
+              quantity.setAttribute("inputmode","numeric");
               quantity.setAttribute("aria-label",terms[3]+": "+product.title);
               quantity.style.cssText="box-sizing:border-box;width:70px;min-height:44px;text-align:center;border:1px solid #dfb98e;border-radius:8px;background:#24313b;color:white;font-size:16px";
               [minus,plus,remove].forEach(function(button){
@@ -441,6 +444,8 @@
           const inlineTotal = document.createElement("p");
           inlineTotal.style.cssText = "margin:12px 0;color:#f2e7d9;font-weight:700;text-align:center";
           inlineTotal.setAttribute("aria-live", "polite");
+          // Localized preview refresh is also needed when the page language changes.
+          document.addEventListener("echoes:languagechange", refreshInlineTotal);
           function refreshInlineTotal() {
             // Product detail shows the current unsaved quantity preview.
             // The separate cart summary continues to use saved selection only.
