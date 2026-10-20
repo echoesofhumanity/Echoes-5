@@ -318,7 +318,7 @@
           button.addEventListener("click",function(){
             try{
               const action=button.dataset.orderAction, words=orderWords(), engine=window.EchoesMarketplaceSyntheticOrder;
-              if(action==="calculate"){if(!calculatedSelection())throw Error(words[5]);orderState.textContent=words[9];}
+              if(action==="calculate"){const calculated=calculatedSelection();if(!calculated)throw Error(words[5]);refreshOrderPanel();orderState.textContent=words[9]+"\n"+words[10]+calculated.total_ec.toLocaleString()+" EC";return;}
               else if(action==="create"){const order=engine.create(calculatedSelection());orderState.textContent=words[6]+order.id;}
               else if(action==="confirm"){const order=engine.confirm();orderState.textContent=words[7]+order.id;}
               else if(action==="fulfill"){const order=engine.fulfill();orderState.textContent="DEMO: "+order.status+" ("+order.id+")";}
