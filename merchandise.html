@@ -508,16 +508,20 @@
               refreshOrderPanel();
               const target = document.getElementById("echoes-synthetic-checkout");
               if (!target || !target.isConnected) throw new Error("Synthetic cart section unavailable");
-              // The cart is a native modal: no document scroll position is involved.
+              // Open the canonical cart synchronously from the user's click.
+              // Deferring showModal() can lose the mobile user activation context.
               if (typeof dialog.close === "function" && dialog.open) dialog.close();
-              requestAnimationFrame(function () {
-                if (!orderPanel.open) orderPanel.showModal();
-              });
+              if (!orderPanel.open) orderPanel.showModal();
             } catch (error) {
               status.textContent = window.EchoesMerchDemoText(10);
             }
           });
-          document.addEventListener("echoes:languagechange", updateGoToOrder);
+          document.addEventListener("echoes:languagechange", function () {
+            updateGoToOrder();
+            // Refresh the open detail immediately, not only when reopened.
+            label.textContent = window.EchoesMerchDemoText(0);
+            refreshInlineTotal();
+          });
           updateGoToOrder();
           area.append(label, existing, quantityRow, button, status, inlineTotal, goToOrder);
           inside.appendChild(area);
