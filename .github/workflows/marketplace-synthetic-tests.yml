@@ -8,6 +8,9 @@ on:
       - 'assets/data/marketplace-catalog.json'
       - 'assets/js/marketplace-*.js'
       - 'tests/marketplace-cart.test.js'
+      - 'tests/marketplace-catalog-cart-integration.test.js'
+      - 'assets/data/merchandise-catalog.json'
+      - 'assets/js/merchandise-catalog.js'
       - 'tests/marketplace-selection.test.js'
       - 'tests/marketplace-single-demo-boundary.test.js'
       - '.github/workflows/marketplace-synthetic-tests.yml'
@@ -34,6 +37,8 @@ jobs:
           if grep -Eq 'marketplace-demo-(catalog|cart|selection)\\.js' merchandise.html; then exit 1; fi
       - name: Validate shared Marketplace catalogue and cart
         run: node tests/marketplace-cart.test.js
+      - name: Validate all four products and quantity boundaries
+        run: node tests/marketplace-catalog-cart-integration.test.js
       - name: Validate shared Marketplace selection
         run: node tests/marketplace-selection.test.js
       - name: Guard canonical single-demo integration and old links
