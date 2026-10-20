@@ -3,7 +3,7 @@
  */
 (function(root){
  "use strict";
- const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+ const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
  const TRANSITIONS=Object.freeze({
   created:["confirmed","cancelled"],confirmed:["fulfilled","cancelled"],
   fulfilled:[],cancelled:[]
