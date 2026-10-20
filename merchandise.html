@@ -298,7 +298,8 @@
           orderButtons[1].disabled=!cart||active;
           orderButtons[2].disabled=!order||order.status!=="created";
           orderButtons[3].disabled=!order||order.status!=="confirmed";
-          orderButtons[4].disabled=!order||!["created","confirmed"].includes(order.status);
+          orderButtons[4].disabled=!order||!["created","confirmed","fulfilled"].includes(order.status);
+          if(order&&order.status==="fulfilled")orderButtons[4].textContent=lang==="tr"?"Tamamlanan demo siparişini geri al":"Reverse completed demo order";
           orderButtons.forEach(function(button){
             button.style.opacity=button.disabled?".42":"1";
             button.style.cursor=button.disabled?"not-allowed":"pointer";
@@ -313,6 +314,7 @@
           else if(order.status==="confirmed")orderState.textContent=help[2]+"\n"+order.id;
           else if(order.status==="fulfilled")orderState.textContent=help[3]+"\n"+order.id;
           else if(order.status==="cancelled")orderState.textContent=help[4]+"\n"+order.id;
+          else if(order.status==="reversed")orderState.textContent=(lang==="tr"?"Tamamlanan demo siparişi geri alındı. Geçmiş korundu.":"Completed demo order reversed. History retained.")+"\n"+order.id;
         }
         orderButtons.forEach(function(button){
           button.addEventListener("click",function(){
@@ -322,7 +324,7 @@
               else if(action==="create"){const order=engine.create(calculatedSelection());orderState.textContent=words[6]+order.id;}
               else if(action==="confirm"){const order=engine.confirm();orderState.textContent=words[7]+order.id;}
               else if(action==="fulfill"){const order=engine.fulfill();orderState.textContent="DEMO: "+order.status+" ("+order.id+")";}
-              else if(action==="cancel"){const order=engine.cancel();orderState.textContent=words[8]+order.id;}
+              else if(action==="cancel"){const current=engine.status();const order=current&&current.status==="fulfilled"?engine.reverse():engine.cancel();orderState.textContent=order.status==="reversed"?(words[8]+order.id+" (reversed)"):words[8]+order.id;}
               refreshOrderPanel();
             }catch(error){orderState.textContent="Demo error: "+(error.message||orderWords()[5]);console.warn("Synthetic order action failed",error);}
           });
