@@ -6,7 +6,7 @@
  const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
  const TRANSITIONS=Object.freeze({
   created:["confirmed","cancelled"],confirmed:["fulfilled","cancelled"],
-  fulfilled:[],cancelled:[]
+  fulfilled:["reversed"],cancelled:[],reversed:[]
  });
  let order=null;
  function validCart(cart){
@@ -37,7 +37,7 @@
   });
  }
  function create(cart){
-  if(order&&!["cancelled","fulfilled"].includes(order.status))
+  if(order&&!["cancelled","fulfilled","reversed"].includes(order.status))
    throw Error("An active synthetic order already exists");
   if(!validCart(cart))throw Error("Invalid synthetic order");
   const id="DEMO-"+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,10).toUpperCase();
@@ -58,6 +58,7 @@
  root.EchoesMarketplaceSyntheticOrder=Object.freeze({
   create,confirm:()=>transition("confirmed"),
   fulfill:()=>transition("fulfilled"),
-  cancel:()=>transition("cancelled"),status:copy
+  cancel:()=>transition("cancelled"),
+  reverse:()=>transition("reversed"),status:copy
  });
 })(window);
