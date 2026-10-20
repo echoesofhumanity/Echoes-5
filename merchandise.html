@@ -142,8 +142,8 @@
           cartNotice.textContent = words[2];
         }
         // Original storefront's local-only synthetic order flow.
-        const orderPanel = document.createElement("section");
-        orderPanel.style.cssText = "max-width:760px;margin:22px auto;padding:22px;border:1px solid #806752;border-radius:16px;background:#151b23;color:#f2e7d9;text-align:center";
+        const orderPanel = document.createElement("dialog");
+        orderPanel.style.cssText = "box-sizing:border-box;width:min(760px,calc(100% - 24px));max-height:calc(100dvh - 32px);overflow:auto;margin:auto;padding:22px;border:1px solid #806752;border-radius:16px;background:#151b23;color:#f2e7d9;text-align:center";
         orderPanel.id = "echoes-synthetic-checkout";
         const orderHeading = document.createElement("h2");
         const orderReview = document.createElement("div");
@@ -151,14 +151,20 @@
         const orderState = document.createElement("p");
         orderState.setAttribute("role","status");
         orderState.setAttribute("aria-live","polite");
-        const orderButtons = ["calculate","create","confirm","cancel"].map(function(action){
+        const orderButtons = ["calculate","create","confirm","fulfill","cancel"].map(function(action){
           const button=document.createElement("button");
           button.type="button";
           button.dataset.orderAction=action;
           button.style.cssText="display:block;width:100%;min-height:48px;margin:10px 0;padding:12px;border-radius:12px;border:1px solid #dfb98e;background:#76503a;color:white;font-weight:600";
           return button;
         });
-        orderPanel.append(orderHeading,orderReview,...orderButtons,orderState);
+        const closeOrder = document.createElement("button");
+        closeOrder.type="button";
+        closeOrder.textContent="×";
+        closeOrder.setAttribute("aria-label","Close synthetic cart");
+        closeOrder.style.cssText="float:right;min-width:48px;min-height:48px;border:1px solid #dfb98e;border-radius:12px;background:#29465b;color:white;font-size:1.5rem";
+        closeOrder.addEventListener("click",function(){orderPanel.close();});
+        orderPanel.append(closeOrder,orderHeading,orderReview,...orderButtons,orderState);
         function orderWords(){
           const lang=(window.EchoesI18n&&window.EchoesI18n.getLanguage())||"en";
           const words={
@@ -185,16 +191,17 @@
         function refreshOrderPanel(){
           const words=orderWords(), cart=calculatedSelection(), order=window.EchoesMarketplaceSyntheticOrder.status();
           orderHeading.textContent=words[0];
-          orderButtons.forEach(function(button,i){button.textContent=words[i+1]});
+          orderButtons.forEach(function(button,i){button.textContent=i===3?({tr:"Demo siparişini tamamla",en:"Complete demo order",de:"Testbestellung abschließen",fr:"Terminer la commande fictive",es:"Completar pedido demo",pt:"Concluir pedido demo",ru:"Завершить тестовый заказ",ar:"إكمال الطلب التجريبي",zh:"完成模拟订单"}[(window.EchoesI18n&&window.EchoesI18n.getLanguage())||"en"]||"Complete demo order"):words[i<3?i+1:4]});
           orderReview.textContent=cart?cart.lines.map(function(line){
             const product=demoProducts.find(function(p){return p.product_id===line.product_id});
             return product.title+" × "+line.quantity+" — "+line.subtotal_ec.toLocaleString()+" EC";
           }).join("\n")+"\n"+words[10]+cart.total_ec.toLocaleString()+" EC":words[5];
-          if(order)orderReview.textContent+="\n"+words[11]+order.status+" ("+order.id+")";
+          if(order)orderReview.textContent+="\n"+words[11]+order.status+" ("+order.id+")"+"\n"+order.history.map(function(x){return x.to;}).join(" → ");
           orderButtons[0].disabled=!cart;
           orderButtons[1].disabled=!cart||!!(order&&order.status!=="cancelled");
           orderButtons[2].disabled=!order||order.status!=="created";
-          orderButtons[3].disabled=!order||!["created","confirmed"].includes(order.status);
+          orderButtons[3].disabled=!order||order.status!=="confirmed";
+          orderButtons[4].disabled=!order||!["created","confirmed"].includes(order.status);
         }
         orderButtons.forEach(function(button){
           button.addEventListener("click",function(){
@@ -203,6 +210,7 @@
               if(action==="calculate"){if(!calculatedSelection())throw Error(words[5]);orderState.textContent=words[9];}
               else if(action==="create"){const order=engine.create(calculatedSelection());orderState.textContent=words[6]+order.id;}
               else if(action==="confirm"){const order=engine.confirm();orderState.textContent=words[7]+order.id;}
+              else if(action==="fulfill"){const order=engine.fulfill();orderState.textContent="DEMO: "+order.status+" ("+order.id+")";}
               else if(action==="cancel"){const order=engine.cancel();orderState.textContent=words[8]+order.id;}
               refreshOrderPanel();
             }catch(error){orderState.textContent=error.message||orderWords()[5];}
@@ -388,16 +396,10 @@
               refreshOrderPanel();
               const target = document.getElementById("echoes-synthetic-checkout");
               if (!target || !target.isConnected) throw new Error("Synthetic cart section unavailable");
-              // Closing a modal can restore focus and scroll to the product opener.
-              // Move focus only after close, then set the final document scroll position.
+              // The cart is a native modal: no document scroll position is involved.
               if (typeof dialog.close === "function" && dialog.open) dialog.close();
               requestAnimationFrame(function () {
-                requestAnimationFrame(function () {
-                  target.setAttribute("tabindex","-1");
-                  target.focus({preventScroll:true});
-                  const top = target.getBoundingClientRect().top + window.scrollY - 16;
-                  window.scrollTo({top:Math.max(0,top),behavior:"instant"});
-                });
+                if (!orderPanel.open) orderPanel.showModal();
               });
             } catch (error) {
               status.textContent = window.EchoesMerchDemoText(10);
