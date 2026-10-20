@@ -16,7 +16,8 @@ const catalog=JSON.parse(read("assets/data/marketplace-catalog.json"));
 const merchandise=JSON.parse(read("assets/data/merchandise-catalog.json"));
 assert.match(marketplace,/data-page="marketplace"/);
 assert.match(merch,/data-page="merchandise"/);
-assert.match(storefront,/data-page="storefront"/);
+// Storefront deliberately shares the Marketplace page shell for section loading.
+assert.match(storefront,/data-page="marketplace"/);
 assert.match(stores,/href="merchandise\.html"/);
 assert.match(fronts,/href="merchandise\.html"/);
 assert.match(fronts,/href="storefront\.html"/);
