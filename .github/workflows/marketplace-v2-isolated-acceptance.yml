@@ -1,0 +1,25 @@
+name: Marketplace V2 Isolated Acceptance (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TEST_DATABASE_URL: ${{ secrets.V2_DISPOSABLE_DATABASE_URL }}
+      TEST_SUPABASE_URL: ${{ secrets.V2_TEST_SUPABASE_URL }}
+      TEST_ANON_KEY: ${{ secrets.V2_TEST_ANON_KEY }}
+      TEST_USER_A_JWT: ${{ secrets.V2_TEST_USER_A_JWT }}
+      TEST_USER_B_JWT: ${{ secrets.V2_TEST_USER_B_JWT }}
+      V2_DISPOSABLE_DB_CONFIRMED: ${{ vars.V2_DISPOSABLE_DB_CONFIRMED }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install isolated test dependencies
+        run: python -m pip install 'psycopg[binary]>=3.2,<4'
+      - name: Verify strict preflight and execute tests
+        run: python tests/marketplace-v2-isolated-acceptance.py
