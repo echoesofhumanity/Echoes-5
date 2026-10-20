@@ -419,10 +419,12 @@
           minus.addEventListener("click", function () {
             quantity = Math.max(0, quantity - 1);
             refreshQuantity();
+            refreshInlineTotal();
           });
           plus.addEventListener("click", function () {
             quantity = Math.min(99, quantity + 1);
             refreshQuantity();
+            refreshInlineTotal();
           });
           refreshQuantity();
           quantityRow.append(minus, amount, plus);
@@ -440,23 +442,15 @@
           inlineTotal.style.cssText = "margin:12px 0;color:#f2e7d9;font-weight:700;text-align:center";
           inlineTotal.setAttribute("aria-live", "polite");
           function refreshInlineTotal() {
-            try {
-              const selected = selection.read();
-              if (!selected.length) {
-                inlineTotal.textContent = "EC: 0";
-                return;
-              }
-              const calculated = window.EchoesMarketplaceCart.calculate(demoProducts,
-                selected.map(function (line) {
-                  const product = productsByConcept.get(line.concept_id);
-                  if (!product) throw new Error("Unknown merchandise selection");
-                  return { product_id: product.product_id, quantity: line.quantity };
-                }));
-              const language = (window.EchoesI18n && window.EchoesI18n.getLanguage()) || "en";
-              inlineTotal.textContent = "EC: " + calculated.total_ec.toLocaleString(language);
-            } catch (error) {
+            // Product detail shows the current unsaved quantity preview.
+            // The separate cart summary continues to use saved selection only.
+            const language = (window.EchoesI18n && window.EchoesI18n.getLanguage()) || "en";
+            const product = productsByConcept.get(entry.concept_id);
+            if (!product || !Number.isSafeInteger(quantity) || quantity < 0 || quantity > 99) {
               inlineTotal.textContent = window.EchoesMerchDemoText(10);
+              return;
             }
+            inlineTotal.textContent = "EC: " + (product.price_ec * quantity).toLocaleString(language);
           }
           const existing = document.createElement("p");
           existing.dataset.echoesMerchExisting = "";
