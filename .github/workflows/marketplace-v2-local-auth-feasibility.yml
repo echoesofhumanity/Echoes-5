@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/marketplace-v2-local-auth-feasibility.yml'
       - 'tests/marketplace-v2-local-jwt.py'
+      - 'tests/fixtures/marketplace-v2-local-api-boundary.sql'
   workflow_dispatch:
 permissions:
   contents: read
@@ -33,6 +34,11 @@ jobs:
           ./node_modules/.bin/supabase status
           curl --fail --silent --show-error http://127.0.0.1:54321/auth/v1/health
           echo 'PASS: isolated local Supabase Auth gateway is reachable'
+      - name: Install isolated API ownership fixture in local database
+        run: |
+          DB_CONTAINER=$(docker ps --filter 'name=supabase_db_' --format '{{.ID}}' | head -n 1)
+          test -n "$DB_CONTAINER"
+          docker exec -i "$DB_CONTAINER" psql -v ON_ERROR_STOP=1 -U postgres -d postgres < tests/fixtures/marketplace-v2-local-api-boundary.sql
       - name: Test two real signed JWT identities and rejected tokens
         run: |
           ./node_modules/.bin/supabase status -o env > /tmp/echoes-v2-local-supabase.env
