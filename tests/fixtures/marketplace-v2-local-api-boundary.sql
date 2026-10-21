@@ -36,3 +36,5 @@ BEGIN
 END $$;
 REVOKE ALL ON FUNCTION public.v2_api_test_checkout(integer),public.v2_api_test_cancel(uuid) FROM PUBLIC,anon;
 GRANT EXECUTE ON FUNCTION public.v2_api_test_checkout(integer),public.v2_api_test_cancel(uuid) TO authenticated;
+
+NOTIFY pgrst, 'reload schema';
