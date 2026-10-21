@@ -1,0 +1,37 @@
+name: V2 Local Supabase Auth Feasibility (isolated)
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/marketplace-v2-local-auth-feasibility.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-auth-feasibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_ACCESS_TOKEN: ''
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Docker and runner resources
+        run: |
+          docker version
+          docker info --format '{{.ServerVersion}}'
+          df -h .
+          free -h
+      - name: Install Supabase CLI locally
+        run: |
+          npm install --no-save --package-lock=false supabase@latest
+          ./node_modules/.bin/supabase --version
+      - name: Start isolated local Supabase stack (no cloud link)
+        run: |
+          ./node_modules/.bin/supabase start --exclude studio,imgproxy,logflare,vector,edge-runtime,storage-api,realtime,inbucket,postgres-meta,supavisor
+      - name: Verify local Auth and API gateway are present
+        run: |
+          ./node_modules/.bin/supabase status
+          curl --fail --silent --show-error http://127.0.0.1:54321/auth/v1/health
+          echo 'PASS: isolated local Supabase Auth gateway is reachable'
+      - name: Stop local services
+        if: always()
+        run: ./node_modules/.bin/supabase stop --no-backup || true
