@@ -1,0 +1,48 @@
+name: Marketplace V2 Isolated PostgreSQL Infrastructure
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/marketplace-v2-isolated-acceptance.yml'
+      - 'tests/marketplace-v2-postgres-infrastructure.py'
+      - 'tests/marketplace-v2-core-acceptance.py'
+      - 'tests/fixtures/echoes-v2-installed-core.sql'
+permissions:
+  contents: read
+jobs:
+  isolated-postgres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: test_runner
+          POSTGRES_PASSWORD: local_only_password
+          POSTGRES_DB: echoes_v2_disposable_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test_runner -d echoes_v2_disposable_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://test_runner:local_only_password@localhost:5432/echoes_v2_disposable_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test driver
+        run: python -m pip install 'psycopg[binary]>=3.2,<4'
+      - name: Validate independent PostgreSQL and two-connection race harness
+        run: python tests/marketplace-v2-postgres-infrastructure.py
+      - name: Load inspected V2 checkout core into ephemeral database
+        run: psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 -f tests/fixtures/echoes-v2-installed-core.sql
+      - name: Run real V2 checkout/cancel concurrent acceptance
+        run: python tests/marketplace-v2-core-acceptance.py
+      - name: Check isolated role access and row policies
+        run: python tests/marketplace-v2-security-boundary.py
+      - name: Check two buyer order-chain RLS isolation
+        run: python tests/marketplace-v2-two-buyer-rls.py
