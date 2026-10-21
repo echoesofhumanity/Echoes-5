@@ -74,3 +74,32 @@ code,_=call("/rest/v1/rpc/v2_api_test_checkout","POST",users[0][1],anon,{"amount
 assert code>=400,("overspend",code)
 print("PASS: local signed JWT PostgREST checkout, foreign cancellation denied, owner refund and overspend denied")
 print("NOT TESTED: V2 stock, journal and staging parity through PostgREST")
+
+# Exercise the installed V2 core via the signed-JWT PostgREST boundary.
+import subprocess
+def fixture_sql(statement):
+    cmd=["docker","exec",db_container,"psql","-XAt","-v","ON_ERROR_STOP=1","-U","postgres","-d","postgres","-c",statement]
+    return subprocess.check_output(cmd,text=True).strip().splitlines()[0]
+db_container=subprocess.check_output(["docker","ps","--filter","name=supabase_db_","--format","{{.ID}}"],text=True).strip().splitlines()[0]
+seller=fixture_sql("INSERT INTO echoes_v2_synthetic.sellers(label) VALUES('Test seller') RETURNING seller_id")
+product=fixture_sql("INSERT INTO echoes_v2_synthetic.products(seller_id,unit_price_ec,available_qty) VALUES('%s',17,2) RETURNING product_id"%seller)
+for uid,_ in users:
+    fixture_sql("INSERT INTO echoes_v2_synthetic.wallets(fixture_buyer_id,opening_ec,balance_ec) VALUES('%s',100,100) RETURNING wallet_id"%uid)
+request=str(uuid.uuid4())
+payload={"request":request,"cart":[{"product_id":product,"qty":1}]}
+code,order=call("/rest/v1/rpc/v2_real_test_checkout","POST",users[0][1],anon,payload)
+assert code==200 and isinstance(order,str),("core checkout",code)
+code,replay=call("/rest/v1/rpc/v2_real_test_checkout","POST",users[0][1],anon,payload)
+assert code==200 and replay==order,("replay",code)
+code,_=call("/rest/v1/rpc/v2_real_test_cancel","POST",users[1][1],anon,{"order_id":order,"request":str(uuid.uuid4())})
+assert code>=400,("foreign cancel",code)
+assert fixture_sql("SELECT balance_ec FROM echoes_v2_synthetic.wallets WHERE fixture_buyer_id='%s'"%users[0][0])=="83"
+assert fixture_sql("SELECT available_qty FROM echoes_v2_synthetic.products WHERE product_id='%s'"%product)=="1"
+code,_=call("/rest/v1/rpc/v2_real_test_cancel","POST",users[0][1],anon,{"order_id":order,"request":str(uuid.uuid4())})
+assert code in (200,204),("owner cancel",code)
+assert fixture_sql("SELECT balance_ec FROM echoes_v2_synthetic.wallets WHERE fixture_buyer_id='%s'"%users[0][0])=="100"
+assert fixture_sql("SELECT available_qty FROM echoes_v2_synthetic.products WHERE product_id='%s'"%product)=="2"
+assert fixture_sql("SELECT count(*) FROM echoes_v2_synthetic.journal WHERE order_id='%s'"%order)=="2"
+assert fixture_sql("SELECT state FROM echoes_v2_synthetic.clearing WHERE order_id='%s'"%order)=="voided"
+assert fixture_sql("SELECT state FROM echoes_v2_synthetic.reservations WHERE order_id='%s'"%order)=="released"
+print("PASS: signed JWT PostgREST installed V2 core checkout/replay/cross-buyer denial/refund/stock/journal/clearing/reservation")
