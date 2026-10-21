@@ -64,4 +64,42 @@ with psycopg.connect(dsn) as c:
         q.execute("SELECT state FROM echoes_v2_synthetic.clearing WHERE order_id=%s",(winner[2],))
         assert q.fetchone()[0]=='voided'
 print('PASS: actual V2 cancellation, repeat cancellation, refund, stock release, debit/reversal and clearing')
+# Authorization boundary at the function's buyer ownership lookup:
+# a second synthetic buyer must not cancel or refund the first buyer's order.
+# This is PostgreSQL core coverage, NOT a signed-JWT/API assertion.
+with psycopg.connect(dsn) as c:
+    with c.cursor() as q:
+        q.execute("INSERT INTO echoes_v2_synthetic.products(seller_id,unit_price_ec,available_qty) VALUES(%s,17,2) RETURNING product_id",(seller,))
+        protected_product=q.fetchone()[0]
+        protected_request=uuid.uuid4()
+        q.execute("SELECT echoes_v2_synthetic.checkout(%s,%s,%s::jsonb)",
+                  (winner[1],protected_request,json.dumps([{'product_id':str(protected_product),'qty':1}])))
+        protected_order=q.fetchone()[0]
+        other_buyer=next(b for b in buyers if b!=winner[1])
+        try:
+            with c.transaction():
+                q.execute("SELECT echoes_v2_synthetic.cancel(%s,%s,%s)",
+                          (other_buyer,protected_order,uuid.uuid4()))
+            raise AssertionError("foreign buyer cancellation unexpectedly succeeded")
+        except psycopg.Error as e:
+            assert "order not found" in str(e).lower(),str(e)
+        q.execute("SELECT status,total_ec FROM echoes_v2_synthetic.orders WHERE order_id=%s",(protected_order,))
+        assert q.fetchone()==('created',17)
+        q.execute("SELECT available_qty FROM echoes_v2_synthetic.products WHERE product_id=%s",(protected_product,))
+        assert q.fetchone()[0]==1
+        q.execute("SELECT balance_ec FROM echoes_v2_synthetic.wallets WHERE fixture_buyer_id=%s",(winner[1],))
+        assert q.fetchone()[0]==83
+        q.execute("SELECT operation,delta_ec FROM echoes_v2_synthetic.journal WHERE order_id=%s",(protected_order,))
+        assert q.fetchall()==[('debit',-17)]
+        q.execute("SELECT state FROM echoes_v2_synthetic.clearing WHERE order_id=%s",(protected_order,))
+        assert q.fetchone()[0]=='pending'
+        q.execute("SELECT echoes_v2_synthetic.cancel(%s,%s,%s)",(winner[1],protected_order,uuid.uuid4()))
+        q.execute("SELECT balance_ec FROM echoes_v2_synthetic.wallets WHERE fixture_buyer_id=%s",(winner[1],))
+        assert q.fetchone()[0]==100
+        q.execute("SELECT available_qty FROM echoes_v2_synthetic.products WHERE product_id=%s",(protected_product,))
+        assert q.fetchone()[0]==2
+print('PASS: foreign buyer cannot cancel another buyer order; no unauthorized refund, stock release or journal reversal')
+print('PASS: rightful buyer cancellation restores balance and stock')
+print('NOT TESTED: foreign-buyer cancellation over signed JWT/PostgREST API')
+
 print('NOT TESTED: real Supabase JWT, API gateway, RLS, full nine-function security boundary')
