@@ -495,6 +495,7 @@
               refreshCartSafely();
               refreshInlineTotal();
               refreshOrderPanel();
+              updateGoToOrder();
             } catch (error) {
               status.textContent = window.EchoesMerchDemoText(10);
             }
@@ -511,16 +512,19 @@
           }
           goToOrder.addEventListener("click", function () {
             try {
+              const target = document.getElementById("echoes-synthetic-checkout");
+              if (!target || !target.isConnected || typeof target.showModal !== "function") {
+                throw new Error("Synthetic cart dialog unavailable");
+              }
+              // Close the product dialog first, then synchronously open the
+              // existing cart. Rendering errors must not block the transition.
+              if (dialog.open) dialog.close();
+              if (!target.open) target.showModal();
               refreshCartSafely();
               refreshOrderPanel();
-              const target = document.getElementById("echoes-synthetic-checkout");
-              if (!target || !target.isConnected) throw new Error("Synthetic cart section unavailable");
-              // Open the canonical cart synchronously from the user's click.
-              // Deferring showModal() can lose the mobile user activation context.
-              if (typeof dialog.close === "function" && dialog.open) dialog.close();
-              if (!orderPanel.open) orderPanel.showModal();
             } catch (error) {
-              status.textContent = window.EchoesMerchDemoText(10);
+              status.textContent = window.EchoesMerchDemoText(10) + " " + (error.message || "");
+              console.warn("Synthetic cart transition failed", error);
             }
           });
           document.addEventListener("echoes:language-change", function () {
