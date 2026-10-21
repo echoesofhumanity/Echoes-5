@@ -53,7 +53,7 @@ for i,(user_id,token) in enumerate(users):
     assert code==200 and identity.get("id")==user_id,(i,"identity crossover",code)
 print("PASS: two distinct local users, password login, signed JWT and gateway identity isolation")
 for label,token in (("missing",None),("forged","not-a-valid-jwt"),
-                    ("modified",users[0][1][:-1]+("A" if users[0][1][-1]!="A" else "B"))):
+                    ("modified",users[0][1].split(".")[0]+"."+("A" if users[0][1].split(".")[1][0]!="A" else "B")+users[0][1].split(".")[1][1:]+"."+users[0][1].split(".")[2])):
     code,_=call("/auth/v1/user",token=token)
     assert code in (401,403),(label,"must be denied",code)
 print("PASS: missing, forged and modified tokens denied by local Auth gateway")
