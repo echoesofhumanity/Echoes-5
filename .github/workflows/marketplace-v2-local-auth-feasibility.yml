@@ -5,6 +5,8 @@ on:
       - '.github/workflows/marketplace-v2-local-auth-feasibility.yml'
       - 'tests/marketplace-v2-local-jwt.py'
       - 'tests/fixtures/marketplace-v2-local-api-boundary.sql'
+      - 'tests/fixtures/marketplace-v2-local-real-api.sql'
+      - 'tests/fixtures/echoes-v2-installed-core.sql'
   workflow_dispatch:
 permissions:
   contents: read
@@ -39,6 +41,8 @@ jobs:
           DB_CONTAINER=$(docker ps --filter 'name=supabase_db_' --format '{{.ID}}' | head -n 1)
           test -n "$DB_CONTAINER"
           docker exec -i "$DB_CONTAINER" psql -v ON_ERROR_STOP=1 -U postgres -d postgres < tests/fixtures/marketplace-v2-local-api-boundary.sql
+          docker exec -i "$DB_CONTAINER" psql -v ON_ERROR_STOP=1 -U postgres -d postgres < tests/fixtures/echoes-v2-installed-core.sql
+          docker exec -i "$DB_CONTAINER" psql -v ON_ERROR_STOP=1 -U postgres -d postgres < tests/fixtures/marketplace-v2-local-real-api.sql
       - name: Test two real signed JWT identities and rejected tokens
         run: |
           ./node_modules/.bin/supabase status -o env > /tmp/echoes-v2-local-supabase.env
