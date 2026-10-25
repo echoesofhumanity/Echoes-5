@@ -39,8 +39,8 @@
         <h1 id="storefront-heading" data-storefront-i18n="title">Every creation begins with a person.</h1>
         <p data-storefront-i18n="intro">A home for independent makers, artists, writers and musicians within the Echoes of Humanity Marketplace.</p>
         <div class="echoes-storefront-shell__notice" role="status">
-          <h2 >Kitap seçkisi · İlk özgün eser</h2>
-          <p >İnsanlığın Yaşayan Tasarısı / The Living Blueprint artık Türkçe ve İngilizce tam metin olarak ücretsiz okunabilir. Satış kapalıdır.</p>
+          <h2 data-book-notice-title>Book selection · First original work</h2>
+          <p data-book-notice-body>The Living Blueprint is available to read in full in Turkish and English, free of charge. Sales are disabled.</p>
         </div>
       </div>
       <div class="echoes-storefront-shell__catalog"><h2 data-storefront-i18n="catalogTitle">A world of human creativity</h2><p class="echoes-storefront-shell__catalog-lead" data-storefront-i18n="catalogLead">Illustrative product concepts showing the future breadth of independent storefronts.</p><div class="echoes-storefront-shell__grid"><article class="echoes-storefront-shell__product"><div class="echoes-storefront-shell__art" style="--glow:#429d9c77"><svg viewBox="0 0 240 180" aria-hidden="true"><circle cx="120" cy="90" r="70" fill="#142b35" stroke="#79d4c8" stroke-width="2"/><circle cx="120" cy="90" r="42" fill="none" stroke="#c7b18e" stroke-width="22"/><circle cx="120" cy="90" r="11" fill="#8adad5"/><path d="M167 38v80a18 18 0 1 1-10-16V57l37-9v62a18 18 0 1 1-10-16V38Z" fill="#d8d0bc"/></svg></div><div class="echoes-storefront-shell__info"><span class="echoes-storefront-shell__category" data-storefront-i18n="cat0">Music</span><h3 data-storefront-i18n="item0">Songs Across Borders</h3><p data-storefront-i18n="desc0">An original music release concept.</p><span class="echoes-storefront-shell__concept" data-storefront-i18n="concept">Concept preview · Not for sale</span></div></article>
@@ -86,6 +86,17 @@
         de:{category:"BÜCHER · TÜRKISCHE ORIGINALAUSGABE",title:"Der lebendige Entwurf der Menschheit",description:"Ein eigenständiges philosophisches Werk über Menschenwürde, Freiheit, Liebe, Gerechtigkeit, Gewissen und die Zukunft der Menschheit.",readLabel:"Leseprobe · Einleitung",excerpt:"Manchmal beginnt ein Mensch, noch bevor er die Welt verändern will, zu hinterfragen, warum er sie so akzeptiert hat, wie sie ist. Aus solchen Fragen entstand dieses Buch. Es untersucht, unter welchen Bedingungen Menschen, die unterschiedlich denken, einander vielleicht weder kennen noch lieben, dennoch in Würde zusammenleben können.",allocation:"Bei einem späteren Verkaufsstart decken 3 % der Einnahmen die Betriebskosten des Portals; 97 % finanzieren humanitäre Einsätze. Der Autor erhält keine Tantiemen. Verkauf und EC-Zahlungen sind derzeit deaktiviert.",status:"Kostenlose Leseprobe · Nicht zum Verkauf"},
         ru:{category:"КНИГИ · ОРИГИНАЛ НА ТУРЕЦКОМ",title:"Живой проект человечества",description:"Оригинальное философское произведение о человеческом достоинстве, свободе, любви, справедливости, совести и будущем человечества.",readLabel:"Читать отрывок · Введение",excerpt:"Иногда, прежде чем попытаться изменить мир, человек начинает задумываться, почему он принимал его таким, какой он есть. Из таких вопросов родилась эта книга. Она исследует условия, при которых люди с разными взглядами, даже не зная и не любя друг друга, могут жить вместе, сохраняя достоинство.",allocation:"Если продажи начнутся позднее, 3 % выручки пойдут на операционные расходы портала, а 97 % — на гуманитарные операции. Автор не получает гонорар. Продажи и платежи EC пока отключены.",status:"Бесплатный отрывок · Не продаётся"}
       };
+      const noticeCopy = {
+        tr:["Kitap seçkisi · İlk özgün eser","İnsanlığın Yaşayan Tasarısı / The Living Blueprint artık Türkçe ve İngilizce tam metin olarak ücretsiz okunabilir. Satış kapalıdır."],
+        en:["Book selection · First original work","The Living Blueprint is available to read in full in Turkish and English, free of charge. Sales are disabled."],
+        es:["Selección de libros · Primera obra original","The Living Blueprint puede leerse íntegramente y gratis en turco e inglés. Las ventas están desactivadas."],
+        de:["Buchauswahl · Erstes Originalwerk","The Living Blueprint ist auf Türkisch und Englisch vollständig und kostenlos lesbar. Der Verkauf ist deaktiviert."],
+        fr:["Sélection de livres · Première œuvre originale","The Living Blueprint est disponible gratuitement en texte intégral, en turc et en anglais. Les ventes sont désactivées."],
+        pt:["Seleção de livros · Primeira obra original","The Living Blueprint está disponível gratuitamente na íntegra em turco e inglês. As vendas estão desativadas."],
+        ru:["Книжная подборка · Первое оригинальное произведение","Полный текст The Living Blueprint доступен бесплатно на турецком и английском языках. Продажи отключены."],
+        ar:["مجموعة الكتب · أول عمل أصلي","يتوفر النص الكامل لكتاب The Living Blueprint مجانًا بالتركية والإنجليزية. البيع معطّل."],
+        zh:["图书精选 · 首部原创作品","《The Living Blueprint》土耳其语及英语全文均可免费阅读，销售功能暂未开放。"]
+      };
       const readerCopy = {
         tr:["Türkçe tam kitabı oku · Ücretsiz","Türkçe ana metin ve İngilizce çeviri ücretsiz okunabilir."],
         en:["Read complete English edition · Free","Complete English and Turkish editions are available to read for free."],
@@ -101,6 +112,11 @@
         var code = window.EchoesI18n && window.EchoesI18n.getLanguage ? window.EchoesI18n.getLanguage() : "en";
         var copy = translations[code] || translations.en;
         const book = bookCopy[code] || bookCopy.en;
+        const notice = noticeCopy[code] || noticeCopy.en;
+        const noticeTitle = document.querySelector("[data-book-notice-title]");
+        const noticeBody = document.querySelector("[data-book-notice-body]");
+        if (noticeTitle) noticeTitle.textContent = notice[0];
+        if (noticeBody) noticeBody.textContent = notice[1];
         const reader = document.querySelector("[data-book-reader]");
         const editionNote = document.querySelector("[data-book-edition-note]");
         const readerLanguage = readerCopy[code] ? code : "en";
