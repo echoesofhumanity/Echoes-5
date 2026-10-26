@@ -29,5 +29,11 @@ test('enrollment denied',()=>assert.equal(api.handle({method:'POST',path:base+'/
 test('credential issuance denied',()=>assert.equal(api.handle({method:'POST',path:base+'/credentials/synthetic-revision/issue',actor:learner}).status,403));
 test('responses are non-cacheable',()=>assert.equal(api.handle({path:base+'/catalog/programs'}).headers['cache-control'],'no-store'));
 test('errors have stable shape',()=>assert.equal(api.handle({path:base+'/secret'}).body.error.code,'not_found'));
+test('forged known-id instructor role rejected',()=>assert.equal(api.handle({path:base+'/me/progress/'+lesson,actor:{id:learner.id,role:'instructor'}}).status,403));
+test('unknown synthetic-prefix learner rejected',()=>assert.equal(api.handle({path:base+'/me/progress/'+lesson,actor:{id:'synthetic-fake',role:'learner'}}).status,403));
+test('extra progress fields rejected',()=>assert.equal(api.handle({method:'PUT',path:base+'/me/progress/'+lesson,actor:learner,body:{state:'completed',admin:true}}).status,422));
+test('progress rollback rejected',()=>assert.equal(api.handle({method:'PUT',path:base+'/me/progress/'+lesson,actor:learner,body:{state:'not_started'}}).status,409));
+test('rejected rollback preserves prior state',()=>assert.equal(api.handle({path:base+'/me/progress/'+lesson,actor:learner}).body.data.state,'in_progress'));
+test('catalog responses cannot alter source fixture',()=>{const r=api.handle({path:base+'/catalog/programs'});r.body.data[0].title='tampered';assert.notEqual(api.handle({path:base+'/catalog/programs'}).body.data[0].title,'tampered');});
 let failed=0;for(const [name,fn] of tests){try{fn();console.log('PASS',name);}catch(e){failed++;console.error('FAIL',name,e.message);}}
 console.log(`${tests.length-failed}/${tests.length} synthetic HTTP contract checks passed`);if(failed)process.exitCode=1;
