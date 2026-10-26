@@ -24,7 +24,7 @@ function createHttpContract(domain,lessons){
     if(!actor||actor.role!=='learner'||!domain.actors.some(a=>a.id===actor.id&&a.role==='learner'))return response(403,'forbidden');
     if(method==='GET')return response(200,service.readProgress(actor,progress[1]));
     if(method==='PUT'){
-     if(!body||typeof body!=='object'||Array.isArray(body)||!['not_started','in_progress','completed'].includes(body.state))return response(422,'invalid_progress_state');
+     if(!body||typeof body!=='object'||Array.isArray(body)||Object.keys(body).length!==1||!['not_started','in_progress','completed'].includes(body.state))return response(422,'invalid_progress_state');
      return response(200,service.simulateProgress(actor,progress[1],body.state));
     }
    }
@@ -35,6 +35,7 @@ function createHttpContract(domain,lessons){
    if(e.message==='not_found')return response(404,'not_found');
    if(e.message==='forbidden')return response(403,'forbidden');
    if(e.message==='unsupported_locale')return response(400,'unsupported_locale');
+   if(e.message==='invalid_transition')return response(409,'invalid_transition');
    return response(500,'internal_error');
   }
  }
