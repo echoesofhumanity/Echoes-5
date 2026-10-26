@@ -31,3 +31,4 @@ jobs:
           node academy-tests/check-synthetic-service.cjs
           node academy-tests/check-lms-prototype.cjs
           node academy-tests/check-offline-service.cjs
+          node academy-tests/check-synthetic-http-contract.cjs
