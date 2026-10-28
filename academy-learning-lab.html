@@ -22,6 +22,15 @@
 #roomInstructorPanel .room-roster li{margin:3px 0}
 #roomInstructorPanel .room-roster p{margin:5px 0;line-height:1.4}
 }
+
+/* Mobile instructor: retain DOM, translations and live state, but avoid repeated prose in the working area. Full demo/privacy notice remains in the class information and below the controls. */
+@media(max-width:640px){
+#roomInstructorPanel #roomRosterHint,#roomInstructorPanel #multiQueueNotice{display:none}
+#roomInstructorPanel #roomInactiveTitle:empty{display:none}
+#roomInstructorPanel #multiQueueTitle{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#roomInstructorPanel .multi-queue ol{margin:5px 0;padding-inline-start:24px}
+#roomInstructorPanel .multi-queue>p{margin:5px 0}
+}
 </style></head><body><main>
 <header><nav aria-label="Portal navigation" style="margin-bottom:20px"><a class="button" href="index.html" id="portalReturn">← Return to portal</a></nav><div class="eyebrow">Echoes of Humanity / Academy</div><h1 id="heading">Learning Lab</h1><p id="intro">An isolated learning experience preview.</p><label for="language" id="langLabel">Language</label> <select id="language" aria-label="Language"><option value="en">English</option><option value="tr">Türkçe</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="pt">Português</option><option value="ru">Русский</option><option value="ar">العربية</option><option value="zh">简体中文</option></select></header>
 <div class="notice" role="status" id="notice">SYNTHETIC DEMO — No live classes, real videos, enrollment or certificates.</div>
