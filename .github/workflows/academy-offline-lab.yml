@@ -1,0 +1,23 @@
+name: Academy offline Lab integration
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'academy/classroom/**'
+      - 'academy-tests/check-*lab-bridge.cjs'
+      - 'academy-tests/check-live-boundary.cjs'
+      - 'academy-tests/check-classroom-demo.cjs'
+      - 'academy-learning-lab.html'
+      - '.github/workflows/academy-offline-lab.yml'
+  workflow_dispatch:
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node academy-tests/check-classroom-demo.cjs
+      - run: node academy-tests/check-live-boundary.cjs
+      - run: node academy-tests/check-existing-lab-bridge.cjs
