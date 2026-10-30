@@ -75,3 +75,5 @@ require('./check-existing-lab-event-projection.cjs');
 require('./check-existing-lab-projection-wiring.cjs');
 
 require('./check-session-lifecycle-policy.cjs');
+
+require('./check-existing-lab-bridge.cjs');
