@@ -16,4 +16,24 @@ assert.equal(bridge.inspect().ready,false);
 assert.deepEqual(bridge.inspect().missing,['roomRequest']);
 assert.equal(typeof bridge.send,'undefined');
 assert.equal(typeof bridge.attach,'undefined');
-console.log('Existing Lab read-only bridge: PASS');
+assert.equal(typeof bridge.observe,'function');
+const listeners=new Map();
+const clickable={
+  textContent:'Request entry',
+  addEventListener(type,fn){listeners.set(type,fn);},
+  removeEventListener(type,fn){if(listeners.get(type)===fn)listeners.delete(type);}
+};
+elements.set('roomRequest',clickable);
+const changes=[];
+const unwatch=bridge.observe(event=>changes.push(event));
+assert.equal(listeners.has('click'),true);
+listeners.get('click')();
+Promise.resolve().then(()=>{
+  assert.equal(changes.length,1);
+  assert.equal(changes[0].source,'synthetic-ui');
+  assert.equal(changes[0].control,'roomRequest');
+  assert.equal(changes[0].state.liveConnected,false);
+  unwatch();
+  assert.equal(listeners.has('click'),false);
+  console.log('Existing Lab read-only bridge: PASS');
+}).catch(err=>{console.error(err);process.exitCode=1;});
