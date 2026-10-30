@@ -79,3 +79,5 @@ require('./check-session-lifecycle-policy.cjs');
 require('./check-existing-lab-bridge.cjs');
 
 require('./check-classroom-permission-gate.cjs');
+
+require('./check-existing-lab-readiness-contract.cjs');
