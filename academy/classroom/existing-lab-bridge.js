@@ -30,6 +30,23 @@
       handRaised:pressed('seminarHand')
     });
   }
+  // Observe existing UI changes only. No duplicate classroom state or server calls.
+  const watchedIds=Object.freeze(['roomRequest','roomAdmit','roomReject','roomRemove','seminarHand','roomStudentView','roomInstructorView']);
+  function observe(callback){
+    if(typeof callback!=='function')throw Error('Observer callback required');
+    const attached=[];
+    for(const id of watchedIds){
+      const el=documentRef.getElementById(id);
+      if(!el||typeof el.addEventListener!=='function')continue;
+      const handler=()=>{
+        // Existing Lab listeners update the UI first; observe the resulting DOM.
+        Promise.resolve().then(()=>callback(Object.freeze({source:'synthetic-ui',control:id,state:snapshot()})));
+      };
+      el.addEventListener('click',handler);
+      attached.push([el,handler]);
+    }
+    return ()=>{for(const [el,handler] of attached)el.removeEventListener('click',handler);};
+  }
   // Deliberately no live attach or send methods exposed from the page.
-  return Object.freeze({inspect,snapshot});
+  return Object.freeze({inspect,snapshot,observe});
 });
