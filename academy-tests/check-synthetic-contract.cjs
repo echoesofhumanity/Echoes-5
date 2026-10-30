@@ -68,3 +68,8 @@ test('negative: credential without verified assessment rejected',()=>{const serv
 test('positive: unchanged synthetic fixture validates',()=>{assert.deepEqual(validateFixture(data),[]);});
 let failed=0;for(const [name,fn] of tests){try{fn();console.log('PASS',name);}catch(err){failed++;console.error('FAIL',name,err.message);}}
 console.log(`${tests.length-failed}/${tests.length} synthetic contract checks passed`);if(failed)process.exitCode=1;
+
+// Existing Learning Lab projection and wiring regression suite (offline only).
+require('./check-room-state-compatibility.cjs');
+require('./check-existing-lab-event-projection.cjs');
+require('./check-existing-lab-projection-wiring.cjs');
