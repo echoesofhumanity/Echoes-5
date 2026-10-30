@@ -1,0 +1,21 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../academy-learning-lab.html'),'utf8');
+const order=['academy/classroom/room-state-compatibility.js','academy/classroom/existing-lab-event-projection.js','academy/classroom/live-classroom-boundary.js','academy/classroom/existing-lab-bridge.js'];
+let previous=-1;
+for(const file of order){const index=html.indexOf('src="'+file+'"');assert.ok(index>previous,'Missing or misordered script: '+file);previous=index;}
+assert.equal(html.split('window.EchoesAcademyExistingClassroomProjection=function').length-1,1);
+assert.match(html,/function syntheticParticipants\(\)/);
+const compat=require('../academy/classroom/room-state-compatibility.js');
+const projection=require('../academy/classroom/existing-lab-event-projection.js');
+const p=(id,state)=>({id,state});
+const abc=projection.project([p(0,'speaking'),p(1,'queued'),p(2,'finished')],compat);
+assert.equal(abc.speaker,0);
+assert.equal(abc.participants[1].handQueued,true);
+assert.equal(abc.participants[2].turnFinished,true);
+assert.equal(projection.project([p(2,'rejected')],compat).participants[0].state,'denied');
+assert.throws(()=>projection.project([p(0,'speaking'),p(1,'speaking')],compat),/Multiple speakers/);
+assert.throws(()=>projection.project(Array.from({length:13},(_,i)=>p(i,'admitted')),compat),/capacity/);
+console.log('Existing Learning Lab projection wiring: PASS');
