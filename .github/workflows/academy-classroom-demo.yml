@@ -1,0 +1,19 @@
+name: Academy synthetic classroom contract
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'academy/classroom/classroom-demo-engine.js'
+      - 'academy-tests/check-classroom-demo.cjs'
+      - '.github/workflows/academy-classroom-demo.yml'
+  workflow_dispatch:
+jobs:
+  synthetic-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify local-only classroom state transitions
+        run: node academy-tests/check-classroom-demo.cjs
