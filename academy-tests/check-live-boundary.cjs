@@ -1,0 +1,27 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {createBoundary,validateEvent,LANGUAGES}=require('../academy/classroom/live-classroom-boundary.js');
+(async()=>{
+  assert.equal(LANGUAGES.length,9);
+  const room=createBoundary();
+  assert.equal(room.status().connected,false);
+  await assert.rejects(room.send('entry.request',{}),/unavailable/);
+  await assert.rejects(room.send('unsafe.command',{}),/Unsupported/);
+  const received=[];const stop=room.subscribe(e=>received.push(e));
+  let listener,closed=false;
+  const adapter={subscribe(fn){listener=fn;return ()=>{listener=null;}},send:async(action)=>({action,synthetic:true}),close(){closed=true;}};
+  room.attach(adapter);
+  assert.equal(room.status().connected,true);
+  assert.deepEqual(await room.send('hand.set',{}),{action:'hand.set',synthetic:true});
+  const event=(n)=>({schema_version:1,event_id:'demo-'+n,session_id:'demo-room',subject_id:'student-a',sequence:n,type:'hand.changed'});
+  assert.equal(validateEvent(event(1),0),true);
+  assert.equal(validateEvent(event(3),0),false);
+  listener(event(1));listener(event(3));
+  assert.equal(room.status().lastSequence,1);
+  assert.equal(received.at(-1).type,'resync.required');
+  assert.throws(()=>room.attach(adapter),/Already/);
+  stop();room.close();
+  assert.equal(closed,true);
+  assert.equal(room.status().connected,false);
+  console.log('Academy live boundary offline contract: PASS');
+})().catch(e=>{console.error(e);process.exitCode=1;});
