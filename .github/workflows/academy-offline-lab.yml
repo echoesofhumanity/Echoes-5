@@ -21,3 +21,4 @@ jobs:
       - run: node academy-tests/check-classroom-demo.cjs
       - run: node academy-tests/check-live-boundary.cjs
       - run: node academy-tests/check-existing-lab-bridge.cjs
+      - run: node academy-tests/check-room-transition-policy.cjs
