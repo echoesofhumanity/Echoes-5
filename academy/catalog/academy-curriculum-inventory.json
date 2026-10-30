@@ -8,10 +8,13 @@
       "sections/academy/section-01.html",
       "sections/academy/section-02.html",
       "sections/academy/section-03.html",
-      "academy-learning-lab.html"
+      "academy-learning-lab.html",
+      "academy-program.html",
+      "academy-campus.html",
+      "docs/academy-isolated-lms-data-contract-v1.md"
     ]
   },
-  "note": "Source-aligned inventory, not an approved lesson schedule. No course video, seminar date, learning outcome, or certificate eligibility is inferred.",
+  "note": "Verified eight planned pilot programs with three outcomes and three indicative modules each from academy-program.html. Academy's six learning areas and six preparation areas are separate public overview categories, not course enrollments. No lesson video, seminar schedule or certificate is activated.",
   "learning_areas": [
     {
       "id": "humanity-dignity",
@@ -126,5 +129,287 @@
     "no_automatic_certificate_on_video_watch": true
   },
   "lessons": [],
-  "seminars": []
+  "seminars": [],
+  "pilot_programs": [
+    {
+      "id": "art-of-being-human",
+      "source": "academy-program.html",
+      "status": "planned_preview",
+      "learning_outcomes_en": [
+        "Recognize dignity, empathy and healthy boundaries.",
+        "Practice respectful communication.",
+        "Identify ways to contribute responsibly."
+      ],
+      "indicative_modules_en": [
+        {
+          "id": "art-of-being-human-module-1",
+          "title": "Dignity and empathy",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "art-of-being-human-module-2",
+          "title": "Healthy boundaries",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "art-of-being-human-module-3",
+          "title": "Responsible community participation",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        }
+      ],
+      "lessons": [],
+      "seminars": []
+    },
+    {
+      "id": "conscious-parenting-child-safeguarding",
+      "source": "academy-program.html",
+      "status": "planned_preview",
+      "learning_outcomes_en": [
+        "Recognize child safeguarding concerns.",
+        "Practice safe listening and appropriate referral.",
+        "Understand limits of non-specialist support."
+      ],
+      "indicative_modules_en": [
+        {
+          "id": "conscious-parenting-child-safeguarding-module-1",
+          "title": "Safeguarding principles",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "conscious-parenting-child-safeguarding-module-2",
+          "title": "Safe listening and referral",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "conscious-parenting-child-safeguarding-module-3",
+          "title": "Prevention and specialist review",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        }
+      ],
+      "lessons": [],
+      "seminars": []
+    },
+    {
+      "id": "creativity-economic-opportunity",
+      "source": "academy-program.html",
+      "status": "planned_preview",
+      "learning_outcomes_en": [
+        "Identify creative strengths and audiences.",
+        "Explore ethical commerce fundamentals.",
+        "Plan realistic next steps without income guarantees."
+      ],
+      "indicative_modules_en": [
+        {
+          "id": "creativity-economic-opportunity-module-1",
+          "title": "Creative skills and value",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "creativity-economic-opportunity-module-2",
+          "title": "Ethical marketplace basics",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "creativity-economic-opportunity-module-3",
+          "title": "Practical planning",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        }
+      ],
+      "lessons": [],
+      "seminars": []
+    },
+    {
+      "id": "young-creators-future-media",
+      "source": "academy-program.html",
+      "status": "planned_preview",
+      "learning_outcomes_en": [
+        "Practice responsible storytelling.",
+        "Recognize consent and publishing safeguards.",
+        "Explore audio and video production concepts."
+      ],
+      "indicative_modules_en": [
+        {
+          "id": "young-creators-future-media-module-1",
+          "title": "Storytelling foundations",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "young-creators-future-media-module-2",
+          "title": "Audio and video exploration",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "young-creators-future-media-module-3",
+          "title": "Consent and publication safety",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        }
+      ],
+      "lessons": [],
+      "seminars": []
+    },
+    {
+      "id": "financial-literacy-everyday-life",
+      "source": "academy-program.html",
+      "status": "planned_preview",
+      "learning_outcomes_en": [
+        "Describe everyday budgeting principles.",
+        "Evaluate financial choices and risks.",
+        "Practice informed financial decision-making."
+      ],
+      "indicative_modules_en": [
+        {
+          "id": "financial-literacy-everyday-life-module-1",
+          "title": "Budgeting basics",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "financial-literacy-everyday-life-module-2",
+          "title": "Everyday financial decisions",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "financial-literacy-everyday-life-module-3",
+          "title": "Economic agency",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        }
+      ],
+      "lessons": [],
+      "seminars": []
+    },
+    {
+      "id": "responsible-ai-digital-safety",
+      "source": "academy-program.html",
+      "status": "planned_preview",
+      "learning_outcomes_en": [
+        "Identify common AI opportunities and limitations.",
+        "Recognize privacy and misinformation risks.",
+        "Apply responsible digital habits."
+      ],
+      "indicative_modules_en": [
+        {
+          "id": "responsible-ai-digital-safety-module-1",
+          "title": "AI fundamentals",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "responsible-ai-digital-safety-module-2",
+          "title": "Privacy and misinformation",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "responsible-ai-digital-safety-module-3",
+          "title": "Digital safety habits",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        }
+      ],
+      "lessons": [],
+      "seminars": []
+    },
+    {
+      "id": "peaceful-dialogue-community-action",
+      "source": "academy-program.html",
+      "status": "planned_preview",
+      "learning_outcomes_en": [
+        "Practice nonviolent communication.",
+        "Explore intercultural dialogue.",
+        "Outline a collaborative community initiative."
+      ],
+      "indicative_modules_en": [
+        {
+          "id": "peaceful-dialogue-community-action-module-1",
+          "title": "Dialogue and listening",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "peaceful-dialogue-community-action-module-2",
+          "title": "Nonviolent communication",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "peaceful-dialogue-community-action-module-3",
+          "title": "Community action planning",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        }
+      ],
+      "lessons": [],
+      "seminars": []
+    },
+    {
+      "id": "communication-across-cultures",
+      "source": "academy-program.html",
+      "status": "planned_preview",
+      "learning_outcomes_en": [
+        "Practice active listening.",
+        "Recognize cultural perspectives.",
+        "Use inclusive communication techniques."
+      ],
+      "indicative_modules_en": [
+        {
+          "id": "communication-across-cultures-module-1",
+          "title": "Active listening",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "communication-across-cultures-module-2",
+          "title": "Cultural understanding",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        },
+        {
+          "id": "communication-across-cultures-module-3",
+          "title": "Inclusive communication",
+          "status": "indicative_not_published",
+          "video_asset_id": null,
+          "seminar_ids": []
+        }
+      ],
+      "lessons": [],
+      "seminars": []
+    }
+  ]
 }
