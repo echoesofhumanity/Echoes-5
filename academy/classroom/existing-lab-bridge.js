@@ -6,7 +6,7 @@
   'use strict';
   if(typeof module==='object'&&module.exports)module.exports=factory;
   if(root)root.EchoesAcademyLabBridge=factory;
-})(typeof window!=='undefined'?window:null,function(documentRef,boundaryApi,lifecycleApi){
+})(typeof window!=='undefined'?window:null,function(documentRef,boundaryApi,lifecycleApi,readinessApi){
   'use strict';
   if(!documentRef||!boundaryApi||typeof boundaryApi.createBoundary!=='function')throw Error('Lab bridge prerequisites missing');
   const ids=Object.freeze(['roomStudentView','roomInstructorView','roomRequest','roomAdmit','roomReject','roomRemove','seminarHand','roomDemoStatus','roomInstructorPanel','roomStudentPanel','liveTitle']);
@@ -17,6 +17,7 @@
   const boundary=boundaryApi.createBoundary();
   // Read-only offline lifecycle descriptor. Never infer a connected session from demo UI.
   const lifecycle=lifecycleApi&&typeof lifecycleApi.snapshot==='function'?lifecycleApi:null;
+  const readiness=readinessApi&&typeof readinessApi.create==='function'?readinessApi.create():null;
   function snapshot(){
     const check=inspect();
     const value=id=>{const el=documentRef.getElementById(id);return el?String(el.textContent||'').trim():null;};
@@ -26,6 +27,7 @@
       mode:'synthetic-local-only',
       liveConnected:boundary.status().connected,
       session:lifecycle?lifecycle.snapshot('idle'):null,
+      readiness:readiness?readiness.status():null,
       ready:check.ready,
       missing:check.missing,
       view:pressed('roomInstructorView')?'instructor-preview':'student-preview',
