@@ -2,12 +2,16 @@
 const assert=require('node:assert/strict');
 const createBridge=require('../academy/classroom/existing-lab-bridge.js');
 const boundary=require('../academy/classroom/live-classroom-boundary.js');
+const lifecycle=require('../academy/classroom/session-lifecycle-policy.js');
 const ids=['roomStudentView','roomInstructorView','roomRequest','roomAdmit','roomReject','roomRemove','seminarHand','roomDemoStatus','roomInstructorPanel','roomStudentPanel','liveTitle'];
 const elements=new Map(ids.map(id=>[id,{textContent:id==='roomDemoStatus'?'Outside the room':'',getAttribute(name){return name==='aria-pressed'&&id==='roomStudentView'?'true':'false';}}]));
 const doc={getElementById:id=>elements.get(id)||null};
-const bridge=createBridge(doc,boundary);
+const bridge=createBridge(doc,boundary,lifecycle);
 assert.equal(bridge.inspect().ready,true);
 assert.equal(bridge.snapshot().liveConnected,false);
+assert.equal(bridge.snapshot().session.state,'idle');
+assert.equal(bridge.snapshot().session.serverAuthorized,false);
+assert.equal(bridge.snapshot().session.mediaEnabled,false);
 assert.equal(bridge.snapshot().mode,'synthetic-local-only');
 assert.equal(bridge.snapshot().view,'student-preview');
 assert.equal(bridge.snapshot().roomStatus,'Outside the room');
