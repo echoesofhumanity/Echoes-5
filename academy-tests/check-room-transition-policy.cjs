@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {next,controls}=require('../academy/classroom/room-transition-policy.js');
+assert.deepEqual(controls,['roomRequest','roomAdmit','roomReject','roomRemove']);
+for(const state of ['outside','rejected','removed'])assert.equal(next('roomRequest',state,0,12),'waiting');
+assert.equal(next('roomAdmit','waiting',0,12),'admitted');
+assert.equal(next('roomAdmit','waiting',12,12),null);
+assert.equal(next('roomReject','waiting',0,12),'rejected');
+assert.equal(next('roomRemove','admitted',1,12),'removed');
+assert.equal(next('roomRemove','waiting',0,12),null);
+assert.equal(next('roomAdmit','admitted',1,12),null);
+assert.equal(next('unknown','outside',0,12),null);
+console.log('Existing Academy room transition policy: PASS');
