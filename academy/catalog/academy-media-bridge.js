@@ -16,7 +16,7 @@ function selectPublishedLesson(programId,lessonId,language){
   if(!lesson)return false;
   // Published lesson selection is opt-in. No synthetic demo button invokes this.
   player.pause();
-  player.querySelectorAll('track[data-academy-lesson-track]').forEach(t=>t.remove());
+  player.querySelectorAll('track').forEach(t=>t.remove());
   player.setAttribute('src',lesson.videoUrl);
   if(lesson.subtitleUrl){
     try{
