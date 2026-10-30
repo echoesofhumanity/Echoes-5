@@ -198,7 +198,42 @@
           "seminar_ids": []
         }
       ],
-      "lessons": [],
+      "lessons": [
+        {
+          "id": "conscious-parenting-child-safeguarding-lesson-01",
+          "module_id": "conscious-parenting-child-safeguarding-module-1",
+          "status": "draft",
+          "title_en": "Safeguarding principles",
+          "source": "academy-program.html (indicative module title)",
+          "learning_outcomes_en": [
+            "Recognize child safeguarding concerns.",
+            "Practice safe listening and appropriate referral.",
+            "Understand limits of non-specialist support."
+          ],
+          "media": null,
+          "subtitle_languages_required": [
+            "en",
+            "tr",
+            "es",
+            "fr",
+            "de",
+            "pt",
+            "ru",
+            "ar",
+            "zh"
+          ],
+          "reading_resources": [],
+          "assessment_id": null,
+          "seminar_ids": [],
+          "review": {
+            "subject_matter": "pending",
+            "safeguarding": "pending",
+            "accessibility": "pending",
+            "translations": "pending"
+          },
+          "publication_note": "Planning record only. No teaching content or video is published."
+        }
+      ],
       "seminars": []
     },
     {
