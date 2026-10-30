@@ -73,3 +73,5 @@ console.log(`${tests.length-failed}/${tests.length} synthetic contract checks pa
 require('./check-room-state-compatibility.cjs');
 require('./check-existing-lab-event-projection.cjs');
 require('./check-existing-lab-projection-wiring.cjs');
+
+require('./check-session-lifecycle-policy.cjs');
