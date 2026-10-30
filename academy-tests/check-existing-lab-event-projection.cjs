@@ -1,0 +1,16 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {project}=require('../academy/classroom/existing-lab-event-projection.js');
+const compat=require('../academy/classroom/room-state-compatibility.js');
+const make=(id,state)=>({id,state});
+const room=project([make(0,'speaking'),make(1,'queued'),make(2,'finished')],compat);
+assert.equal(room.speaker,0);
+assert.equal(room.participants[1].handQueued,true);
+assert.equal(room.participants[2].turnFinished,true);
+assert.deepEqual(room.participants.map(p=>p.state),['admitted','admitted','admitted']);
+for(const state of ['outside','waiting','rejected','admitted','removed']) assert.equal(project([make(0,state)],compat).participants[0].state,compat.toEngine(state));
+assert.throws(()=>project([make(0,'speaking'),make(1,'speaking')],compat),/Multiple speakers/);
+assert.throws(()=>project([make(0,'admitted'),make(0,'queued')],compat),/Invalid participant/);
+assert.throws(()=>project(Array.from({length:13},(_,i)=>make(i,'admitted')),compat),/capacity/);
+assert.equal(project(Array.from({length:12},(_,i)=>make(i,'admitted')),compat).participants.length,12);
+console.log('Learning Lab A/B/C projection checks: PASS');
