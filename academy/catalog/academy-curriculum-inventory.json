@@ -1,0 +1,130 @@
+{
+  "schema_version": "1.0.0",
+  "status": "inventory_only",
+  "source": {
+    "repository": "echoesofhumanity/Echoes-5",
+    "branch": "main",
+    "files": [
+      "sections/academy/section-01.html",
+      "sections/academy/section-02.html",
+      "sections/academy/section-03.html",
+      "academy-learning-lab.html"
+    ]
+  },
+  "note": "Source-aligned inventory, not an approved lesson schedule. No course video, seminar date, learning outcome, or certificate eligibility is inferred.",
+  "learning_areas": [
+    {
+      "id": "humanity-dignity",
+      "title": "Humanity & Dignity"
+    },
+    {
+      "id": "protection-safeguarding",
+      "title": "Protection & Safeguarding"
+    },
+    {
+      "id": "humanitarian-knowledge",
+      "title": "Humanitarian Knowledge"
+    },
+    {
+      "id": "digital-humanity",
+      "title": "Digital Humanity"
+    },
+    {
+      "id": "skills-for-humanity",
+      "title": "Skills for Humanity"
+    },
+    {
+      "id": "culture-arts-human-experience",
+      "title": "Culture, Arts & Human Experience"
+    }
+  ],
+  "preparation_areas": [
+    {
+      "id": "echoes-orientation",
+      "title": "Echoes Orientation"
+    },
+    {
+      "id": "human-dignity-ethics",
+      "title": "Human Dignity & Ethics"
+    },
+    {
+      "id": "safeguarding",
+      "title": "Safeguarding"
+    },
+    {
+      "id": "responsible-storytelling",
+      "title": "Responsible Storytelling"
+    },
+    {
+      "id": "volunteer-readiness",
+      "title": "Volunteer Readiness"
+    },
+    {
+      "id": "project-readiness",
+      "title": "Project Readiness"
+    }
+  ],
+  "learning_lab": {
+    "status": "synthetic_preview",
+    "sample_lessons": [
+      {
+        "id": "demo-human-dignity",
+        "title": "Human dignity"
+      },
+      {
+        "id": "demo-empathy",
+        "title": "Empathy"
+      },
+      {
+        "id": "demo-safe-participation",
+        "title": "Safe participation"
+      }
+    ],
+    "intro_video": "Echoes_Academy_Introduction_35s.mp4",
+    "intro_subtitle_languages": [
+      "en",
+      "tr",
+      "de",
+      "fr",
+      "es",
+      "pt",
+      "ru",
+      "ar",
+      "zh"
+    ],
+    "seminar": {
+      "status": "demo_only",
+      "schedule": null,
+      "meeting_url": null
+    }
+  },
+  "publication_contract": {
+    "lesson_fields": [
+      "id",
+      "program_id",
+      "module_id",
+      "title_i18n",
+      "learning_outcomes",
+      "video_url",
+      "subtitle_urls",
+      "reading_resources",
+      "practice_id",
+      "assessment_id",
+      "seminar_ids",
+      "status"
+    ],
+    "seminar_fields": [
+      "id",
+      "lesson_ids",
+      "title_i18n",
+      "learning_outcomes",
+      "schedule",
+      "join_url",
+      "status"
+    ],
+    "default_lesson_status": "draft",
+    "no_automatic_certificate_on_video_watch": true
+  },
+  "lessons": [],
+  "seminars": []
+}
