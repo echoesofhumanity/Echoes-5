@@ -33,3 +33,4 @@ jobs:
           node academy-tests/check-offline-service.cjs
           node academy-tests/check-synthetic-http-contract.cjs
           node academy-tests/check-synthetic-classroom.cjs
+          node academy-tests/live-boundary-contract.test.js
