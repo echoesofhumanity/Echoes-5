@@ -19,3 +19,14 @@ button:focus-visible,.button:focus-visible,.lesson-jump a:focus-visible{outline:
  .panel:not(:has(#readTitle)):not(.practice-panel),button,.button,.lesson-jump a{transition:none!important}
  button,.button,.lesson-jump a{transform:none!important}
 }
+
+/* Mobile taps need a visible release phase; native :active ends too quickly. */
+button:not(:disabled).lab-cinematic-press,.button.lab-cinematic-press,.lesson-jump a.lab-cinematic-press{
+ transform:translateY(-3px) scale(1.008);
+ border-color:rgba(var(--lab-accent),.85);
+ box-shadow:0 18px 38px rgba(0,0,0,.22),0 18px 42px -10px rgba(var(--lab-accent),.56),inset 0 0 18px rgba(var(--lab-accent),.09);
+ transition-duration:850ms;
+}
+@media(prefers-reduced-motion:reduce){
+ button.lab-cinematic-press,.button.lab-cinematic-press,.lesson-jump a.lab-cinematic-press{transform:none!important;transition:none!important}
+}
