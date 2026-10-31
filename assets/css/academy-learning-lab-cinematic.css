@@ -1,0 +1,21 @@
+/* Echoes Academy Learning Lab — cinematic surface, scoped visual enhancement.
+ * No scripts, classroom state, media or language changes.
+ */
+:root{--lab-night:#050a14;--lab-glass:rgba(10,22,38,.82);--lab-accent:95,208,197;--lab-ease:cubic-bezier(.22,1,.36,1)}
+body{background:radial-gradient(ellipse at 16% 2%,rgba(22,76,91,.50),transparent 48%),radial-gradient(ellipse at 85% 38%,rgba(27,67,95,.19),transparent 52%),var(--lab-night)}
+.panel:not(:has(#readTitle)):not(.practice-panel){background:linear-gradient(155deg,rgba(20,44,62,.88),var(--lab-glass));border-color:rgba(var(--lab-accent),.22);box-shadow:0 22px 55px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.035);transition:border-color 900ms var(--lab-ease),box-shadow 900ms var(--lab-ease)}
+button,.button,.lesson-jump a{position:relative;transition:transform 900ms var(--lab-ease),border-color 900ms var(--lab-ease),box-shadow 900ms var(--lab-ease),background-color 900ms var(--lab-ease);-webkit-tap-highlight-color:transparent}
+button:not(:disabled),.button,.lesson-jump a{box-shadow:0 9px 25px rgba(0,0,0,.13),0 0 20px rgba(var(--lab-accent),.045)}
+button:disabled{transform:none!important;box-shadow:none!important}
+@media(hover:hover) and (pointer:fine){
+ .panel:not(:has(#readTitle)):not(.practice-panel):hover{border-color:rgba(var(--lab-accent),.36);box-shadow:0 26px 60px rgba(0,0,0,.20),0 0 28px rgba(var(--lab-accent),.045)}
+ button:not(:disabled):hover,.button:hover,.lesson-jump a:hover{transform:translateY(-2px);border-color:rgba(var(--lab-accent),.65);box-shadow:0 15px 32px rgba(0,0,0,.20),0 12px 32px -16px rgba(var(--lab-accent),.42)}
+}
+@media(hover:none) and (pointer:coarse){
+ button:not(:disabled):active,.button:active,.lesson-jump a:active{transform:translateY(-1px) scale(1.005);border-color:rgba(var(--lab-accent),.7);box-shadow:0 14px 32px rgba(0,0,0,.19),0 14px 30px -12px rgba(var(--lab-accent),.36)}
+}
+button:focus-visible,.button:focus-visible,.lesson-jump a:focus-visible{outline:3px solid #a8f9e8;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){
+ .panel:not(:has(#readTitle)):not(.practice-panel),button,.button,.lesson-jump a{transition:none!important}
+ button,.button,.lesson-jump a{transform:none!important}
+}
