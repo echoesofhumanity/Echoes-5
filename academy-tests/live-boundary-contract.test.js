@@ -5,8 +5,23 @@
 'use strict';
 const assert=require('node:assert/strict');
 const {createBoundary,validateEvent}=require('../academy/classroom/live-classroom-boundary.js');
+const lesson=require('../academy/classroom/lesson-session-policy.js');
 const event=(sequence,overrides={})=>({schema_version:1,event_id:'evt_'+sequence,session_id:'demo_room',subject_id:'student_1',type:'entry.requested',sequence,...overrides});
 async function main(){
+  // Lesson state transitions remain local and independent of any live transport.
+  assert.equal(lesson.snapshot('ready').liveConnected,false);
+  assert.equal(lesson.snapshot('ready').serverAuthorized,false);
+  assert.equal(lesson.next('ready','pause'),null);
+  assert.equal(lesson.next('ready','start'),'running');
+  assert.equal(lesson.next('running','pause'),'paused');
+  assert.equal(lesson.next('paused','resume'),'running');
+  assert.equal(lesson.next('running','finish'),'completed');
+  assert.equal(lesson.next('paused','finish'),'completed');
+  assert.equal(lesson.next('completed','start'),null);
+  assert.equal(lesson.next('completed','resume'),null);
+  assert.equal(lesson.next('completed','finish'),null);
+  assert.equal(lesson.snapshot('completed').canFinish,false);
+  assert.equal(lesson.snapshot('completed').mediaEnabled,false);
   const boundary=createBoundary();
   assert.deepEqual(boundary.status(),{mode:'unconfigured',connected:false,lastSequence:0});
   await assert.rejects(boundary.send('entry.request',{}),/no server configured/);
