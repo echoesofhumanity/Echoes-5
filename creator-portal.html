@@ -60,10 +60,10 @@ footer{text-align:center}
 <p class="eyebrow">ECHOES OF HUMANITY / CREATOR PORTAL</p>
 <h1>Sesini, hikâyeni, eserini paylaş.</h1>
 <p>Echoes dijital vatandaşları, gönüllüleri ve bağımsız üreticiler için tek içerik kabul noktası.</p>
-<div class="notice" role="status"><strong>Kontrollü test aşaması.</strong> Yalnızca açıkça onaylanan sentetik başvuru kaydedilir. Dosyasız başvuru açıktır; dosya yükleme, yayınlama ve EIN değerlendirmesi kapalıdır. Hassas içerik girmeyin.</div>
+<div class="notice" role="status"><strong>Kontrollü test aşaması.</strong> Yalnızca açıkça onaylanan sentetik başvuru kaydedilir. Dosyalı başvuru test aşamasındadır; gerçek eser veya hassas veri yüklemeyin. Yayınlama ve EIN değerlendirmesi kapalıdır. Hassas içerik girmeyin.</div>
 <section class="panel" aria-labelledby="creator-auth-title" id="creator-auth-panel">
 <div class="creator-icon" aria-hidden="true">◇</div><h2 id="creator-auth-title">Güvenli giriş</h2>
-<p class="help">Şimdilik yalnızca mevcut Echoes kullanıcı hesaplarıyla giriş yapılabilir. Yeni hesap kaydı ve dosya yükleme henüz açık değil.</p>
+<p class="help">Şimdilik yalnızca mevcut Echoes kullanıcı hesaplarıyla giriş yapılabilir. Yeni hesap kaydı henüz açık değil; dosya yükleme kontrollü test içindir.</p>
 <form id="creator-auth-form" autocomplete="on">
 <div class="field"><label for="creator-email">E-posta</label><input id="creator-email" type="email" autocomplete="username" required maxlength="254" placeholder="E-posta adresin"></div>
 <div class="field"><label for="creator-password">Şifre</label><input id="creator-password" type="password" autocomplete="current-password" required placeholder="Şifren"></div>
@@ -97,7 +97,7 @@ footer{text-align:center}
 <label><input type="checkbox" name="social-platform" value="editor_choice" style="width:auto"> Platformu editör belirlesin</label>
 </div></fieldset><div class="field"><label for="title">Eser başlığı</label><input id="title" required maxlength="180" placeholder="Başlık"></div>
 <div class="field"><label for="summary">Kısa açıklama</label><textarea id="summary" maxlength="4000" placeholder="Eserinizi tanıtın"></textarea></div>
-<div class="field"><label for="file">Dosya</label><input id="file" type="file" disabled><p class="help">Desteklenen dosyalar ve boyut sınırları güvenli altyapı doğrulandıktan sonra belirlenecek.</p></div>
+<div class="field"><label for="file">Dosya</label><input id="file" type="file" accept=".jpg,.jpeg,.png,.webp,.mp4,.webm,.mp3,.wav,.pdf,.txt"><p class="help">İsteğe bağlı. JPG, PNG, WEBP, MP4, WEBM, MP3, WAV, PDF, TXT; en fazla 100 MiB. İlk test için küçük sentetik dosya kullan.</p></div>
 <div class="field"><label for="rights">Telif ve kullanım izni</label><select id="rights" required><option value="">Seçiniz</option><option value="yes">Hak sahibi olduğumu ve gerekli izinlere sahip olduğumu beyan ediyorum</option></select></div>
 <button id="creator-form-submit" type="submit" disabled>Başvuru gönder</button><p id="creator-form-status" class="help" role="status" aria-live="polite">Giriş yapıldığında dosyasız başvuru kullanılabilir.</p>
 </form><div class="panel" style="max-width:620px;margin:20px auto"><h2>Sentetik başvuru testi</h2><p class="help">Yalnızca test başlığı ve açıklamasıyla, giriş yaptığın hesaba ait yayımlanmamış bir kayıt oluşturur. Dosya yüklemez.</p><button id="creator-test-submit" type="button" disabled>Test başvurusu oluştur</button><p id="creator-test-status" class="help" role="status" aria-live="polite">Giriş yapıldığında etkinleşir.</p></div></section></div><div class="creator-view" id="view-submissions" role="tabpanel" aria-labelledby="tab-submissions" hidden><section class="panel"><div class="creator-icon" aria-hidden="true">▤</div><h2>Gönderilerim</h2><p>Bu aşamada yalnızca hesabına ait test başvurularını görüntüleyebilirsin.<button id="creator-refresh-submissions" type="button" style="opacity:1;cursor:pointer;display:block;margin:16px auto">Başvurularımı yenile</button><p id="creator-submissions-status" class="help" role="status" aria-live="polite">Giriş yapıldığında kayıtlar görüntülenebilir.</p><ul id="creator-submissions-list" style="list-style:none;padding:0"></ul></p></section></div><div class="creator-view" id="view-profile" role="tabpanel" aria-labelledby="tab-profile" hidden><section class="panel"><div class="creator-icon" aria-hidden="true">◉</div><h2>Profilim</h2><p>Dijital vatandaş veya üretici profilin, eser sahipliği bilgilerin ve bildirim tercihlerin burada yönetilecek. Henüz giriş veya kayıt yapılmıyor.</p></section></div>
@@ -147,16 +147,27 @@ catch(_){status.textContent='Giriş servisine bağlanılamadı.';}finally{login.
 });
 submissionForm.addEventListener('submit',async event=>{
 event.preventDefault();if(!currentUser)return;
+const file=document.getElementById('file').files[0]||null;
+const allowedTypes=['image/jpeg','image/png','image/webp','video/mp4','video/webm','audio/mpeg','audio/wav','application/pdf','text/plain'];
+if(file&&(!allowedTypes.includes(file.type)||file.size<1||file.size>104857600)){submitStatus.textContent='Dosya türü desteklenmiyor veya dosya 100 MiB sınırını aşıyor.';return;}
 const preferred_channels=Array.from(document.querySelectorAll('input[name="channel"]:checked')).map(x=>x.value);const preferred_social_platforms=preferred_channels.includes('social')?Array.from(document.querySelectorAll('input[name="social-platform"]:checked')).map(x=>x.value):[];if(preferred_channels.includes('social')&&preferred_social_platforms.length===0)preferred_social_platforms.push('editor_choice');if(preferred_channels.length<1||preferred_channels.length>3){submitStatus.textContent='Bir ile üç yayın kanalı seçmelisin.';return;}const title=document.getElementById('title').value.trim(),summary=document.getElementById('summary').value.trim(),content_type=document.getElementById('type').value,language_code=document.getElementById('language').value;
 if(!title||title.length>180||summary.length>4000||document.getElementById('rights').value!=='yes')return;
-if(!window.confirm('Başvurun özel olarak kaydedilecek ve inceleme için bekleyecek. Dosya yüklenmeyecek. Onaylıyor musun?'))return;
+if(!window.confirm('Başvurun özel olarak kaydedilecek'+(file?' ve dosyan özel depoya yüklenecek':'')+'. Test için gerçek eser veya hassas veri kullanma. Onaylıyor musun?'))return;
 submitButton.disabled=true;submitStatus.textContent='Başvuru kaydediliyor.';
 try{
 const {data:{user},error:authError}=await client.auth.getUser();
 if(authError||!user||user.id!==currentUser.id)throw Error('auth');
 const {data,error}=await client.from('creator_submissions').insert({creator_user_id:user.id,title,summary:summary||null,content_type,language_code,preferred_channels,preferred_social_platforms,rights_attested:true}).select('id').single();
 if(error)throw error;
-submitStatus.textContent='Başvuru alındı. Numara: '+data.id+'. Gönderilerim sekmesinden takip edebilirsin.';
+if(file){
+submitStatus.textContent='Başvuru kaydedildi. Dosya yükleniyor...';
+const path=user.id+'/'+data.id+'/'+crypto.randomUUID();
+const {error:uploadError}=await client.storage.from('echoes-creator-submissions').upload(path,file,{contentType:file.type,upsert:false});
+if(uploadError){submitStatus.textContent='Başvuru kaydedildi ('+data.id+'), ancak dosya yüklenemedi. Destek gerekli.';return;}
+const {error:metadataError}=await client.from('creator_submission_files').insert({submission_id:data.id,creator_user_id:user.id,storage_path:path,original_name:file.name,mime_type:file.type,file_size:file.size});
+if(metadataError){submitStatus.textContent='Dosya yüklendi fakat başvuruya bağlanamadı. Numara: '+data.id+'. Destek gerekli.';return;}
+}
+submitStatus.textContent='Başvuru alındı'+(file?' ve dosya kaydedildi':'')+'. Numara: '+data.id+'. Gönderilerim sekmesinden takip edebilirsin.';
 submissionForm.reset();document.getElementById('creator-social-options').hidden=true;
 }catch(_){submitStatus.textContent='Başvuru kaydedilemedi. Lütfen bağlantını ve oturumunu kontrol et.';}
 finally{submitButton.disabled=!currentUser;}
@@ -185,8 +196,10 @@ const {data:{user},error:authError}=await client.auth.getUser();
 if(authError||!user||user.id!==currentUser.id)throw Error('auth');
 const {data,error}=await client.from('creator_submissions').select('id,title,status,created_at,preferred_channels,preferred_social_platforms').eq('creator_user_id',user.id).order('created_at',{ascending:false}).limit(20);
 if(error)throw error;
+const {data:files,error:fileError}=await client.from('creator_submission_files').select('submission_id,original_name').eq('creator_user_id',user.id).limit(100);
+const fileBySubmission=new Map();if(!fileError&&files)for(const file of files){const arr=fileBySubmission.get(file.submission_id)||[];arr.push(file.original_name);fileBySubmission.set(file.submission_id,arr);}
 listStatus.textContent=data.length?data.length+' başvuru görüntüleniyor.':'Henüz başvurun yok.';
-for(const item of data){const li=document.createElement('li');li.style.padding='12px';li.style.borderBottom='1px solid #27505a';li.textContent=item.title+' — '+item.status+' — '+(item.preferred_channels||['editor_choice']).map(c=>({radio:'Radio',tv:'TV',news:'Haber Merkezi',social:'Sosyal Medya',stories:'Stories / Media',academy:'Academy',editor_choice:'Editör değerlendirsin'}[c]||c)).join(', ')+(item.preferred_social_platforms?.length?' ('+item.preferred_social_platforms.map(p=>p==='editor_choice'?'Platformu editör belirlesin':p).join(', ')+')':'')+' — '+new Date(item.created_at).toLocaleDateString('tr-TR')+' · '+item.id;list.append(li);}
+for(const item of data){const li=document.createElement('li');li.style.padding='12px';li.style.borderBottom='1px solid #27505a';li.textContent=item.title+' — '+item.status+' — '+(item.preferred_channels||['editor_choice']).map(c=>({radio:'Radio',tv:'TV',news:'Haber Merkezi',social:'Sosyal Medya',stories:'Stories / Media',academy:'Academy',editor_choice:'Editör değerlendirsin'}[c]||c)).join(', ')+(item.preferred_social_platforms?.length?' ('+item.preferred_social_platforms.map(p=>p==='editor_choice'?'Platformu editör belirlesin':p).join(', ')+')':'')+' — '+new Date(item.created_at).toLocaleDateString('tr-TR')+' · '+item.id+(fileBySubmission.has(item.id)?' · Dosya: '+fileBySubmission.get(item.id).join(', '):'');list.append(li);}
 }catch(_){listStatus.textContent='Başvurular yüklenemedi. Yetki veya bağlantıyı kontrol et.';}
 }
 const channelBoxes=Array.from(document.querySelectorAll('input[name="channel"]'));const platformBoxes=Array.from(document.querySelectorAll('input[name="social-platform"]'));const socialPanel=document.getElementById('creator-social-options');function updateSocial(){socialPanel.hidden=!channelBoxes.some(x=>x.value==='social'&&x.checked);if(socialPanel.hidden)platformBoxes.forEach(x=>x.checked=false);}platformBoxes.forEach(box=>box.addEventListener('change',()=>{if(box.checked&&box.value==='editor_choice')platformBoxes.filter(x=>x!==box).forEach(x=>x.checked=false);else if(box.checked)platformBoxes.find(x=>x.value==='editor_choice').checked=false;}));
