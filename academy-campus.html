@@ -51,6 +51,16 @@ body[data-page="academy-campus"] .header-icon svg{width:22px;height:22px;display
 
 /* Campus V3: orderly, touch-friendly mobile program filters. */
 @media(max-width:699px){body[data-page="academy-campus"] .filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%;max-width:520px;margin:24px auto 22px}body[data-page="academy-campus"] .filters button{width:100%;min-width:0;min-height:52px;padding:12px 8px;border-radius:14px;font-size:clamp(.84rem,3.45vw,1rem);line-height:1.25;letter-spacing:0;white-space:normal}body[data-page="academy-campus"] #program-search{box-sizing:border-box;width:100%;max-width:520px}body[data-page="academy-campus"] #count{margin-top:12px}}
+
+/* Campus V3: Echoes cinematic filter illumination and tactile feedback. */
+body[data-page="academy-campus"] .filters button{position:relative;isolation:isolate;overflow:hidden;-webkit-tap-highlight-color:transparent;box-shadow:0 9px 22px rgba(0,0,0,.14);transition:transform 900ms var(--echoes-ease),border-color 900ms var(--echoes-ease),background 900ms var(--echoes-ease),box-shadow 900ms var(--echoes-ease)}
+body[data-page="academy-campus"] .filters button::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(ellipse 85% 80% at 50% 100%,rgba(95,208,197,.20),transparent 76%);opacity:.3;transition:opacity 900ms var(--echoes-ease)}
+body[data-page="academy-campus"] .filters button[aria-pressed="true"]{border-color:rgba(95,208,197,.68);background:linear-gradient(145deg,rgba(95,208,197,.23),rgba(13,40,49,.94));box-shadow:0 12px 32px rgba(0,0,0,.17),0 14px 25px -18px rgba(95,208,197,.45),inset 0 0 18px rgba(95,208,197,.055)}
+body[data-page="academy-campus"] .filters button[aria-pressed="true"]::after{opacity:.85;animation:campus-filter-glow 8s ease-in-out infinite alternate}
+@keyframes campus-filter-glow{from{opacity:.48}to{opacity:.9}}
+@media(hover:hover) and (pointer:fine){body[data-page="academy-campus"] .filters button:hover{transform:translateY(-2px);border-color:rgba(95,208,197,.62);box-shadow:0 16px 36px rgba(0,0,0,.2),0 18px 25px -19px rgba(95,208,197,.34)}body[data-page="academy-campus"] .filters button:hover::after{opacity:.95}}
+@media(hover:none) and (pointer:coarse){body[data-page="academy-campus"] .filters button:active{transform:translateY(-2px) scale(1.012);border-color:rgba(95,208,197,.8);box-shadow:0 16px 36px rgba(0,0,0,.2),0 20px 28px -16px rgba(95,208,197,.35);transition-duration:360ms}body[data-page="academy-campus"] .filters button:active::after{opacity:1;transition-duration:360ms}}
+@media(prefers-reduced-motion:reduce){body[data-page="academy-campus"] .filters button,body[data-page="academy-campus"] .filters button::after{transition:none;animation:none}body[data-page="academy-campus"] .filters button:hover,body[data-page="academy-campus"] .filters button:active{transform:none}}
 </style></head>
 <body data-page="academy-campus"><div data-component="header"></div><main class="campus">
 <a class="back" href="academy.html">← Echoes Academy</a>
