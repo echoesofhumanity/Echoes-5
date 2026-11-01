@@ -20,7 +20,7 @@
     return true;
   }
   function createBoundary(){
-    let mode=MODES.UNCONFIGURED,adapter=null,lastSequence=0,subscribers=new Set();
+    let mode=MODES.UNCONFIGURED,adapter=null,lastSequence=0,sessionId=null,subscribers=new Set();
     function status(){return Object.freeze({mode,connected:mode===MODES.LIVE&&!!adapter,lastSequence});}
     function subscribe(fn){if(typeof fn!=='function')throw Error('Listener required');subscribers.add(fn);return ()=>subscribers.delete(fn);}
     function notify(event){for(const fn of subscribers)fn(event);}
@@ -29,7 +29,8 @@
       if(!adapterCandidate||typeof adapterCandidate.send!=='function'||typeof adapterCandidate.close!=='function'||typeof adapterCandidate.subscribe!=='function')throw Error('Invalid transport adapter');
       // Adapter binding is not a trust boundary: the server must enforce every permission.
       const detach=adapterCandidate.subscribe(event=>{
-        if(!validateEvent(event,lastSequence)){notify(Object.freeze({type:'resync.required'}));return;}
+        if(!validateEvent(event,lastSequence)||(sessionId!==null&&event.session_id!==sessionId)){notify(Object.freeze({type:'resync.required'}));return;}
+        if(sessionId===null)sessionId=event.session_id;
         lastSequence=event.sequence;notify(Object.freeze({...event}));
       });
       if(typeof detach!=='function')throw Error('Adapter must return unsubscribe');
@@ -42,7 +43,7 @@
       // Do not infer authorization from browser-side state.
       return adapter.send(action,payload||{});
     }
-    function close(){if(adapter){adapter.detach();adapter.close();}adapter=null;mode=MODES.UNCONFIGURED;lastSequence=0;}
+    function close(){if(adapter){adapter.detach();adapter.close();}adapter=null;mode=MODES.UNCONFIGURED;lastSequence=0;sessionId=null;}
     return Object.freeze({status,subscribe,attach,send,close});
   }
   return Object.freeze({createBoundary,validateEvent,ACTIONS,EVENTS,LANGUAGES,MODES});
