@@ -60,10 +60,10 @@ footer{text-align:center}
 <p class="eyebrow">ECHOES OF HUMANITY / CREATOR PORTAL</p>
 <h1>Sesini, hikâyeni, eserini paylaş.</h1>
 <p>Echoes dijital vatandaşları, gönüllüleri ve bağımsız üreticiler için tek içerik kabul noktası.</p>
-<div class="notice" role="status"><strong>Geliştirme önizlemesi — gönderim kapalı.</strong> Bu sayfa gerçek dosya yüklemez, hesap açmaz, veri kaydetmez veya EIN değerlendirmesi yapmaz. Lütfen kişisel bilgi ya da hassas içerik girmeyin.</div>
+<div class="notice" role="status"><strong>Kontrollü test aşaması.</strong> Yalnızca açıkça onaylanan sentetik başvuru kaydedilir. Gerçek eser ve dosya yükleme, yayınlama ve EIN değerlendirmesi kapalıdır. Hassas içerik girmeyin.</div>
 <section class="panel" aria-labelledby="creator-auth-title" id="creator-auth-panel">
 <div class="creator-icon" aria-hidden="true">◇</div><h2 id="creator-auth-title">Güvenli giriş</h2>
-<p class="help">Şimdilik yalnızca mevcut Echoes kullanıcı hesaplarıyla giriş yapılabilir. Yeni hesap kaydı ve içerik gönderimi henüz açık değil.</p>
+<p class="help">Şimdilik yalnızca mevcut Echoes kullanıcı hesaplarıyla giriş yapılabilir. Yeni hesap kaydı ve gerçek içerik gönderimi henüz açık değil.</p>
 <form id="creator-auth-form" autocomplete="on">
 <div class="field"><label for="creator-email">E-posta</label><input id="creator-email" type="email" autocomplete="username" required maxlength="254" placeholder="E-posta adresin"></div>
 <div class="field"><label for="creator-password">Şifre</label><input id="creator-password" type="password" autocomplete="current-password" required placeholder="Şifren"></div>
@@ -82,8 +82,8 @@ footer{text-align:center}
 <div class="field"><label for="summary">Kısa açıklama</label><textarea id="summary" disabled placeholder="Eserinizi tanıtın"></textarea></div>
 <div class="field"><label for="file">Dosya</label><input id="file" type="file" disabled><p class="help">Desteklenen dosyalar ve boyut sınırları güvenli altyapı doğrulandıktan sonra belirlenecek.</p></div>
 <div class="field"><label for="rights">Telif ve kullanım izni</label><select id="rights" disabled><option>Hak sahipliği ve üçüncü kişi izinleri doğrulanacak</option></select></div>
-<button type="button" disabled>Gönderim henüz etkin değil</button>
-</form></section></div><div class="creator-view" id="view-submissions" role="tabpanel" aria-labelledby="tab-submissions" hidden><section class="panel"><div class="creator-icon" aria-hidden="true">▤</div><h2>Gönderilerim</h2><p>Başvuruların ve inceleme durumların burada görüntülenecek. Güvenli hesap bağlantısı henüz etkin olmadığı için bu bölüm şu anda veri göstermiyor.</p></section></div><div class="creator-view" id="view-profile" role="tabpanel" aria-labelledby="tab-profile" hidden><section class="panel"><div class="creator-icon" aria-hidden="true">◉</div><h2>Profilim</h2><p>Dijital vatandaş veya üretici profilin, eser sahipliği bilgilerin ve bildirim tercihlerin burada yönetilecek. Henüz giriş veya kayıt yapılmıyor.</p></section></div>
+<button type="button" disabled>Gerçek gönderim henüz etkin değil</button>
+</form><div class="panel" style="max-width:620px;margin:20px auto"><h2>Sentetik başvuru testi</h2><p class="help">Yalnızca test başlığı ve açıklamasıyla, giriş yaptığın hesaba ait yayımlanmamış bir kayıt oluşturur. Dosya yüklemez.</p><button id="creator-test-submit" type="button" disabled>Test başvurusu oluştur</button><p id="creator-test-status" class="help" role="status" aria-live="polite">Giriş yapıldığında etkinleşir.</p></div></section></div><div class="creator-view" id="view-submissions" role="tabpanel" aria-labelledby="tab-submissions" hidden><section class="panel"><div class="creator-icon" aria-hidden="true">▤</div><h2>Gönderilerim</h2><p>Bu aşamada yalnızca hesabına ait test başvurularını görüntüleyebilirsin.<button id="creator-refresh-submissions" type="button" style="opacity:1;cursor:pointer;display:block;margin:16px auto">Başvurularımı yenile</button><p id="creator-submissions-status" class="help" role="status" aria-live="polite">Giriş yapıldığında kayıtlar görüntülenebilir.</p><ul id="creator-submissions-list" style="list-style:none;padding:0"></ul></p></section></div><div class="creator-view" id="view-profile" role="tabpanel" aria-labelledby="tab-profile" hidden><section class="panel"><div class="creator-icon" aria-hidden="true">◉</div><h2>Profilim</h2><p>Dijital vatandaş veya üretici profilin, eser sahipliği bilgilerin ve bildirim tercihlerin burada yönetilecek. Henüz giriş veya kayıt yapılmıyor.</p></section></div>
 <section class="panel"><h2>Gönderimden sonra ne olacak?</h2><ol><li>Güvenli dosya kabulü ve benzersiz başvuru numarası</li><li>EIN güvenlik, sınıflandırma ve dil ön değerlendirmesi</li><li>Yetkili editörün doğrulama ve hak incelemesi</li><li>Revizyon, onay veya gerekçeli ret</li><li>Onaylı içeriğin uygun yayın kanalına hazırlanması</li></ol><p class="help">Bunlar planlanan aşamalardır; şu anda aktif bir iş akışı değildir.</p></section>
 <section class="panel"><h2>Güvenlik sınırı</h2><p>Bu portal acil yardım veya kayıp kişi bildirimi için kullanılmayacak. Action vakaları ayrı, korumalı bir sistemde ele alınacak. Hassas içerikler otomatik yayımlanmayacak.</p></section>
 <footer>Echoes Creator Portal · İlk bağımsız arayüz iskeleti · Admin V3'e dokunulmadı.</footer>
@@ -113,12 +113,12 @@ activate(tabs[next],true);
 (function(){
 "use strict";
 const form=document.getElementById('creator-auth-form'),status=document.getElementById('creator-auth-status'),logout=document.getElementById('creator-logout'),login=document.getElementById('creator-login');
-const client=window.db;
+const client=window.db;const testButton=document.getElementById('creator-test-submit'),testStatus=document.getElementById('creator-test-status'),refresh=document.getElementById('creator-refresh-submissions'),list=document.getElementById('creator-submissions-list'),listStatus=document.getElementById('creator-submissions-status');let currentUser=null;
 if(!client){status.textContent='Giriş servisine ulaşılamadı. Daha sonra yeniden deneyin.';form.hidden=true;return;}
 function display(session){
-const signedIn=!!session?.user;
+const signedIn=!!session?.user;currentUser=session?.user||null;testButton.disabled=!signedIn;testButton.style.opacity=signedIn?'1':'.65';testButton.style.cursor=signedIn?'pointer':'not-allowed';if(!signedIn){list.replaceChildren();listStatus.textContent='Giriş yapman gerekiyor.';}
 form.hidden=signedIn;logout.hidden=!signedIn;
-status.textContent=signedIn?'Giriş yapıldı. İçerik gönderimi henüz etkin değil.':'Giriş yapılmadı. Mevcut hesabınla giriş yapabilirsin.';
+status.textContent=signedIn?'Giriş yapıldı. Sentetik başvuru testi kullanılabilir.':'Giriş yapılmadı. Mevcut hesabınla giriş yapabilirsin.';
 }
 client.auth.getSession().then(({data,error})=>{if(error){status.textContent='Oturum kontrol edilemedi.';return;}display(data.session);}).catch(()=>{status.textContent='Oturum kontrol edilemedi.';});
 client.auth.onAuthStateChange((_event,session)=>display(session));
@@ -128,6 +128,36 @@ const email=document.getElementById('creator-email').value.trim(),password=docum
 try{const {error}=await client.auth.signInWithPassword({email,password});if(error){status.textContent='Giriş başarısız. Bilgilerini veya hesap yetkini kontrol et.';}else{document.getElementById('creator-password').value='';}}
 catch(_){status.textContent='Giriş servisine bağlanılamadı.';}finally{login.disabled=false;}
 });
+testButton.addEventListener('click',async()=>{
+if(!currentUser)return;
+if(!window.confirm('Yalnızca sentetik bir test başvurusu Supabase veritabanına kaydedilecek. Onaylıyor musun?'))return;
+testButton.disabled=true;testStatus.textContent='Test kaydı oluşturuluyor.';
+try{
+const {data:{user},error:authError}=await client.auth.getUser();
+if(authError||!user||user.id!==currentUser.id)throw Error('auth');
+const {data,error}=await client.from('creator_submissions').insert({
+creator_user_id:user.id,title:'ECHOES TEST — Sentetik başvuru',summary:'V0.7 sistem testi. Gerçek eser veya kişisel veri içermez.',content_type:'story',language_code:'tr',rights_attested:true
+}).select('id').single();
+if(error)throw error;
+testStatus.textContent='Test başvurusu kaydedildi. Kayıt numarası: '+data.id+'. Gönderilerim sekmesinden kontrol et.';
+}catch(_){testStatus.textContent='Test kaydı oluşturulamadı. Yetki veya bağlantı kontrolü gerekiyor.';}
+finally{testButton.disabled=!currentUser;}
+});
+async function loadOwn(){
+list.replaceChildren();
+if(!currentUser){listStatus.textContent='Önce giriş yap.';return;}
+listStatus.textContent='Başvurular yükleniyor.';
+try{
+const {data:{user},error:authError}=await client.auth.getUser();
+if(authError||!user||user.id!==currentUser.id)throw Error('auth');
+const {data,error}=await client.from('creator_submissions').select('id,title,status,created_at').eq('creator_user_id',user.id).order('created_at',{ascending:false}).limit(20);
+if(error)throw error;
+listStatus.textContent=data.length?data.length+' başvuru görüntüleniyor.':'Henüz başvurun yok.';
+for(const item of data){const li=document.createElement('li');li.style.padding='12px';li.style.borderBottom='1px solid #27505a';li.textContent=item.title+' — '+item.status+' — '+new Date(item.created_at).toLocaleDateString('tr-TR')+' · '+item.id;list.append(li);}
+}catch(_){listStatus.textContent='Başvurular yüklenemedi. Yetki veya bağlantıyı kontrol et.';}
+}
+refresh.addEventListener('click',loadOwn);
+document.getElementById('tab-submissions').addEventListener('click',loadOwn);
 logout.addEventListener('click',async()=>{logout.disabled=true;try{const {error}=await client.auth.signOut();if(error)status.textContent='Çıkış tamamlanamadı.';}catch(_){status.textContent='Çıkış tamamlanamadı.';}finally{logout.disabled=false;}});
 })();
 </script>
