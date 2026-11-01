@@ -121,3 +121,23 @@ test('offline readiness never authorizes actions after simulated reconnection',(
     assert.equal(room.evaluate(action,role,'admitted').allowed,false);
   }
 });
+
+const identity=require('./classroom-identity-contract.js');
+test('identity contract rejects missing, malformed and expired-range claims',()=>{
+  for(const claim of [null,{},[],{schema_version:2,session_id:'room_A',subject_id:'student_A',role:'student',issued_at:1,expires_at:2},{schema_version:1,session_id:'room_A',subject_id:'student_A',role:'owner',issued_at:1,expires_at:2},{schema_version:1,session_id:'room_A',subject_id:'student_A',role:'student',issued_at:2,expires_at:2}]){
+    assert.equal(identity.describe(claim).authorized,false);
+    assert.equal(identity.describe(claim).valid,false);
+  }
+});
+test('well-formed browser identity claims never grant authority',()=>{
+  for(const role of identity.ROLES){
+    const claim=identity.describe({schema_version:1,session_id:'room_A',subject_id:'user_A',role,issued_at:1,expires_at:2});
+    assert.equal(claim.valid,true);
+    assert.equal(claim.authorized,false);
+    assert.equal(claim.reason,'unverified_claim');
+  }
+  const requirements=identity.requirements();
+  assert.equal(requirements.clientClaimsGrantAccess,false);
+  assert.equal(requirements.sessionRejoinRequiresServerApproval,true);
+  assert.equal(requirements.removedParticipantRequiresServerReadmission,true);
+});
