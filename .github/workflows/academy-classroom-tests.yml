@@ -18,4 +18,4 @@ jobs:
         with:
           node-version: '22'
       - name: Verify existing Learning Lab classroom boundary
-        run: node --test academy/classroom/live-classroom-boundary.test.js
+        run: node --test academy/classroom/*.test.js
