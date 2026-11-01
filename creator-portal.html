@@ -17,6 +17,33 @@ textarea{min-height:110px;resize:vertical}.help{color:var(--muted);font-size:.87
 button{background:#285b62;color:#fff;border:1px solid #417b7c;border-radius:10px;padding:12px 18px;font:inherit;opacity:.65;cursor:not-allowed}
 ul{padding-left:20px}li{margin:8px 0}footer{color:var(--muted);font-size:.85rem;margin-top:30px}
 @media(max-width:640px){.grid{grid-template-columns:1fr}.panel{padding:18px}}
+
+/* Echoes cinematic alignment and restrained breathing, presentation only */
+body::before{content:"";position:fixed;inset:-35%;pointer-events:none;z-index:-1;background:radial-gradient(circle at 48% 30%,rgba(48,174,180,.14),transparent 42%);animation:echoesAtmosphere 12s ease-in-out infinite alternate}
+main{text-align:center}
+main>.eyebrow{max-width:560px;margin:0 auto 22px}
+main>h1{max-width:760px;margin:0 auto 24px;text-wrap:balance}
+main>h1+p{max-width:650px;margin:0 auto 30px;color:var(--muted)}
+.notice{max-width:760px;margin:28px auto 34px;text-align:center;background:rgba(48,42,28,.72)}
+.panel{position:relative;overflow:hidden;box-shadow:0 10px 42px rgba(0,0,0,.15),0 0 24px rgba(72,192,190,.035);animation:echoesBreathe 7s ease-in-out infinite}
+.panel h2{color:#eaffff;letter-spacing:.015em}
+.panel::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,transparent 15%,rgba(113,217,209,.055) 50%,transparent 85%);opacity:.55}
+form{position:relative;max-width:650px;margin:0 auto}
+.field{text-align:center;margin:18px 0}
+.field label{margin-bottom:9px}
+.field input,.field select,.field textarea{text-align:center;transition:border-color .25s,box-shadow .25s}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+.field textarea{min-height:96px}
+.field input[type=file]{text-align:left}
+.panel ol{max-width:600px;margin:16px auto;padding-left:32px;text-align:left}
+.panel li{padding-left:5px}
+.panel p{max-width:650px;margin-left:auto;margin-right:auto}
+button{border-radius:999px;min-height:48px;padding-inline:25px}
+footer{text-align:center}
+@keyframes echoesBreathe{0%,100%{box-shadow:0 10px 42px rgba(0,0,0,.15),0 0 18px rgba(72,192,190,.025)}50%{box-shadow:0 12px 46px rgba(0,0,0,.18),0 0 30px rgba(72,192,190,.12)}}
+@keyframes echoesAtmosphere{from{opacity:.55;transform:scale(.98)}to{opacity:1;transform:scale(1.04)}}
+@media(max-width:640px){main{padding-top:54px}.panel{padding:22px 17px}.notice{padding:18px}.field{margin:16px 0}.panel ol{padding-left:25px}}
+@media(prefers-reduced-motion:reduce){body::before,.panel{animation:none!important}}
 </style>
 </head>
 <body><main>
