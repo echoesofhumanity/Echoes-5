@@ -87,6 +87,14 @@ footer{text-align:center}
 <label><input type="checkbox" name="channel" value="stories" style="width:auto"> Stories / Media</label>
 <label><input type="checkbox" name="channel" value="academy" style="width:auto"> Echoes Academy</label>
 <label><input type="checkbox" name="channel" value="editor_choice" checked style="width:auto"> Editör değerlendirsin</label>
+</div></fieldset><fieldset id="creator-social-options" class="field" hidden style="border:1px solid #37646b;border-radius:15px;padding:15px"><legend style="padding:0 8px;color:#72d9d1;font-weight:700">Sosyal medya platformları</legend><p class="help">Birden fazla platform seçebilirsin. Platform seçmezsen editör değerlendirecek.</p><div style="text-align:left;max-width:400px;margin:auto">
+<label><input type="checkbox" name="social-platform" value="instagram" style="width:auto"> Instagram</label>
+<label><input type="checkbox" name="social-platform" value="tiktok" style="width:auto"> TikTok</label>
+<label><input type="checkbox" name="social-platform" value="youtube" style="width:auto"> YouTube</label>
+<label><input type="checkbox" name="social-platform" value="facebook" style="width:auto"> Facebook</label>
+<label><input type="checkbox" name="social-platform" value="x" style="width:auto"> X</label>
+<label><input type="checkbox" name="social-platform" value="linkedin" style="width:auto"> LinkedIn</label>
+<label><input type="checkbox" name="social-platform" value="editor_choice" style="width:auto"> Platformu editör belirlesin</label>
 </div></fieldset><div class="field"><label for="title">Eser başlığı</label><input id="title" required maxlength="180" placeholder="Başlık"></div>
 <div class="field"><label for="summary">Kısa açıklama</label><textarea id="summary" maxlength="4000" placeholder="Eserinizi tanıtın"></textarea></div>
 <div class="field"><label for="file">Dosya</label><input id="file" type="file" disabled><p class="help">Desteklenen dosyalar ve boyut sınırları güvenli altyapı doğrulandıktan sonra belirlenecek.</p></div>
@@ -139,17 +147,17 @@ catch(_){status.textContent='Giriş servisine bağlanılamadı.';}finally{login.
 });
 submissionForm.addEventListener('submit',async event=>{
 event.preventDefault();if(!currentUser)return;
-const preferred_channels=Array.from(document.querySelectorAll('input[name="channel"]:checked')).map(x=>x.value);if(preferred_channels.length<1||preferred_channels.length>3){submitStatus.textContent='Bir ile üç yayın kanalı seçmelisin.';return;}const title=document.getElementById('title').value.trim(),summary=document.getElementById('summary').value.trim(),content_type=document.getElementById('type').value,language_code=document.getElementById('language').value;
+const preferred_channels=Array.from(document.querySelectorAll('input[name="channel"]:checked')).map(x=>x.value);const preferred_social_platforms=preferred_channels.includes('social')?Array.from(document.querySelectorAll('input[name="social-platform"]:checked')).map(x=>x.value):[];if(preferred_channels.includes('social')&&preferred_social_platforms.length===0)preferred_social_platforms.push('editor_choice');if(preferred_channels.length<1||preferred_channels.length>3){submitStatus.textContent='Bir ile üç yayın kanalı seçmelisin.';return;}const title=document.getElementById('title').value.trim(),summary=document.getElementById('summary').value.trim(),content_type=document.getElementById('type').value,language_code=document.getElementById('language').value;
 if(!title||title.length>180||summary.length>4000||document.getElementById('rights').value!=='yes')return;
 if(!window.confirm('Başvurun özel olarak kaydedilecek ve inceleme için bekleyecek. Dosya yüklenmeyecek. Onaylıyor musun?'))return;
 submitButton.disabled=true;submitStatus.textContent='Başvuru kaydediliyor.';
 try{
 const {data:{user},error:authError}=await client.auth.getUser();
 if(authError||!user||user.id!==currentUser.id)throw Error('auth');
-const {data,error}=await client.from('creator_submissions').insert({creator_user_id:user.id,title,summary:summary||null,content_type,language_code,preferred_channels,rights_attested:true}).select('id').single();
+const {data,error}=await client.from('creator_submissions').insert({creator_user_id:user.id,title,summary:summary||null,content_type,language_code,preferred_channels,preferred_social_platforms,rights_attested:true}).select('id').single();
 if(error)throw error;
 submitStatus.textContent='Başvuru alındı. Numara: '+data.id+'. Gönderilerim sekmesinden takip edebilirsin.';
-submissionForm.reset();
+submissionForm.reset();document.getElementById('creator-social-options').hidden=true;
 }catch(_){submitStatus.textContent='Başvuru kaydedilemedi. Lütfen bağlantını ve oturumunu kontrol et.';}
 finally{submitButton.disabled=!currentUser;}
 });
@@ -175,18 +183,18 @@ listStatus.textContent='Başvurular yükleniyor.';
 try{
 const {data:{user},error:authError}=await client.auth.getUser();
 if(authError||!user||user.id!==currentUser.id)throw Error('auth');
-const {data,error}=await client.from('creator_submissions').select('id,title,status,created_at,preferred_channels').eq('creator_user_id',user.id).order('created_at',{ascending:false}).limit(20);
+const {data,error}=await client.from('creator_submissions').select('id,title,status,created_at,preferred_channels,preferred_social_platforms').eq('creator_user_id',user.id).order('created_at',{ascending:false}).limit(20);
 if(error)throw error;
 listStatus.textContent=data.length?data.length+' başvuru görüntüleniyor.':'Henüz başvurun yok.';
-for(const item of data){const li=document.createElement('li');li.style.padding='12px';li.style.borderBottom='1px solid #27505a';li.textContent=item.title+' — '+item.status+' — '+(item.preferred_channels||['editor_choice']).map(c=>({radio:'Radio',tv:'TV',news:'Haber Merkezi',social:'Sosyal Medya',stories:'Stories / Media',academy:'Academy',editor_choice:'Editör değerlendirsin'}[c]||c)).join(', ')+' — '+new Date(item.created_at).toLocaleDateString('tr-TR')+' · '+item.id;list.append(li);}
+for(const item of data){const li=document.createElement('li');li.style.padding='12px';li.style.borderBottom='1px solid #27505a';li.textContent=item.title+' — '+item.status+' — '+(item.preferred_channels||['editor_choice']).map(c=>({radio:'Radio',tv:'TV',news:'Haber Merkezi',social:'Sosyal Medya',stories:'Stories / Media',academy:'Academy',editor_choice:'Editör değerlendirsin'}[c]||c)).join(', ')+(item.preferred_social_platforms?.length?' ('+item.preferred_social_platforms.map(p=>p==='editor_choice'?'Platformu editör belirlesin':p).join(', ')+')':'')+' — '+new Date(item.created_at).toLocaleDateString('tr-TR')+' · '+item.id;list.append(li);}
 }catch(_){listStatus.textContent='Başvurular yüklenemedi. Yetki veya bağlantıyı kontrol et.';}
 }
-const channelBoxes=Array.from(document.querySelectorAll('input[name="channel"]'));
+const channelBoxes=Array.from(document.querySelectorAll('input[name="channel"]'));const platformBoxes=Array.from(document.querySelectorAll('input[name="social-platform"]'));const socialPanel=document.getElementById('creator-social-options');function updateSocial(){socialPanel.hidden=!channelBoxes.some(x=>x.value==='social'&&x.checked);if(socialPanel.hidden)platformBoxes.forEach(x=>x.checked=false);}platformBoxes.forEach(box=>box.addEventListener('change',()=>{if(box.checked&&box.value==='editor_choice')platformBoxes.filter(x=>x!==box).forEach(x=>x.checked=false);else if(box.checked)platformBoxes.find(x=>x.value==='editor_choice').checked=false;}));
 channelBoxes.forEach(box=>box.addEventListener('change',()=>{
 if(box.checked&&box.value==='editor_choice')channelBoxes.filter(x=>x!==box).forEach(x=>x.checked=false);
 else if(box.checked)channelBoxes.find(x=>x.value==='editor_choice').checked=false;
 if(channelBoxes.filter(x=>x.checked).length>3){box.checked=false;submitStatus.textContent='En fazla üç yayın kanalı seçebilirsin.';}
-if(!channelBoxes.some(x=>x.checked))channelBoxes.find(x=>x.value==='editor_choice').checked=true;
+if(!channelBoxes.some(x=>x.checked))channelBoxes.find(x=>x.value==='editor_choice').checked=true;updateSocial();
 }));
 refresh.addEventListener('click',loadOwn);
 document.getElementById('tab-submissions').addEventListener('click',loadOwn);
