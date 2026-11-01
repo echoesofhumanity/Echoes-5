@@ -20,13 +20,34 @@ button:focus-visible,.button:focus-visible,.lesson-jump a:focus-visible{outline:
  button,.button,.lesson-jump a{transform:none!important}
 }
 
-/* Mobile taps need a visible release phase; native :active ends too quickly. */
-button:not(:disabled).lab-cinematic-press,.button.lab-cinematic-press,.lesson-jump a.lab-cinematic-press{
- transform:translateY(-3px) scale(1.008);
- border-color:rgba(var(--lab-accent),.85);
- box-shadow:0 18px 38px rgba(0,0,0,.22),0 18px 42px -10px rgba(var(--lab-accent),.56),inset 0 0 18px rgba(var(--lab-accent),.09);
- transition-duration:850ms;
+/* Unified cinematic feedback: every interactive classroom button and navigation link. */
+button,.button,.lesson-jump a{isolation:isolate}
+button::after,.button::after,.lesson-jump a::after{
+ content:"";position:absolute;inset:-5px;border-radius:inherit;pointer-events:none;
+ background:radial-gradient(ellipse at 50% 85%,rgba(var(--lab-accent),.40),rgba(var(--lab-accent),.12) 44%,transparent 78%);
+ filter:blur(10px);opacity:0;z-index:-1;
+}
+@keyframes lab-cinematic-rise{
+ 0%{transform:translateY(0) scale(1)}
+ 42%{transform:translateY(-4px) scale(1.012)}
+ 75%{transform:translateY(-3px) scale(1.008)}
+ 100%{transform:translateY(0) scale(1)}
+}
+@keyframes lab-cinematic-glow{
+ 0%{box-shadow:0 8px 20px rgba(0,0,0,.12),0 0 0 rgba(var(--lab-accent),0)}
+ 35%{box-shadow:0 20px 40px rgba(0,0,0,.23),0 10px 35px rgba(var(--lab-accent),.55),0 0 28px rgba(var(--lab-accent),.32),inset 0 0 16px rgba(var(--lab-accent),.13)}
+ 70%{box-shadow:0 18px 36px rgba(0,0,0,.20),0 8px 32px rgba(var(--lab-accent),.42),0 0 20px rgba(var(--lab-accent),.24)}
+ 100%{box-shadow:0 9px 25px rgba(0,0,0,.13),0 0 20px rgba(var(--lab-accent),.045)}
+}
+@keyframes lab-cinematic-halo{0%,100%{opacity:0}35%{opacity:1}72%{opacity:.65}}
+button.lab-cinematic-press,.button.lab-cinematic-press,.lesson-jump a.lab-cinematic-press{
+ animation:lab-cinematic-rise 1050ms var(--lab-ease) both,lab-cinematic-glow 1050ms var(--lab-ease) both!important;
+ border-color:rgba(var(--lab-accent),.88)!important;
+}
+button.lab-cinematic-press::after,.button.lab-cinematic-press::after,.lesson-jump a.lab-cinematic-press::after{
+ animation:lab-cinematic-halo 1050ms var(--lab-ease) both!important;
 }
 @media(prefers-reduced-motion:reduce){
- button.lab-cinematic-press,.button.lab-cinematic-press,.lesson-jump a.lab-cinematic-press{transform:none!important;transition:none!important}
+ button.lab-cinematic-press,.button.lab-cinematic-press,.lesson-jump a.lab-cinematic-press,
+ button.lab-cinematic-press::after,.button.lab-cinematic-press::after,.lesson-jump a.lab-cinematic-press::after{animation:none!important;transform:none!important}
 }
