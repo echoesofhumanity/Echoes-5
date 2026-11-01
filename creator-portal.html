@@ -196,7 +196,7 @@ const {data:{user},error:authError}=await client.auth.getUser();
 if(authError||!user||user.id!==currentUser.id)throw Error('auth');
 const {data,error}=await client.from('creator_submissions').select('id,title,status,created_at,preferred_channels,preferred_social_platforms').eq('creator_user_id',user.id).order('created_at',{ascending:false}).limit(20);
 if(error)throw error;
-const {data:files,error:fileError}=await client.from('creator_submission_files').select('submission_id,original_name,storage_path,file_size').eq('creator_user_id',user.id).limit(100);
+const {data:files,error:fileError}=await client.from('creator_submission_files').select('submission_id,original_name,storage_path,file_size,mime_type').eq('creator_user_id',user.id).limit(100);
 const fileBySubmission=new Map();if(!fileError&&files)for(const file of files){const arr=fileBySubmission.get(file.submission_id)||[];arr.push(file);fileBySubmission.set(file.submission_id,arr);}
 listStatus.textContent=data.length?data.length+' başvuru görüntüleniyor.':'Henüz başvurun yok.';
 for(const item of data){const li=document.createElement('li');li.style.padding='12px';li.style.borderBottom='1px solid #27505a';li.textContent=item.title+' — '+item.status+' — '+(item.preferred_channels||['editor_choice']).map(c=>({radio:'Radio',tv:'TV',news:'Haber Merkezi',social:'Sosyal Medya',stories:'Stories / Media',academy:'Academy',editor_choice:'Editör değerlendirsin'}[c]||c)).join(', ')+(item.preferred_social_platforms?.length?' ('+item.preferred_social_platforms.map(p=>p==='editor_choice'?'Platformu editör belirlesin':p).join(', ')+')':'')+' — '+new Date(item.created_at).toLocaleDateString('tr-TR')+' · '+item.id;list.append(li);
@@ -204,6 +204,37 @@ for(const file of (fileBySubmission.get(item.id)||[])){
 const wrap=document.createElement('div');wrap.style.margin='10px auto';
 const label=document.createElement('span');label.textContent='Dosya: '+file.original_name+' ('+Math.ceil(file.file_size/1024)+' KB) ';
 const download=document.createElement('button');download.type='button';download.textContent='Dosyamı indir';download.style.opacity='1';download.style.cursor='pointer';download.style.margin='6px';
+const preview=document.createElement('button');preview.type='button';preview.textContent='Önizle';preview.style.opacity='1';preview.style.cursor='pointer';preview.style.margin='6px';preview.style.background='#23616a';
+const previewArea=document.createElement('div');previewArea.hidden=true;previewArea.style.cssText='margin:12px auto;max-width:100%;overflow:hidden';
+let previewUrl=null;
+function clearPreview(){previewArea.replaceChildren();previewArea.hidden=true;if(previewUrl){URL.revokeObjectURL(previewUrl);previewUrl=null;}preview.textContent='Önizle';}
+preview.addEventListener('click',async()=>{
+if(!previewArea.hidden){clearPreview();return;}
+preview.disabled=true;preview.textContent='Açılıyor...';
+try{
+const {data:{user},error:authError}=await client.auth.getUser();
+if(authError||!user||user.id!==currentUser?.id||!file.storage_path.startsWith(user.id+'/'+item.id+'/'))throw Error('auth');
+const mime=file.mime_type||'';
+if(file.file_size>10485760)throw Error('large');
+const supported=['image/jpeg','image/png','image/webp','video/mp4','video/webm','audio/mpeg','audio/wav','application/pdf','text/plain'];
+if(!supported.includes(mime))throw Error('type');
+const {data:blob,error}=await client.storage.from('echoes-creator-submissions').download(file.storage_path);
+if(error)throw error;
+clearPreview();
+let element;
+if(mime==='text/plain'){element=document.createElement('pre');element.textContent=await blob.text();element.style.cssText='text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;max-height:360px;overflow:auto;padding:12px;background:#091a25;border-radius:12px';}
+else{
+previewUrl=URL.createObjectURL(blob);
+element=document.createElement(mime.startsWith('image/')?'img':mime.startsWith('video/')?'video':mime.startsWith('audio/')?'audio':'iframe');
+element.src=previewUrl;element.style.cssText='max-width:100%;width:100%;border:0;border-radius:10px;'+(mime==='application/pdf'?'height:460px;':'');
+if(mime.startsWith('video/')||mime.startsWith('audio/'))element.controls=true;
+if(mime.startsWith('image/'))element.alt=file.original_name;
+if(mime==='application/pdf')element.title='PDF önizlemesi';
+}
+previewArea.append(element);previewArea.hidden=false;preview.textContent='Önizlemeyi kapat';
+}catch(error){clearPreview();preview.textContent=error.message==='large'?'10 MiB üzerindeki dosyalar için indirmeyi kullan':error.message==='type'?'Önizleme desteklenmiyor':'Önizleme açılamadı — tekrar dene';}
+finally{preview.disabled=false;}
+});
 download.addEventListener('click',async()=>{
 download.disabled=true;download.textContent='İndiriliyor...';
 try{
@@ -214,7 +245,7 @@ if(error)throw error;
 const url=URL.createObjectURL(blob),anchor=document.createElement('a');anchor.href=url;anchor.download=file.original_name;document.body.append(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
 download.textContent='Dosyamı indir';
 }catch(_){download.textContent='İndirme başarısız — tekrar dene';}finally{download.disabled=false;}
-});wrap.append(label,download);li.append(wrap);
+});wrap.append(label,preview,download,previewArea);li.append(wrap);
 }}
 }catch(_){listStatus.textContent='Başvurular yüklenemedi. Yetki veya bağlantıyı kontrol et.';}
 }
