@@ -1,10 +1,44 @@
-/* Echoes Academy: scoped cinematic feedback for three access cards only. */
-.academy-access-grid>a{isolation:isolate;-webkit-tap-highlight-color:transparent}
-.academy-access-grid>a::after{content:"";position:absolute;inset:5px;border-radius:inherit;pointer-events:none;background:radial-gradient(ellipse at 50% 75%,rgba(95,208,197,.46),rgba(95,208,197,.15) 46%,transparent 78%);filter:blur(14px);opacity:0}
-@keyframes academy-access-rise{0%{transform:translateY(0) scale(1)}42%{transform:translateY(-5px) scale(1.012)}75%{transform:translateY(-4px) scale(1.008)}100%{transform:translateY(0) scale(1)}}
-@keyframes academy-access-glow{0%,100%{box-shadow:var(--echoes-card-shadow)}35%{box-shadow:0 22px 44px rgba(0,0,0,.23),0 12px 38px rgba(95,208,197,.45),0 0 32px rgba(95,208,197,.30),inset 0 0 20px rgba(95,208,197,.10)}70%{box-shadow:0 20px 38px rgba(0,0,0,.19),0 8px 30px rgba(95,208,197,.36),0 0 24px rgba(95,208,197,.22)}}
-@keyframes academy-access-halo{0%,100%{opacity:0}35%{opacity:1}70%{opacity:.65}}
-.academy-access-grid>a.lab-cinematic-press{animation:academy-access-rise 1050ms cubic-bezier(.22,1,.36,1) both,academy-access-glow 1050ms cubic-bezier(.22,1,.36,1) both!important;border-color:rgba(95,208,197,.85)!important}
-.academy-access-grid>a.lab-cinematic-press::after{animation:academy-access-halo 1050ms cubic-bezier(.22,1,.36,1) both!important}
-@media(hover:hover) and (pointer:fine){.academy-access-grid>a:hover{box-shadow:0 20px 42px rgba(0,0,0,.20),0 10px 30px rgba(95,208,197,.18)}}
-@media(prefers-reduced-motion:reduce){.academy-access-grid>a.lab-cinematic-press,.academy-access-grid>a.lab-cinematic-press::after{animation:none!important;transform:none!important}}
+/* Academy access cards — match the native Echoes cinematic card language.
+ * Deliberately scoped; existing Academy cards and controls stay untouched.
+ */
+.academy-access-grid>a{
+ --access-ease:var(--echoes-ease,cubic-bezier(.22,.61,.36,1));
+ isolation:isolate;
+ -webkit-tap-highlight-color:transparent;
+ transition:transform 1200ms var(--access-ease),border-color 1200ms var(--access-ease),box-shadow 1200ms var(--access-ease);
+}
+.academy-access-grid>a::after{
+ content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+ background:
+ radial-gradient(ellipse 76% 58% at 50% 0%,rgba(var(--echoes-card-accent-rgb),.075),rgba(var(--echoes-card-accent-rgb),.025) 42%,transparent 72%),
+ radial-gradient(ellipse 82% 68% at 50% 100%,var(--echoes-card-ambient) 0%,rgba(var(--echoes-card-accent-rgb),.055) 38%,rgba(var(--echoes-card-accent-rgb),.016) 58%,transparent 78%);
+ opacity:.8;
+ clip-path:inset(0 round var(--echoes-card-radius));
+ animation:echoes-card-breathe var(--echoes-motion-breathe) ease-in-out infinite;
+}
+@keyframes academy-access-calm-rise{
+ 0%{transform:translateY(0)}
+ 52%{transform:translateY(-3px)}
+ 100%{transform:translateY(0)}
+}
+@keyframes academy-access-bottom-light{
+ 0%,100%{box-shadow:var(--echoes-card-shadow);border-color:var(--echoes-card-border)}
+ 55%{box-shadow:0 24px 60px rgba(0,0,0,.19),0 18px 24px -14px rgba(var(--echoes-card-accent-rgb),.27),0 34px 48px -26px rgba(var(--echoes-card-accent-rgb),.17),0 48px 68px -42px rgba(var(--echoes-card-accent-rgb),.10);border-color:rgba(var(--echoes-card-accent-rgb),.25)}
+}
+@keyframes academy-access-bottom-ambient{
+ 0%,100%{opacity:.8}
+ 55%{opacity:1}
+}
+.academy-access-grid>a.lab-cinematic-press{
+ animation:academy-access-calm-rise 1500ms var(--access-ease) both,academy-access-bottom-light 1500ms var(--access-ease) both!important;
+}
+.academy-access-grid>a.lab-cinematic-press::after{
+ animation:academy-access-bottom-ambient 1500ms var(--access-ease) both!important;
+}
+@media(hover:hover) and (pointer:fine){
+ .academy-access-grid>a:hover{transform:translateY(-3px);border-color:var(--echoes-card-border-active);box-shadow:0 24px 68px rgba(0,0,0,.24),0 26px 36px -24px rgba(var(--echoes-card-accent-rgb),.15)}
+}
+@media(prefers-reduced-motion:reduce){
+ .academy-access-grid>a,.academy-access-grid>a::after{transition:none!important;animation:none!important}
+ .academy-access-grid>a:hover,.academy-access-grid>a.lab-cinematic-press{transform:none!important;animation:none!important}
+}
