@@ -52,6 +52,14 @@ body[data-page="academy-campus"] .header-icon svg{width:22px;height:22px;display
 /* Campus V3: orderly, touch-friendly mobile program filters. */
 @media(max-width:699px){body[data-page="academy-campus"] .filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%;max-width:520px;margin:24px auto 22px}body[data-page="academy-campus"] .filters button{width:100%;min-width:0;min-height:52px;padding:12px 8px;border-radius:14px;font-size:clamp(.84rem,3.45vw,1rem);line-height:1.25;letter-spacing:0;white-space:normal}body[data-page="academy-campus"] #program-search{box-sizing:border-box;width:100%;max-width:520px}body[data-page="academy-campus"] #count{margin-top:12px}}
 
+/* Campus V3: school and program cards share the same calm breathing light. */
+body[data-page="academy-campus"] .grid>.card{animation:campus-card-frame-breathe 7s ease-in-out infinite;will-change:auto}
+body[data-page="academy-campus"] .grid>.card::after{border-radius:inherit;animation:campus-card-ambient-breathe 7s ease-in-out infinite}
+@keyframes campus-card-frame-breathe{0%,100%{border-color:rgba(95,208,197,.15);box-shadow:0 14px 35px rgba(0,0,0,.16),0 18px 25px -20px rgba(95,208,197,.08)}50%{border-color:rgba(95,208,197,.42);box-shadow:0 22px 46px rgba(0,0,0,.20),0 22px 32px -17px rgba(95,208,197,.24),0 34px 46px -28px rgba(95,208,197,.13)}}
+@keyframes campus-card-ambient-breathe{0%,100%{opacity:.4;transform:scale(.985)}50%{opacity:1;transform:scale(1.025)}}
+@media(hover:none) and (pointer:coarse){body[data-page="academy-campus"] .grid>.card:active{transform:none}}
+@media(prefers-reduced-motion:reduce){body[data-page="academy-campus"] .grid>.card,body[data-page="academy-campus"] .grid>.card::after{animation:none!important}body[data-page="academy-campus"] .grid>.card{border-color:var(--echoes-card-border);box-shadow:var(--echoes-card-shadow)}}
+
 /* Campus V3: rounded, breathing selection light — no hard-edged touch flash. */
 body[data-page="academy-campus"] .filters button{position:relative;isolation:isolate;overflow:hidden;-webkit-tap-highlight-color:transparent;box-shadow:0 9px 22px rgba(0,0,0,.14);transition:transform 1100ms var(--echoes-ease),border-color 1100ms var(--echoes-ease),background 1100ms var(--echoes-ease),box-shadow 1100ms var(--echoes-ease)}
 body[data-page="academy-campus"] .filters button::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(ellipse 85% 72% at 50% 100%,rgba(95,208,197,.13),transparent 80%);opacity:.15;transition:opacity 1100ms var(--echoes-ease)}
