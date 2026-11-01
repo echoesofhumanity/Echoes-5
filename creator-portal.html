@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Echoes Creator Portal — Tasarım Önizlemesi</title>
+<style>
+:root{color-scheme:dark;--bg:#07151f;--panel:#102532;--line:#27505a;--teal:#72d9d1;--text:#eaf7f7;--muted:#b2c9cd}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#173746,var(--bg) 65%);color:var(--text);font:16px/1.6 system-ui,sans-serif}
+main{max-width:850px;margin:auto;padding:40px 18px 80px}a{color:var(--teal)}.eyebrow{letter-spacing:.17em;color:var(--teal);font-size:.8rem}
+h1{font-size:clamp(2rem,6vw,3.7rem);line-height:1.15;margin:.5rem 0}h2{font-size:1.2rem;margin:0 0 12px}
+.notice{border:1px solid #b9945a;background:#32281c;padding:15px;border-radius:12px;margin:24px 0}
+.panel{background:rgba(16,37,50,.95);border:1px solid var(--line);border-radius:18px;padding:24px;margin:20px 0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.field{margin:12px 0}
+label{display:block;font-weight:600;margin-bottom:5px}input,select,textarea{width:100%;background:#091a25;color:var(--text);border:1px solid #426570;border-radius:10px;padding:12px;font:inherit}
+textarea{min-height:110px;resize:vertical}.help{color:var(--muted);font-size:.87rem;margin:5px 0}
+button{background:#285b62;color:#fff;border:1px solid #417b7c;border-radius:10px;padding:12px 18px;font:inherit;opacity:.65;cursor:not-allowed}
+ul{padding-left:20px}li{margin:8px 0}footer{color:var(--muted);font-size:.85rem;margin-top:30px}
+@media(max-width:640px){.grid{grid-template-columns:1fr}.panel{padding:18px}}
+</style>
+</head>
+<body><main>
+<p class="eyebrow">ECHOES OF HUMANITY / CREATOR PORTAL</p>
+<h1>Sesini, hikâyeni, eserini paylaş.</h1>
+<p>Echoes dijital vatandaşları, gönüllüleri ve bağımsız üreticiler için tek içerik kabul noktası.</p>
+<div class="notice" role="status"><strong>Geliştirme önizlemesi — gönderim kapalı.</strong> Bu sayfa gerçek dosya yüklemez, hesap açmaz, veri kaydetmez veya EIN değerlendirmesi yapmaz. Lütfen kişisel bilgi ya da hassas içerik girmeyin.</div>
+<section class="panel" aria-labelledby="submit"><h2 id="submit">İçerik başvurusu</h2>
+<form onsubmit="return false">
+<div class="grid">
+<div class="field"><label for="type">İçerik türü</label><select id="type" disabled><option>Seçiniz</option><option>Haber / hikâye</option><option>Makale / şiir</option><option>Fotoğraf</option><option>Video / belgesel</option><option>Müzik / ses</option><option>Social Media Dramas</option></select></div>
+<div class="field"><label for="language">İçerik dili</label><select id="language" disabled><option>Seçiniz</option><option>Türkçe</option><option>English</option><option>Diğer</option></select></div>
+</div>
+<div class="field"><label for="title">Eser başlığı</label><input id="title" disabled placeholder="Başlık"></div>
+<div class="field"><label for="summary">Kısa açıklama</label><textarea id="summary" disabled placeholder="Eserinizi tanıtın"></textarea></div>
+<div class="field"><label for="file">Dosya</label><input id="file" type="file" disabled><p class="help">Desteklenen dosyalar ve boyut sınırları güvenli altyapı doğrulandıktan sonra belirlenecek.</p></div>
+<div class="field"><label for="rights">Telif ve kullanım izni</label><select id="rights" disabled><option>Hak sahipliği ve üçüncü kişi izinleri doğrulanacak</option></select></div>
+<button type="button" disabled>Gönderim henüz etkin değil</button>
+</form></section>
+<section class="panel"><h2>Gönderimden sonra ne olacak?</h2><ol><li>Güvenli dosya kabulü ve benzersiz başvuru numarası</li><li>EIN güvenlik, sınıflandırma ve dil ön değerlendirmesi</li><li>Yetkili editörün doğrulama ve hak incelemesi</li><li>Revizyon, onay veya gerekçeli ret</li><li>Onaylı içeriğin uygun yayın kanalına hazırlanması</li></ol><p class="help">Bunlar planlanan aşamalardır; şu anda aktif bir iş akışı değildir.</p></section>
+<section class="panel"><h2>Güvenlik sınırı</h2><p>Bu portal acil yardım veya kayıp kişi bildirimi için kullanılmayacak. Action vakaları ayrı, korumalı bir sistemde ele alınacak. Hassas içerikler otomatik yayımlanmayacak.</p></section>
+<footer>Echoes Creator Portal · İlk bağımsız arayüz iskeleti · Admin V3'e dokunulmadı.</footer>
+</main></body></html>
