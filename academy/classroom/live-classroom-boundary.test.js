@@ -72,3 +72,52 @@ test('unsupported actions fail closed even with an adapter',async()=>{
   assert.equal(h.sent.length,0);
   room.close();
 });
+
+const lifecycle=require('./session-lifecycle-policy.js');
+const gate=require('./classroom-permission-gate.js');
+const readiness=require('./existing-lab-readiness-contract.js');
+
+test('interruption and reconnection follow explicit lifecycle transitions',()=>{
+  let state='idle';
+  for(const [action,expected] of [['join','joining'],['connected','connected'],['disconnect','interrupted'],['retry','rejoining'],['connected','connected'],['end','ended']]){
+    state=lifecycle.next(state,action);
+    assert.equal(state,expected);
+  }
+  assert.equal(lifecycle.next(state,'retry'),null);
+  assert.equal(lifecycle.snapshot(state).serverAuthorized,false);
+});
+test('disconnected instructor cannot approve entry or grant speaking',()=>{
+  for(const action of ['entry.decide','speaker.grant','participant.remove','session.end']){
+    assert.equal(gate.decision({action,role:'instructor',sessionState:'interrupted',serverVerified:true,serverActionApproved:true}).allowed,false);
+  }
+});
+test('student cannot use instructor controls even when claims say approved',()=>{
+  for(const action of ['entry.decide','speaker.grant','speaker.revoke','participant.remove','session.end']){
+    const result=gate.decision({action,role:'student',sessionState:'connected',serverVerified:true,serverActionApproved:true});
+    assert.equal(result.allowed,false);
+    assert.equal(result.reason,'role_forbidden');
+  }
+});
+test('removed student cannot raise hand without a new server decision',()=>{
+  const result=gate.decision({action:'hand.set',role:'student',participantState:'removed',sessionState:'connected',serverVerified:true,serverActionApproved:true});
+  assert.equal(result.allowed,false);
+  assert.equal(result.reason,'removed_requires_new_server_decision');
+});
+test('missing server verification or approval denies speaking',()=>{
+  for(const [verified,approved] of [[false,false],[false,true],[true,false]]){
+    assert.equal(gate.decision({action:'speaker.grant',role:'instructor',sessionState:'connected',serverVerified:verified,serverActionApproved:approved}).allowed,false);
+  }
+});
+test('offline readiness never authorizes actions after simulated reconnection',()=>{
+  const room=readiness.create();
+  for(const action of ['join','connected','disconnect','retry','connected']){
+    assert.equal(room.transition(action).accepted,true);
+  }
+  assert.equal(room.status().session.state,'connected');
+  assert.equal(room.status().liveConnected,false);
+  assert.equal(room.status().serverConfigured,false);
+  assert.equal(room.status().mediaEnabled,false);
+  for(const [action,role] of [['entry.decide','instructor'],['speaker.grant','instructor'],['hand.set','student']]){
+    assert.equal(room.evaluate(action,role,'admitted').allowed,false);
+  }
+});
