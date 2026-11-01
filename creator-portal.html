@@ -44,6 +44,16 @@ footer{text-align:center}
 @keyframes echoesAtmosphere{from{opacity:.55;transform:scale(.98)}to{opacity:1;transform:scale(1.04)}}
 @media(max-width:640px){main{padding-top:54px}.panel{padding:22px 17px}.notice{padding:18px}.field{margin:16px 0}.panel ol{padding-left:25px}}
 @media(prefers-reduced-motion:reduce){body::before,.panel{animation:none!important}}
+
+.creator-tabs{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:26px auto 12px;max-width:720px}
+.creator-tabs button{opacity:1;cursor:pointer;background:rgba(15,43,54,.86);border:1px solid #37646b;color:#d6eeee;min-height:48px;box-shadow:0 0 15px rgba(91,216,206,.06);transition:background .25s,box-shadow .25s,transform .25s}
+.creator-tabs button[aria-selected="true"]{background:#23616a;color:#fff;box-shadow:0 0 23px rgba(91,216,206,.2)}
+.creator-tabs button:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+.creator-tabs button:hover{transform:translateY(-2px)}
+.creator-view[hidden]{display:none!important}
+.creator-view .panel{max-width:850px;margin:20px auto}
+.creator-icon{font-size:2rem;color:var(--teal);line-height:1.2;margin:0 auto 12px}
+@media(max-width:640px){.creator-tabs{gap:7px}.creator-tabs button{flex:1 1 29%;font-size:.88rem;padding:11px 8px}}
 </style>
 </head>
 <body><main>
@@ -51,7 +61,7 @@ footer{text-align:center}
 <h1>Sesini, hikâyeni, eserini paylaş.</h1>
 <p>Echoes dijital vatandaşları, gönüllüleri ve bağımsız üreticiler için tek içerik kabul noktası.</p>
 <div class="notice" role="status"><strong>Geliştirme önizlemesi — gönderim kapalı.</strong> Bu sayfa gerçek dosya yüklemez, hesap açmaz, veri kaydetmez veya EIN değerlendirmesi yapmaz. Lütfen kişisel bilgi ya da hassas içerik girmeyin.</div>
-<section class="panel" aria-labelledby="submit"><h2 id="submit">İçerik başvurusu</h2>
+<nav class="creator-tabs" role="tablist" aria-label="Creator Portal bölümleri"><button type="button" role="tab" id="tab-upload" aria-controls="view-upload" aria-selected="true" tabindex="0" data-view="upload">✦ İçerik Yükle</button><button type="button" role="tab" id="tab-submissions" aria-controls="view-submissions" aria-selected="false" tabindex="-1" data-view="submissions">▤ Gönderilerim</button><button type="button" role="tab" id="tab-profile" aria-controls="view-profile" aria-selected="false" tabindex="-1" data-view="profile">◉ Profilim</button></nav><div class="creator-view" id="view-upload" role="tabpanel" aria-labelledby="tab-upload"><section class="panel" aria-labelledby="submit"><h2 id="submit">İçerik başvurusu</h2>
 <form onsubmit="return false">
 <div class="grid">
 <div class="field"><label for="type">İçerik türü</label><select id="type" disabled><option>Seçiniz</option><option>Haber / hikâye</option><option>Makale / şiir</option><option>Fotoğraf</option><option>Video / belgesel</option><option>Müzik / ses</option><option>Social Media Dramas</option></select></div>
@@ -62,8 +72,28 @@ footer{text-align:center}
 <div class="field"><label for="file">Dosya</label><input id="file" type="file" disabled><p class="help">Desteklenen dosyalar ve boyut sınırları güvenli altyapı doğrulandıktan sonra belirlenecek.</p></div>
 <div class="field"><label for="rights">Telif ve kullanım izni</label><select id="rights" disabled><option>Hak sahipliği ve üçüncü kişi izinleri doğrulanacak</option></select></div>
 <button type="button" disabled>Gönderim henüz etkin değil</button>
-</form></section>
+</form></section></div><div class="creator-view" id="view-submissions" role="tabpanel" aria-labelledby="tab-submissions" hidden><section class="panel"><div class="creator-icon" aria-hidden="true">▤</div><h2>Gönderilerim</h2><p>Başvuruların ve inceleme durumların burada görüntülenecek. Güvenli hesap bağlantısı henüz etkin olmadığı için bu bölüm şu anda veri göstermiyor.</p></section></div><div class="creator-view" id="view-profile" role="tabpanel" aria-labelledby="tab-profile" hidden><section class="panel"><div class="creator-icon" aria-hidden="true">◉</div><h2>Profilim</h2><p>Dijital vatandaş veya üretici profilin, eser sahipliği bilgilerin ve bildirim tercihlerin burada yönetilecek. Henüz giriş veya kayıt yapılmıyor.</p></section></div>
 <section class="panel"><h2>Gönderimden sonra ne olacak?</h2><ol><li>Güvenli dosya kabulü ve benzersiz başvuru numarası</li><li>EIN güvenlik, sınıflandırma ve dil ön değerlendirmesi</li><li>Yetkili editörün doğrulama ve hak incelemesi</li><li>Revizyon, onay veya gerekçeli ret</li><li>Onaylı içeriğin uygun yayın kanalına hazırlanması</li></ol><p class="help">Bunlar planlanan aşamalardır; şu anda aktif bir iş akışı değildir.</p></section>
 <section class="panel"><h2>Güvenlik sınırı</h2><p>Bu portal acil yardım veya kayıp kişi bildirimi için kullanılmayacak. Action vakaları ayrı, korumalı bir sistemde ele alınacak. Hassas içerikler otomatik yayımlanmayacak.</p></section>
 <footer>Echoes Creator Portal · İlk bağımsız arayüz iskeleti · Admin V3'e dokunulmadı.</footer>
-</main></body></html>
+<script>
+(function(){
+"use strict";
+const tabs=Array.from(document.querySelectorAll('.creator-tabs [role="tab"]'));
+const views=Array.from(document.querySelectorAll('.creator-view'));
+function activate(tab,focus){
+tabs.forEach(t=>{const selected=t===tab;t.setAttribute('aria-selected',String(selected));t.tabIndex=selected?0:-1;});
+views.forEach(v=>{v.hidden=v.id!=='view-'+tab.dataset.view;});
+if(focus)tab.focus();
+}
+tabs.forEach((tab,index)=>{
+tab.addEventListener('click',()=>activate(tab,false));
+tab.addEventListener('keydown',event=>{
+if(!['ArrowRight','ArrowLeft','Home','End'].includes(event.key))return;
+event.preventDefault();
+const next=event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+activate(tabs[next],true);
+});
+});
+})();
+</script></main></body></html>
