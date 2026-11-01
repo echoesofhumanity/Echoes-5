@@ -141,3 +141,16 @@ test('well-formed browser identity claims never grant authority',()=>{
   assert.equal(requirements.sessionRejoinRequiresServerApproval,true);
   assert.equal(requirements.removedParticipantRequiresServerReadmission,true);
 });
+
+const sessionContract=require('./classroom-session-contract.js');
+test('session protocol accepts only shaped commands, never grants server authority',()=>{
+  for(const type of sessionContract.COMMANDS){
+    const result=sessionContract.describeCommand({schema_version:1,type,request_id:'request_1',session_id:'room_A'});
+    assert.equal(result.valid,true);
+    assert.equal(result.authorized,false);
+    assert.equal(result.sendableWithoutServer,false);
+  }
+  assert.equal(sessionContract.describeCommand({schema_version:1,type:'session.force',request_id:'request_1',session_id:'room_A'}).valid,false);
+  assert.equal(sessionContract.policy().resumeRequiresFreshServerApproval,true);
+  assert.equal(sessionContract.policy().serverTransportConfigured,false);
+});
