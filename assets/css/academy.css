@@ -13,3 +13,6 @@
 @media(prefers-reduced-motion:reduce){.academy-button,.academy-button::after{transition:none}.academy-button:hover,.academy-button:active{transform:none}}
 @media(min-width:760px){.academy-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.academy-actions{grid-template-columns:1fr 1fr}}@media(max-width:699px){.academy-hero,.academy-section,.academy-cta{padding:88px 0}.academy-card{}.academy-closing-line{margin-top:112px}.academy-button{width:100%;min-height:60px;border-radius:18px;font-size:13px}}
 html[dir="rtl"] .academy-hero h1,html[dir="rtl"] .academy-section h2,html[dir="rtl"] .academy-cta h2{letter-spacing:0}
+
+/* Academy mobile: informational readiness and knowledge cards should not mimic large navigation tiles. */
+@media(max-width:699px){body[data-page="academy"] .academy-teach .academy-card-grid>div.academy-card,body[data-page="academy"] .academy-culture .academy-card-grid>div.academy-card{min-height:0;padding:clamp(28px,7vw,40px) clamp(20px,5vw,28px)}body[data-page="academy"] .academy-teach .academy-card-grid>div.academy-card>.card-icon,body[data-page="academy"] .academy-culture .academy-card-grid>div.academy-card>.card-icon,body[data-page="academy"] .academy-culture .academy-card-grid>div.academy-card>.card-number{margin-bottom:16px}}
