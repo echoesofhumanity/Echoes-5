@@ -1,0 +1,10 @@
+/* Echoes Academy: scoped cinematic feedback for three access cards only. */
+.academy-access-grid>a{isolation:isolate;-webkit-tap-highlight-color:transparent}
+.academy-access-grid>a::after{content:"";position:absolute;inset:5px;border-radius:inherit;pointer-events:none;background:radial-gradient(ellipse at 50% 75%,rgba(95,208,197,.46),rgba(95,208,197,.15) 46%,transparent 78%);filter:blur(14px);opacity:0}
+@keyframes academy-access-rise{0%{transform:translateY(0) scale(1)}42%{transform:translateY(-5px) scale(1.012)}75%{transform:translateY(-4px) scale(1.008)}100%{transform:translateY(0) scale(1)}}
+@keyframes academy-access-glow{0%,100%{box-shadow:var(--echoes-card-shadow)}35%{box-shadow:0 22px 44px rgba(0,0,0,.23),0 12px 38px rgba(95,208,197,.45),0 0 32px rgba(95,208,197,.30),inset 0 0 20px rgba(95,208,197,.10)}70%{box-shadow:0 20px 38px rgba(0,0,0,.19),0 8px 30px rgba(95,208,197,.36),0 0 24px rgba(95,208,197,.22)}}
+@keyframes academy-access-halo{0%,100%{opacity:0}35%{opacity:1}70%{opacity:.65}}
+.academy-access-grid>a.lab-cinematic-press{animation:academy-access-rise 1050ms cubic-bezier(.22,1,.36,1) both,academy-access-glow 1050ms cubic-bezier(.22,1,.36,1) both!important;border-color:rgba(95,208,197,.85)!important}
+.academy-access-grid>a.lab-cinematic-press::after{animation:academy-access-halo 1050ms cubic-bezier(.22,1,.36,1) both!important}
+@media(hover:hover) and (pointer:fine){.academy-access-grid>a:hover{box-shadow:0 20px 42px rgba(0,0,0,.20),0 10px 30px rgba(95,208,197,.18)}}
+@media(prefers-reduced-motion:reduce){.academy-access-grid>a.lab-cinematic-press,.academy-access-grid>a.lab-cinematic-press::after{animation:none!important;transform:none!important}}
