@@ -65,6 +65,21 @@ footer{text-align:center}
 .creator-file-actions button:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
 .creator-file-actions button:disabled{opacity:.55;cursor:wait}
 @media(max-width:390px){.creator-file-actions{gap:7px}.creator-file-actions button{font-size:.84rem;padding:9px 10px}}
+
+/* V0.15: submission tracking cards */
+#creator-submissions-list{display:grid;gap:16px;margin:20px 0 0!important;padding:0!important}
+.creator-submission-card{list-style:none;padding:20px 18px!important;border:1px solid rgba(107,208,205,.25);border-radius:22px;background:linear-gradient(145deg,rgba(22,57,69,.76),rgba(8,26,39,.88));box-shadow:0 12px 30px rgba(0,0,0,.13);text-align:left;min-width:0}
+.creator-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.creator-card-title{margin:0;color:#f1fbfb;font-size:1.24rem;line-height:1.35;overflow-wrap:anywhere}
+.creator-card-status{display:inline-flex;border:1px solid rgba(107,208,205,.42);background:rgba(39,107,111,.27);color:#b8f1ec;padding:6px 10px;border-radius:999px;font-size:.79rem;line-height:1.2}
+.creator-card-date{color:#9fbec4;font-size:.84rem;margin:9px 0 14px}
+.creator-card-label{font-size:.76rem;color:#88b8bf;letter-spacing:.035em;margin:12px 0 5px}
+.creator-card-values{color:#e1f1f2;font-size:.94rem;line-height:1.5;overflow-wrap:anywhere}
+.creator-card-details{margin-top:15px;border-top:1px solid rgba(107,208,205,.17);padding-top:12px;color:#b8d0d5;font-size:.8rem}
+.creator-card-details summary{cursor:pointer;color:#a7dcd8;padding:5px 0}
+.creator-card-id{overflow-wrap:anywhere;display:block;margin-top:8px}
+.creator-submission-card .creator-file{max-width:none;margin:15px 0 0}
+@media(max-width:480px){.creator-submission-card{padding:17px 14px!important;border-radius:18px}.creator-card-title{font-size:1.12rem}}
 </style>
 </head>
 <body><main>
@@ -210,7 +225,26 @@ if(error)throw error;
 const {data:files,error:fileError}=await client.from('creator_submission_files').select('submission_id,original_name,storage_path,file_size,mime_type').eq('creator_user_id',user.id).limit(100);
 const fileBySubmission=new Map();if(!fileError&&files)for(const file of files){const arr=fileBySubmission.get(file.submission_id)||[];arr.push(file);fileBySubmission.set(file.submission_id,arr);}
 listStatus.textContent=data.length?data.length+' başvuru görüntüleniyor.':'Henüz başvurun yok.';
-for(const item of data){const li=document.createElement('li');li.style.padding='12px';li.style.borderBottom='1px solid #27505a';li.textContent=item.title+' — '+item.status+' — '+(item.preferred_channels||['editor_choice']).map(c=>({radio:'Radio',tv:'TV',news:'Haber Merkezi',social:'Sosyal Medya',stories:'Stories / Media',academy:'Academy',editor_choice:'Editör değerlendirsin'}[c]||c)).join(', ')+(item.preferred_social_platforms?.length?' ('+item.preferred_social_platforms.map(p=>p==='editor_choice'?'Platformu editör belirlesin':p).join(', ')+')':'')+' — '+new Date(item.created_at).toLocaleDateString('tr-TR')+' · '+item.id;list.append(li);
+const channelNames={radio:'Echoes Radio',tv:'Echoes TV',news:'Haber Merkezi',social:'Sosyal Medya',stories:'Stories / Media',academy:'Echoes Academy',editor_choice:'Editör değerlendirsin'};
+const platformNames={instagram:'Instagram',tiktok:'TikTok',youtube:'YouTube',facebook:'Facebook',x:'X',linkedin:'LinkedIn',editor_choice:'Platformu editör belirlesin'};
+const statusNames={submitted:'Başvuru alındı',in_review:'İncelemede',revision_requested:'Düzeltme istendi',approved:'Onaylandı',rejected:'Uygun bulunmadı',published:'Yayımlandı'};
+for(const item of data){
+const li=document.createElement('li');li.className='creator-submission-card';
+function element(tag,cls,value,parent){const e=document.createElement(tag);if(cls)e.className=cls;if(value!==undefined)e.textContent=value;if(parent)parent.append(e);return e;}
+const top=element('div','creator-card-top',undefined,li);
+element('h3','creator-card-title',item.title,top);
+element('span','creator-card-status',statusNames[item.status]||'Değerlendiriliyor',top);
+element('div','creator-card-date',new Date(item.created_at).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'}),li);
+element('div','creator-card-label','YAYIN KANALLARI',li);
+element('div','creator-card-values',(item.preferred_channels||['editor_choice']).map(c=>channelNames[c]||c).join(' · '),li);
+if(item.preferred_social_platforms?.length){
+element('div','creator-card-label','SOSYAL MEDYA PLATFORMLARI',li);
+element('div','creator-card-values',item.preferred_social_platforms.map(p=>platformNames[p]||p).join(' · '),li);
+}
+const details=element('details','creator-card-details',undefined,li);
+element('summary','', 'Başvuru ayrıntıları',details);
+element('span','creator-card-id','Başvuru numarası: '+item.id,details);
+list.append(li);
 for(const file of (fileBySubmission.get(item.id)||[])){
 const wrap=document.createElement('div');wrap.className='creator-file';
 const label=document.createElement('span');label.className='creator-file-name';label.textContent='Dosya · '+file.original_name+' ('+Math.ceil(file.file_size/1024)+' KB)';
