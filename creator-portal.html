@@ -61,6 +61,17 @@ footer{text-align:center}
 <h1>Sesini, hikâyeni, eserini paylaş.</h1>
 <p>Echoes dijital vatandaşları, gönüllüleri ve bağımsız üreticiler için tek içerik kabul noktası.</p>
 <div class="notice" role="status"><strong>Geliştirme önizlemesi — gönderim kapalı.</strong> Bu sayfa gerçek dosya yüklemez, hesap açmaz, veri kaydetmez veya EIN değerlendirmesi yapmaz. Lütfen kişisel bilgi ya da hassas içerik girmeyin.</div>
+<section class="panel" aria-labelledby="creator-auth-title" id="creator-auth-panel">
+<div class="creator-icon" aria-hidden="true">◇</div><h2 id="creator-auth-title">Güvenli giriş</h2>
+<p class="help">Şimdilik yalnızca mevcut Echoes kullanıcı hesaplarıyla giriş yapılabilir. Yeni hesap kaydı ve içerik gönderimi henüz açık değil.</p>
+<form id="creator-auth-form" autocomplete="on">
+<div class="field"><label for="creator-email">E-posta</label><input id="creator-email" type="email" autocomplete="username" required maxlength="254" placeholder="E-posta adresin"></div>
+<div class="field"><label for="creator-password">Şifre</label><input id="creator-password" type="password" autocomplete="current-password" required placeholder="Şifren"></div>
+<button id="creator-login" type="submit" style="opacity:1;cursor:pointer">Giriş yap</button>
+</form>
+<button id="creator-logout" type="button" hidden style="opacity:1;cursor:pointer">Çıkış yap</button>
+<p id="creator-auth-status" role="status" aria-live="polite" class="help">Oturum kontrol ediliyor.</p>
+</section>
 <nav class="creator-tabs" role="tablist" aria-label="Creator Portal bölümleri"><button type="button" role="tab" id="tab-upload" aria-controls="view-upload" aria-selected="true" tabindex="0" data-view="upload">✦ İçerik Yükle</button><button type="button" role="tab" id="tab-submissions" aria-controls="view-submissions" aria-selected="false" tabindex="-1" data-view="submissions">▤ Gönderilerim</button><button type="button" role="tab" id="tab-profile" aria-controls="view-profile" aria-selected="false" tabindex="-1" data-view="profile">◉ Profilim</button></nav><div class="creator-view" id="view-upload" role="tabpanel" aria-labelledby="tab-upload"><section class="panel" aria-labelledby="submit"><h2 id="submit">İçerik başvurusu</h2>
 <form onsubmit="return false">
 <div class="grid">
@@ -96,4 +107,28 @@ activate(tabs[next],true);
 });
 });
 })();
-</script></main></body></html>
+</script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
+<script src="assets/js/supabase-config.js"></script>
+<script>
+(function(){
+"use strict";
+const form=document.getElementById('creator-auth-form'),status=document.getElementById('creator-auth-status'),logout=document.getElementById('creator-logout'),login=document.getElementById('creator-login');
+const client=window.db;
+if(!client){status.textContent='Giriş servisine ulaşılamadı. Daha sonra yeniden deneyin.';form.hidden=true;return;}
+function display(session){
+const signedIn=!!session?.user;
+form.hidden=signedIn;logout.hidden=!signedIn;
+status.textContent=signedIn?'Giriş yapıldı. İçerik gönderimi henüz etkin değil.':'Giriş yapılmadı. Mevcut hesabınla giriş yapabilirsin.';
+}
+client.auth.getSession().then(({data,error})=>{if(error){status.textContent='Oturum kontrol edilemedi.';return;}display(data.session);}).catch(()=>{status.textContent='Oturum kontrol edilemedi.';});
+client.auth.onAuthStateChange((_event,session)=>display(session));
+form.addEventListener('submit',async event=>{
+event.preventDefault();login.disabled=true;status.textContent='Giriş kontrol ediliyor.';
+const email=document.getElementById('creator-email').value.trim(),password=document.getElementById('creator-password').value;
+try{const {error}=await client.auth.signInWithPassword({email,password});if(error){status.textContent='Giriş başarısız. Bilgilerini veya hesap yetkini kontrol et.';}else{document.getElementById('creator-password').value='';}}
+catch(_){status.textContent='Giriş servisine bağlanılamadı.';}finally{login.disabled=false;}
+});
+logout.addEventListener('click',async()=>{logout.disabled=true;try{const {error}=await client.auth.signOut();if(error)status.textContent='Çıkış tamamlanamadı.';}catch(_){status.textContent='Çıkış tamamlanamadı.';}finally{logout.disabled=false;}});
+})();
+</script>
+</main></body></html>
