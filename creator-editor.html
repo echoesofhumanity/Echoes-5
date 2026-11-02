@@ -48,6 +48,23 @@ else{line(body,'h4','','Dosya bilgileri');for(const file of filesResult.data){
 line(body,'p','detail-row',file.original_name+' · '+(file.mime_type||'Tür bilinmiyor')+' · '+(typeof file.file_size==='number'?(file.file_size/1024).toFixed(1)+' KB':'Boyut bilinmiyor'));
 const btn=document.createElement('button');btn.type='button';btn.textContent='Dosyayı güvenli indir';body.append(btn);
 const result=line(body,'p','detail-note','');
+if(['video/mp4','video/webm'].includes(file.mime_type)){
+const preview=document.createElement('button');preview.type='button';preview.textContent='Videoyu ön izle';body.append(preview);
+const player=document.createElement('video');player.controls=true;player.playsInline=true;player.preload='metadata';player.hidden=true;player.style.cssText='display:none;width:100%;max-width:620px;margin:12px auto;border-radius:12px;background:#000;';body.append(player);
+let previewUrl=null;
+preview.addEventListener('click',async()=>{
+if(previewUrl){player.pause();player.removeAttribute('src');player.load();URL.revokeObjectURL(previewUrl);previewUrl=null;player.hidden=true;player.style.display='none';preview.textContent='Videoyu ön izle';result.textContent='Ön izleme kapatıldı.';return;}
+preview.disabled=true;result.textContent='Güvenli video hazırlanıyor...';
+try{
+const {data:who,error:whoError}=await db.auth.getUser();if(whoError||!who?.user)throw Error('Oturum doğrulanamadı');
+const {data:member,error:memberError}=await db.from('creator_editor_members').select('active').eq('user_id',who.user.id).eq('active',true).maybeSingle();if(memberError||!member)throw Error('Editör yetkisi bulunamadı');
+const {data:blob,error:downloadError}=await db.storage.from('echoes-creator-submissions').download(file.storage_path);if(downloadError||!blob)throw Error('Video alınamadı');
+previewUrl=URL.createObjectURL(blob);player.src=previewUrl;player.hidden=false;player.style.display='block';preview.textContent='Ön izlemeyi kapat';result.textContent='Video yalnızca bu oturumda açıldı; otomatik oynatılmaz.';
+}catch(e){result.textContent='Ön izleme başarısız: '+(e.message||'Erişim hatası');}
+finally{preview.disabled=false;}
+});
+detail.addEventListener('toggle',()=>{if(!detail.open&&previewUrl){player.pause();player.removeAttribute('src');player.load();URL.revokeObjectURL(previewUrl);previewUrl=null;player.hidden=true;player.style.display='none';preview.textContent='Videoyu ön izle';}});
+}
 btn.addEventListener('click',async()=>{
 btn.disabled=true;result.textContent='Yetkili dosya erişimi kontrol ediliyor...';
 try{
