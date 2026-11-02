@@ -91,6 +91,14 @@ footer{text-align:center}
 .creator-card-id{text-align:center}
 .creator-submission-card .creator-file{text-align:center;margin-left:auto;margin-right:auto}
 .creator-submission-card .creator-file-actions{margin-left:auto;margin-right:auto}
+
+.creator-card-progress{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;margin:14px auto 6px;max-width:600px}
+.creator-progress-step{border:1px solid rgba(114,217,209,.2);border-radius:999px;padding:5px 10px;color:#9bb8bc;font-size:.76rem}
+.creator-progress-step.current{border-color:#72d9d1;background:rgba(49,137,138,.23);color:#e7ffff}
+.creator-progress-step.complete{border-color:rgba(114,217,209,.32);color:#bce8e3}
+.creator-review-history{max-width:600px;margin:14px auto 0;border-top:1px solid rgba(114,217,209,.16);padding-top:12px}
+.creator-review-history h4{font-size:.89rem;color:#c5eae7;margin:0 0 8px}
+.creator-review-history p{font-size:.84rem;color:#b6cfd0;margin:5px 0;overflow-wrap:anywhere}
 </style>
 </head>
 <body><main>
@@ -234,6 +242,8 @@ if(authError||!user||user.id!==currentUser.id)throw Error('auth');
 const {data,error}=await client.from('creator_submissions').select('id,title,status,created_at,preferred_channels,preferred_social_platforms').eq('creator_user_id',user.id).order('created_at',{ascending:false}).limit(20);
 if(error)throw error;
 const {data:files,error:fileError}=await client.from('creator_submission_files').select('submission_id,original_name,storage_path,file_size,mime_type').eq('creator_user_id',user.id).limit(100);
+const {data:reviewEvents,error:reviewError}=await client.from('creator_review_events').select('submission_id,event_type,message,created_at').order('created_at',{ascending:true}).limit(200);
+const reviewsBySubmission=new Map();if(!reviewError&&reviewEvents)for(const event of reviewEvents){const arr=reviewsBySubmission.get(event.submission_id)||[];arr.push(event);reviewsBySubmission.set(event.submission_id,arr);}
 const fileBySubmission=new Map();if(!fileError&&files)for(const file of files){const arr=fileBySubmission.get(file.submission_id)||[];arr.push(file);fileBySubmission.set(file.submission_id,arr);}
 listStatus.textContent=data.length?data.length+' başvuru görüntüleniyor.':'Henüz başvurun yok.';
 const channelNames={radio:'Echoes Radio',tv:'Echoes TV',news:'Haber Merkezi',social:'Sosyal Medya',stories:'Stories / Media',academy:'Echoes Academy',editor_choice:'Editör değerlendirsin'};
@@ -251,6 +261,27 @@ element('div','creator-card-values',(item.preferred_channels||['editor_choice'])
 if(item.preferred_social_platforms?.length){
 element('div','creator-card-label','SOSYAL MEDYA PLATFORMLARI',li);
 element('div','creator-card-values',item.preferred_social_platforms.map(p=>platformNames[p]||p).join(' · '),li);
+}
+const statusOrder=['submitted','in_review','approved','published'];
+const steps=[['submitted','Alındı'],['in_review','İnceleme'],['approved','Onay'],['published','Yayın']];
+const progress=element('div','creator-card-progress',undefined,li);
+for(const [code,label] of steps){
+const step=element('span','creator-progress-step',label,progress);
+if(item.status===code)step.classList.add('current');
+else if(statusOrder.indexOf(item.status)>statusOrder.indexOf(code))step.classList.add('complete');
+}
+if(item.status==='revision_requested'||item.status==='rejected'){
+element('p','creator-card-values',item.status==='revision_requested'?'Editör düzeltme talep etti. Ayrıntılar mevcutsa aşağıda gösterilir.':'Başvuru uygun bulunmadı.',li);
+}
+const reviewSection=element('section','creator-review-history',undefined,li);
+element('h4','','Değerlendirme geçmişi',reviewSection);
+const history=reviewsBySubmission.get(item.id)||[];
+if(reviewError)element('p','','Değerlendirme geçmişi şu anda yüklenemiyor.',reviewSection);
+else if(!history.length)element('p','','Henüz editör değerlendirmesi kaydedilmedi.',reviewSection);
+else for(const event of history){
+const when=new Date(event.created_at).toLocaleDateString('tr-TR');
+const eventLabel=statusNames[event.event_type]||(event.event_type==='editor_note'?'Editör notu':'Güncelleme');
+element('p','',when+' · '+eventLabel+(event.message?' — '+event.message:''),reviewSection);
 }
 const details=element('details','creator-card-details',undefined,li);
 element('summary','', 'Başvuru ayrıntıları',details);
