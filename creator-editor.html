@@ -64,7 +64,7 @@ finally{btn.disabled=false;}
 }line(body,'p','detail-note','Dosyalar yalnızca yetkili oturumla, özel depolama alanından indirilir.');}
 function renderChangeHighlight(parent,oldText,newText){
 const before=String(oldText||''),after=String(newText||'');
-const a=before.match(/\\S+\\s*|\\s+/gu)||[],b=after.match(/\\S+\\s*|\\s+/gu)||[];
+const a=before.match(/\S+\s*|\s+/gu)||[],b=after.match(/\S+\s*|\s+/gu)||[];
 const oldLine=document.createElement('p'),newLine=document.createElement('p');
 oldLine.className='diff-text';newLine.className='diff-text';
 const emit=(node,value,changed,kind)=>{if(!value)return;const part=document.createElement(changed?'mark':'span');if(changed)part.className=kind;part.textContent=value;node.append(part);};
