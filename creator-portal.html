@@ -299,6 +299,28 @@ const when=new Date(event.created_at).toLocaleDateString('tr-TR');
 const eventLabel=statusNames[event.event_type]||(event.event_type==='editor_note'?'Editör notu':'Güncelleme');
 element('p','',when+' · '+eventLabel+(event.message?' — '+event.message:''),reviewSection);
 }
+if(item.status==='revision_requested'&&item.title==='ECHOES TEST — Sentetik başvuru'){
+const revision=element('section','creator-review-history',undefined,li);
+element('h4','','Sentetik düzeltme testi',revision);
+element('p','creator-card-values','Aynı başvuruyu yeniden incelemeye göndermek için açıklamayı güncelle. Gerçek eser veya kişisel bilgi kullanma.',revision);
+const revisionText=document.createElement('textarea');revisionText.maxLength=4000;revisionText.minLength=10;revisionText.placeholder='Güncellenmiş sentetik test açıklaması (10–4000 karakter)';revisionText.setAttribute('aria-label','Güncellenmiş sentetik açıklama');revision.append(revisionText);
+const revisionButton=element('button','creator-download','Düzeltmeyi gönder',revision);revisionButton.type='button';
+const revisionStatus=element('p','help','',revision);revisionStatus.setAttribute('role','status');
+revisionButton.addEventListener('click',async()=>{
+const updated=revisionText.value.trim();
+if(updated.length<10||updated.length>4000){revisionStatus.textContent='Açıklama 10–4000 karakter olmalı.';return;}
+if(!window.confirm('Sentetik başvurunun açıklaması güncellenip yeniden incelemeye alınacak. Onaylıyor musun?'))return;
+revisionButton.disabled=true;revisionStatus.textContent='Düzeltme kaydediliyor...';
+try{
+const {data:{user},error:authError}=await client.auth.getUser();
+if(authError||!user||user.id!==currentUser?.id)throw Error('auth');
+const {error}=await client.rpc('creator_submit_revision_v1',{p_submission_id:item.id,p_summary:updated});
+if(error)throw error;
+revisionStatus.textContent='Düzeltme gönderildi. Liste yenileniyor.';
+await loadOwn();
+}catch(_){revisionStatus.textContent='Düzeltme kaydedilemedi. Yetki, durum veya bağlantı kontrolü gerekiyor.';revisionButton.disabled=false;}
+});
+}
 const details=element('details','creator-card-details',undefined,li);
 element('summary','', 'Başvuru ayrıntıları',details);
 element('span','creator-card-id','Başvuru numarası: '+item.id,details);
