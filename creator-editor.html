@@ -5,7 +5,7 @@
 </style></head><body><main>
 <p class="eyebrow">ECHOES OF HUMANITY · EDITORIAL</p><h1>Editör İnceleme Alanı</h1><p class="muted">Creator Portal başvuruları için yetki kontrollü, salt okunur ön inceleme ekranı.</p>
 <section class="panel" id="gate"><h2>Editör girişi</h2><p class="muted">Yalnızca Creator Portal için ayrıca yetkilendirilmiş hesaplar erişebilir.</p><form id="login"><label for="email">E-posta</label><input id="email" type="email" autocomplete="username" required><label for="password">Şifre</label><input id="password" type="password" autocomplete="current-password" required><button type="submit">Giriş yap</button></form><p id="message" role="status" aria-live="polite"></p></section>
-<section id="workspace" hidden><div class="panel"><h2>Gelen başvurular</h2><p class="muted">Yetkili editör dosyaları indirebilir ve değerlendirme notu ekleyebilir. Başvuru durumu değiştirilemez.</p><button id="reload" type="button">Listeyi yenile</button><button id="logout" type="button">Çıkış yap</button><p id="workspace-status" role="status" aria-live="polite"></p></div><ul id="items"></ul></section>
+<section id="workspace" hidden><div class="panel"><h2>Gelen başvurular</h2><p class="muted">Yetkili editör dosyaları indirebilir ve değerlendirme notu ekleyebilir. Kararlar ilk aşamada yalnızca sentetik test başvurusunda kullanılabilir; yayınlama kapalıdır.</p><button id="reload" type="button">Listeyi yenile</button><button id="logout" type="button">Çıkış yap</button><p id="workspace-status" role="status" aria-live="polite"></p></div><ul id="items"></ul></section>
 <footer><a href="creator-portal.html">Creator Portal'a dön</a></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script><script src="assets/js/supabase-config.js"></script>
 <script>
@@ -87,6 +87,29 @@ line(body,'p','detail-row',new Date().toLocaleString('tr-TR')+' · Editör notu'
 line(body,'p','detail-note',content);
 }catch(e){feedback.textContent=e.message||'Not kaydedilemedi';}finally{save.disabled=false;}
 });
+if(item.title==='ECHOES TEST — Sentetik başvuru'){
+line(body,'h4','','Kontrollü karar testi');
+const allowed={submitted:[['in_review','İncelemeye al']],in_review:[['revision_requested','Düzeltme iste'],['approved','Onayla'],['rejected','Reddet']],revision_requested:[['in_review','Yeniden incelemeye al']]};
+const choices=allowed[item.status]||[];
+if(!choices.length){line(body,'p','detail-note','Bu durum için yeni karar seçeneği bulunmuyor.');}
+else{
+const select=document.createElement('select');select.setAttribute('aria-label','Editör kararı');select.style.cssText='display:block;margin:10px auto;padding:12px;max-width:100%;background:#081b27;color:white;border:1px solid #517a81;border-radius:12px;font:inherit;';
+for(const [value,label] of choices){const option=document.createElement('option');option.value=value;option.textContent=label;select.append(option);}
+const reason=document.createElement('textarea');reason.rows=3;reason.maxLength=4000;reason.placeholder='Karar gerekçesi (düzeltme ve ret için zorunlu)';reason.setAttribute('aria-label','Karar gerekçesi');reason.style.cssText='width:100%;max-width:620px;display:block;margin:10px auto;padding:12px;border:1px solid #517a81;border-radius:12px;background:#081b27;color:white;font:inherit;';
+const decisionButton=document.createElement('button');decisionButton.type='button';decisionButton.textContent='Test kararını kaydet';const decisionFeedback=line(body,'p','detail-note','');body.append(select,reason,decisionButton);
+decisionButton.addEventListener('click',async()=>{
+const newStatus=select.value;const message=reason.value.trim();
+if(['revision_requested','rejected'].includes(newStatus)&&!message){decisionFeedback.textContent='Bu karar için gerekçe zorunludur.';return;}
+if(!window.confirm('Yalnızca sentetik test başvurusunun durumunu değiştirmek istiyor musun?'))return;
+decisionButton.disabled=true;decisionFeedback.textContent='Karar güvenli biçimde kaydediliyor...';
+try{
+const {error}=await db.rpc('creator_editor_decide_v1',{p_submission_id:item.id,p_expected_status:item.status,p_new_status:newStatus,p_message:message||null});
+if(error)throw Error(error.message||'Karar kaydedilemedi');
+decisionFeedback.textContent='Karar ve geçmiş birlikte kaydedildi. Liste yenileniyor...';await load();
+}catch(e){decisionFeedback.textContent='Karar kaydedilemedi: '+e.message;}finally{decisionButton.disabled=false;}
+});
+}
+}
 }catch(_){body.replaceChildren();line(body,'p','detail-row','Ayrıntılar yüklenemedi.');fetched=false;}
 });
 
