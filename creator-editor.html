@@ -5,7 +5,7 @@
 </style></head><body><main>
 <p class="eyebrow">ECHOES OF HUMANITY · EDITORIAL</p><h1>Editör İnceleme Alanı</h1><p class="muted">Creator Portal başvuruları için yetki kontrollü, salt okunur ön inceleme ekranı.</p>
 <section class="panel" id="gate"><h2>Editör girişi</h2><p class="muted">Yalnızca Creator Portal için ayrıca yetkilendirilmiş hesaplar erişebilir.</p><form id="login"><label for="email">E-posta</label><input id="email" type="email" autocomplete="username" required><label for="password">Şifre</label><input id="password" type="password" autocomplete="current-password" required><button type="submit">Giriş yap</button></form><p id="message" role="status" aria-live="polite"></p></section>
-<section id="workspace" hidden><div class="panel"><h2>Gelen başvurular</h2><p class="muted">Bu sürümde dosyalar yalnızca yetkili editör tarafından indirilebilir; değerlendirme kararı kaydedilemez.</p><button id="reload" type="button">Listeyi yenile</button><button id="logout" type="button">Çıkış yap</button><p id="workspace-status" role="status" aria-live="polite"></p></div><ul id="items"></ul></section>
+<section id="workspace" hidden><div class="panel"><h2>Gelen başvurular</h2><p class="muted">Yetkili editör dosyaları indirebilir ve değerlendirme notu ekleyebilir. Başvuru durumu değiştirilemez.</p><button id="reload" type="button">Listeyi yenile</button><button id="logout" type="button">Çıkış yap</button><p id="workspace-status" role="status" aria-live="polite"></p></div><ul id="items"></ul></section>
 <footer><a href="creator-portal.html">Creator Portal'a dön</a></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script><script src="assets/js/supabase-config.js"></script>
 <script>
@@ -38,7 +38,7 @@ fetched=true;body.replaceChildren();line(body,'p','detail-note','Dosya ve değer
 try{
 const [filesResult,historyResult]=await Promise.all([
 db.from('creator_submission_files').select('original_name,mime_type,file_size,created_at,storage_path').eq('submission_id',item.id).order('created_at',{ascending:true}).limit(30),
-db.from('creator_review_events').select('event_type,message,created_at').eq('submission_id',item.id).order('created_at',{ascending:true}).limit(50)
+db.from('creator_review_events').select('event_type,message,created_at,editor_user_id').eq('submission_id',item.id).order('created_at',{ascending:true}).limit(50)
 ]);
 body.replaceChildren();
 line(body,'p','detail-note','Başvuru kimliği: '+item.id);
@@ -69,6 +69,24 @@ else for(const event of historyResult.data){
 line(body,'p','detail-row',new Date(event.created_at).toLocaleString('tr-TR')+' · '+(events[event.event_type]||'Değerlendirme'));
 if(event.message)line(body,'p','detail-note',event.message);
 }
+const noteHeading=line(body,'h4','','Editör notu ekle');
+const note=document.createElement('textarea');note.maxLength=4000;note.rows=4;note.placeholder='Yalnızca değerlendirme notu; başvuru durumunu değiştirmez.';note.setAttribute('aria-label','Editör notu');note.style.cssText='width:100%;max-width:620px;display:block;margin:10px auto;padding:12px;border:1px solid #517a81;border-radius:12px;background:#081b27;color:white;font:inherit;';
+const save=document.createElement('button');save.type='button';save.textContent='Notu kaydet';const feedback=line(body,'p','detail-note','');
+body.append(note,save);
+save.addEventListener('click',async()=>{
+const content=note.value.trim();if(!content){feedback.textContent='Önce bir not yaz.';return;}
+save.disabled=true;feedback.textContent='Not kaydediliyor...';
+try{
+const {data:auth,error:authError}=await db.auth.getUser();if(authError||!auth?.user)throw Error('Oturum doğrulanamadı');
+const {data:member,error:memberError}=await db.from('creator_editor_members').select('active').eq('user_id',auth.user.id).eq('active',true).maybeSingle();
+if(memberError||!member)throw Error('Editör yetkisi bulunamadı');
+const {error:insertError}=await db.from('creator_review_events').insert({submission_id:item.id,event_type:'editor_note',message:content,editor_user_id:auth.user.id});
+if(insertError)throw Error('Not kaydedilemedi');
+note.value='';feedback.textContent='Not kaydedildi. Güncel geçmiş için ayrıntıları kapatıp listeyi yenile.';
+line(body,'p','detail-row',new Date().toLocaleString('tr-TR')+' · Editör notu');
+line(body,'p','detail-note',content);
+}catch(e){feedback.textContent=e.message||'Not kaydedilemedi';}finally{save.disabled=false;}
+});
 }catch(_){body.replaceChildren();line(body,'p','detail-row','Ayrıntılar yüklenemedi.');fetched=false;}
 });
 
