@@ -336,7 +336,7 @@ const allowed=['image/jpeg','image/png','image/webp','video/mp4','video/webm','a
 if(!allowed.includes(file.type)||file.size<1||file.size>104857600){feedback.textContent='Desteklenmeyen dosya türü veya 100 MiB sınırı aşıldı.';return;}
 send.disabled=true;feedback.textContent='Dosya yükleniyor...';
 try{
-const {data:{user},error:authError}=await client.auth.getUser();if(authError||!user||user.id!==currentUser?.id||user.id!==item.creator_user_id)throw Error('Oturum doğrulanamadı');
+const {data:{user},error:authError}=await client.auth.getUser();if(authError||!user||user.id!==currentUser?.id)throw Error('Oturum doğrulanamadı');
 const {data:existing,error:existingError}=await client.from('creator_submission_files').select('id').eq('submission_id',item.id).limit(1);if(existingError||existing?.length)throw Error('Bu başvuruda zaten dosya bulunuyor veya kontrol edilemedi');
 const path=user.id+'/'+item.id+'/'+crypto.randomUUID();
 const {error:uploadError}=await client.storage.from('echoes-creator-submissions').upload(path,file,{contentType:file.type,upsert:false});if(uploadError)throw uploadError;
