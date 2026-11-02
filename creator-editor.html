@@ -5,7 +5,7 @@
 </style></head><body><main>
 <p class="eyebrow">ECHOES OF HUMANITY · EDITORIAL</p><h1>Editör İnceleme Alanı</h1><p class="muted">Creator Portal başvuruları için yetki kontrollü, salt okunur ön inceleme ekranı.</p>
 <section class="panel" id="gate"><h2>Editör girişi</h2><p class="muted">Yalnızca Creator Portal için ayrıca yetkilendirilmiş hesaplar erişebilir.</p><form id="login"><label for="email">E-posta</label><input id="email" type="email" autocomplete="username" required><label for="password">Şifre</label><input id="password" type="password" autocomplete="current-password" required><button type="submit">Giriş yap</button></form><p id="message" role="status" aria-live="polite"></p></section>
-<section id="workspace" hidden><div class="panel"><h2>Gelen başvurular</h2><p class="muted">Bu sürümde değerlendirme kararı kaydedilemez ve dosyalar açılamaz.</p><button id="reload" type="button">Listeyi yenile</button><button id="logout" type="button">Çıkış yap</button><p id="workspace-status" role="status" aria-live="polite"></p></div><ul id="items"></ul></section>
+<section id="workspace" hidden><div class="panel"><h2>Gelen başvurular</h2><p class="muted">Bu sürümde dosyalar yalnızca yetkili editör tarafından indirilebilir; değerlendirme kararı kaydedilemez.</p><button id="reload" type="button">Listeyi yenile</button><button id="logout" type="button">Çıkış yap</button><p id="workspace-status" role="status" aria-live="polite"></p></div><ul id="items"></ul></section>
 <footer><a href="creator-portal.html">Creator Portal'a dön</a></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script><script src="assets/js/supabase-config.js"></script>
 <script>
@@ -37,7 +37,7 @@ if(!detail.open||fetched)return;
 fetched=true;body.replaceChildren();line(body,'p','detail-note','Dosya ve değerlendirme bilgileri yükleniyor...');
 try{
 const [filesResult,historyResult]=await Promise.all([
-db.from('creator_submission_files').select('original_name,mime_type,file_size,created_at').eq('submission_id',item.id).order('created_at',{ascending:true}).limit(30),
+db.from('creator_submission_files').select('original_name,mime_type,file_size,created_at,storage_path').eq('submission_id',item.id).order('created_at',{ascending:true}).limit(30),
 db.from('creator_review_events').select('event_type,message,created_at').eq('submission_id',item.id).order('created_at',{ascending:true}).limit(50)
 ]);
 body.replaceChildren();
@@ -46,7 +46,22 @@ if(filesResult.error){line(body,'p','detail-row','Dosya kayıtları alınamadı.
 else if(!filesResult.data.length){line(body,'p','detail-row','Dosya kaydı bulunmuyor.');}
 else{line(body,'h4','','Dosya bilgileri');for(const file of filesResult.data){
 line(body,'p','detail-row',file.original_name+' · '+(file.mime_type||'Tür bilinmiyor')+' · '+(typeof file.file_size==='number'?(file.file_size/1024).toFixed(1)+' KB':'Boyut bilinmiyor'));
-}line(body,'p','detail-note','Bu ekranda dosya açma ve indirme kapalıdır.');}
+const btn=document.createElement('button');btn.type='button';btn.textContent='Dosyayı güvenli indir';body.append(btn);
+const result=line(body,'p','detail-note','');
+btn.addEventListener('click',async()=>{
+btn.disabled=true;result.textContent='Yetkili dosya erişimi kontrol ediliyor...';
+try{
+const {data:who,error:whoError}=await db.auth.getUser();
+if(whoError||!who?.user)throw Error('Oturum doğrulanamadı');
+const {data:member,error:memberError}=await db.from('creator_editor_members').select('active').eq('user_id',who.user.id).eq('active',true).maybeSingle();
+if(memberError||!member)throw Error('Editör yetkisi bulunamadı');
+const {data:blob,error:downloadError}=await db.storage.from('echoes-creator-submissions').download(file.storage_path);
+if(downloadError||!blob)throw Error('Dosya indirilemedi');
+const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=file.original_name||'creator-dosya';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);result.textContent='İndirme başlatıldı.';
+}catch(e){result.textContent='İndirme başarısız: '+(e.message||'Erişim hatası');}
+finally{btn.disabled=false;}
+});
+}line(body,'p','detail-note','Dosyalar yalnızca yetkili oturumla, özel depolama alanından indirilir.');}
 line(body,'h4','','Değerlendirme geçmişi');
 if(historyResult.error)line(body,'p','detail-row','Değerlendirme geçmişi alınamadı.');
 else if(!historyResult.data.length)line(body,'p','detail-row','Henüz kayıtlı değerlendirme olayı bulunmuyor.');
