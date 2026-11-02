@@ -224,7 +224,7 @@ if(file){
 submitStatus.textContent='Başvuru kaydedildi. Dosya yükleniyor...';
 const path=user.id+'/'+data.id+'/'+crypto.randomUUID();
 const {error:uploadError}=await client.storage.from('echoes-creator-submissions').upload(path,file,{contentType:file.type,upsert:false});
-if(uploadError){submitStatus.textContent='Başvuru kaydedildi ('+data.id+'), ancak dosya yüklenemedi. Destek gerekli.';return;}
+if(uploadError){const code=String(uploadError.statusCode||uploadError.error||'bilinmiyor').slice(0,60);const detail=String(uploadError.message||'Depolama hatası').slice(0,220);submitStatus.textContent='Başvuru kaydedildi ('+data.id+'), ancak dosya yüklenemedi. Hata: '+code+' — '+detail+'. Aynı başvuruyu tekrar gönderme.';return;}
 const {error:metadataError}=await client.from('creator_submission_files').insert({submission_id:data.id,creator_user_id:user.id,storage_path:path,original_name:file.name,mime_type:file.type,file_size:file.size});
 if(metadataError){submitStatus.textContent='Dosya yüklendi fakat başvuruya bağlanamadı. Numara: '+data.id+'. Destek gerekli.';return;}
 }
