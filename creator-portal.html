@@ -206,13 +206,13 @@ const email=document.getElementById('creator-email').value.trim(),password=docum
 try{const {error}=await client.auth.signInWithPassword({email,password});if(error){status.textContent='Giriş başarısız. Bilgilerini veya hesap yetkini kontrol et.';}else{document.getElementById('creator-password').value='';}}
 catch(_){status.textContent='Giriş servisine bağlanılamadı.';}finally{login.disabled=false;}
 });
-submissionForm.addEventListener('submit',async event=>{
-event.preventDefault();if(!currentUser)return;
-const file=document.getElementById('file').files[0]||null;
 const fileLimits={'image/jpeg':10485760,'image/png':10485760,'image/webp':10485760,'video/mp4':52428800,'video/webm':52428800,'audio/mpeg':26214400,'audio/wav':26214400,'application/pdf':10485760,'text/plain':10485760};
 function fileLimitError(file){if(!file)return '';const max=fileLimits[file.type];if(!max)return 'Bu dosya türü desteklenmiyor.';if(file.size<1||file.size>max)return 'Dosya sınırı aşıldı. Fotoğraf/belge: 10 MiB, ses: 25 MiB, video: 50 MiB.';return '';}
 const selectedFileInput=document.getElementById('file'),selectedFileCheck=document.getElementById('creator-file-check');
 selectedFileInput.addEventListener('change',()=>{const file=selectedFileInput.files?.[0];if(!file){selectedFileCheck.textContent='';return;}const size=(file.size/1048576).toFixed(2);const problem=fileLimitError(file);selectedFileCheck.textContent=problem?'Seçilen dosya: '+size+' MiB. '+problem:'Seçilen dosya: '+size+' MiB. Boyut kontrolü başarılı; gönderime hazır.';selectedFileCheck.style.color=problem?'#f3ae9a':'#89ded1';});
+submissionForm.addEventListener('submit',async event=>{
+event.preventDefault();if(!currentUser)return;
+const file=document.getElementById('file').files[0]||null;
 const allowedTypes=['image/jpeg','image/png','image/webp','video/mp4','video/webm','audio/mpeg','audio/wav','application/pdf','text/plain'];
 if(fileLimitError(file)){submitStatus.textContent=fileLimitError(file);return;}
 const preferred_channels=Array.from(document.querySelectorAll('input[name="channel"]:checked')).map(x=>x.value);const preferred_social_platforms=preferred_channels.includes('social')?Array.from(document.querySelectorAll('input[name="social-platform"]:checked')).map(x=>x.value):[];if(preferred_channels.includes('social')&&preferred_social_platforms.length===0)preferred_social_platforms.push('editor_choice');if(preferred_channels.length<1||preferred_channels.length>3){submitStatus.textContent='Bir ile üç yayın kanalı seçmelisin.';return;}const title=document.getElementById('title').value.trim(),summary=document.getElementById('summary').value.trim(),content_type=document.getElementById('type').value,language_code=document.getElementById('language').value;
