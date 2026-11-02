@@ -324,6 +324,27 @@ await loadOwn();
 const details=element('details','creator-card-details',undefined,li);
 element('summary','', 'Başvuru ayrıntıları',details);
 element('span','creator-card-id','Başvuru numarası: '+item.id,details);
+if(item.status==='submitted'&&!(fileBySubmission.get(item.id)||[]).length){
+const retry=element('div','creator-file',undefined,details);
+element('p','help','Bu başvuruya henüz dosya bağlanmamış. Yeni başvuru oluşturmadan dosya ekleyebilirsin.',retry);
+const picker=document.createElement('input');picker.type='file';picker.accept='.jpg,.jpeg,.png,.webp,.mp4,.webm,.mp3,.wav,.pdf,.txt';picker.setAttribute('aria-label','Mevcut başvuruya dosya seç');picker.style.cssText='display:block;max-width:100%;margin:12px auto';retry.append(picker);
+const send=element('button','creator-download','Dosyayı bu başvuruya yükle',retry);send.type='button';
+const feedback=element('p','help','',retry);feedback.setAttribute('role','status');
+send.addEventListener('click',async()=>{
+const file=picker.files?.[0];if(!file){feedback.textContent='Önce dosya seç.';return;}
+const allowed=['image/jpeg','image/png','image/webp','video/mp4','video/webm','audio/mpeg','audio/wav','application/pdf','text/plain'];
+if(!allowed.includes(file.type)||file.size<1||file.size>104857600){feedback.textContent='Desteklenmeyen dosya türü veya 100 MiB sınırı aşıldı.';return;}
+send.disabled=true;feedback.textContent='Dosya yükleniyor...';
+try{
+const {data:{user},error:authError}=await client.auth.getUser();if(authError||!user||user.id!==currentUser?.id||user.id!==item.creator_user_id)throw Error('Oturum doğrulanamadı');
+const {data:existing,error:existingError}=await client.from('creator_submission_files').select('id').eq('submission_id',item.id).limit(1);if(existingError||existing?.length)throw Error('Bu başvuruda zaten dosya bulunuyor veya kontrol edilemedi');
+const path=user.id+'/'+item.id+'/'+crypto.randomUUID();
+const {error:uploadError}=await client.storage.from('echoes-creator-submissions').upload(path,file,{contentType:file.type,upsert:false});if(uploadError)throw uploadError;
+const {error:metaError}=await client.from('creator_submission_files').insert({submission_id:item.id,creator_user_id:user.id,storage_path:path,original_name:file.name,mime_type:file.type,file_size:file.size});if(metaError)throw metaError;
+feedback.textContent='Dosya mevcut başvuruya bağlandı.';await loadOwn();
+}catch(error){feedback.textContent='Yükleme başarısız: '+String(error.statusCode||error.error||'')+' '+String(error.message||'Bilinmeyen hata').slice(0,220);send.disabled=false;}
+});
+}
 list.append(li);
 for(const file of (fileBySubmission.get(item.id)||[])){
 const wrap=document.createElement('div');wrap.className='creator-file';
