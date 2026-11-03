@@ -222,11 +222,12 @@ const preferred_channels=Array.from(document.querySelectorAll('input[name="chann
 if(!title||title.length>180||summary.length>4000||document.getElementById('rights').value!=='yes')return;
 if(!window.confirm('Başvurun özel olarak kaydedilecek'+(file?' ve dosyan özel depoya yüklenecek':'')+'. Test için gerçek eser veya hassas veri kullanma. Onaylıyor musun?'))return;
 submissionInFlight=true;submissionNeedsReview=true;
-submitButton.disabled=true;submitStatus.textContent='Başvuru kaydediliyor. Sonuç kesinleşene kadar tekrar gönderme.';
+const requestId=crypto.randomUUID();
+submitButton.disabled=true;submitStatus.textContent='Başvuru kaydediliyor. İşlem numarası: '+requestId+'. Sonuç kesinleşene kadar tekrar gönderme.';
 try{
 const {data:{user},error:authError}=await client.auth.getUser();
 if(authError||!user||user.id!==currentUser.id)throw Error('auth');
-const {data,error}=await client.from('creator_submissions').insert({creator_user_id:user.id,title,summary:summary||null,content_type,language_code,preferred_channels,preferred_social_platforms,rights_attested:true}).select('id').single();
+const {data,error}=await client.from('creator_submissions').insert({id:requestId,creator_user_id:user.id,title,summary:summary||null,content_type,language_code,preferred_channels,preferred_social_platforms,rights_attested:true}).select('id').single();
 if(error)throw error;
 if(file){
 submitStatus.textContent='1/3 Başvuru kaydedildi. 2/3 Dosya aktarılıyor ('+(file.size/1048576).toFixed(2)+' MiB). Bu sekmeyi kapatma veya yenileme.';
@@ -240,7 +241,7 @@ if(metadataError){submitStatus.textContent='Dosya yüklendi fakat başvuruya ba�
 submitStatus.textContent='Başvuru alındı'+(file?' ve dosya kaydedildi':'')+'. Numara: '+data.id+'. Gönderilerim sekmesinden takip edebilirsin.';
 submissionNeedsReview=false;
 submissionForm.reset();document.getElementById('creator-social-options').hidden=true;
-}catch(_){submitStatus.textContent='Gönderim sonucu kesinleşmedi. Bağlantını açıp Gönderilerim bölümünü kontrol et. Aynı formu tekrar gönderme.';}
+}catch(_){submitStatus.textContent='Gönderim sonucu kesinleşmedi. İşlem numarası: '+requestId+'. Bağlantını açıp Gönderilerim bölümünden bu numarayı kontrol et. Aynı formu tekrar gönderme.';}
 finally{submissionInFlight=false;submitButton.disabled=!currentUser||submissionNeedsReview;}
 });
 testButton.addEventListener('click',async()=>{
