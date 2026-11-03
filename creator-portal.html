@@ -339,16 +339,25 @@ send.addEventListener('click',async()=>{
 const file=picker.files?.[0];if(!file){feedback.textContent='Önce dosya seç.';return;}
 const allowed=['image/jpeg','image/png','image/webp','video/mp4','video/webm','audio/mpeg','audio/wav','application/pdf','text/plain'];
 if(fileLimitError(file)){feedback.textContent=fileLimitError(file);return;}
+let uploadCompleted=false;
 send.disabled=true;feedback.textContent='1/2 Dosya aktarılıyor ('+(file.size/1048576).toFixed(2)+' MiB). Bu sekmeyi kapatma veya yenileme.';
 try{
 const {data:{user},error:authError}=await client.auth.getUser();if(authError||!user||user.id!==currentUser?.id)throw Error('Oturum doğrulanamadı');
 const {data:existing,error:existingError}=await client.from('creator_submission_files').select('id').eq('submission_id',item.id).limit(1);if(existingError||existing?.length)throw Error('Bu başvuruda zaten dosya bulunuyor veya kontrol edilemedi');
 const path=user.id+'/'+item.id+'/'+crypto.randomUUID();
 const {error:uploadError}=await client.storage.from('echoes-creator-submissions').upload(path,file,{contentType:file.type,upsert:false});if(uploadError)throw uploadError;
+uploadCompleted=true;
 feedback.textContent='Dosya aktarıldı. 2/2 Başvuruya bağlanıyor...';
 const {error:metaError}=await client.from('creator_submission_files').insert({submission_id:item.id,creator_user_id:user.id,storage_path:path,original_name:file.name,mime_type:file.type,file_size:file.size});if(metaError)throw metaError;
 feedback.textContent='Dosya mevcut başvuruya bağlandı.';await loadOwn();
-}catch(error){feedback.textContent='Yükleme başarısız: '+String(error.statusCode||error.error||'')+' '+String(error.message||'Bilinmeyen hata').slice(0,220);send.disabled=false;}
+}catch(error){
+const message=String(error.message||'Bilinmeyen hata').slice(0,180);
+const {data:check,error:checkError}=await client.from('creator_submission_files').select('id').eq('submission_id',item.id).limit(1);
+if(!checkError&&check?.length){feedback.textContent='Dosya kaydı bulundu. Gönderilerim listesini yenileyerek kontrol et; yeniden yükleme yapma.';send.disabled=true;}
+else if(checkError){feedback.textContent='Bağlantı veya kayıt kontrolü başarısız. Yeniden yüklemeden önce sayfayı yenileyip dosya kaydını kontrol et. Hata: '+message;send.disabled=true;}
+else if(uploadCompleted){feedback.textContent='Dosya depolamaya ulaştı fakat başvuruya bağlanamadı. Tekrar yükleme yapma; destek gerekli. Hata: '+message;send.disabled=true;}
+else{feedback.textContent='Yükleme tamamlanamadı: '+message+'. Aynı başvuruyu yenileyip dosya kaydını kontrol ettikten sonra yeniden deneyebilirsin.';send.disabled=false;}
+}
 });
 }
 list.append(li);
