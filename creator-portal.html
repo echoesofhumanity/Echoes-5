@@ -212,6 +212,7 @@ const selectedFileInput=document.getElementById('file'),selectedFileCheck=docume
 selectedFileInput.addEventListener('change',()=>{const file=selectedFileInput.files?.[0];if(!file){selectedFileCheck.textContent='';return;}const size=(file.size/1048576).toFixed(2);const problem=fileLimitError(file);selectedFileCheck.textContent=problem?'Seçilen dosya: '+size+' MiB. '+problem:'Seçilen dosya: '+size+' MiB. Boyut kontrolü başarılı; gönderime hazır.';selectedFileCheck.style.color=problem?'#f3ae9a':'#89ded1';});
 submissionForm.addEventListener('submit',async event=>{
 event.preventDefault();if(!currentUser)return;
+if(!navigator.onLine){submitStatus.textContent='İnternet bağlantısı yok. Başvuru gönderilmedi. Bağlantı geldikten sonra yeniden kontrol et.';return;}
 const file=document.getElementById('file').files[0]||null;
 const allowedTypes=['image/jpeg','image/png','image/webp','video/mp4','video/webm','audio/mpeg','audio/wav','application/pdf','text/plain'];
 if(fileLimitError(file)){submitStatus.textContent=fileLimitError(file);return;}
@@ -336,6 +337,7 @@ const picker=document.createElement('input');picker.type='file';picker.accept='.
 const send=element('button','creator-download','Dosyayı bu başvuruya yükle',retry);send.type='button';
 const feedback=element('p','help','',retry);feedback.setAttribute('role','status');
 send.addEventListener('click',async()=>{
+if(!navigator.onLine){feedback.textContent='İnternet bağlantısı yok. Bağlantı geldikten sonra Gönderilerim listesini yenileyip dosya durumunu kontrol et.';return;}
 const file=picker.files?.[0];if(!file){feedback.textContent='Önce dosya seç.';return;}
 const allowed=['image/jpeg','image/png','image/webp','video/mp4','video/webm','audio/mpeg','audio/wav','application/pdf','text/plain'];
 if(fileLimitError(file)){feedback.textContent=fileLimitError(file);return;}
