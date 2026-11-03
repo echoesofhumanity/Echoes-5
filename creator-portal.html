@@ -210,8 +210,10 @@ const fileLimits={'image/jpeg':10485760,'image/png':10485760,'image/webp':104857
 function fileLimitError(file){if(!file)return '';const max=fileLimits[file.type];if(!max)return 'Bu dosya türü desteklenmiyor.';if(file.size<1||file.size>max)return 'Dosya sınırı aşıldı. Fotoğraf/belge: 10 MiB, ses: 25 MiB, video: 50 MiB.';return '';}
 const selectedFileInput=document.getElementById('file'),selectedFileCheck=document.getElementById('creator-file-check');
 selectedFileInput.addEventListener('change',()=>{const file=selectedFileInput.files?.[0];if(!file){selectedFileCheck.textContent='';return;}const size=(file.size/1048576).toFixed(2);const problem=fileLimitError(file);selectedFileCheck.textContent=problem?'Seçilen dosya: '+size+' MiB. '+problem:'Seçilen dosya: '+size+' MiB. Boyut kontrolü başarılı; gönderime hazır.';selectedFileCheck.style.color=problem?'#f3ae9a':'#89ded1';});
+let submissionInFlight=false,submissionNeedsReview=false;
 submissionForm.addEventListener('submit',async event=>{
 event.preventDefault();if(!currentUser)return;
+if(submissionInFlight||submissionNeedsReview){submitStatus.textContent='Bu gönderimin sonucu kontrol edilmeli. Gönderilerim bölümünden başvurunu kontrol et; aynı formu tekrar gönderme.';return;}
 if(!navigator.onLine){submitStatus.textContent='İnternet bağlantısı yok. Başvuru gönderilmedi. Bağlantı geldikten sonra yeniden kontrol et.';return;}
 const file=document.getElementById('file').files[0]||null;
 const allowedTypes=['image/jpeg','image/png','image/webp','video/mp4','video/webm','audio/mpeg','audio/wav','application/pdf','text/plain'];
@@ -219,7 +221,8 @@ if(fileLimitError(file)){submitStatus.textContent=fileLimitError(file);return;}
 const preferred_channels=Array.from(document.querySelectorAll('input[name="channel"]:checked')).map(x=>x.value);const preferred_social_platforms=preferred_channels.includes('social')?Array.from(document.querySelectorAll('input[name="social-platform"]:checked')).map(x=>x.value):[];if(preferred_channels.includes('social')&&preferred_social_platforms.length===0)preferred_social_platforms.push('editor_choice');if(preferred_channels.length<1||preferred_channels.length>3){submitStatus.textContent='Bir ile üç yayın kanalı seçmelisin.';return;}const title=document.getElementById('title').value.trim(),summary=document.getElementById('summary').value.trim(),content_type=document.getElementById('type').value,language_code=document.getElementById('language').value;
 if(!title||title.length>180||summary.length>4000||document.getElementById('rights').value!=='yes')return;
 if(!window.confirm('Başvurun özel olarak kaydedilecek'+(file?' ve dosyan özel depoya yüklenecek':'')+'. Test için gerçek eser veya hassas veri kullanma. Onaylıyor musun?'))return;
-submitButton.disabled=true;submitStatus.textContent='Başvuru kaydediliyor.';
+submissionInFlight=true;submissionNeedsReview=true;
+submitButton.disabled=true;submitStatus.textContent='Başvuru kaydediliyor. Sonuç kesinleşene kadar tekrar gönderme.';
 try{
 const {data:{user},error:authError}=await client.auth.getUser();
 if(authError||!user||user.id!==currentUser.id)throw Error('auth');
@@ -235,9 +238,10 @@ const {error:metadataError}=await client.from('creator_submission_files').insert
 if(metadataError){submitStatus.textContent='Dosya yüklendi fakat başvuruya bağlanamadı. Numara: '+data.id+'. Destek gerekli.';return;}
 }
 submitStatus.textContent='Başvuru alındı'+(file?' ve dosya kaydedildi':'')+'. Numara: '+data.id+'. Gönderilerim sekmesinden takip edebilirsin.';
+submissionNeedsReview=false;
 submissionForm.reset();document.getElementById('creator-social-options').hidden=true;
-}catch(_){submitStatus.textContent='Başvuru kaydedilemedi. Lütfen bağlantını ve oturumunu kontrol et.';}
-finally{submitButton.disabled=!currentUser;}
+}catch(_){submitStatus.textContent='Gönderim sonucu kesinleşmedi. Bağlantını açıp Gönderilerim bölümünü kontrol et. Aynı formu tekrar gönderme.';}
+finally{submissionInFlight=false;submitButton.disabled=!currentUser||submissionNeedsReview;}
 });
 testButton.addEventListener('click',async()=>{
 if(!currentUser)return;
