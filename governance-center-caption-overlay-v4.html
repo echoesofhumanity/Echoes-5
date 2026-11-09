@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Governance Center V4 — In-Video Caption Layout Pilot | Echoes of Humanity</title>
+<style>
+:root{color-scheme:dark;--bg:#071628;--panel:#11273b;--line:#2c5261;--ink:#e9f7fa;--muted:#acc5d0;--aqua:#65e5dc}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#16495b 0%,transparent 45%),var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}a{color:var(--aqua)}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--aqua);outline-offset:3px}
+.wrap{max-width:1080px;margin:auto;padding:22px 16px 60px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.brand{letter-spacing:.1em;font-size:.78rem;color:var(--aqua);font-weight:750;text-decoration:none}.pill{border:1px solid #e2ba69;color:#ffe4ac;border-radius:99px;padding:5px 11px;font-size:.75rem}h1{font-size:clamp(1.8rem,5vw,3rem);line-height:1.13;margin:32px 0 12px}h2{font-size:1.25rem;margin:0 0 12px}p{margin:7px 0 15px}.lead{color:var(--muted);max-width:780px}.note{border-left:3px solid #e2ba69;padding:11px 15px;background:#302c2b;margin:22px 0;color:#ffebc8}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}.tabs button,.action{background:#16364a;border:1px solid #3e6a79;color:var(--ink);border-radius:12px;padding:10px 14px}.tabs button[aria-selected=true],.action.primary{background:#126c72;border-color:#6de8dc;color:white}.panel{background:rgba(15,37,55,.94);border:1px solid var(--line);border-radius:18px;padding:20px;margin:12px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.tile{border:1px solid var(--line);background:#0e2335;border-radius:14px;padding:16px}.muted{color:var(--muted)}.small{font-size:.86rem}.stack{display:grid;gap:10px}.row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.screen[hidden]{display:none}label{display:block;margin:10px 0 5px}input,textarea,select{width:100%;background:#071b2b;border:1px solid #507282;border-radius:10px;color:var(--ink);padding:11px}textarea{min-height:90px;resize:vertical}.action:disabled{opacity:.45;cursor:not-allowed}.entry{padding:12px 0;border-bottom:1px solid var(--line)}.entry:last-child{border-bottom:0}.status{color:var(--aqua);font-weight:700}.stat{font-size:1.7rem;font-weight:750}.footer{margin-top:28px;color:var(--muted);font-size:.82rem}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:680px){.grid,.two{grid-template-columns:1fr}.panel{padding:15px}.tabs button{flex:1 1 44%}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top"><a class="brand" href="governance.html">ECHOES OF HUMANITY · GOVERNANCE</a><span class="pill">V4 CAPTION OVERLAY PILOT</span></header>
+<h1>Global Governance Center</h1>
+<p class="lead">A shared space for compassionate leadership, equal voices, operational trust and accountable decisions.</p>
+<div class="note" role="status"><strong>Demonstration only.</strong> No authentication, private meeting, real vote, permanent records or private access. Do not enter personal, confidential or operational information. All examples are fictional and reset on reload.</div>
+<nav class="tabs" aria-label="Governance workspaces">
+<button type="button" data-tab="overview" aria-selected="true">Overview</button>
+<button type="button" data-tab="meeting" aria-selected="false">Meeting Chamber</button>
+<button type="button" data-tab="decisions" aria-selected="false">Council Decisions</button>
+<button type="button" data-tab="clusters" aria-selected="false">Clusters & Reports</button>
+</nav>
+<section class="screen" id="overview">
+<div class="grid">
+<div class="tile"><div class="stat">25</div><strong>Equal council seats</strong><p class="muted small">Including two co-chairs; one vote per seat.</p></div>
+<div class="tile"><div class="stat">2</div><strong>Co-chairs</strong><p class="muted small">Coordination and representation, without veto power.</p></div>
+<div class="tile"><div class="stat">0</div><strong>Live integrations</strong><p class="muted small">Video, identity and decision services are not connected.</p></div>
+<div class="tile"><div class="stat">4</div><strong>Working areas</strong><p class="muted small">Meeting, agenda, synthetic decisions and cluster reporting.</p></div>
+</div>
+<div class="panel"><h2>Our way of working</h2><p>Love, compassion, justice, human dignity and voluntary contribution come before status. The council makes institutional decisions together. Authorized clusters make day-to-day operational decisions within their delegated scope.</p></div>
+</section>
+<section class="screen" id="meeting" hidden>
+<div class="panel" id="languagePilot">
+<h2>Subtitle controls · five languages</h2>
+<p class="muted small">Choose the languages here; the sample subtitle is shown over the video area when loaded. This remains prewritten text, not live speech translation.</p>
+<div class="two">
+<div><label for="spokenLanguage">Speaker's language</label><select id="spokenLanguage"><option value="tr">Türkçe</option><option value="en">English</option><option value="ru">Русский</option><option value="es">Español</option><option value="de">Deutsch</option></select></div>
+<div><label for="subtitleLanguage">My subtitle language</label><select id="subtitleLanguage"><option value="tr">Türkçe</option><option value="en">English</option><option value="ru">Русский</option><option value="es">Español</option><option value="de">Deutsch</option></select></div>
+</div>
+<div class="tile" style="margin-top:14px" aria-live="polite">
+<div class="small muted">Sample spoken statement</div><p id="sourceSentence" lang="tr"></p>
+<div class="small muted">Sample subtitle · selected language</div><p id="translatedSentence" lang="en" style="font-size:1.15rem;color:var(--aqua);overflow-wrap:anywhere"></p>
+</div>
+<div class="row"><button type="button" class="action primary" id="nextPhrase">Next sample statement</button><button type="button" class="action" id="resetPhrase">Reset example</button></div>
+<p class="small muted">Illustrative prewritten equivalents, not machine translations. In real meetings, verified captions, explicit participant consent and a protected translation service will be required. Binding decisions must be confirmed in writing.</p>
+</div>
+<div class="panel"><h2>Meeting Chamber · Prototype</h2><p class="muted">The future video service will appear here after provider, security and mobile checks. Video is loaded only on request. Sample captions appear near the bottom of the video frame, not below it.</p><div class="tile" style="text-align:center;padding:24px 12px"><div class="stat">◉</div><strong>External video pilot — Jitsi</strong><p class="small muted">This is a public third-party test room, not a secure council chamber. Never share names, confidential documents or real council discussions. Starting may request camera/microphone permission; decline if not needed. Jitsi may require a host account.</p><button class="action primary" type="button" id="startVideo">Load public test room</button> <button class="action" type="button" id="stopVideo" disabled>Leave / unload</button><div id="videoHost" hidden style="margin-top:15px"><div id="videoStage" style="position:relative;isolation:isolate"><iframe id="meetingFrame" title="Public Jitsi video test room" allow="camera; microphone; fullscreen; display-capture; autoplay" referrerpolicy="strict-origin-when-cross-origin" style="display:block;width:100%;height:min(70vh,620px);min-height:340px;border:1px solid #507282;border-radius:12px;background:#06121f"></iframe><div id="videoCaption" aria-live="polite" style="position:absolute;left:8px;right:8px;bottom:72px;background:rgba(3,14,25,.91);border:1px solid #65e5dc;border-radius:10px;padding:9px 12px;text-align:center;pointer-events:none;z-index:3;color:#fff;font-size:clamp(15px,3.7vw,21px);line-height:1.35;overflow-wrap:anywhere" hidden></div></div><p class="small muted">If embedded video is blocked by your browser, use <a href="https://meet.jit.si/EchoesGovernanceSyntheticPilot2026" target="_blank" rel="noopener noreferrer">the external Jitsi test room</a>. This link is public and not access-controlled.</p></div></div></div>
+<div class="panel"><h2>Sample agenda</h2><ol><li>Welcome and member wellbeing</li><li>Humanitarian and Academy activity updates</li><li>Marketplace producer onboarding review</li><li>Cluster support needs and next steps</li></ol><p class="small muted">Sample agenda only; no live scheduling or minutes are stored.</p></div>
+</section>
+<section class="screen" id="decisions" hidden>
+<div class="panel"><h2>Decision practice</h2><p class="muted small">Simulates a single council member's vote in this browser only. No real council tally, quorum or constitutional approval is implied.</p>
+<div class="tile"><strong>Sample motion</strong><p>Approve a pilot reporting format for volunteer cluster activity.</p><div class="row"><button class="action primary" data-vote="Support">Support</button><button class="action" data-vote="Oppose">Oppose</button><button class="action" data-vote="Abstain">Abstain</button><button class="action" id="clearVote">Reset</button></div><p id="voteResult" class="status" aria-live="polite">No demonstration vote selected.</p></div>
+</div>
+<div class="panel"><h2>Decision integrity</h2><p>Real decisions will require verified board membership, server-enforced voting eligibility, conflict-of-interest handling, a durable audit log and approved voting rules. These are not implemented in this demonstration.</p></div>
+</section>
+<section class="screen" id="clusters" hidden>
+<div class="panel"><h2>Operational clusters</h2><div class="grid">
+<div class="tile"><strong>Academy</strong><p class="muted small">Learning programs, teachers and student experience</p></div>
+<div class="tile"><strong>Media</strong><p class="muted small">Editorial workflow and publishing</p></div>
+<div class="tile"><strong>Marketplace</strong><p class="muted small">Producer and product review</p></div>
+<div class="tile"><strong>Humanitarian Action</strong><p class="muted small">Safeguarding and authorized coordination; no live case service</p></div>
+</div></div>
+<div class="panel"><h2>Practice activity report</h2><p class="muted small">Use fictional text only. The preview is not transmitted or saved.</p>
+<label for="cluster">Sample cluster</label><select id="cluster"><option>Academy</option><option>Media</option><option>Marketplace</option><option>Humanitarian Action</option></select>
+<label for="report">Sample activity summary</label><textarea id="report" maxlength="600" placeholder="Example: Reviewed three fictional lesson proposals."></textarea>
+<button type="button" class="action primary" id="previewReport">Preview report</button>
+<div class="tile" id="reportPreview" aria-live="polite" hidden><strong>Local preview</strong><p id="previewCluster"></p><p id="previewText" style="white-space:pre-wrap;overflow-wrap:anywhere"></p><p class="muted small">Not submitted, not stored.</p></div>
+</div>
+</section>
+<footer class="footer">Echoes of Humanity · Independent V4 in-video subtitle layout prototype · No production authorization · <a href="governance.html">Back to Governance & Transparency</a></footer>
+</main>
+<script>
+(function(){
+'use strict';
+const tabs=[...document.querySelectorAll('[data-tab]')];
+tabs.forEach(button=>button.addEventListener('click',()=>{
+const active=button.dataset.tab;
+tabs.forEach(b=>b.setAttribute('aria-selected',String(b===button)));
+document.querySelectorAll('.screen').forEach(s=>{s.hidden=s.id!==active});
+}));
+document.querySelectorAll('[data-vote]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('voteResult').textContent='Local sample selection: '+b.dataset.vote+'. No vote was recorded.';}));
+document.getElementById('clearVote').addEventListener('click',()=>{document.getElementById('voteResult').textContent='No demonstration vote selected.'});
+const frame=document.getElementById('meetingFrame');
+const videoHost=document.getElementById('videoHost');
+const startVideo=document.getElementById('startVideo');
+const stopVideo=document.getElementById('stopVideo');
+startVideo.addEventListener('click',()=>{
+frame.src='https://meet.jit.si/EchoesGovernanceSyntheticPilot2026#config.prejoinPageEnabled=true';
+videoHost.hidden=false;startVideo.disabled=true;stopVideo.disabled=false;renderSample();
+});
+stopVideo.addEventListener('click',()=>{
+frame.removeAttribute('src');videoHost.hidden=true;document.getElementById('videoCaption').hidden=true;startVideo.disabled=false;stopVideo.disabled=true;
+});
+const spokenLanguage=document.getElementById('spokenLanguage');
+const subtitleLanguage=document.getElementById('subtitleLanguage');
+const samples=[
+{tr:'İnsan onurunu korumak ortak sorumluluğumuzdur.',en:'Protecting human dignity is our shared responsibility.',ru:'Защита человеческого достоинства — наша общая ответственность.',es:'Proteger la dignidad humana es nuestra responsabilidad compartida.',de:'Die Menschenwürde zu schützen ist unsere gemeinsame Verantwortung.'},
+{tr:'Her kurul üyesinin bir oy hakkı vardır.',en:'Every council member has one vote.',ru:'Каждый член совета имеет один голос.',es:'Cada miembro del consejo tiene un voto.',de:'Jedes Ratsmitglied hat eine Stimme.'},
+{tr:'Faaliyet salkımları kendi görev alanlarında karar alabilir.',en:'Operational clusters may make decisions within their delegated scope.',ru:'Рабочие группы могут принимать решения в пределах своих полномочий.',es:'Los grupos operativos pueden tomar decisiones dentro de sus competencias delegadas.',de:'Operative Gruppen dürfen innerhalb ihres Zuständigkeitsbereichs Entscheidungen treffen.'}
+];
+let sampleIndex=0;
+function renderSample(){
+const source=document.getElementById('sourceSentence');
+const translated=document.getElementById('translatedSentence');
+source.textContent=samples[sampleIndex][spokenLanguage.value];
+translated.textContent=samples[sampleIndex][subtitleLanguage.value];
+source.lang=spokenLanguage.value;translated.lang=subtitleLanguage.value;
+const overlay=document.getElementById('videoCaption');
+overlay.textContent=translated.textContent;
+overlay.lang=subtitleLanguage.value;
+overlay.hidden=document.getElementById('videoHost').hidden;
+
+}
+spokenLanguage.addEventListener('change',renderSample);
+subtitleLanguage.addEventListener('change',renderSample);
+document.getElementById('nextPhrase').addEventListener('click',()=>{sampleIndex=(sampleIndex+1)%samples.length;renderSample()});
+document.getElementById('resetPhrase').addEventListener('click',()=>{sampleIndex=0;spokenLanguage.value='tr';subtitleLanguage.value='en';renderSample()});
+renderSample();
+document.getElementById('previewReport').addEventListener('click',()=>{
+const value=document.getElementById('report').value.trim();
+const preview=document.getElementById('reportPreview');
+document.getElementById('previewCluster').textContent=document.getElementById('cluster').value;
+document.getElementById('previewText').textContent=value||'No sample activity summary entered.';
+preview.hidden=false;
+});
+})();
+</script>
+</body></html>
