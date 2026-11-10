@@ -211,5 +211,28 @@ function apply(){let lang="en";try{lang=localStorage.getItem("echoes.language")|
 document.addEventListener("echoes:governance-language",apply);apply();
 })();
 </script>
+
+<script>
+/* V11-B scoped static locale pass; leaves synthetic controls and their values untouched. */
+(function(){'use strict';
+const data={"keys":["Global Governance Center","A shared space for compassionate leadership, equal voices, operational trust and accountable decisions.","Demonstration only.","Overview","Meeting Chamber","Council Decisions","Clusters & Reports","Equal council seats","Co-chairs","Live integrations","Working areas","Our way of working"],"dict":{"tr":["Küresel Yönetim Merkezi","Şefkatli liderlik, eşit söz hakkı, operasyonel güven ve hesap verebilir kararlar için ortak bir alan.","Yalnızca gösterim.","Genel bakış","Toplantı Salonu","Kurul Kararları","Salkımlar ve Raporlar","Eşit kurul koltukları","Eş başkanlar","Canlı entegrasyonlar","Çalışma alanları","Çalışma yöntemimiz"],"ar":["مركز الحوكمة العالمي","مساحة مشتركة للقيادة الرحيمة وتكافؤ الأصوات والثقة التشغيلية والقرارات المسؤولة.","للعرض التجريبي فقط.","نظرة عامة","قاعة الاجتماعات","قرارات المجلس","المجموعات والتقارير","مقاعد متساوية في المجلس","الرئيسان المشتركان","التكاملات المباشرة","مساحات العمل","طريقة عملنا"],"fr":["Centre mondial de gouvernance","Un espace commun pour une direction bienveillante, l’égalité des voix, la confiance opérationnelle et des décisions responsables.","Démonstration uniquement.","Vue d’ensemble","Salle de réunion","Décisions du conseil","Groupes et rapports","Sièges égaux au conseil","Coprésidents","Intégrations en direct","Espaces de travail","Notre méthode de travail"],"es":["Centro de Gobernanza Global","Un espacio compartido para el liderazgo compasivo, la igualdad de voz, la confianza operativa y las decisiones responsables.","Solo demostración.","Resumen","Sala de reuniones","Decisiones del consejo","Grupos e informes","Puestos iguales en el consejo","Copresidentes","Integraciones en vivo","Áreas de trabajo","Nuestra forma de trabajar"],"de":["Globales Governance-Zentrum","Ein gemeinsamer Raum für mitfühlende Führung, gleichberechtigte Stimmen, operatives Vertrauen und verantwortliche Entscheidungen.","Nur Demonstration.","Überblick","Sitzungssaal","Ratsentscheidungen","Arbeitsgruppen und Berichte","Gleichberechtigte Ratssitze","Ko-Vorsitzende","Live-Integrationen","Arbeitsbereiche","Unsere Arbeitsweise"],"pt":["Centro Global de Governança","Um espaço partilhado para liderança compassiva, vozes iguais, confiança operacional e decisões responsáveis.","Apenas demonstração.","Visão geral","Sala de reuniões","Decisões do conselho","Grupos e relatórios","Assentos iguais no conselho","Copresidentes","Integrações ao vivo","Áreas de trabalho","Nossa forma de trabalhar"],"ru":["Глобальный центр управления","Общее пространство для сострадательного лидерства, равного голоса, доверия и ответственных решений.","Только демонстрация.","Обзор","Зал заседаний","Решения совета","Группы и отчёты","Равные места в совете","Сопредседатели","Активные интеграции","Рабочие области","Наш подход к работе"],"zh":["全球治理中心","一个促进仁爱领导、平等发声、运营互信和负责决策的共享空间。","仅供演示。","概览","会议室","理事会决策","工作组与报告","平等的理事会席位","共同主席","实时集成","工作区域","我们的工作方式"]}};
+const root=document.querySelector('main.wrap');
+const originals=new WeakMap();
+const nodes=[];
+const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+let node;
+while((node=walker.nextNode())){
+ const key=node.nodeValue.trim();
+ if(data.keys.includes(key)){nodes.push(node);originals.set(node,key)}
+}
+function apply(){let lang='en';try{lang=localStorage.getItem('echoes.language')||'en'}catch(e){}
+ const words=data.dict[lang];
+ for(const n of nodes){const original=originals.get(n),i=data.keys.indexOf(original);n.nodeValue=words?words[i]:original}
+ document.documentElement.lang=lang;
+}
+document.addEventListener('echoes:governance-language',apply);
+apply();
+})();
+</script>
 <script src="assets/js/governance-i18n.js?v=11"></script>
 </body></html>
