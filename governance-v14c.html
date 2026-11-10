@@ -16,4 +16,4 @@ $("seed").addEventListener("click",()=>{addTask({seat:"07",role:"Koordinatör",t
 $("clear").addEventListener("click",()=>{tasks=[];seq=0;render();$("message").textContent="Yerel örnekler temizlendi."});
 $("download").addEventListener("click",()=>{const lines=["ECHOES V14-C — SYNTHETIC / NON-BINDING","Gerçek üye, oy, karar veya görev kaydı değildir.","",...tasks.map(t=>"#"+t.id+" | Koltuk "+t.seat+" | "+kinds[t.type]+" | "+t.title+" | "+t.role+" | "+t.status)];const blob=new Blob([lines.join("\n")],{type:"text/plain;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="echoes-v14c-synthetic-report.txt";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)});
 render();
-</script></body></html>
+</script><script src="assets/js/governance-i18n.js?v=5"></script></body></html>
