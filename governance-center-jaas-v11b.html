@@ -63,7 +63,7 @@ body.immersive-open{overflow:hidden}
 </section>
 <section class="screen" id="clusters" hidden>
 <div class="panel"><h2>Operational clusters</h2><div class="grid">
-<div class="tile"><strong>Academy</strong><p class="muted small">Learning programs, teachers and student experience</p></div>
+<div class="tile"><strong>Academy</strong><p class="muted small" id="academyClusterDescription">Learning programs, teachers and student experience</p></div>
 <div class="tile"><strong>Media</strong><p class="muted small">Editorial workflow and publishing</p></div>
 <div class="tile"><strong>Marketplace</strong><p class="muted small">Producer and product review</p></div>
 <div class="tile"><strong>Humanitarian Action</strong><p class="muted small">Safeguarding and authorized coordination; no live case service</p></div>
@@ -202,6 +202,13 @@ function vote(value){if(seat.value==='guest'){status.textContent='Invited cluste
 el('v11Clear').addEventListener('click',()=>{motions=[];ballots=new Map();nextId=1;proposal.value='';render();status.textContent='Synthetic session cleared.'});
 el('v11Export').addEventListener('click',()=>{const lines=['ECHOES — V11-B SYNTHETIC MEETING DRAFT','NOT BINDING / NO AUTHENTICATION / NOT A REAL VOTE','',...motions.map(m=>{const v=[...(ballots.get(m.id)||new Map()).values()];return '#'+m.id+' '+m.area+' — '+m.text+' | Yes '+v.filter(x=>x==='Yes').length+', No '+v.filter(x=>x==='No').length+', Abstain '+v.filter(x=>x==='Abstain').length+', unique seats '+v.length}),'','Provisional V11-A roles; no real identities, quorum or approval verified.'];const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='echoes-v11b-synthetic-meeting-note.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);status.textContent='Local draft export requested; no data sent to a server.'});
 render();
+})();
+</script>
+<script>
+(function(){
+const words={tr:"Öğrenim programları, öğretmenler ve öğrenci deneyimi",en:"Learning programs, teachers and student experience",ar:"البرامج التعليمية والمعلمون وتجربة الطلاب",es:"Programas educativos, docentes y experiencia del alumnado",fr:"Programmes éducatifs, enseignants et expérience des élèves",de:"Lernprogramme, Lehrkräfte und Lernerfahrung",pt:"Programas de aprendizagem, professores e experiência dos alunos",ru:"Учебные программы, преподаватели и опыт учащихся",zh:"学习项目、教师与学生体验"};
+function apply(){let lang="en";try{lang=localStorage.getItem("echoes.language")||"en"}catch(e){}document.getElementById("academyClusterDescription").textContent=words[lang]||words.en;}
+document.addEventListener("echoes:governance-language",apply);apply();
 })();
 </script>
 </body></html>
