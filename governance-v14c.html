@@ -16,7 +16,7 @@ $("seed").addEventListener("click",()=>{addTask({seat:"07",role:"Koordinatör",t
 $("clear").addEventListener("click",()=>{tasks=[];seq=0;render();$("message").textContent="Yerel örnekler temizlendi."});
 $("download").addEventListener("click",()=>{const lines=["ECHOES V14-C — SYNTHETIC / NON-BINDING","Gerçek üye, oy, karar veya görev kaydı değildir.","",...tasks.map(t=>"#"+t.id+" | Koltuk "+t.seat+" | "+kinds[t.type]+" | "+t.title+" | "+t.role+" | "+t.status)];const blob=new Blob([lines.join("\n")],{type:"text/plain;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="echoes-v14c-synthetic-report.txt";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)});
 render();
-</script><script src="assets/js/governance-v14b-seat-translations.js?v=1"></script>
+</script><script src="assets/js/governance-v14b-seat-translations.js?v=1"></script><script src="assets/js/governance-v14c-locales.js?v=1"></script>
 <script>
 (function(){
 "use strict";
@@ -26,7 +26,7 @@ const baseSeats=seats.map(s=>({...s}));
 const root=document.querySelector("main");
 const originals=new WeakMap();
 function language(){try{return localStorage.getItem("echoes.language")||"en"}catch(e){return "en"}}
-function localize(text,lang){if(lang==="tr")return text;if(lang!=="en")return text;let result=text;for(const [from,to] of Object.entries(dictionary))result=result.split(from).join(to);for(let i=0;i<baseSeats.length;i++){const translated=window.EchoesV14BSeatTranslations?.en?.[i];if(!translated)continue;for(const [j,key] of ["role","cluster","operational","boundary"].entries())result=result.split(baseSeats[i][key]).join(translated[j])}return result.replace(/Tamamlanan: (\d+) · Kurul oyu: (\d+)/g,"Completed: $1 · Council votes: $2").replace(/Koltuk (\d+)/g,"Seat $1")}
+function localize(text,lang){if(lang==="tr")return text;let result=text;const words=lang==="en"?dictionary:(window.EchoesV14CLocales?.[lang]||{});for(const [from,to] of Object.entries(words))result=result.split(from).join(to);for(let i=0;i<baseSeats.length;i++){const translated=window.EchoesV14BSeatTranslations?.[lang]?.[i];if(!translated)continue;for(const [j,key] of ["role","cluster","operational","boundary"].entries())result=result.split(baseSeats[i][key]).join(translated[j])}return lang==="en"?result.replace(/Tamamlanan: (\d+) · Kurul oyu: (\d+)/g,"Completed: $1 · Council votes: $2").replace(/Koltuk (\d+)/g,"Seat $1"):result}
 function translateTree(){const lang=language();const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){if(node.parentElement?.closest("#gov-language,script,style"))continue;let source=originals.get(node);if(source===undefined){source=node.nodeValue;originals.set(node,source)}const translated=localize(source,lang);if(node.nodeValue!==translated)node.nodeValue=translated}for(const el of root.querySelectorAll("[placeholder]")){const original=el.dataset.govOriginalPlaceholder||el.getAttribute("placeholder");el.dataset.govOriginalPlaceholder=original;el.placeholder=localize(original,lang)}for(let i=0;i<seats.length;i++){const source=baseSeats[i];const translation=window.EchoesV14BSeatTranslations?.[lang]?.[i];Object.assign(seats[i],translation?{role:translation[0],cluster:translation[1],operational:translation[2],boundary:translation[3]}:source);const option=document.querySelector('#seat option[value="'+seats[i].id+'"]');if(option)option.textContent=seats[i].id+" — "+seats[i].role}scope();render();translateDynamic()}
 function translateDynamic(){const lang=language();for(const id of ["scope","items","done","message"]){const el=document.getElementById(id);if(!el)continue;const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let n;while(n=walker.nextNode()){let original=originals.get(n);if(original===undefined){original=n.nodeValue;originals.set(n,original)}const value=localize(original,lang);if(n.nodeValue!==value)n.nodeValue=value}}}
 for(const id of ["add","seed","clear"]){document.getElementById(id).addEventListener("click",()=>queueMicrotask(translateDynamic))}
@@ -36,4 +36,4 @@ document.addEventListener("echoes:governance-language",translateTree);
 translateTree();
 })();
 </script>
-<script src="assets/js/governance-i18n.js?v=9"></script></body></html>
+<script src="assets/js/governance-i18n.js?v=10"></script></body></html>
