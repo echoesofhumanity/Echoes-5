@@ -265,7 +265,7 @@ const guest=select.querySelector('option[value="guest"]');if(guest)guest.textCon
 const idx=originals.findIndex(o=>o.value===select.value);info.textContent=idx<0?words[3]:words[0]+': '+rows[idx][0]+' | '+words[1]+': '+rows[idx][1]+' | '+words[2];
 }
 const controller=window.EchoesGovernanceLocaleEngine.create({root:document.querySelector('main.wrap'),dynamic});
-select.addEventListener('change',()=>controller.apply());controller.apply();
+select.addEventListener('change',()=>controller.apply());select.addEventListener('focus',()=>controller.apply());select.addEventListener('pointerdown',()=>controller.apply());document.addEventListener('visibilitychange',()=>{if(!document.hidden)controller.apply()});controller.apply();
 })();
 </script>
 <script>
