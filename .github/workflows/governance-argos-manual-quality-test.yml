@@ -1,0 +1,80 @@
+name: Governance Argos manual translation quality test
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_language:
+        description: "Source language (tr/en/ru/es/de)"
+        required: true
+        type: choice
+        options: [tr, en, ru, es, de]
+        default: tr
+      target_language:
+        description: "Target language (tr/en/ru/es/de)"
+        required: true
+        type: choice
+        options: [tr, en, ru, es, de]
+        default: en
+      sample_text:
+        description: "PUBLIC synthetic text only; logged in GitHub Actions (max 300 chars)"
+        required: true
+        default: "İnsan onuru bütün kararlarımızın merkezinde olmalıdır."
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: governance-argos-manual-quality
+  cancel-in-progress: false
+
+jobs:
+  quality-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SOURCE_LANGUAGE: ${{ inputs.source_language }}
+      TARGET_LANGUAGE: ${{ inputs.target_language }}
+      SAMPLE_TEXT: ${{ inputs.sample_text }}
+    steps:
+      - name: Validate public synthetic sample and language pair
+        run: |
+          python - <<'PY'
+          import os
+          allowed = {'tr','en','ru','es','de'}
+          source, target, sample = (os.environ[x] for x in ('SOURCE_LANGUAGE','TARGET_LANGUAGE','SAMPLE_TEXT'))
+          assert source in allowed and target in allowed and source != target, 'Choose distinct supported languages'
+          assert 0 < len(sample.strip()) <= 300, 'Use 1 to 300 characters'
+          print('Validated synthetic text length:', len(sample), 'language pair:', source, '->', target)
+          PY
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Argos Translate
+        run: python -m pip install --disable-pip-version-check 'argostranslate==1.9.6'
+      - name: Install models and translate sample
+        run: |
+          python - <<'PY'
+          import os
+          import argostranslate.package as package
+          import argostranslate.translate as translate
+          source, target, sample = (os.environ[x] for x in ('SOURCE_LANGUAGE','TARGET_LANGUAGE','SAMPLE_TEXT'))
+          package.update_package_index()
+          available = package.get_available_packages()
+          legs = [(source,target)] if source == 'en' or target == 'en' else [(source,'en'),('en',target)]
+          for a,b in legs:
+              matches = [p for p in available if p.from_code == a and p.to_code == b]
+              if not matches:
+                  raise RuntimeError(f'Model unavailable: {a}->{b}')
+              model = matches[0]
+              print('Installing model:', a, '->', b, 'version:', model.package_version, flush=True)
+              package.install_from_path(model.download())
+          output = sample
+          print('Source:', sample, flush=True)
+          for a,b in legs:
+              output = translate.translate(output,a,b)
+              print('Stage',a,'->',b,':',output,flush=True)
+          assert output.strip() and output.strip() != sample.strip(), 'No meaningful translation output'
+          print('PASS: engine returned translated text; human review of accuracy still required')
+          PY
