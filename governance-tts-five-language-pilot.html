@@ -12,7 +12,24 @@
 function stop(){if(synth)synth.cancel();$('status').textContent='Seslendirme durduruldu.'}
 function render(){if(synth)synth.cancel();const s=samples[index],from=$('source').value,to=$('target').value;$('sourceText').textContent='Örnek konuşma: '+s[from];$('subtitle').textContent=s[to];$('subtitle').lang=locales[to];$('status').textContent='Örnek altyazı hazır.'}
 $('source').addEventListener('change',render);$('target').addEventListener('change',render);$('next').addEventListener('click',()=>{index=(index+1)%samples.length;render()});$('stop').addEventListener('click',stop);
-$('speak').addEventListener('click',()=>{if(!synth||!('SpeechSynthesisUtterance'in window)){$('status').textContent='Bu tarayıcıda TTS desteklenmiyor.';return}const to=$('target').value;const voices=synth.getVoices();const voice=voices.find(v=>v.lang.toLowerCase()===locales[to].toLowerCase())||voices.find(v=>v.lang.toLowerCase().startsWith(to+'-'));if(!voice){$('status').textContent='Bu dil için cihazda TTS sesi bulunamadı; yanlış dilde seslendirme yapılmadı.';return}synth.cancel();const utter=new SpeechSynthesisUtterance(samples[index][to]);utter.lang=locales[to];utter.voice=voice;utter.rate=.9;utter.onstart=()=>$('status').textContent='Örnek seslendirme oynatılıyor.';utter.onend=()=>$('status').textContent='Seslendirme tamamlandı.';utter.onerror=()=>$('status').textContent='Seslendirme başarısız veya iptal edildi.';synth.speak(utter)});
+let voicesReady=false;
+if(synth){try{voicesReady=synth.getVoices().length>0;synth.addEventListener('voiceschanged',()=>{voicesReady=synth.getVoices().length>0})}catch(e){}}
+$('speak').addEventListener('click',()=>{
+ if(!synth||!('SpeechSynthesisUtterance'in window)){$('status').textContent='Bu tarayıcıda TTS desteklenmiyor.';return}
+ const to=$('target').value,lang=locales[to];let voices=[];
+ try{voices=synth.getVoices()}catch(e){}
+ const voice=voices.find(v=>v.lang.toLowerCase()===lang.toLowerCase())||voices.find(v=>v.lang.toLowerCase().startsWith(to+'-'));
+ // Android Chrome can expose no voices before the first user gesture, despite having system TTS.
+ // In that case request the locale from the browser rather than refusing to try playback.
+ synth.cancel();
+ const utter=new SpeechSynthesisUtterance(samples[index][to]);utter.lang=lang;if(voice)utter.voice=voice;utter.rate=.9;
+ let started=false;
+ $('status').textContent=voice?'Seçilen dilde ses başlatılıyor…':'Tarayıcıdan '+lang+' dilinde ses isteniyor; cihazda uygun ses yoksa okunmayabilir.';
+ utter.onstart=()=>{started=true;$('status').textContent=voice?'Seslendirme oynatılıyor.':'Tarayıcı seslendirmesi başladı; dilin doğruluğunu dinleyerek kontrol edin.'};
+ utter.onend=()=>$('status').textContent='Seslendirme tamamlandı.';
+ utter.onerror=e=>$('status').textContent='Seslendirme çalışmadı ('+(e.error||'tarayıcı hatası')+'). Telefonun metin okuma motorunu ve ses ayarlarını kontrol edin.';
+ try{synth.resume();synth.speak(utter)}catch(e){$('status').textContent='Tarayıcı TTS başlatılamadı: '+e.message}
+});
 $('speak').disabled=!synth;document.addEventListener('visibilitychange',()=>{if(document.hidden&&synth)synth.cancel()});window.addEventListener('pagehide',()=>{if(synth)synth.cancel()});render();
 })();
 </script></body></html>
