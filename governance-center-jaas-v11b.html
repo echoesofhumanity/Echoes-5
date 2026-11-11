@@ -242,7 +242,7 @@ const dict={"tr":["← Yönetim merkezine dön"," Kimlik doğrulaması, özel to
 const root=document.querySelector('main.wrap');
 const nodes=[];const original=new WeakMap();
 const walk=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;
-while((n=walk.nextNode())){const raw=n.nodeValue;const idx=keys.indexOf(raw.trim());if(idx!==-1){nodes.push(n);original.set(n,{idx,raw});}}
+while((n=walk.nextNode())){const raw=n.nodeValue;const idx=keys.findIndex(k=>k.trim()===raw.trim());if(idx!==-1){nodes.push(n);original.set(n,{idx,raw});}}
 function apply(){let lang='en';try{lang=localStorage.getItem('echoes.language')||'en'}catch(e){}for(const n of nodes){const {idx,raw}=original.get(n);const val=dict[lang]?.[idx];n.nodeValue=val===undefined?raw:val;}}
 document.addEventListener('echoes:governance-language',apply);apply();
 })();
