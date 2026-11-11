@@ -89,3 +89,12 @@ D. **JaaS paid transcription/translation** remains a future opt-in only, after p
 
 ### Next release gate
 Before changing meeting code again: choose an explicit route, establish data flow, consent, device compatibility, expected latency and monthly cost ceiling. Preserve the accepted local-TTS pilot and existing JaaS integration. No untested automatic listening, recording, hidden audio capture, or provider calls.
+
+## Open-source translation engine assessment — 2026-11-12
+- Preferred candidate: LibreTranslate self-hosted REST API, powered by Argos Translate; compare Argos Translate direct Python integration as a secondary option.
+- The five target languages tr/en/ru/es/de appear in LibreTranslate's published language-model inventory. Some pairs pivot through English, which can reduce quality. Official reference: https://docs.libretranslate.com/guides/supported_languages/
+- LibreTranslate self-hosting guide: https://docs.libretranslate.com/guides/installation/ ; API usage: https://docs.libretranslate.com/guides/api_usage/ ; Argos: https://github.com/argosopentech/argos-translate
+- LibreTranslate's hosted libretranslate.com API requires a purchased key for production; self-hosted open-source software has no per-request provider fee, but server, compute, maintenance, security and network costs are not proven zero. Do not use public unauthenticated community instances for private meeting content.
+- Pilot architecture: local browser STT (consent-based, local microphone only) -> authenticated HTTPS translation backend (not GitHub Pages) -> browser local TTS. This is **not** yet multi-speaker JaaS translation.
+- Before deployment: confirm spare CPU/RAM on an explicitly approved isolated environment, install only the 5 required languages, verify model licensing, benchmark Turkish-English accuracy and end-to-end latency, rate limit requests, enforce retention policy, secure authentication, and load-test 25 simultaneous clients.
+- No Oracle, JaaS, Academy, Radio or TV deployment or changes approved. Keep working STT/TTS and JaaS pilot untouched. Decision: research complete; infrastructure gate pending.
