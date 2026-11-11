@@ -1,4 +1,4 @@
-name: Governance Argos TR-EN isolated test
+name: Governance Argos five-language isolated test
 
 on:
   push:
@@ -11,13 +11,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: governance-argos-tr-en-test
+  group: governance-argos-five-language-test
   cancel-in-progress: true
 
 jobs:
   translation-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 20
     steps:
       - name: Set up Python 3.11 for compatible prebuilt dependencies
         uses: actions/setup-python@v5
@@ -48,4 +48,37 @@ jobs:
           if not result.strip() or result.strip() == text.strip():
               sys.exit("FAIL: no meaningful translated output")
           print("PASS: translation engine returned non-empty distinct English output (quality requires human review)")
+          PY
+      - name: Test English to Turkish Russian Spanish German translations
+        run: |
+          python - <<'PY'
+          import sys
+          import argostranslate.package as package
+          import argostranslate.translate as translate
+          source = "It is our common responsibility to protect human dignity."
+          targets = {"tr": "Turkish", "ru": "Russian", "es": "Spanish", "de": "German"}
+          package.update_package_index()
+          available = package.get_available_packages()
+          failures = []
+          for code, name in targets.items():
+              candidates = [p for p in available if p.from_code == "en" and p.to_code == code]
+              if not candidates:
+                  print(f"FAIL EN->{code}: model not found", flush=True)
+                  failures.append(code)
+                  continue
+              try:
+                  model = candidates[0]
+                  print(f"Installing EN->{code} ({name}), version {model.package_version}", flush=True)
+                  package.install_from_path(model.download())
+                  output = translate.translate(source, "en", code)
+                  print(f"Translation ({code}): {output}", flush=True)
+                  if not output.strip() or output.strip() == source.strip():
+                      raise ValueError("empty or unchanged output")
+                  print(f"PASS EN->{code}: non-empty translated output (human quality review pending)", flush=True)
+              except Exception as exc:
+                  print(f"FAIL EN->{code}: {type(exc).__name__}: {exc}", flush=True)
+                  failures.append(code)
+          if failures:
+              sys.exit("FAIL: language pairs requiring investigation: " + ", ".join(failures))
+          print("PASS: all four additional language pairs produced output; quality not yet certified")
           PY
