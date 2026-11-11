@@ -42,3 +42,12 @@ G. Only after security/legal and operational approval may the service be used fo
 
 ## Guardrails
 Do not modify Admin V3, backups, Academy, Radio, TV, Marketplace, or other projects. No server deployment, cloud billing or live audio collection without explicit approval. Maintain the one-change -> test -> commit -> new-working-version process.
+
+## Five-language implementation decision — 2026-11-11
+- **Scope fixed:** TR, EN, RU, ES, DE for live captions and eventual optional spoken translation. The nine-language portal UI remains unchanged.
+- **Verified vendor path:** JaaS officially documents built-in live transcription and text translation. Prioritize this supported path over building a custom remote-audio capture pipeline. Official references: https://developer.8x8.com/jaas/docs/transcription-translation/ and https://developer.8x8.com/jaas/docs/tutorial-using-transcription-chunks/.
+- **Activation gate:** JaaS transcription/translation are paid add-ons requiring billing/payment setup and a meeting JWT with `features.transcription=true`. No activation, card entry, billing or token generation has been authorized or performed.
+- **Supported integration:** JaaS documents the IFrame `transcriptionChunkReceived` event and `setSubtitles` command; actual availability in the Echoes tenant and behavior on Android must be tested. The built-in subtitle UI may already handle placement and target-language selection. Do not confuse this with synthesized speech.
+- **Provider caution:** JaaS FAQ warns that changing the transcription source language mid-session may be unreliable; test language switches and multi-speaker meetings before promising arbitrary five-way simultaneous interpretation. Confirm supported source/target language codes in the actual tenant.
+- **TTS is a separate phase:** Built-in live translated text does not establish live dubbed audio. Choose and cost a TTS service only after caption acceptance; avoid echo, audio retransmission, and exposing secrets in static GitHub Pages.
+- **Next safe step:** Inspect the existing JaaS initialization and prepare a non-billing, non-audio-capturing capability/readiness check, then user-led provider-account confirmation. Do not replace synthetic captions with a claim of real translation before activation and measured testing.
