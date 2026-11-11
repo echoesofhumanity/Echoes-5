@@ -72,3 +72,20 @@ Do not modify Admin V3, backups, Academy, Radio, TV, Marketplace, or other proje
 - For mobile playback, browser gesture/autoplay policies and echo prevention require a user-initiated 'enable translated audio' control and local mute/volume. Do not rebroadcast synthesized audio to the JaaS microphone.
 - Proposed security boundary: GitHub Pages renders the client; an authenticated service validates meeting/participant entitlement and issues narrowly scoped temporary credentials or proxies synthesis. Secrets, provider keys and participant audio stay off public GitHub.
 - Release gates: (1) synthetic 5-language control UI (2) secured provider trial with spending cap (3) 2-device TR↔EN caption latency and TTS quality test (4) 5-language audition and quality tests (5) 25-participant capacity/load test. No production activation before gates pass.
+
+## Zero-cost live-interpretation feasibility decision — 2026-11-11
+Status: **architecture decision / research only**. No live STT or translation has been enabled.
+
+### Verified provider constraint
+- 8x8 JaaS official transcription/translation docs: both are paid add-ons; billing method and moderator JWT transcription entitlement required. https://developer.8x8.com/jaas/docs/transcription-translation/
+- The browser SpeechSynthesisUtterance path already accepted in the five-language synthetic pilot can speak **text provided by the application**, at no per-character Azure charge. It does **not** recognize speech or translate.
+- Do not misrepresent 25 monthly active endpoints as guaranteed concurrent-video capacity or free transcription eligibility.
+
+### Candidate routes (not yet deployed)
+A. **Keep JaaS + free local TTS**; only synthetic captions work until a live STT/translation provider is approved. This is the currently implemented and accepted baseline.
+B. **Browser speech recognition proof of concept** may capture the *local user's microphone* on some devices, subject to browser support, permissions, provider processing and privacy. It is not a verified cross-browser, offline, zero-cost, 25-person meeting transcription solution. It cannot reliably transcribe all JaaS participants' remote audio from the parent GitHub Pages iframe.
+C. **Self-hosted open-source STT and translation** could avoid per-request provider fees, but needs compute capacity, secure server deployment, models for all five languages, performance validation, and operational support. Existing Oracle resources must not be repurposed without explicit approval and impact assessment for Radio/TV/Academy.
+D. **JaaS paid transcription/translation** remains a future opt-in only, after pricing, security, consent and JWT review. Do not activate or collect payment details without approval.
+
+### Next release gate
+Before changing meeting code again: choose an explicit route, establish data flow, consent, device compatibility, expected latency and monthly cost ceiling. Preserve the accepted local-TTS pilot and existing JaaS integration. No untested automatic listening, recording, hidden audio capture, or provider calls.
