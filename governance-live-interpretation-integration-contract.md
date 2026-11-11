@@ -51,3 +51,12 @@ Do not modify Admin V3, backups, Academy, Radio, TV, Marketplace, or other proje
 - **Provider caution:** JaaS FAQ warns that changing the transcription source language mid-session may be unreliable; test language switches and multi-speaker meetings before promising arbitrary five-way simultaneous interpretation. Confirm supported source/target language codes in the actual tenant.
 - **TTS is a separate phase:** Built-in live translated text does not establish live dubbed audio. Choose and cost a TTS service only after caption acceptance; avoid echo, audio retransmission, and exposing secrets in static GitHub Pages.
 - **Next safe step:** Inspect the existing JaaS initialization and prepare a non-billing, non-audio-capturing capability/readiness check, then user-led provider-account confirmation. Do not replace synthetic captions with a claim of real translation before activation and measured testing.
+
+## Azure TTS voice selection — 2026-11-11
+- User auditioned and accepted two Turkish voices in Microsoft's voice gallery: **Ahmet (male)** and **Emel (female)**.
+- Microsoft's current official Speech voice catalogue lists the standard Neural voice identifiers `tr-TR-AhmetNeural` and `tr-TR-EmelNeural`. Reference: https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support?tabs=text-to-speech
+- These are **distinct voice models**, not browser pitch-shift presets. Do not confuse with `tr-TR-Aydın:MAI-Voice-2-Flash` or `tr-TR-Elif:MAI-Voice-2-Flash`.
+- Device browser speechSynthesis exposed no selectable Turkish voices. Pitch-shift voice 1/2 audition failed user acceptance. The previously accepted single-voice browser TTS was restored as fallback.
+- Integration gate: verify Azure subscription, Speech resource region, supported REST/SDK voice IDs, quota, pricing and authentication before making requests. No account creation or paid activation was performed.
+- Security requirement: do not put Azure subscription keys, tokens or service credentials into static GitHub Pages code. Use a secure server-side token broker and explicit cost cap before any real Azure synthesis.
+- After Turkish two-voice live API acceptance, confirm separate male/female standard Neural voices for EN/RU/ES/DE. Do not promise voice identity across languages without auditioning.
