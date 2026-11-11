@@ -1,0 +1,47 @@
+name: Governance Argos TR-EN isolated test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/governance-argos-translation-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: governance-argos-tr-en-test
+  cancel-in-progress: true
+
+jobs:
+  translation-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Install isolated Argos Translate
+        run: |
+          python -m pip install --disable-pip-version-check 'argostranslate==1.9.6'
+      - name: Download Turkish to English model and translate synthetic sample
+        run: |
+          python - <<'PY'
+          import argostranslate.package
+          import argostranslate.translate
+          import sys
+          text = "İnsan onurunu korumak ortak sorumluluğumuzdur."
+          print("Source (TR):", text)
+          argostranslate.package.update_package_index()
+          available = argostranslate.package.get_available_packages()
+          candidates = [p for p in available if p.from_code == "tr" and p.to_code == "en"]
+          if not candidates:
+              sys.exit("FAIL: TR→EN model not available in Argos index")
+          pkg = candidates[0]
+          print("Selected model:", pkg.from_code, "->", pkg.to_code, "version:", pkg.package_version)
+          path = pkg.download()
+          argostranslate.package.install_from_path(path)
+          result = argostranslate.translate.translate(text, "tr", "en")
+          print("Translation (EN):", result)
+          if not result.strip() or result.strip() == text.strip():
+              sys.exit("FAIL: no meaningful translated output")
+          print("PASS: translation engine returned non-empty distinct English output (quality requires human review)")
+          PY
