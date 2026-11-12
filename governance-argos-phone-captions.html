@@ -15,12 +15,12 @@ small{color:#b6d7db}.caption{border-left:3px solid #75d8d2;padding:12px 14px;bac
 </style></head><body><main>
 <header><small>ECHOES OF HUMANITY · GOVERNANCE</small><h1>Beş dilli altyazı önizlemesi</h1><p>GitHub Actions tarafından üretilen gerçek Argos test çevirileri.</p></header>
 <section class="panel"><strong>Test sınırı</strong><p>Yalnızca herkese açık test sonuçlarını görüntüler. Canlı mikrofon, gerçek zamanlı çeviri veya JaaS bağlantısı yoktur. Özel toplantı metni kullanmayın.</p></section>
-<section class="panel"><div class="meta"><strong id="sourceTitle">Örnek kaynak konuşma · Türkçe</strong><span class="tag">Sabit test verisi</span></div><div class="caption" id="sourceCaption" lang="tr">İnsan onurunu korumak ortak sorumluluğumuzdur.</div></section>
+<section class="panel"><div class="meta"><strong id="sourceTitle">Örnek kaynak konuşma · Türkçe</strong><span class="tag" id="dataTag">Önceki örnek</span></div><div class="caption" id="sourceCaption" lang="tr">İnsan onurunu korumak ortak sorumluluğumuzdur.</div></section>
 <section class="panel"><button type="button" id="refresh">Son gerçek çeviriyi yükle</button><p id="loadStatus" role="status">Test verisi bekleniyor.</p></section>
 <section class="panel"><label for="language">Altyazı dili</label><select id="language">
 <option value="en">English</option><option value="ru">Русский</option><option value="es">Español</option><option value="de">Deutsch</option><option value="tr">Türkçe</option>
-</select><p><small>Gösterilen çeviriler önceki Argos test kayıtlarından alınmıştır; dilsel doğruluk uzman onayı bekliyor.</small></p></section>
-<section class="panel" aria-live="polite"><div class="meta"><strong id="heading">English</strong><span class="tag">Örnek altyazı</span></div><div id="caption" class="caption" lang="en"></div><div class="actions"><button type="button" id="speak">▶ Altyazıyı dinle</button><button type="button" id="stop">■ Durdur</button></div><p id="status" role="status"><small>Seslendirme, telefonun mevcut tarayıcı TTS motorunu kullanır; Azure sesi değildir.</small></p></section>
+</select><p><small>Yükleme başarılıysa GitHub Actions tarafından üretilen son gerçek Argos test sonucu gösterilir. Dilsel doğruluk uzman onayı bekliyor.</small></p></section>
+<section class="panel" aria-live="polite"><div class="meta"><strong id="heading">English</strong><span class="tag" id="captionTag">Önceki örnek</span></div><div id="caption" class="caption" lang="en"></div><div class="actions"><button type="button" id="speak">▶ Altyazıyı dinle</button><button type="button" id="stop">■ Durdur</button></div><p id="status" role="status"><small>Seslendirme, telefonun mevcut tarayıcı TTS motorunu kullanır; Azure sesi değildir.</small></p></section>
 <p><small>Gizlilik: Ses kaydedilmez. GitHub Actions test girdileri ve sonuçları herkese açıktır. Gerçek zamanlı kullanım için ayrı, güvenli bir hizmet gerekir.</small></p>
 </main><script>
 "use strict";
@@ -32,8 +32,9 @@ es:{label:"Español",locale:"es-ES",text:"Es nuestra responsabilidad común prot
 de:{label:"Deutsch",locale:"de-DE",text:"Es ist unsere gemeinsame Verantwortung, die Menschenwürde zu schützen."}
 };
 let active=entries;
+let isLatest=false;
 const picker=document.getElementById("language"),caption=document.getElementById("caption"),heading=document.getElementById("heading"),status=document.getElementById("status");
-function render(){if("speechSynthesis" in window)speechSynthesis.cancel();const e=active[picker.value];heading.textContent=e.label;caption.textContent=e.text;caption.lang=e.locale;status.textContent="Sabit Argos örneği görüntüleniyor."}
+function render(){if("speechSynthesis" in window)speechSynthesis.cancel();const e=active[picker.value];heading.textContent=e.label;caption.textContent=e.text;caption.lang=e.locale;status.textContent=isLatest?"Son Argos test çıktısı görüntüleniyor.":"Önceki örnek görüntüleniyor."}
 picker.addEventListener("change",render);
 document.getElementById("speak").addEventListener("click",()=>{
 if(!("speechSynthesis" in window)){status.textContent="Bu tarayıcıda seslendirme desteklenmiyor.";return}
@@ -53,6 +54,9 @@ async function loadLatest(){
   const data=await response.json();
   if(data.schemaVersion!==1||data.type!=="public-test-only"||data.live!==false||!entries[data.source])throw Error("Geçersiz test verisi.");
   for(const lang of Object.keys(entries))if(typeof data.captions?.[lang]!=="string"||!data.captions[lang].trim())throw Error("Eksik altyazı: "+lang);
+  isLatest=true;
+  document.getElementById("dataTag").textContent="Gerçek Argos test çıktısı";
+  document.getElementById("captionTag").textContent="Gerçek Argos çevirisi";
   active=Object.fromEntries(Object.keys(entries).map(lang=>[lang,{...entries[lang],text:data.captions[lang]}]));
   document.getElementById("sourceTitle").textContent="Örnek kaynak konuşma · "+entries[data.source].label;
   document.getElementById("sourceCaption").textContent=data.captions[data.source];
