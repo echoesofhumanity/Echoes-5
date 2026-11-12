@@ -4,6 +4,8 @@ No meeting audio, no transcript persistence, no permissive CORS.
 Requires an API token and separately installed Argos language models.
 """
 import hmac
+import http.client
+import time
 import json
 import os
 import threading
@@ -18,6 +20,7 @@ PILOT_ROUTES = frozenset({('tr', 'en')})
 MAX_BYTES = 4096
 MAX_CHARS = 1200
 TRANSLATE_LOCK = threading.Lock()
+SELF_TEST = {'status': 'pending'}
 
 
 def translate_text(text, source, target):
@@ -45,7 +48,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == '/health':
-            return self.respond(200, {'status': 'pilot', 'liveMeeting': False})
+            return self.respond(200, {'status': 'pilot', 'liveMeeting': False, 'translationSelfTest': SELF_TEST['status']})
         return self.respond(404, {'error': 'Not found'})
 
     def do_POST(self):
@@ -83,9 +86,40 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
 
+def run_self_test(port):
+    """One delayed authenticated loopback test; no personal data or secret in logs."""
+    time.sleep(120)
+    secret = os.environ.get('ECHOES_TRANSLATE_API_KEY', '')
+    if not secret:
+        SELF_TEST['status'] = 'missing-key'
+        return
+    connection = None
+    try:
+        connection = http.client.HTTPConnection('127.0.0.1', port, timeout=90)
+        original = 'İnsan onurunu korumak ortak sorumluluğumuzdur.'
+        body = json.dumps({'source': 'tr', 'target': 'en', 'text': original},
+                          ensure_ascii=False).encode('utf-8')
+        connection.request('POST', '/translate', body,
+                           {'Content-Type': 'application/json', 'X-API-Key': secret})
+        response = connection.getresponse()
+        payload = json.loads(response.read())
+        translated = payload.get('translatedText', '')
+        SELF_TEST['status'] = ('passed' if response.status == 200
+                               and isinstance(translated, str)
+                               and bool(translated.strip()) and translated != original
+                               else 'failed')
+    except Exception:
+        SELF_TEST['status'] = 'failed'
+    finally:
+        if connection is not None:
+            connection.close()
+    print('GOVERNANCE_SELF_TEST ' + SELF_TEST['status'], flush=True)
+
+
 def main():
     port = int(os.environ.get('PORT', '10000'))
     server = ThreadingHTTPServer(('0.0.0.0', port), Handler)
+    threading.Thread(target=run_self_test, args=(port,), daemon=True).start()
     server.serve_forever()
 
 
