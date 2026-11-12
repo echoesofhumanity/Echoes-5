@@ -7,7 +7,7 @@
 main{max-width:720px;margin:auto}header{text-align:center;padding:22px 4px}h1{font-size:clamp(1.45rem,5vw,2rem);line-height:1.25}p{line-height:1.55;color:#c1dce0}
 .panel{background:#102c3d;border:1px solid #397a86;border-radius:20px;padding:18px;margin:14px 0}
 label{display:block;font-weight:700;margin:0 0 8px}select,button{font:inherit;border-radius:12px;padding:14px;color:#f7ffff;background:#194858;border:1px solid #65bdbb;width:100%}
-button{cursor:pointer;font-weight:700}button:focus-visible,select:focus-visible{outline:3px solid #a5f0e3;outline-offset:2px}
+button{cursor:pointer;font-weight:700}button:disabled{opacity:.5;cursor:not-allowed}button:focus-visible,select:focus-visible{outline:3px solid #a5f0e3;outline-offset:2px}
 small{color:#b6d7db}.caption{border-left:3px solid #75d8d2;padding:12px 14px;background:#092332;border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:1.15rem}
 .meta{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
 .tag{font-size:.78rem;color:#a4e5de;border:1px solid #4d9c9d;border-radius:99px;padding:5px 9px}
@@ -21,7 +21,8 @@ small{color:#b6d7db}.caption{border-left:3px solid #75d8d2;padding:12px 14px;bac
 <option value="en">English</option><option value="ru">Русский</option><option value="es">Español</option><option value="de">Deutsch</option><option value="tr">Türkçe</option>
 </select><p><small>Yükleme başarılıysa GitHub Actions tarafından üretilen son gerçek Argos test sonucu gösterilir. Dilsel doğruluk uzman onayı bekliyor.</small></p></section>
 <section class="panel" aria-live="polite"><div class="meta"><strong id="heading">English</strong><span class="tag" id="captionTag">Önceki örnek</span></div><div id="caption" class="caption" lang="en"></div><div class="actions"><button type="button" id="speak">▶ Altyazıyı dinle</button><button type="button" id="stop">■ Durdur</button></div><p id="status" role="status"><small>Seslendirme, telefonun mevcut tarayıcı TTS motorunu kullanır; Azure sesi değildir.</small></p></section>
-<p><small>Gizlilik: Ses kaydedilmez. GitHub Actions test girdileri ve sonuçları herkese açıktır. Gerçek zamanlı kullanım için ayrı, güvenli bir hizmet gerekir.</small></p>
+<section class="panel"><strong>Canlı mikrofon / konuşma tanıma denemesi</strong><p><small>Yalnızca açık izninle mikrofon açılır. Tarayıcının konuşma tanıma hizmeti sesi uzak sunucularda işleyebilir. Özel toplantı bilgisi söyleme. Bu adım Argos çevirisi değildir.</small></p><label for="micLanguage">Konuşma dili</label><select id="micLanguage"><option value="tr">Türkçe</option><option value="en">English</option><option value="ru">Русский</option><option value="es">Español</option><option value="de">Deutsch</option></select><div class="actions"><button type="button" id="micStart">🎙 Mikrofonu başlat</button><button type="button" id="micStop" disabled>■ Mikrofonu durdur</button></div><p id="micStatus" role="status">Mikrofon kapalı.</p><label for="recognized">Tanınan konuşma (çeviri değil)</label><div id="recognized" class="caption" aria-live="polite">Henüz konuşma tanınmadı.</div></section>
+<p><small>Gizlilik: Bu sayfa ses kaydetmez; tarayıcı konuşma tanıma hizmeti sesi işleyebilir. GitHub Actions test girdileri ve sonuçları herkese açıktır. Gerçek zamanlı kullanım için ayrı, güvenli bir hizmet gerekir.</small></p>
 </main><script>
 "use strict";
 const entries={
@@ -65,6 +66,28 @@ async function loadLatest(){
  }catch(err){el.textContent="Yeni sonuç yüklenemedi: "+err.message+" Önceki örnek korunuyor.";}
 }
 document.getElementById("refresh").addEventListener("click",loadLatest);
+
+// Explicit user-initiated browser speech recognition pilot; no Argos or meeting bridge.
+const SpeechRecognitionAPI=window.SpeechRecognition||window.webkitSpeechRecognition;
+const micStart=document.getElementById("micStart"),micStop=document.getElementById("micStop");
+const micStatus=document.getElementById("micStatus"),recognized=document.getElementById("recognized");
+let recognition=null;
+function micIdle(message){micStart.disabled=!SpeechRecognitionAPI;micStop.disabled=true;recognition=null;micStatus.textContent=message;}
+if(!SpeechRecognitionAPI)micIdle("Bu tarayıcı konuşma tanımayı desteklemiyor. Android Chrome ile deneyebilirsin.");
+micStart.addEventListener("click",()=>{
+ if(!SpeechRecognitionAPI||recognition)return;
+ const rec=new SpeechRecognitionAPI();recognition=rec;
+ rec.lang=entries[document.getElementById("micLanguage").value].locale;
+ rec.continuous=false;rec.interimResults=true;rec.maxAlternatives=1;
+ micStart.disabled=true;micStop.disabled=false;
+ recognized.textContent="Dinleniyor…";micStatus.textContent="Mikrofon izni isteniyor / konuşma bekleniyor…";
+ rec.onresult=event=>{let parts=[];for(let i=0;i<event.results.length;i++)parts.push(event.results[i][0].transcript);recognized.textContent=parts.join(" ").trim()||"Konuşma bekleniyor…";};
+ rec.onerror=event=>{micStatus.textContent="Konuşma tanıma hatası: "+event.error+" (mikrofon izni ve tarayıcı desteğini kontrol et).";};
+ rec.onend=()=>{micIdle(micStatus.textContent.startsWith("Konuşma tanıma hatası")?micStatus.textContent:"Mikrofon kapandı. Tanınan metin yukarıda; henüz çevrilmedi.");};
+ try{rec.start();}catch(error){micIdle("Mikrofon başlatılamadı: "+error.message);}
+});
+micStop.addEventListener("click",()=>{if(recognition){recognition.stop();micStatus.textContent="Mikrofon durduruluyor…";}});
+window.addEventListener("pagehide",()=>{if(recognition)recognition.abort();});
 render();
 loadLatest();
 </script></body></html>
