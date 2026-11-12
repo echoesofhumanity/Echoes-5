@@ -1,0 +1,76 @@
+name: Governance Argos isolated latency benchmark
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/governance-argos-latency-benchmark.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: governance-argos-latency-benchmark
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Argos Translate
+        run: python -m pip install --disable-pip-version-check 'argostranslate==1.9.6'
+      - name: Download models and measure warm translation latency
+        run: |
+          python - <<'PY'
+          import statistics
+          import time
+          import argostranslate.package as package
+          import argostranslate.translate as translate
+
+          # PUBLIC synthetic meeting phrases only. No participant audio or personal data.
+          samples = [
+              "İnsan onurunu korumak ortak sorumluluğumuzdur.",
+              "Öneriyi değerlendirmek için söz almak istiyorum.",
+              "Toplantı kararını bir sonraki oturuma erteleyelim.",
+              "Bu konuda farklı görüşleri dinlemeliyiz.",
+              "Herkesin görüşünü saygıyla karşılıyoruz.",
+          ]
+          package.update_package_index()
+          available = package.get_available_packages()
+          pairs = [('tr','en'),('en','tr'),('en','ru'),('en','es'),('en','de')]
+          for source,target in pairs:
+              matches = [p for p in available if p.from_code == source and p.to_code == target]
+              if not matches:
+                  raise RuntimeError(f'Missing model: {source}->{target}')
+              pkg = matches[0]
+              print(f'Installing {source}->{target} model {pkg.package_version}',flush=True)
+              package.install_from_path(pkg.download())
+
+          english = [
+              "Protecting human dignity is our shared responsibility.",
+              "I would like to speak to evaluate the proposal.",
+              "Let us postpone the meeting decision until the next session.",
+              "We should listen to different perspectives on this issue.",
+              "We respect everyone's opinion.",
+          ]
+          print('NOTE: CPU-only GitHub runner benchmark, not network, STT, TTS or 25-person latency.',flush=True)
+          for source,target in pairs:
+              phrases = samples if source == 'tr' else english
+              translate.translate(phrases[0],source,target) # warm-up, excluded
+              durations=[]
+              for phrase in phrases:
+                  start=time.perf_counter()
+                  output=translate.translate(phrase,source,target)
+                  elapsed=(time.perf_counter()-start)*1000
+                  if not output.strip() or output.strip()==phrase.strip():
+                      raise RuntimeError(f'Empty/unchanged output {source}->{target}')
+                  durations.append(elapsed)
+              print(f'PAIR {source}->{target} | samples=5 | mean_ms={statistics.mean(durations):.1f} | median_ms={statistics.median(durations):.1f} | max_ms={max(durations):.1f}',flush=True)
+          print('PASS: translation model warm latency measured. Human quality and concurrency remain untested.',flush=True)
+          PY
