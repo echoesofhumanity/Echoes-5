@@ -13,14 +13,15 @@ small{color:#b6d7db}.caption{border-left:3px solid #75d8d2;padding:12px 14px;bac
 .tag{font-size:.78rem;color:#a4e5de;border:1px solid #4d9c9d;border-radius:99px;padding:5px 9px}
 .actions{display:flex;gap:10px;margin-top:12px}.actions button{flex:1}
 </style></head><body><main>
-<header><small>ECHOES OF HUMANITY · GOVERNANCE</small><h1>Beş dilli altyazı önizlemesi</h1><p>Telefon üzerinden kontrol edilebilen, gerçek Argos testlerinden alınmış örnek çeviriler.</p></header>
-<section class="panel"><strong>Test sınırı</strong><p>Bu sayfa sabit bir örnek cümleyi gösterir. Canlı mikrofon, gerçek zamanlı çeviri veya JaaS toplantı bağlantısı yoktur. Yeni cümle çevrilmez ve hiçbir metin sunucuya gönderilmez.</p></section>
-<section class="panel"><div class="meta"><strong>Örnek kaynak konuşma · Türkçe</strong><span class="tag">Sabit test verisi</span></div><div class="caption" lang="tr">İnsan onurunu korumak ortak sorumluluğumuzdur.</div></section>
+<header><small>ECHOES OF HUMANITY · GOVERNANCE</small><h1>Beş dilli altyazı önizlemesi</h1><p>GitHub Actions tarafından üretilen gerçek Argos test çevirileri.</p></header>
+<section class="panel"><strong>Test sınırı</strong><p>Yalnızca herkese açık test sonuçlarını görüntüler. Canlı mikrofon, gerçek zamanlı çeviri veya JaaS bağlantısı yoktur. Özel toplantı metni kullanmayın.</p></section>
+<section class="panel"><div class="meta"><strong id="sourceTitle">Örnek kaynak konuşma · Türkçe</strong><span class="tag">Sabit test verisi</span></div><div class="caption" id="sourceCaption" lang="tr">İnsan onurunu korumak ortak sorumluluğumuzdur.</div></section>
+<section class="panel"><button type="button" id="refresh">Son gerçek çeviriyi yükle</button><p id="loadStatus" role="status">Test verisi bekleniyor.</p></section>
 <section class="panel"><label for="language">Altyazı dili</label><select id="language">
 <option value="en">English</option><option value="ru">Русский</option><option value="es">Español</option><option value="de">Deutsch</option><option value="tr">Türkçe</option>
 </select><p><small>Gösterilen çeviriler önceki Argos test kayıtlarından alınmıştır; dilsel doğruluk uzman onayı bekliyor.</small></p></section>
 <section class="panel" aria-live="polite"><div class="meta"><strong id="heading">English</strong><span class="tag">Örnek altyazı</span></div><div id="caption" class="caption" lang="en"></div><div class="actions"><button type="button" id="speak">▶ Altyazıyı dinle</button><button type="button" id="stop">■ Durdur</button></div><p id="status" role="status"><small>Seslendirme, telefonun mevcut tarayıcı TTS motorunu kullanır; Azure sesi değildir.</small></p></section>
-<p><small>Gizlilik: Bu sayfa ses kaydetmez, mikrofon izni istemez ve çeviri API'sine bağlanmaz. Gerçek zamanlı kullanım için ayrı, güvenli bir hizmet gerekir.</small></p>
+<p><small>Gizlilik: Ses kaydedilmez. GitHub Actions test girdileri ve sonuçları herkese açıktır. Gerçek zamanlı kullanım için ayrı, güvenli bir hizmet gerekir.</small></p>
 </main><script>
 "use strict";
 const entries={
@@ -30,17 +31,36 @@ ru:{label:"Русский",locale:"ru-RU",text:"Наша общая ответс
 es:{label:"Español",locale:"es-ES",text:"Es nuestra responsabilidad común proteger la dignidad humana."},
 de:{label:"Deutsch",locale:"de-DE",text:"Es ist unsere gemeinsame Verantwortung, die Menschenwürde zu schützen."}
 };
+let active=entries;
 const picker=document.getElementById("language"),caption=document.getElementById("caption"),heading=document.getElementById("heading"),status=document.getElementById("status");
-function render(){if("speechSynthesis" in window)speechSynthesis.cancel();const e=entries[picker.value];heading.textContent=e.label;caption.textContent=e.text;caption.lang=e.locale;status.textContent="Sabit Argos örneği görüntüleniyor."}
+function render(){if("speechSynthesis" in window)speechSynthesis.cancel();const e=active[picker.value];heading.textContent=e.label;caption.textContent=e.text;caption.lang=e.locale;status.textContent="Sabit Argos örneği görüntüleniyor."}
 picker.addEventListener("change",render);
 document.getElementById("speak").addEventListener("click",()=>{
 if(!("speechSynthesis" in window)){status.textContent="Bu tarayıcıda seslendirme desteklenmiyor.";return}
-speechSynthesis.cancel();const e=entries[picker.value],u=new SpeechSynthesisUtterance(e.text);
+speechSynthesis.cancel();const e=active[picker.value],u=new SpeechSynthesisUtterance(e.text);
 u.lang=e.locale;u.rate=1;u.pitch=1;u.onstart=()=>status.textContent="Seslendirme başladı.";
 u.onerror=()=>status.textContent="Cihaz bu dilde seslendirme yapamadı.";
 u.onend=()=>status.textContent="Seslendirme tamamlandı.";
 speechSynthesis.speak(u);
 });
 document.getElementById("stop").addEventListener("click",()=>{if("speechSynthesis" in window)speechSynthesis.cancel();status.textContent="Seslendirme durduruldu."});
+
+async function loadLatest(){
+ const el=document.getElementById("loadStatus");el.textContent="Yükleniyor…";
+ try{
+  const response=await fetch("./governance-argos-latest-captions.json?ts="+Date.now(),{cache:"no-store"});
+  if(!response.ok)throw Error("Henüz sonuç yayımlanmadı (HTTP "+response.status+").");
+  const data=await response.json();
+  if(data.schemaVersion!==1||data.type!=="public-test-only"||data.live!==false||!entries[data.source])throw Error("Geçersiz test verisi.");
+  for(const lang of Object.keys(entries))if(typeof data.captions?.[lang]!=="string"||!data.captions[lang].trim())throw Error("Eksik altyazı: "+lang);
+  active=Object.fromEntries(Object.keys(entries).map(lang=>[lang,{...entries[lang],text:data.captions[lang]}]));
+  document.getElementById("sourceTitle").textContent="Örnek kaynak konuşma · "+entries[data.source].label;
+  document.getElementById("sourceCaption").textContent=data.captions[data.source];
+  document.getElementById("sourceCaption").lang=entries[data.source].locale;
+  render();el.textContent="Gerçek Argos test sonucu yüklendi · "+new Date(data.generatedAt).toLocaleString("tr-TR");
+ }catch(err){el.textContent="Yeni sonuç yüklenemedi: "+err.message+" Önceki örnek korunuyor.";}
+}
+document.getElementById("refresh").addEventListener("click",loadLatest);
 render();
+loadLatest();
 </script></body></html>
