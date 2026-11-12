@@ -1,0 +1,84 @@
+name: Governance phone-only real caption translation
+on:
+  workflow_dispatch:
+    inputs:
+      source_language:
+        description: 'Konusma dili / Source language'
+        type: choice
+        required: true
+        default: tr
+        options:
+          - tr
+          - en
+          - ru
+          - es
+          - de
+      sample_text:
+        description: 'Public test sentence only (no private meeting content)'
+        type: string
+        required: true
+        default: 'İnsan onurunu korumak ortak sorumluluğumuzdur.'
+permissions:
+  contents: read
+concurrency:
+  group: governance-phone-caption-${{ github.run_id }}
+  cancel-in-progress: false
+jobs:
+  captions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SOURCE_LANGUAGE: ${{ inputs.source_language }}
+      SAMPLE_TEXT: ${{ inputs.sample_text }}
+    steps:
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install real Argos engine
+        run: python -m pip install --disable-pip-version-check 'argostranslate==1.9.6'
+      - name: Translate one public sentence into four caption languages
+        run: |
+          python - <<'PY'
+          import os
+          import argostranslate.package as package
+          import argostranslate.translate as translate
+
+          langs=('tr','en','ru','es','de')
+          src=os.environ['SOURCE_LANGUAGE']
+          phrase=os.environ['SAMPLE_TEXT'].strip()
+          assert src in langs, 'Unsupported source language'
+          assert phrase and len(phrase)<=1200, 'Text must contain 1-1200 characters'
+          package.update_package_index()
+          available=package.get_available_packages()
+          edges=set()
+          for dst in langs:
+              if dst==src:
+                  continue
+              if src=='en' or dst=='en':
+                  edges.add((src,dst))
+              else:
+                  edges.add((src,'en'))
+                  edges.add(('en',dst))
+          for source,target in sorted(edges):
+              choices=[p for p in available if p.from_code==source and p.to_code==target]
+              assert choices, f'Missing model {source}->{target}'
+              model=choices[0]
+              print(f'Installing {source}->{target} v{model.package_version}',flush=True)
+              package.install_from_path(model.download())
+          print('--- ACTUAL ARGOS CAPTIONS (not a live meeting) ---',flush=True)
+          print(f'SOURCE {src}: {phrase}',flush=True)
+          for dst in langs:
+              if dst==src:
+                  continue
+              if src=='en' or dst=='en':
+                  output=translate.translate(phrase,src,dst)
+              else:
+                  pivot=translate.translate(phrase,src,'en')
+                  assert pivot.strip(), f'Empty pivot {src}->en'
+                  output=translate.translate(pivot,'en',dst)
+              assert output.strip(), f'Empty output {src}->{dst}'
+              print(f'CAPTION {dst}: {output}',flush=True)
+          print('PASS: four actual Argos captions returned.',flush=True)
+          print('LIMITATIONS: batch test only; no microphone, live captions, JaaS, TTS, or certified translation quality.',flush=True)
+          PY
