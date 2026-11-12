@@ -1,0 +1,100 @@
+name: Governance Argos five-language fanout benchmark
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/governance-argos-fanout-benchmark.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: governance-argos-fanout-benchmark
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install isolated Argos Translate
+        run: python -m pip install --disable-pip-version-check 'argostranslate==1.9.6'
+      - name: Measure one speaker to four target languages and audience fanout
+        run: |
+          python - <<'PY'
+          import concurrent.futures
+          import statistics
+          import time
+          import argostranslate.package as package
+          import argostranslate.translate as translate
+
+          # No meeting audio, real participants, personal data or external translation API.
+          samples = [
+              "İnsan onurunu korumak ortak sorumluluğumuzdur.",
+              "Bu öneriyi birlikte değerlendirelim.",
+              "Lütfen herkesin görüşünü dinleyelim.",
+              "Kararı bir sonraki toplantıya erteleyebiliriz.",
+              "Çocukların güvenliği önceliğimizdir."
+          ]
+          package.update_package_index()
+          available = package.get_available_packages()
+          pairs = [('tr','en'),('en','ru'),('en','es'),('en','de')]
+          for source,target in pairs:
+              candidates = [p for p in available if p.from_code == source and p.to_code == target]
+              if not candidates:
+                  raise RuntimeError(f'Missing model {source}->{target}')
+              model=candidates[0]
+              print(f'Installing {source}->{target} version={model.package_version}',flush=True)
+              package.install_from_path(model.download())
+
+          # Warm all models before measuring.
+          warm_en=translate.translate(samples[0],'tr','en')
+          for lang in ('ru','es','de'):
+              translate.translate(warm_en,'en',lang)
+
+          def one_fanout(text):
+              started=time.perf_counter()
+              english=translate.translate(text,'tr','en')
+              if not english.strip():
+                  raise RuntimeError('English translation missing')
+              outputs={'en':english}
+              # A single source is translated to English once, then to the other 3 languages.
+              with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+                  futures={lang:pool.submit(translate.translate,english,'en',lang)
+                           for lang in ('ru','es','de')}
+                  for lang,future in futures.items():
+                      outputs[lang]=future.result()
+              if any(not v.strip() for v in outputs.values()):
+                  raise RuntimeError('Empty target translation')
+              elapsed=(time.perf_counter()-started)*1000
+              return elapsed,outputs
+
+          # Model latency only. Python thread scheduling/GIL may serialize work.
+          times=[]
+          for i in range(3):
+              for text in samples:
+                  elapsed,outputs=one_fanout(text)
+                  times.append(elapsed)
+                  if i==0 and text==samples[0]:
+                      print('SOURCE (tr):',text,flush=True)
+                      for lang in ('en','ru','es','de'):
+                          print(f'TARGET ({lang}): {outputs[lang]}',flush=True)
+          print(f'FANOUT source=tr targets=en,ru,es,de samples={len(times)} mean_ms={statistics.mean(times):.1f} median_ms={statistics.median(times):.1f} p95_ms={sorted(times)[int(len(times)*.95+.999999)-1]:.1f} max_ms={max(times):.1f}',flush=True)
+
+          # Delivery fanout is simulated in memory; no 25 real clients or networking.
+          audience={'tr':5,'en':6,'ru':5,'es':5,'de':4}
+          assert sum(audience.values())==25
+          targets=[lang for lang,n in audience.items() if n and lang!='tr']
+          assert len(targets)==4
+          naive=sum(n for lang,n in audience.items() if lang!='tr')
+          print('AUDIENCE total=25 source_language=tr unique_target_languages=4 recipients_needing_translation='+str(naive),flush=True)
+          print('FANOUT_COMPARISON per_recipient_translation_jobs='+str(naive)+' shared_translation_jobs='+str(len(targets))+' shared_outputs_delivered='+str(naive),flush=True)
+          print('NOTE: Audience distribution is synthetic; fanout delivery is simulated, not a network or real JaaS meeting.',flush=True)
+          print('PASS: four-target Argos fanout measured; STT, TTS, network, server memory, concurrency across speakers and real participants remain untested.',flush=True)
+          PY
