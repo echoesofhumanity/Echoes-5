@@ -19,9 +19,9 @@ on:
         required: true
         default: 'İnsan onurunu korumak ortak sorumluluğumuzdur.'
 permissions:
-  contents: read
+  contents: write
 concurrency:
-  group: governance-phone-caption-${{ github.run_id }}
+  group: governance-phone-caption-publish
   cancel-in-progress: false
 jobs:
   captions:
@@ -30,6 +30,8 @@ jobs:
     env:
       SOURCE_LANGUAGE: ${{ inputs.source_language }}
       SAMPLE_TEXT: ${{ inputs.sample_text }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPOSITORY: ${{ github.repository }}
     steps:
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
@@ -41,6 +43,8 @@ jobs:
         run: |
           python - <<'PY'
           import os
+          import json, base64, urllib.request, urllib.error
+          from datetime import datetime, timezone
           import argostranslate.package as package
           import argostranslate.translate as translate
 
@@ -66,6 +70,7 @@ jobs:
               model=choices[0]
               print(f'Installing {source}->{target} v{model.package_version}',flush=True)
               package.install_from_path(model.download())
+          captions={src:phrase}
           print('--- ACTUAL ARGOS CAPTIONS (not a live meeting) ---',flush=True)
           print(f'SOURCE {src}: {phrase}',flush=True)
           for dst in langs:
@@ -78,7 +83,24 @@ jobs:
                   assert pivot.strip(), f'Empty pivot {src}->en'
                   output=translate.translate(pivot,'en',dst)
               assert output.strip(), f'Empty output {src}->{dst}'
+              captions[dst]=output
               print(f'CAPTION {dst}: {output}',flush=True)
+          # PUBLIC sample only. Never enter private meeting speech in workflow inputs.
+          payload={'schemaVersion':1,'source':src,'captions':captions,'generatedAt':datetime.now(timezone.utc).isoformat(),'type':'public-test-only','live':False}
+          url=f"https://api.github.com/repos/{os.environ['GH_REPOSITORY']}/contents/governance-argos-latest-captions.json"
+          headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json','User-Agent':'echoes-governance-test'}
+          sha=None
+          try:
+              with urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=20) as resp:
+                  sha=json.load(resp)['sha']
+          except urllib.error.HTTPError as exc:
+              if exc.code!=404: raise
+          data={'message':'test(governance): publish public caption sample','branch':'main','content':base64.b64encode(json.dumps(payload,ensure_ascii=False).encode()).decode()}
+          if sha: data['sha']=sha
+          req=urllib.request.Request(url,data=json.dumps(data).encode(),headers=headers,method='PUT')
+          with urllib.request.urlopen(req,timeout=30) as resp:
+              assert resp.status in (200,201)
+          print('PUBLISHED: public captions JSON for mobile preview.',flush=True)
           print('PASS: four actual Argos captions returned.',flush=True)
           print('LIMITATIONS: batch test only; no microphone, live captions, JaaS, TTS, or certified translation quality.',flush=True)
           PY
