@@ -41,12 +41,27 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header('Content-Type', 'application/json; charset=utf-8')
         self.send_header('Cache-Control', 'no-store')
+        if self.path == '/demo-translation':
+            self.send_header('Access-Control-Allow-Origin', 'https://echoesofhumanity.github.io')
         self.send_header('X-Content-Type-Options', 'nosniff')
         self.send_header('Content-Length', str(len(body)))
         self.end_headers()
         self.wfile.write(body)
 
     def do_GET(self):
+        if self.path == '/demo-translation':
+            # Public demonstration: fixed synthetic text only; no user input accepted.
+            original = 'İnsan onurunu korumak ortak sorumluluğumuzdur.'
+            try:
+                translated = translate_text(original, 'tr', 'en')
+                if not translated.strip():
+                    raise RuntimeError('Empty translation')
+            except Exception:
+                return self.respond(503, {'error': 'Demonstration unavailable'})
+            return self.respond(200, {'source': 'tr', 'target': 'en',
+                                      'originalText': original,
+                                      'translatedText': translated,
+                                      'synthetic': True, 'liveMeeting': False})
         if self.path == '/health':
             return self.respond(200, {'status': 'pilot', 'liveMeeting': False, 'translationSelfTest': SELF_TEST['status']})
         return self.respond(404, {'error': 'Not found'})
