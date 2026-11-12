@@ -1,0 +1,53 @@
+name: Governance Argos bridge contract test
+on:
+  workflow_dispatch:
+jobs:
+  bridge-contract:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate local bridge without installing models or accessing meeting audio
+        run: |
+          python -m py_compile governance-argos-local-bridge.py
+          python - <<'PY'
+          import importlib.util, json, threading, http.client
+          from http.server import ThreadingHTTPServer
+          from unittest.mock import patch
+          spec=importlib.util.spec_from_file_location("bridge", "governance-argos-local-bridge.py")
+          bridge=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(bridge)
+          assert len(bridge.routes()) == 8
+          server=ThreadingHTTPServer(("127.0.0.1",0),bridge.Handler)
+          thread=threading.Thread(target=server.serve_forever,daemon=True)
+          thread.start()
+          def request(method,path,body=None,content_type="application/json"):
+              conn=http.client.HTTPConnection("127.0.0.1",server.server_port,timeout=5)
+              headers={"Content-Type":content_type}
+              conn.request(method,path,body=body,headers=headers)
+              resp=conn.getresponse()
+              status=resp.status
+              data=json.loads(resp.read())
+              conn.close()
+              return status,data
+          try:
+              status,health=request("GET","/health")
+              assert status==200 and len(health["languages"])==5 and health["liveMeeting"] is False
+              with patch.object(bridge,"convert",return_value="Human dignity matters.") as mock:
+                  status,data=request("POST","/translate",json.dumps({"source":"tr","target":"en","text":"İnsan onuru önemlidir."}).encode())
+                  assert status==200 and data["translatedText"]=="Human dignity matters."
+                  mock.assert_called_once()
+              assert request("POST","/translate",b'{"source":"xx","target":"en","text":"Hi"}')[0]==400
+              assert request("POST","/translate",b'{"source":"tr","target":"en","text":""}')[0]==400
+              assert request("POST","/translate",b"x"*4097)[0]==413
+              assert request("POST","/translate",b"{}",content_type="text/plain")[0]==415
+              assert request("GET","/missing")[0]==404
+              print("PASS: 7 HTTP contract checks; translation model intentionally mocked.")
+          finally:
+              server.shutdown()
+              server.server_close()
+          PY
