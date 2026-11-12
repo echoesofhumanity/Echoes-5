@@ -5,18 +5,18 @@
 <body><main><a href="governance-center-demo.html">← Governance Center</a><h1>Çeviri Pilot Testi</h1>
 <p class="muted">Türkçe → İngilizce · yalnızca sentetik örnek · gerçek toplantı değildir</p>
 <section><strong>Türkçe test cümlesi</strong><p>İnsan onurunu korumak ortak sorumluluğumuzdur.</p></section>
-<button id="run" type="button">Render üzerinde çeviriyi test et</button>
+<button id="run" type="button">Render'da doğrulanmış çeviriyi göster</button>
 <section aria-live="polite"><strong>İngilizce sonuç</strong><output id="result">Test başlatılmadı.</output></section>
 <p class="warning">Bu ekran kişisel konuşmaları veya serbest metinleri göndermez. Ses, kamera ve toplantı erişimi yoktur.</p>
 </main><script>
 const button=document.getElementById('run'), result=document.getElementById('result');
-button.addEventListener('click',async()=>{button.disabled=true;result.textContent='Çeviri servisine bağlanılıyor…';try{
+button.addEventListener('click',async()=>{button.disabled=true;result.textContent='Doğrulanmış test sonucu alınıyor…';try{
 const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),90000);
 try{const response=await fetch('https://echoes-governance-argos.onrender.com/demo-translation',{signal:controller.signal,cache:'no-store'});
 if(!response.ok)throw new Error('Servis yanıtı: '+response.status);
 const data=await response.json();
 if(data.synthetic!==true||data.source!=='tr'||data.target!=='en'||!data.translatedText)throw new Error('Geçersiz pilot yanıtı');
-result.textContent=data.translatedText;
+result.textContent=data.translatedText+'\n\n(Render sunucusunda doğrulanmış sentetik test sonucu; yeni canlı çeviri değildir.)';
 }finally{clearTimeout(timer)}
 }catch(e){result.textContent='Test tamamlanamadı: '+e.message+'. Ücretsiz servis uykudaysa yeniden deneyin.'}finally{button.disabled=false}});
 </script></body></html>
