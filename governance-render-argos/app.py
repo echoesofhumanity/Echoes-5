@@ -7,15 +7,22 @@ import hmac
 import json
 import os
 import threading
+from pathlib import Path
+
+# Must be configured before Argos is imported.
+os.environ['ARGOS_PACKAGES_DIR'] = str(Path(__file__).resolve().parent / '.argos-packages')
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 LANGUAGES = frozenset(('tr', 'en', 'ru', 'es', 'de'))
+PILOT_ROUTES = frozenset({('tr', 'en')})
 MAX_BYTES = 4096
 MAX_CHARS = 1200
 TRANSLATE_LOCK = threading.Lock()
 
 
 def translate_text(text, source, target):
+    if (source, target) not in PILOT_ROUTES:
+        raise ValueError('Route not enabled in pilot')
     import argostranslate.translate as argos
     with TRANSLATE_LOCK:
         if source == target:
@@ -58,8 +65,8 @@ class Handler(BaseHTTPRequestHandler):
             if not isinstance(payload, dict):
                 raise ValueError('Invalid request')
             source, target, text = (payload.get(k) for k in ('source', 'target', 'text'))
-            if source not in LANGUAGES or target not in LANGUAGES:
-                raise ValueError('Unsupported language')
+            if source not in LANGUAGES or target not in LANGUAGES or (source, target) not in PILOT_ROUTES:
+                raise ValueError('Unsupported pilot route')
             if not isinstance(text, str) or not text.strip() or len(text) > MAX_CHARS:
                 raise ValueError('Invalid text')
         except (ValueError, UnicodeError):
