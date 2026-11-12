@@ -41,6 +41,17 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header('Content-Type', 'application/json; charset=utf-8')
         self.send_header('Cache-Control', 'no-store')
+        self.send_header('X-Content-Type-Options', 'nosniff')
+        if self.path == '/demo-translation':
+            self.send_header('Access-Control-Allow-Origin', 'https://echoesofhumanity.github.io')
+        self.send_header('Content-Length', str(len(body)))
+        self.end_headers()
+        try:
+            self.wfile.write(body)
+        except (BrokenPipeError, ConnectionResetError):
+            pass
+
+    def do_GET(self):
         if self.path == '/demo-translation':
             if SELF_TEST['status'] != 'passed':
                 return self.respond(503, {'error': 'Synthetic verification not ready',
@@ -51,7 +62,8 @@ class Handler(BaseHTTPRequestHandler):
                                       'synthetic': True, 'verifiedCachedResult': True,
                                       'liveMeeting': False})
         if self.path == '/health':
-            return self.respond(200, {'status': 'pilot', 'liveMeeting': False, 'translationSelfTest': SELF_TEST['status']})
+            return self.respond(200, {'status': 'pilot', 'liveMeeting': False,
+                                      'translationSelfTest': SELF_TEST['status']})
         return self.respond(404, {'error': 'Not found'})
 
     def do_POST(self):
