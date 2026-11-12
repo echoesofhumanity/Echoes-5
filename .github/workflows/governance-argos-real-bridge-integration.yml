@@ -1,0 +1,52 @@
+name: Governance real Argos bridge integration
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Argos runtime
+        run: python -m pip install --disable-pip-version-check 'argostranslate==1.9.6'
+      - name: Install Turkish to English model and test actual HTTP translation
+        run: |
+          python - <<'PY'
+          import argostranslate.package as p
+          p.update_package_index()
+          models=[m for m in p.get_available_packages() if m.from_code=='tr' and m.to_code=='en']
+          assert models, 'Turkish to English model not found'
+          p.install_from_path(models[0].download())
+          print('MODEL_READY tr->en',flush=True)
+          PY
+          python - <<'PY'
+          import importlib.util, json, threading, http.client
+          from http.server import ThreadingHTTPServer
+          spec=importlib.util.spec_from_file_location('bridge','governance-argos-local-bridge.py')
+          bridge=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(bridge)
+          server=ThreadingHTTPServer(('127.0.0.1',0),bridge.Handler)
+          worker=threading.Thread(target=server.serve_forever,daemon=True)
+          worker.start()
+          try:
+              conn=http.client.HTTPConnection('127.0.0.1',server.server_port,timeout=30)
+              body=json.dumps({'source':'tr','target':'en','text':'İnsan onurunu korumak ortak sorumluluğumuzdur.'},ensure_ascii=False).encode('utf-8')
+              conn.request('POST','/translate',body,{'Content-Type':'application/json'})
+              response=conn.getresponse()
+              result=json.loads(response.read())
+              conn.close()
+              assert response.status==200,(response.status,result)
+              assert result['source']=='tr' and result['target']=='en'
+              assert result['translatedText'].strip()
+              assert result['translatedText'].strip()!='İnsan onurunu korumak ortak sorumluluğumuzdur.'
+              print('REAL_HTTP_TRANSLATION tr->en:',result['translatedText'],flush=True)
+              print('PASS: real Argos model returned English via local HTTP bridge; translation quality, all other routes and live JaaS not tested.',flush=True)
+          finally:
+              server.shutdown()
+              server.server_close()
+          PY
