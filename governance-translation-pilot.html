@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Echoes Governance · Çeviri Pilotu</title>
+<style>:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#17465b,#061827 70%);color:#eafafa;font:16px/1.55 system-ui,sans-serif}main{max-width:700px;margin:auto;padding:28px 18px}h1{line-height:1.2}section{background:#102b3c;border:1px solid #3d6976;border-radius:18px;padding:20px;margin:16px 0}button,a{color:#eaffff}button{border:1px solid #7ce7e0;border-radius:12px;background:#12666c;padding:12px 18px;font:inherit;cursor:pointer}button:disabled{opacity:.5}a{display:inline-block;margin-top:20px}.muted{color:#b8cfd4}.warning{color:#ffdbab}output{display:block;white-space:pre-wrap;overflow-wrap:anywhere;font-size:1.12rem}</style></head>
+<body><main><a href="governance-center-demo.html">← Governance Center</a><h1>Çeviri Pilot Testi</h1>
+<p class="muted">Türkçe → İngilizce · yalnızca sentetik örnek · gerçek toplantı değildir</p>
+<section><strong>Türkçe test cümlesi</strong><p>İnsan onurunu korumak ortak sorumluluğumuzdur.</p></section>
+<button id="run" type="button">Render üzerinde çeviriyi test et</button>
+<section aria-live="polite"><strong>İngilizce sonuç</strong><output id="result">Test başlatılmadı.</output></section>
+<p class="warning">Bu ekran kişisel konuşmaları veya serbest metinleri göndermez. Ses, kamera ve toplantı erişimi yoktur.</p>
+</main><script>
+const button=document.getElementById('run'), result=document.getElementById('result');
+button.addEventListener('click',async()=>{button.disabled=true;result.textContent='Çeviri servisine bağlanılıyor…';try{
+const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),90000);
+try{const response=await fetch('https://echoes-governance-argos.onrender.com/demo-translation',{signal:controller.signal,cache:'no-store'});
+if(!response.ok)throw new Error('Servis yanıtı: '+response.status);
+const data=await response.json();
+if(data.synthetic!==true||data.source!=='tr'||data.target!=='en'||!data.translatedText)throw new Error('Geçersiz pilot yanıtı');
+result.textContent=data.translatedText;
+}finally{clearTimeout(timer)}
+}catch(e){result.textContent='Test tamamlanamadı: '+e.message+'. Ücretsiz servis uykudaysa yeniden deneyin.'}finally{button.disabled=false}});
+</script></body></html>
