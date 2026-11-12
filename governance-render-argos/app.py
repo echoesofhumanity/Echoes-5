@@ -20,7 +20,7 @@ PILOT_ROUTES = frozenset({('tr', 'en')})
 MAX_BYTES = 4096
 MAX_CHARS = 1200
 TRANSLATE_LOCK = threading.Lock()
-SELF_TEST = {'status': 'pending', 'translatedText': ''}
+SELF_TEST = {'status': 'pending', 'translatedText': '', 'durationMs': None}
 
 
 def translate_text(text, source, target):
@@ -60,6 +60,7 @@ class Handler(BaseHTTPRequestHandler):
                                       'originalText': 'İnsan onurunu korumak ortak sorumluluğumuzdur.',
                                       'translatedText': SELF_TEST['translatedText'],
                                       'synthetic': True, 'verifiedCachedResult': True,
+                                      'serverTranslationDurationMs': SELF_TEST['durationMs'],
                                       'liveMeeting': False})
         if self.path == '/health':
             return self.respond(200, {'status': 'pilot', 'liveMeeting': False,
@@ -114,17 +115,20 @@ def run_self_test(port):
         original = 'İnsan onurunu korumak ortak sorumluluğumuzdur.'
         body = json.dumps({'source': 'tr', 'target': 'en', 'text': original},
                           ensure_ascii=False).encode('utf-8')
+        started = time.monotonic()
         connection.request('POST', '/translate', body,
                            {'Content-Type': 'application/json', 'X-API-Key': secret})
         response = connection.getresponse()
         payload = json.loads(response.read())
         translated = payload.get('translatedText', '')
+        elapsed_ms = round((time.monotonic() - started) * 1000)
         SELF_TEST['status'] = ('passed' if response.status == 200
                                and isinstance(translated, str)
                                and bool(translated.strip()) and translated != original
                                else 'failed')
         if SELF_TEST['status'] == 'passed':
             SELF_TEST['translatedText'] = translated
+            SELF_TEST['durationMs'] = elapsed_ms
     except Exception:
         SELF_TEST['status'] = 'failed'
     finally:
