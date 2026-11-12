@@ -1,0 +1,82 @@
+name: Governance Argos all five source languages isolated test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/governance-argos-all-source-languages-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: governance-argos-all-source-languages-test
+  cancel-in-progress: true
+
+jobs:
+  all-language-directions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Set up compatible Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install isolated translation engine
+        run: python -m pip install --disable-pip-version-check 'argostranslate==1.9.6'
+      - name: Test twenty directed language pairs through English hub
+        run: |
+          python - <<'PY'
+          import statistics
+          import time
+          import argostranslate.package as package
+          import argostranslate.translate as translate
+
+          languages = ('tr','en','ru','es','de')
+          # Synthetic, public meeting examples only; no meeting audio or personal data.
+          samples = {
+              'tr': 'İnsan onurunu korumak ortak sorumluluğumuzdur.',
+              'en': 'Protecting human dignity is our shared responsibility.',
+              'ru': 'Защита человеческого достоинства — наша общая ответственность.',
+              'es': 'Proteger la dignidad humana es nuestra responsabilidad compartida.',
+              'de': 'Die Menschenwürde zu schützen ist unsere gemeinsame Verantwortung.',
+          }
+          package.update_package_index()
+          available = package.get_available_packages()
+          edges = [(lang,'en') for lang in languages if lang!='en'] + [('en',lang) for lang in languages if lang!='en']
+          for src,dst in edges:
+              candidates = [p for p in available if p.from_code==src and p.to_code==dst]
+              if not candidates:
+                  raise RuntimeError(f'MISSING MODEL {src}->{dst}')
+              chosen=candidates[0]
+              print(f'INSTALL {src}->{dst} version={chosen.package_version}',flush=True)
+              package.install_from_path(chosen.download())
+
+          # English hub routing is explicit: non-English to non-English uses two model stages.
+          def route(text,src,dst):
+              if src=='en' or dst=='en':
+                  return translate.translate(text,src,dst)
+              pivot=translate.translate(text,src,'en')
+              if not pivot.strip():
+                  raise RuntimeError(f'EMPTY PIVOT {src}->en')
+              return translate.translate(pivot,'en',dst)
+
+          timings=[]
+          for src in languages:
+              for dst in languages:
+                  if src==dst:
+                      continue
+                  route(samples[src],src,dst)  # warm-up, excluded from timing
+                  start=time.perf_counter()
+                  output=route(samples[src],src,dst)
+                  ms=(time.perf_counter()-start)*1000
+                  if not output.strip():
+                      raise RuntimeError(f'EMPTY RESULT {src}->{dst}')
+                  timings.append(ms)
+                  print(f'PAIR {src}->{dst} route={"direct" if "en" in (src,dst) else "via-en"} elapsed_ms={ms:.1f} output={output}',flush=True)
+          assert len(timings)==20
+          print(f'SUMMARY passed=20 total=20 mean_ms={statistics.mean(timings):.1f} max_ms={max(timings):.1f}',flush=True)
+          print('PASS: twenty directions returned nonempty output. Human translation quality NOT validated.',flush=True)
+          print('LIMITATIONS: one sample per pair, warm CPU-only runner; no STT, TTS, network, JaaS, live meeting, load or language quality certification.',flush=True)
+          PY
