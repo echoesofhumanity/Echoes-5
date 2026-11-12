@@ -1,0 +1,84 @@
+name: Governance Argos isolated concurrency benchmark
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/governance-argos-concurrency-benchmark.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: governance-argos-concurrency-benchmark
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Argos Translate
+        run: python -m pip install --disable-pip-version-check 'argostranslate==1.9.6'
+      - name: Benchmark concurrent translation requests at 1 5 12 25
+        run: |
+          python - <<'PY'
+          import concurrent.futures
+          import statistics
+          import time
+          import argostranslate.package as package
+          import argostranslate.translate as translate
+
+          # Synthetic text only. No user input, audio, meeting data or external server.
+          texts = [
+              "İnsan onurunu korumak ortak sorumluluğumuzdur.",
+              "Herkesin görüşünü saygıyla karşılıyoruz.",
+              "Toplantı kararını bir sonraki oturuma erteleyelim.",
+              "Bu konuda farklı görüşleri dinlemeliyiz.",
+              "Öneriyi değerlendirmek için söz almak istiyorum."
+          ]
+          package.update_package_index()
+          candidates = [p for p in package.get_available_packages()
+                        if p.from_code == 'tr' and p.to_code == 'en']
+          if not candidates:
+              raise RuntimeError('TR->EN package unavailable')
+          model = candidates[0]
+          print('Installing TR->EN model version', model.package_version, flush=True)
+          package.install_from_path(model.download())
+          translate.translate(texts[0], 'tr', 'en') # warm up outside measurement
+
+          def task(index):
+              start = time.perf_counter()
+              result = translate.translate(texts[index % len(texts)], 'tr', 'en')
+              duration = (time.perf_counter()-start)*1000
+              if not result.strip() or result == texts[index % len(texts)]:
+                  raise RuntimeError('Empty or unchanged translation')
+              return duration
+
+          print('NOTE: thread-based concurrent calls on one GitHub runner; not a 25-user JaaS or end-to-end test.', flush=True)
+          for workers in (1,5,12,25):
+              # Multiple rounds help avoid drawing conclusions from a single run.
+              wall_times = []
+              individual = []
+              for round_index in range(3):
+                  start = time.perf_counter()
+                  with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
+                      times = list(pool.map(task, range(round_index*workers,(round_index+1)*workers)))
+                  wall_times.append((time.perf_counter()-start)*1000)
+                  individual.extend(times)
+              print(
+                  f'LOAD requests={workers} rounds=3 '
+                  f'wall_mean_ms={statistics.mean(wall_times):.1f} '
+                  f'wall_max_ms={max(wall_times):.1f} '
+                  f'request_mean_ms={statistics.mean(individual):.1f} '
+                  f'request_p95_ms={sorted(individual)[max(0,int(len(individual)*.95+.999999)-1)]:.1f} '
+                  f'request_max_ms={max(individual):.1f}',
+                  flush=True
+              )
+          print('PASS: concurrency benchmark completed. CPU/RAM, server throughput, network, STT, TTS, privacy and real meeting load remain unvalidated.',flush=True)
+          PY
