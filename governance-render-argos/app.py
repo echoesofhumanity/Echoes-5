@@ -20,7 +20,7 @@ PILOT_ROUTES = frozenset({('tr', 'en')})
 MAX_BYTES = 4096
 MAX_CHARS = 1200
 TRANSLATE_LOCK = threading.Lock()
-SELF_TEST = {'status': 'pending'}
+SELF_TEST = {'status': 'pending', 'translatedText': ''}
 
 
 def translate_text(text, source, target):
@@ -42,26 +42,14 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Content-Type', 'application/json; charset=utf-8')
         self.send_header('Cache-Control', 'no-store')
         if self.path == '/demo-translation':
-            self.send_header('Access-Control-Allow-Origin', 'https://echoesofhumanity.github.io')
-        self.send_header('X-Content-Type-Options', 'nosniff')
-        self.send_header('Content-Length', str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
-
-    def do_GET(self):
-        if self.path == '/demo-translation':
-            # Public demonstration: fixed synthetic text only; no user input accepted.
-            original = 'İnsan onurunu korumak ortak sorumluluğumuzdur.'
-            try:
-                translated = translate_text(original, 'tr', 'en')
-                if not translated.strip():
-                    raise RuntimeError('Empty translation')
-            except Exception:
-                return self.respond(503, {'error': 'Demonstration unavailable'})
+            if SELF_TEST['status'] != 'passed':
+                return self.respond(503, {'error': 'Synthetic verification not ready',
+                                          'verificationStatus': SELF_TEST['status']})
             return self.respond(200, {'source': 'tr', 'target': 'en',
-                                      'originalText': original,
-                                      'translatedText': translated,
-                                      'synthetic': True, 'liveMeeting': False})
+                                      'originalText': 'İnsan onurunu korumak ortak sorumluluğumuzdur.',
+                                      'translatedText': SELF_TEST['translatedText'],
+                                      'synthetic': True, 'verifiedCachedResult': True,
+                                      'liveMeeting': False})
         if self.path == '/health':
             return self.respond(200, {'status': 'pilot', 'liveMeeting': False, 'translationSelfTest': SELF_TEST['status']})
         return self.respond(404, {'error': 'Not found'})
@@ -123,6 +111,8 @@ def run_self_test(port):
                                and isinstance(translated, str)
                                and bool(translated.strip()) and translated != original
                                else 'failed')
+        if SELF_TEST['status'] == 'passed':
+            SELF_TEST['translatedText'] = translated
     except Exception:
         SELF_TEST['status'] = 'failed'
     finally:
