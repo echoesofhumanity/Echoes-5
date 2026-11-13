@@ -13,6 +13,8 @@ from pathlib import Path
 
 # Must be configured before Argos is imported.
 os.environ['ARGOS_PACKAGES_DIR'] = str(Path(__file__).resolve().parent / '.argos-packages')
+# Pilot inputs are single short sentences; avoid heavyweight Stanza sentence splitting.
+os.environ['ARGOS_CHUNK_TYPE'] = 'NONE'
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 LANGUAGES = frozenset(('tr', 'en', 'ru', 'es', 'de'))
