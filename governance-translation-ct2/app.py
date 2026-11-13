@@ -37,7 +37,7 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self):
-        if self.path == "/health":
+        if self.path in ("/", "/health"):
             return self.reply(200, {"status": "ready", "engine": "ct2",
                                     "liveMeeting": False})
         return self.reply(404, {"error": "Not found"})
