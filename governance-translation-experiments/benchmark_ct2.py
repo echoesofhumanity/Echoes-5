@@ -38,13 +38,13 @@ def main():
                                          inter_threads=1, intra_threads=args.threads)
     results = []
     for sample in SAMPLES:
-        tokens = source.encode(sample, out_type=str)
+        tokens = source.encode(sample, out_type=str) + ["</s>"]
         started = time.perf_counter()
-        prediction = translator.translate_batch([tokens], beam_size=1)[0].hypotheses[0]
+        prediction = translator.translate_batch([tokens], beam_size=1, max_decoding_length=64)[0].hypotheses[0]
         duration_ms = round((time.perf_counter() - started) * 1000)
-        output = target.decode(prediction)
-        if not output.strip():
-            raise RuntimeError("Empty translation")
+        output = target.decode([token for token in prediction if token not in ("</s>", "<pad>")])
+        if not output.strip() or len(output.split()) > max(24, len(sample.split()) * 4):
+            raise RuntimeError("Invalid or repetitive translation output")
         results.append({"durationMs": duration_ms, "translatedText": output})
     print(json.dumps({"engine": "ctranslate2-int8", "synthetic": True,
                       "durationsMs": [r["durationMs"] for r in results],
