@@ -20,7 +20,7 @@ PILOT_ROUTES = frozenset({('tr', 'en')})
 MAX_BYTES = 4096
 MAX_CHARS = 1200
 TRANSLATE_LOCK = threading.Lock()
-SELF_TEST = {'status': 'pending', 'translatedText': '', 'durationMs': None}
+SELF_TEST = {'status': 'pending', 'translatedText': '', 'durationMs': None, 'warmDurationMs': None, 'warmStatus': 'pending'}
 
 
 def translate_text(text, source, target):
@@ -61,6 +61,8 @@ class Handler(BaseHTTPRequestHandler):
                                       'translatedText': SELF_TEST['translatedText'],
                                       'synthetic': True, 'verifiedCachedResult': True,
                                       'serverTranslationDurationMs': SELF_TEST['durationMs'],
+                                      'warmTranslationDurationMs': SELF_TEST['warmDurationMs'],
+                                      'warmTranslationStatus': SELF_TEST['warmStatus'],
                                       'liveMeeting': False})
         if self.path == '/health':
             return self.respond(200, {'status': 'pilot', 'liveMeeting': False,
@@ -129,6 +131,27 @@ def run_self_test(port):
         if SELF_TEST['status'] == 'passed':
             SELF_TEST['translatedText'] = translated
             SELF_TEST['durationMs'] = elapsed_ms
+            # Second synthetic request measures performance with the model loaded.
+            try:
+                warm_body = json.dumps({'source': 'tr', 'target': 'en',
+                                        'text': 'Her insan saygıyı hak eder.'},
+                                       ensure_ascii=False).encode('utf-8')
+                warm_started = time.monotonic()
+                connection.request('POST', '/translate', warm_body,
+                                   {'Content-Type': 'application/json', 'X-API-Key': secret})
+                warm_response = connection.getresponse()
+                warm_payload = json.loads(warm_response.read())
+                warm_text = warm_payload.get('translatedText', '')
+                SELF_TEST['warmDurationMs'] = round((time.monotonic() - warm_started) * 1000)
+                SELF_TEST['warmStatus'] = ('passed' if warm_response.status == 200
+                                            and isinstance(warm_text, str)
+                                            and bool(warm_text.strip())
+                                            and warm_text != 'Her insan saygıyı hak eder.'
+                                            else 'failed')
+            except Exception:
+                SELF_TEST['warmStatus'] = 'failed'
+            print('GOVERNANCE_WARM_TEST ' + SELF_TEST['warmStatus'] +
+                  ' duration_ms=' + str(SELF_TEST['warmDurationMs']), flush=True)
     except Exception:
         SELF_TEST['status'] = 'failed'
     finally:
