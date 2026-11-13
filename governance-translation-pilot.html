@@ -16,7 +16,7 @@ try{const response=await fetch('https://echoes-governance-argos.onrender.com/dem
 if(!response.ok)throw new Error('Servis yanıtı: '+response.status);
 const data=await response.json();
 if(data.synthetic!==true||data.source!=='tr'||data.target!=='en'||!data.translatedText)throw new Error('Geçersiz pilot yanıtı');
-result.textContent=data.translatedText+'\n\n(Render sunucusunda doğrulanmış sentetik test sonucu; yeni canlı çeviri değildir.)';
+result.textContent=data.translatedText+'\n\nSunucuda ölçülen çeviri süresi: '+(Number.isFinite(data.serverTranslationDurationMs)?data.serverTranslationDurationMs+' ms':'henüz mevcut değil')+'\n\n(Render sunucusunda doğrulanmış sentetik test sonucu; yeni canlı çeviri değildir.)';
 }finally{clearTimeout(timer)}
 }catch(e){result.textContent='Test tamamlanamadı: '+e.message+'. Ücretsiz servis uykudaysa yeniden deneyin.'}finally{button.disabled=false}});
 </script></body></html>
