@@ -1,0 +1,31 @@
+name: Governance isolated CT2 benchmark
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/governance-ct2-benchmark.yml'
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU-only test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install --index-url https://download.pytorch.org/whl/cpu torch==2.5.1
+          pip install ctranslate2==4.5.0 transformers==4.44.2 sentencepiece==0.2.0 huggingface_hub==0.26.5
+      - name: Download and convert Turkish-English OPUS model
+        run: |
+          python - <<'PY'
+          from huggingface_hub import snapshot_download
+          snapshot_download(repo_id="Helsinki-NLP/opus-mt-tr-en", local_dir="/tmp/opus-tr-en")
+          PY
+          ct2-transformers-converter --model /tmp/opus-tr-en --output_dir /tmp/opus-ct2 --quantization int8 --copy_files source.spm target.spm
+      - name: Benchmark five synthetic sentences
+        run: python governance-translation-experiments/benchmark_ct2.py --model-dir /tmp/opus-ct2 --threads 1
