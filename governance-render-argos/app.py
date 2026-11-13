@@ -133,27 +133,38 @@ def run_self_test(port):
         if SELF_TEST['status'] == 'passed':
             SELF_TEST['translatedText'] = translated
             SELF_TEST['durationMs'] = elapsed_ms
-            # Second synthetic request measures performance with the model loaded.
+            # Sequential warm-model benchmark with synthetic short sentences.
+            samples = [
+                'Her insan saygıyı hak eder.',
+                'Birlikte daha adil bir gelecek kurabiliriz.',
+                'Toplantımız şimdi başlıyor.',
+                'Her ses değerlidir.',
+                'Çocukların güvenliği hepimizin sorumluluğudur.',
+            ]
+            measurements = []
             try:
-                warm_body = json.dumps({'source': 'tr', 'target': 'en',
-                                        'text': 'Her insan saygıyı hak eder.'},
-                                       ensure_ascii=False).encode('utf-8')
-                warm_started = time.monotonic()
-                connection.request('POST', '/translate', warm_body,
-                                   {'Content-Type': 'application/json', 'X-API-Key': secret})
-                warm_response = connection.getresponse()
-                warm_payload = json.loads(warm_response.read())
-                warm_text = warm_payload.get('translatedText', '')
-                SELF_TEST['warmDurationMs'] = round((time.monotonic() - warm_started) * 1000)
-                SELF_TEST['warmStatus'] = ('passed' if warm_response.status == 200
-                                            and isinstance(warm_text, str)
-                                            and bool(warm_text.strip())
-                                            and warm_text != 'Her insan saygıyı hak eder.'
-                                            else 'failed')
+                for sample in samples:
+                    warm_body = json.dumps({'source': 'tr', 'target': 'en',
+                                            'text': sample}, ensure_ascii=False).encode('utf-8')
+                    warm_started = time.monotonic()
+                    connection.request('POST', '/translate', warm_body,
+                                       {'Content-Type': 'application/json', 'X-API-Key': secret})
+                    warm_response = connection.getresponse()
+                    warm_payload = json.loads(warm_response.read())
+                    warm_text = warm_payload.get('translatedText', '')
+                    duration = round((time.monotonic() - warm_started) * 1000)
+                    if (warm_response.status != 200 or not isinstance(warm_text, str)
+                            or not warm_text.strip() or warm_text == sample):
+                        raise RuntimeError('Invalid synthetic translation')
+                    measurements.append(duration)
+                SELF_TEST['warmDurationMs'] = round(sum(measurements) / len(measurements))
+                SELF_TEST['warmStatus'] = 'passed'
+                SELF_TEST['warmMeasurementsMs'] = measurements
             except Exception:
                 SELF_TEST['warmStatus'] = 'failed'
-            print('GOVERNANCE_WARM_TEST ' + SELF_TEST['warmStatus'] +
-                  ' duration_ms=' + str(SELF_TEST['warmDurationMs']), flush=True)
+            print('GOVERNANCE_WARM_BENCHMARK ' + SELF_TEST['warmStatus'] +
+                  ' durations_ms=' + str(measurements) +
+                  ' average_ms=' + str(SELF_TEST['warmDurationMs']), flush=True)
     except Exception:
         SELF_TEST['status'] = 'failed'
     finally:
