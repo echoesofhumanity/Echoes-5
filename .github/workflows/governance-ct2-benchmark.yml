@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/governance-ct2-benchmark.yml'
+      - 'governance-translation-experiments/benchmark_ct2.py'
 jobs:
   benchmark:
     runs-on: ubuntu-latest
