@@ -3,6 +3,7 @@ import hmac
 import json
 import os
 import threading
+from urllib.parse import urlsplit
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -37,10 +38,12 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self):
-        if self.path in ("/", "/health"):
-            return self.reply(200, {"status": "ready", "engine": "ct2",
-                                    "liveMeeting": False})
-        return self.reply(404, {"error": "Not found"})
+        # No public GET resources exist: respond to probes and browser landing URLs.
+        # Never log query strings or headers (they may contain private information).
+        route = urlsplit(self.path).path
+        print("CT2_GET route=" + (route if route in ("/", "/health", "/health/") else "other"), flush=True)
+        return self.reply(200, {"status": "ready", "engine": "ct2",
+                                "liveMeeting": False})
 
     def do_POST(self):
         if self.path != "/translate":
