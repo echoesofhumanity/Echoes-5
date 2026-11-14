@@ -1,0 +1,38 @@
+name: Producer V1 isolated approval gates
+on:
+  push:
+    branches:
+      - feature/producer-product-portal-v1-isolated
+    paths:
+      - 'tests/fixtures/producer-v1-approval-gates.sql'
+      - 'tests/producer-v1-approval-gates.py'
+      - '.github/workflows/producer-v1-approval-gates.yml'
+  workflow_dispatch:
+jobs:
+  approval-boundary:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: test_runner
+          POSTGRES_PASSWORD: isolated_only
+          POSTGRES_DB: producer_v1_disposable
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test_runner -d producer_v1_disposable"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    env:
+      DATABASE_URL: postgresql://test_runner:isolated_only@localhost:5432/producer_v1_disposable
+      PGPASSWORD: isolated_only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install 'psycopg[binary]'
+      - name: Install isolated RLS fixture
+        run: psql -h localhost -U test_runner -d producer_v1_disposable -v ON_ERROR_STOP=1 -f tests/fixtures/producer-v1-approval-gates.sql
+      - name: Verify seller approval and product upload boundary
+        run: python tests/producer-v1-approval-gates.py
