@@ -153,7 +153,7 @@ class Handler(BaseHTTPRequestHandler):
                     SESSIONS[token] = {"expires": now + SESSION_TTL, "requests": []}
                     LOGIN_ATTEMPTS.pop(ip, None)
                 return self.reply(200, {"status": "authorized"},
-                                  "echoes_pilot=" + token + "; HttpOnly; Secure; SameSite=Strict; Path=/pilot; Max-Age=3600")
+                                  "echoes_pilot=" + token + "; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=3600")
             token = self.session()
             if not token:
                 return self.reply(401, {"error": "Session expired; sign in again"})
@@ -161,7 +161,7 @@ class Handler(BaseHTTPRequestHandler):
                 with STATE_LOCK:
                     SESSIONS.pop(token, None)
                 return self.reply(200, {"status": "signed_out"},
-                                  "echoes_pilot=; HttpOnly; Secure; SameSite=Strict; Path=/pilot; Max-Age=0")
+                                  "echoes_pilot=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0")
             if route != "/pilot/translate":
                 return self.reply(404, {"error": "Not found"})
             phrase = data.get("text")
