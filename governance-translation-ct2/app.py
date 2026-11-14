@@ -106,8 +106,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         route = urlsplit(self.path).path
-        if route == "/pilot":
-            page = Path(__file__).resolve().parent / "pilot.html"
+        if route in ("/pilot", "/meeting"):
+            page = Path(__file__).resolve().parent / ("meeting.html" if route == "/meeting" else "pilot.html")
             body = page.read_bytes()
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
