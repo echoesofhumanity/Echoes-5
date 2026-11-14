@@ -15,9 +15,16 @@ Merchandise curator: separate official collection approval, cannot override prod
 Operator: suspend/withdraw with recorded reason; no self-approval of own submission.
 Public visitor: only published and consented fields, never private contact or payout details.
 
+## Mandatory two-stage approval gate
+- Seller state: applicant -> pending_review -> approved | rejected | suspended. Only approved and unsuspended sellers may create product drafts or upload product assets. Applicants may upload only private identity/eligibility evidence into a separate, restricted application area; this is NOT a store product upload.
+- Product state: draft -> submitted -> in_review -> approved | changes_requested | rejected | withdrawn. Only an approved seller may submit a product; product approval must bind to the exact immutable revision and owning store.
+- Storefront publication requires BOTH active seller approval and product revision approval, plus separate operational release gates. Merchandise requires an additional curator/brand approval. A revoked seller approval must immediately block new submissions, uploads, and public sale availability.
+- Enforce seller approval, product ownership, reviewer authorization and revision checks inside database policies / trusted server procedures, not only disabled UI controls. Reject direct client writes to approval/publication states. Product media storage upload policies must enforce the same seller gate.
+- Approval decisions must record actor, reason, evidence version and timestamp; reviewers cannot approve their own seller application or product.
+
 ## Minimum workflow
-1. Producer signs in; server verifies identity and ownership. Producer account may remain pending until verified.
-2. Producer creates a private store draft and product draft (title, category, description, images with rights, physical/digital type, provenance, variants, stock/fulfilment plan and pricing proposal).
+1. Producer signs in and submits a private seller application. Until approved, the producer cannot create product drafts or upload product images into product storage.
+2. Only an approved, active producer creates a private store draft and product draft (title, category, description, images with rights, physical/digital type, provenance, variants, stock/fulfilment plan and pricing proposal).
 3. Submit snapshots an immutable revision; state draft -> submitted -> in_review.
 4. Reviewer decides approved, changes_requested or rejected, with reason, timestamp, reviewer identity and audit event.
 5. Approval alone does not sell: separate gates verify merchant eligibility, rights, tax/shipping/returns, stock and payment integration.
@@ -27,6 +34,8 @@ Public visitor: only published and consented fields, never private contact or pa
 
 ## Proposed records (not yet installed)
 producer_profiles(id, auth_user_id, verification_status, consent metadata)
+seller_applications(id, applicant_user_id, state, private_evidence_keys, submitted_at)
+seller_approval_decisions(id, application_id, reviewer_id, decision, reason, decided_at)
 stores(id, producer_id, slug, public display fields, state)
 store_memberships(store_id, user_id, role)
 product_drafts(id, store_id, owner_id, revision, status, fields)
@@ -38,6 +47,10 @@ Actual schema, RLS and migration must be validated against current staging befor
 
 ## Mandatory acceptance tests
 - Producer A cannot read/write B's private store, drafts or assets.
+- Pending, rejected or suspended sellers cannot create product drafts, upload product images, submit products or publish via direct API calls; only private application evidence is permitted.
+- Approved seller cannot self-approve products, change product approval status, or publish an unapproved revision.
+- Seller approval revocation disables product creation/upload and removes sale eligibility even for previously approved products.
+- An authorized reviewer cannot approve their own seller application or product.
 - Unauthenticated users cannot submit; users cannot self-approve or directly publish.
 - Review decision applies to exact revision; editing after approval does not silently update public content.
 - Marketplace approval does not imply Merchandise approval.
