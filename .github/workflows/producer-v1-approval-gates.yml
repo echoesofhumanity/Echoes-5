@@ -10,6 +10,8 @@ on:
       - 'tests/producer-v1-reviewer-gates.py'
       - 'tests/fixtures/producer-v1-publication-gates.sql'
       - 'tests/producer-v1-publication-gates.py'
+      - 'tests/producer-v1-ui-static-check.py'
+      - 'producer-product-portal-v1.html'
       - '.github/workflows/producer-v1-approval-gates.yml'
   workflow_dispatch:
 jobs:
@@ -48,3 +50,5 @@ jobs:
         run: psql -h localhost -U test_runner -d producer_v1_disposable -v ON_ERROR_STOP=1 -f tests/fixtures/producer-v1-publication-gates.sql
       - name: Verify revision-bound publication and suspension
         run: python tests/producer-v1-publication-gates.py
+      - name: Verify standalone producer portal UI and JS
+        run: python tests/producer-v1-ui-static-check.py
