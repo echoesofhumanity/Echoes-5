@@ -52,3 +52,11 @@ jobs:
         run: python tests/producer-v1-publication-gates.py
       - name: Verify standalone producer portal UI and JS
         run: python tests/producer-v1-ui-static-check.py
+      - name: Package offline mobile test page
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: producer-v1-mobile-offline-preview
+          path: producer-product-portal-v1.html
+          if-no-files-found: error
+          retention-days: 14
