@@ -2,6 +2,50 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#071723"><title>Culture & Arts — Echoes of Humanity</title><link rel="stylesheet" href="../assets/css/core.css">
 <style>
 /* Page layout only: cinematic card surfaces, glow, animation, and icon halo come from the shared Echoes core.css */
+/* Visible soft ambient motion, using the Media palette and 12s Echoes rhythm.
+   The shared cinematic-card ::after remains the card's upper/lower inner light. */
+body[data-page="media"] .category.cinematic-card,
+body[data-page="media"] .work.cinematic-card{
+  isolation:isolate;
+  overflow:visible;
+  animation:echoesHubCardFloat 12s var(--echoes-ease) infinite;
+  will-change:transform;
+}
+body[data-page="media"] .category.cinematic-card::before,
+body[data-page="media"] .work.cinematic-card::before{
+  content:"";position:absolute;z-index:-1;pointer-events:none;
+  left:9%;right:9%;bottom:-18px;height:76px;border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(118,151,190,.25) 0%,rgba(118,151,190,.105) 36%,transparent 76%);
+  filter:blur(23px);opacity:.52;
+  animation:echoesHubSoftHalo 12s ease-in-out infinite;
+}
+body[data-page="media"] .category.cinematic-card::after,
+body[data-page="media"] .work.cinematic-card::after{
+  z-index:0;animation:echoes-card-breathe 12s ease-in-out infinite;
+}
+body[data-page="media"] .category.cinematic-card>*,
+body[data-page="media"] .work.cinematic-card>*{position:relative;z-index:1}
+body[data-page="media"] .category .symbol.card-icon{
+  animation:echoesHubIconGlow 12s ease-in-out infinite;
+}
+@keyframes echoesHubCardFloat{
+  0%,100%{transform:translateY(0);box-shadow:var(--echoes-card-shadow)}
+  50%{transform:translateY(-4px);box-shadow:0 23px 58px rgba(0,0,0,.20),0 16px 48px rgba(118,151,190,.12)}
+}
+@keyframes echoesHubSoftHalo{0%,100%{opacity:.40;transform:scale(.94)}50%{opacity:.90;transform:scale(1.07)}}
+@keyframes echoesHubIconGlow{0%,100%{box-shadow:var(--echoes-icon-glow)}50%{box-shadow:0 0 32px rgba(118,151,190,.20),0 0 48px rgba(118,151,190,.08)}}
+@media(hover:hover) and (pointer:fine){
+ body[data-page="media"] .category.cinematic-card:hover,
+ body[data-page="media"] .work.cinematic-card:hover{animation-play-state:paused;transform:translateY(-5px)}
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-page="media"] .category.cinematic-card,
+ body[data-page="media"] .work.cinematic-card,
+ body[data-page="media"] .category.cinematic-card::before,
+ body[data-page="media"] .work.cinematic-card::before,
+ body[data-page="media"] .category .symbol.card-icon{animation:none}
+}
+
 body[data-page="media"]{background:radial-gradient(ellipse at 50% 0%,#12313e 0%,#091d2c 38%,#071723 78%);color:#e9f4f5}
 header,main,footer{max-width:1050px;margin:auto;padding:24px}
 header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
