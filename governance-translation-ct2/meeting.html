@@ -53,7 +53,7 @@ body.immersive-open{overflow:hidden}
 <p class="small muted">Illustrative prewritten equivalents, not machine translations. In real meetings, verified captions, explicit participant consent and a protected translation service will be required. Binding decisions must be confirmed in writing.</p>
 </div>
 <div class="panel"><h2>Meeting Chamber · Prototype</h2><p class="muted">The future video service will appear here after provider, security and mobile checks. Video is loaded only on request. Sample captions appear near the bottom of the video frame, not below it.</p><div class="tile" style="text-align:center;padding:24px 12px"><div class="stat">◉</div><strong>External video pilot — 8x8 JaaS</strong><p class="small muted">This is a public pilot without Echoes identity or access control. Use a test display name only; do not discuss real council matters. Joining may request camera and microphone access. A host token may be needed to start a meeting.</p><button class="action primary" type="button" id="startVideo">Load JaaS test room</button> <button class="action" type="button" id="stopVideo" disabled>Leave / unload</button> <button class="action" type="button" id="enterImmersive" disabled>Expand meeting view</button><div class="panel" id="ct2PilotPanel"><h2>Tek ekranda canlı TR → EN altyazı</h2><p class="small muted">Toplantı görüntüsü açık kalırken yalnızca izin verdiğiniz mikrofonun Türkçe konuşması İngilizceye çevrilir. Bu, henüz tüm katılımcıların seslerini çevirmeyen tek konuşmacılı pilottur. Konuşma tanıma sağlayıcısının veri işleme koşulları geçerlidir.</p><div id="ct2Auth"><label for="ct2Pass">Pilot erişim kodu</label><input id="ct2Pass" type="password" autocomplete="off"><button class="action" id="ct2Login" type="button">Giriş</button></div><div class="row"><button class="action primary" id="ct2Start" type="button" disabled>🎙 Canlı çeviriyi başlat</button><button class="action" id="ct2Stop" type="button" disabled>Çeviriyi durdur</button></div><p id="ct2PilotStatus" class="small muted" role="status">Önce pilot koduyla giriş yapın. Görüşme ekranı kapanmaz.</p><p id="ct2Source" class="small muted" aria-live="polite"></p><div style="margin-top:12px"><label for="ct2Manual">Mikrofon tanımazsa Türkçe metinle çeviri testi</label><textarea id="ct2Manual" rows="2" maxlength="1200" placeholder="Örneğin: Merhaba, toplantıya hoş geldiniz."></textarea><button class="action" type="button" id="ct2ManualSend" disabled>Yazıyı İngilizceye çevir</button></div><div id="ct2Translated" aria-live="polite" style="background:#061d2d;border:1px solid #65e5dc;border-radius:12px;padding:14px;margin-top:12px;font-size:1.2rem;color:#8cf5e9;min-height:72px"><span class="small muted">English translation will appear here, even before the video loads.</span></div></div>
-<div id="videoHost" hidden style="margin-top:15px"><label style="text-align:left"><input id="showCaptions" type="checkbox" style="width:auto" /> Show synthetic caption overlay (not live translation)</label><div id="videoStage" style="position:relative;isolation:isolate"><button type="button" class="action" id="exitImmersive" style="display:none;position:absolute;right:12px;top:calc(12px + env(safe-area-inset-top));z-index:6;background:#063b45;color:white;border:2px solid #65e5dc">Close expanded view</button><div id="meetingFrame" role="group" aria-label="8x8 JaaS video meeting" style="display:block;width:100%;height:min(70vh,620px);min-height:340px;border:1px solid #507282;border-radius:12px;background:#06121f"></div><div id="videoCaption" aria-live="polite" style="position:absolute;left:8px;right:8px;bottom:72px;background:rgba(3,14,25,.91);border:1px solid #65e5dc;border-radius:10px;padding:9px 12px;text-align:center;pointer-events:none;z-index:3;color:#fff;font-size:clamp(15px,3.7vw,21px);line-height:1.35;overflow-wrap:anywhere" hidden></div></div><p class="small muted">JaaS developer pilot. No JWT is included. If a moderator login or authorization is required, stop and report the screen. No production use.</p></div></div></div>
+<div id="videoHost" hidden style="margin-top:15px"><div id="echoesVolumePanel" style="margin:0 0 12px;padding:12px;border:1px solid #65e5dc;border-radius:12px;background:#061d2d"><label for="echoesRemoteVolume" style="display:block;margin-bottom:6px">Toplantıdaki diğer katılımcıların orijinal sesi: <strong id="echoesVolumeValue">100%</strong></label><input id="echoesRemoteVolume" type="range" min="0" max="100" step="10" value="100" disabled style="width:100%"><div id="echoesVolumeStatus" role="status" aria-live="polite" style="font-size:.85rem;margin-top:6px">JaaS toplantısına katılınca ses kontrolü açılacak. Bu kontrol yalnızca kendi cihazınızdaki dinlemeyi etkiler.</div></div><label style="text-align:left"><input id="showCaptions" type="checkbox" style="width:auto" /> Show synthetic caption overlay (not live translation)</label><div id="videoStage" style="position:relative;isolation:isolate"><button type="button" class="action" id="exitImmersive" style="display:none;position:absolute;right:12px;top:calc(12px + env(safe-area-inset-top));z-index:6;background:#063b45;color:white;border:2px solid #65e5dc">Close expanded view</button><div id="meetingFrame" role="group" aria-label="8x8 JaaS video meeting" style="display:block;width:100%;height:min(70vh,620px);min-height:340px;border:1px solid #507282;border-radius:12px;background:#06121f"></div><div id="videoCaption" aria-live="polite" style="position:absolute;left:8px;right:8px;bottom:72px;background:rgba(3,14,25,.91);border:1px solid #65e5dc;border-radius:10px;padding:9px 12px;text-align:center;pointer-events:none;z-index:3;color:#fff;font-size:clamp(15px,3.7vw,21px);line-height:1.35;overflow-wrap:anywhere" hidden></div></div><p class="small muted">JaaS developer pilot. No JWT is included. If a moderator login or authorization is required, stop and report the screen. No production use.</p></div></div></div>
 <div class="panel"><h2>Sample agenda</h2><ol><li>Welcome and member wellbeing</li><li>Humanitarian and Academy activity updates</li><li>Marketplace producer onboarding review</li><li>Cluster support needs and next steps</li></ol><p class="small muted">Sample agenda only; no live scheduling or minutes are stored.</p></div>
 </section>
 <section class="screen" id="decisions" hidden>
@@ -124,6 +124,27 @@ const videoHost=document.getElementById('videoHost');
 const startVideo=document.getElementById('startVideo');
 const stopVideo=document.getElementById('stopVideo');
 let jaasApi=null;
+const echoesRemoteVolume=document.getElementById('echoesRemoteVolume');
+const echoesVolumeValue=document.getElementById('echoesVolumeValue');
+const echoesVolumeStatus=document.getElementById('echoesVolumeStatus');
+const echoesRemoteParticipants=new Set();
+let echoesMeetingJoined=false;
+function echoesApplyRemoteVolume(){
+  if(!jaasApi||!echoesMeetingJoined)return;
+  const volume=Number(echoesRemoteVolume.value)/100;
+  echoesVolumeValue.textContent=echoesRemoteVolume.value+'%';
+  let sent=0;
+  for(const id of echoesRemoteParticipants){
+    try{jaasApi.executeCommand('setParticipantVolume',id,volume);sent++;}catch(_){}
+  }
+  echoesVolumeStatus.textContent=sent?'Ses ayarı '+sent+' uzak katılımcıya gönderildi (gerçek ses seviyesi telefonla doğrulanmalı).':'Henüz başka katılımcı yok; ayar katıldıklarında uygulanacak.';
+}
+echoesRemoteVolume.addEventListener('input',echoesApplyRemoteVolume);
+function echoesResetVolume(){
+  echoesMeetingJoined=false;echoesRemoteParticipants.clear();
+  echoesRemoteVolume.disabled=true;echoesRemoteVolume.value='100';echoesVolumeValue.textContent='100%';
+  echoesVolumeStatus.textContent='JaaS toplantısına katılınca ses kontrolü açılacak.';
+}
 startVideo.addEventListener('click',()=>{
 if(typeof window.JitsiMeetExternalAPI!=='function'){
 alert('JaaS video library unavailable. The page will still show translated English text below the microphone controls. Try Chrome if the video library is blocked.');return;
@@ -136,6 +157,23 @@ width:'100%',height:'100%',
 configOverwrite:{prejoinConfig:{enabled:true}},
 interfaceConfigOverwrite:{}
 });
+jaasApi.addListener('videoConferenceJoined',()=>{
+  echoesMeetingJoined=true;echoesRemoteVolume.disabled=false;
+  echoesVolumeStatus.textContent='Toplantıya katıldınız. Başka katılımcı geldiğinde seçili ses seviyesi uygulanacak.';
+  if(typeof jaasApi.getRoomsInfo==='function'){
+    Promise.resolve(jaasApi.getRoomsInfo()).then(info=>{
+      if(!echoesMeetingJoined)return;
+      const rooms=Array.isArray(info?.rooms)?info.rooms:[];
+      for(const room of rooms)for(const p of (room.participants||[])){
+        if(p?.id&&p?.isLocal!==true&&p?.local!==true&&p?.isLocalParticipant!==true)echoesRemoteParticipants.add(p.id);
+      }
+      echoesApplyRemoteVolume();
+    }).catch(()=>{});
+  }
+});
+jaasApi.addListener('participantJoined',event=>{if(event?.id){echoesRemoteParticipants.add(event.id);echoesApplyRemoteVolume();}});
+jaasApi.addListener('participantLeft',event=>{if(event?.id)echoesRemoteParticipants.delete(event.id);});
+jaasApi.addListener('videoConferenceLeft',echoesResetVolume);
 videoHost.hidden=false;startVideo.disabled=true;stopVideo.disabled=false;
 document.getElementById('enterImmersive').disabled=false;
 renderSample();
@@ -148,6 +186,7 @@ alert('JaaS could not start. No account credentials were sent by this page.');
 stopVideo.addEventListener('click',()=>{
 exitExpanded();
 if(jaasApi){try{jaasApi.dispose()}catch(_){}jaasApi=null;}
+echoesResetVolume();
 frame.replaceChildren();videoHost.hidden=true;
 document.getElementById('videoCaption').hidden=true;
 startVideo.disabled=false;stopVideo.disabled=true;
