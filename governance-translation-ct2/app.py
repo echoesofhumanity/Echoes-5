@@ -113,7 +113,12 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Cache-Control", "no-store")
             self.send_header("X-Content-Type-Options", "nosniff")
-            self.send_header("Content-Security-Policy", "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
+            self.send_header("Content-Security-Policy", ("default-src 'none'; script-src 'unsafe-inline' https://8x8.vc; "
+                        "style-src 'unsafe-inline'; connect-src 'self' https://8x8.vc; "
+                        "frame-src https://8x8.vc; img-src 'self' data: https:; "
+                        "base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
+                        if route == "/meeting" else
+                        "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)
