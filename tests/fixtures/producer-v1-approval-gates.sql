@@ -33,7 +33,7 @@ CREATE POLICY approved_seller_product_insert ON producer_v1_test.products FOR IN
  WITH CHECK (
  owner_id = nullif(current_setting('request.jwt.claim.sub',true),'')::uuid
  AND status='draft'
- AND EXISTS(SELECT 1 FROM producer_v1_test.sellers s WHERE s.id=seller_id AND s.owner_id=owner_id AND s.status='approved')
+ AND EXISTS(SELECT 1 FROM producer_v1_test.sellers s WHERE s.id=seller_id AND s.owner_id=producer_v1_test.products.owner_id AND s.status='approved')
  );
 CREATE POLICY own_asset ON producer_v1_test.product_assets FOR SELECT TO producer_v1_actor
  USING(owner_id = nullif(current_setting('request.jwt.claim.sub',true),'')::uuid);
@@ -43,8 +43,8 @@ CREATE POLICY approved_seller_asset_insert ON producer_v1_test.product_assets FO
  AND EXISTS(
  SELECT 1 FROM producer_v1_test.products p
  JOIN producer_v1_test.sellers s ON s.id=p.seller_id
- WHERE p.id=product_id AND p.owner_id=owner_id AND p.status='draft'
- AND s.owner_id=owner_id AND s.status='approved'
+ WHERE p.id=product_id AND p.owner_id=producer_v1_test.product_assets.owner_id AND p.status='draft'
+ AND s.owner_id=producer_v1_test.product_assets.owner_id AND s.status='approved'
  )
  );
 COMMIT;
