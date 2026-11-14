@@ -5,7 +5,7 @@ ALTER TABLE producer_v1_test.product_decisions ADD COLUMN revision integer NOT N
 -- A product content edit creates a new review revision and removes approved status.
 -- Direct revision changes are prohibited; old decisions remain audit history only.
 CREATE FUNCTION producer_v1_test.enforce_product_revision()
-RETURNS trigger LANGUAGE plpgsql SET search_path='' AS $
+RETURNS trigger LANGUAGE plpgsql SET search_path='' AS $$
 BEGIN
  IF NEW.title IS DISTINCT FROM OLD.title THEN
   IF NEW.revision IS DISTINCT FROM OLD.revision THEN
@@ -17,7 +17,7 @@ BEGIN
   RAISE EXCEPTION 'revision cannot be changed without content edit';
  END IF;
  RETURN NEW;
-END $;
+END $$;
 CREATE TRIGGER enforce_product_revision BEFORE UPDATE ON producer_v1_test.products
 FOR EACH ROW EXECUTE FUNCTION producer_v1_test.enforce_product_revision();
 CREATE TABLE producer_v1_test.curators (user_id uuid PRIMARY KEY, active boolean NOT NULL DEFAULT true);
