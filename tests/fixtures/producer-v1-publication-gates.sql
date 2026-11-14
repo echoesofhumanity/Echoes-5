@@ -51,7 +51,7 @@ END $$;
 REVOKE ALL ON FUNCTION producer_v1_test.approve_publication(uuid,text,boolean) FROM PUBLIC,producer_v1_actor;
 GRANT EXECUTE ON FUNCTION producer_v1_test.approve_publication(uuid,text,boolean) TO producer_v1_reviewer;
 CREATE FUNCTION producer_v1_test.curator_approve_merchandise(p_product uuid)
-RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $$
 DECLARE actor uuid:=nullif(current_setting('request.jwt.claim.sub',true),'')::uuid;
 DECLARE rev integer;
 BEGIN
@@ -66,7 +66,7 @@ BEGIN
  INSERT INTO producer_v1_test.publication_targets(product_id,approved_revision,target,curator_approved)
  VALUES(p_product,rev,'merchandise',true)
  ON CONFLICT(product_id) DO UPDATE SET approved_revision=excluded.approved_revision,target='merchandise',curator_approved=true;
-END $;
+END $$;
 REVOKE ALL ON FUNCTION producer_v1_test.curator_approve_merchandise(uuid) FROM PUBLIC,producer_v1_actor,producer_v1_reviewer;
 GRANT EXECUTE ON FUNCTION producer_v1_test.curator_approve_merchandise(uuid) TO producer_v1_curator;
 COMMIT;
