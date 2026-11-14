@@ -2,6 +2,25 @@
 BEGIN;
 ALTER TABLE producer_v1_test.products ADD COLUMN revision integer NOT NULL DEFAULT 1 CHECK(revision>0);
 ALTER TABLE producer_v1_test.product_decisions ADD COLUMN revision integer NOT NULL DEFAULT 1;
+-- Revision-aware reviewer decisions: bind each approval to the locked current product revision.
+CREATE OR REPLACE FUNCTION producer_v1_test.decide_product(p_product uuid,p_decision text,p_reason text)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $
+DECLARE actor uuid := nullif(current_setting('request.jwt.claim.sub',true),'')::uuid;
+DECLARE current_revision integer;
+BEGIN
+ IF actor IS NULL OR NOT EXISTS(SELECT 1 FROM producer_v1_test.reviewers WHERE user_id=actor AND active)
+ THEN RAISE EXCEPTION 'not authorized'; END IF;
+ IF p_decision NOT IN ('approved','rejected') OR length(trim(coalesce(p_reason,'')))=0
+ THEN RAISE EXCEPTION 'invalid decision'; END IF;
+ SELECT p.revision INTO current_revision FROM producer_v1_test.products p
+ JOIN producer_v1_test.sellers s ON s.id=p.seller_id
+ WHERE p.id=p_product AND p.owner_id<>actor AND p.status='submitted' AND s.status='approved'
+ FOR UPDATE OF p,s;
+ IF current_revision IS NULL THEN RAISE EXCEPTION 'product not submitted, seller unapproved or self-review prohibited'; END IF;
+ UPDATE producer_v1_test.products SET status=p_decision WHERE id=p_product;
+ INSERT INTO producer_v1_test.product_decisions(product_id,reviewer_id,decision,reason,revision)
+ VALUES(p_product,actor,p_decision,p_reason,current_revision);
+END $;
 -- A product content edit creates a new review revision and removes approved status.
 -- Direct revision changes are prohibited; old decisions remain audit history only.
 CREATE FUNCTION producer_v1_test.enforce_product_revision()
