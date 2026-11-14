@@ -93,7 +93,7 @@ body.immersive-open{overflow:hidden}
 <p class="muted small" data-v14c-key="Changing a seat's vote replaces its previous current vote for that proposal. This preview is not identity-protected: a tester can switch seats. No real voting, quorum or approvals are verified. Never enter confidential or identifying information.">Changing a seat's vote replaces its previous current vote for that proposal. This preview is not identity-protected: a tester can switch seats. No real voting, quorum or approvals are verified. Never enter confidential or identifying information.</p>
 </section>
 </main>
-<script src="https://8x8.vc/vpaas-magic-cookie-ab58a90696094960bb7d5651306e9a35/external_api.js" defer></script>
+<script src="https://8x8.vc/external_api.js" defer></script>
 <script>
 (function(){
 'use strict';
@@ -111,7 +111,7 @@ const ct2Start=document.getElementById('ct2Start');
 const ct2Stop=document.getElementById('ct2Stop');
 const CT2_SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let ct2Rec=null,ct2Active=false,ct2Seq=0;
-async function ct2Post(path,data){const res=await fetch(path,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const out=await res.json();if(!res.ok)throw Error(out.error||'Request failed');return out;}
+async function ct2Post(path,data){const res=await fetch(path,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const type=res.headers.get('content-type')||'';if(!type.includes('application/json'))throw Error('Sunucu JSON yerine başka bir yanıt verdi (HTTP '+res.status+'). Lütfen kısa süre sonra yeniden deneyin.');let out;try{out=await res.json();}catch(_){throw Error('Sunucudan geçersiz JSON yanıtı alındı.');}if(!res.ok)throw Error(out.error||('HTTP '+res.status));return out;}
 const ct2OnRender=location.origin===CT2_ORIGIN;
 if(!ct2OnRender){ct2Status.textContent='Bu bütünleşik sürümü Render /meeting adresinden açın. GitHub Pages kopyası mikrofon sunucusuna giriş yapamaz.';document.getElementById('ct2Login').disabled=true;}
 document.getElementById('ct2Login').addEventListener('click',async()=>{if(!ct2OnRender)return;try{await ct2Post('/pilot/login',{passcode:document.getElementById('ct2Pass').value});document.getElementById('ct2Pass').value='';document.getElementById('ct2Auth').hidden=true;ct2Start.disabled=!CT2_SR;ct2Status.textContent=CT2_SR?'Hazır. Toplantı görüntüsüyle aynı ekranda mikrofonu başlatabilirsiniz.':'Tarayıcı konuşma tanımayı desteklemiyor; Android Chrome deneyin.';}catch(err){ct2Status.textContent='Giriş başarısız: '+err.message;}});
