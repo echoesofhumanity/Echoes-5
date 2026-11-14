@@ -6,6 +6,8 @@ on:
     paths:
       - 'tests/fixtures/producer-v1-approval-gates.sql'
       - 'tests/producer-v1-approval-gates.py'
+      - 'tests/fixtures/producer-v1-reviewer-gates.sql'
+      - 'tests/producer-v1-reviewer-gates.py'
       - '.github/workflows/producer-v1-approval-gates.yml'
   workflow_dispatch:
 jobs:
@@ -36,3 +38,7 @@ jobs:
         run: psql -h localhost -U test_runner -d producer_v1_disposable -v ON_ERROR_STOP=1 -f tests/fixtures/producer-v1-approval-gates.sql
       - name: Verify seller approval and product upload boundary
         run: python tests/producer-v1-approval-gates.py
+      - name: Install isolated reviewer approval fixture
+        run: psql -h localhost -U test_runner -d producer_v1_disposable -v ON_ERROR_STOP=1 -f tests/fixtures/producer-v1-reviewer-gates.sql
+      - name: Verify reviewer decisions and audit
+        run: python tests/producer-v1-reviewer-gates.py
