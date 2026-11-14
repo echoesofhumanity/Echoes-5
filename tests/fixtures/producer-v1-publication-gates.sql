@@ -4,7 +4,7 @@ ALTER TABLE producer_v1_test.products ADD COLUMN revision integer NOT NULL DEFAU
 ALTER TABLE producer_v1_test.product_decisions ADD COLUMN revision integer NOT NULL DEFAULT 1;
 -- Revision-aware reviewer decisions: bind each approval to the locked current product revision.
 CREATE OR REPLACE FUNCTION producer_v1_test.decide_product(p_product uuid,p_decision text,p_reason text)
-RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $revision_review$
 DECLARE actor uuid := nullif(current_setting('request.jwt.claim.sub',true),'')::uuid;
 DECLARE current_revision integer;
 BEGIN
@@ -20,7 +20,7 @@ BEGIN
  UPDATE producer_v1_test.products SET status=p_decision WHERE id=p_product;
  INSERT INTO producer_v1_test.product_decisions(product_id,reviewer_id,decision,reason,revision)
  VALUES(p_product,actor,p_decision,p_reason,current_revision);
-END $;
+END $revision_review$;
 -- A product content edit creates a new review revision and removes approved status.
 -- Direct revision changes are prohibited; old decisions remain audit history only.
 CREATE FUNCTION producer_v1_test.enforce_product_revision()
