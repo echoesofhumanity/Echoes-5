@@ -8,6 +8,8 @@ on:
       - 'tests/producer-v1-approval-gates.py'
       - 'tests/fixtures/producer-v1-reviewer-gates.sql'
       - 'tests/producer-v1-reviewer-gates.py'
+      - 'tests/fixtures/producer-v1-publication-gates.sql'
+      - 'tests/producer-v1-publication-gates.py'
       - '.github/workflows/producer-v1-approval-gates.yml'
   workflow_dispatch:
 jobs:
@@ -42,3 +44,7 @@ jobs:
         run: psql -h localhost -U test_runner -d producer_v1_disposable -v ON_ERROR_STOP=1 -f tests/fixtures/producer-v1-reviewer-gates.sql
       - name: Verify reviewer decisions and audit
         run: python tests/producer-v1-reviewer-gates.py
+      - name: Install isolated revision publication fixture
+        run: psql -h localhost -U test_runner -d producer_v1_disposable -v ON_ERROR_STOP=1 -f tests/fixtures/producer-v1-publication-gates.sql
+      - name: Verify revision-bound publication and suspension
+        run: python tests/producer-v1-publication-gates.py
