@@ -27,6 +27,21 @@ def load_model():
     target_tokenizer = spm.SentencePieceProcessor(model_file=str(MODEL_DIR / "target.spm"))
 
 
+def verify_translation_engine():
+    """One synthetic, non-participant TR->EN inference on startup."""
+    phrase = "Merhaba dünya."
+    tokens = source_tokenizer.encode(phrase, out_type=str) + ["</s>"]
+    with LOCK:
+        result = translator.translate_batch([tokens], beam_size=1,
+                                            max_decoding_length=64)[0].hypotheses[0]
+    output = target_tokenizer.decode([t for t in result if t not in ("</s>", "<pad>")])
+    normalized = output.lower()
+    if not output.strip() or not ("hello" in normalized and "world" in normalized):
+        print("CT2_SELFTEST failed: unexpected translation", flush=True)
+        raise RuntimeError("CT2 startup translation verification failed")
+    print("CT2_SELFTEST passed: synthetic TR->EN inference", flush=True)
+
+
 class Handler(BaseHTTPRequestHandler):
     def reply(self, status, data):
         body = json.dumps(data, ensure_ascii=False).encode("utf-8")
@@ -83,4 +98,5 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     load_model()
+    verify_translation_engine()
     ThreadingHTTPServer(("0.0.0.0", int(os.environ.get("PORT", "10000"))), Handler).serve_forever()
