@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Echoes Producer & Product Portal V1 — Synthetic Preview</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#061729;color:#e9f6fa}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 90% 0%,#12485a 0%,#061729 55%)}
+main{max-width:850px;margin:auto;padding:22px 16px 65px}header{margin-bottom:22px}h1{font-size:clamp(1.5rem,5vw,2.3rem);margin:.4em 0}h2{font-size:1.15rem}p{line-height:1.5;color:#bdd3df}.eyebrow{letter-spacing:.14em;color:#80e2df;font-size:.75rem;text-transform:uppercase}
+.notice{padding:12px;border:1px solid #4d8290;border-radius:12px;background:#0c2a3c;color:#d6eef4}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tabs button{flex:1;min-width:120px}
+button,input,textarea,select{font:inherit;border-radius:10px}button{border:1px solid #3a8594;background:#103f51;color:#eaffff;padding:11px 14px;cursor:pointer}button[aria-selected=true],button.primary{background:#17b7ad;color:#031a26;font-weight:700}button:disabled{opacity:.45;cursor:not-allowed}
+.panel{border:1px solid #315666;background:#0a2435dd;padding:18px;border-radius:17px;margin:14px 0;box-shadow:0 10px 35px #0003}
+label{display:block;margin:13px 0 5px;color:#cde5ee}input,textarea,select{width:100%;padding:11px;border:1px solid #477283;background:#061b2c;color:white}textarea{min-height:80px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.status{display:inline-block;padding:5px 10px;border-radius:20px;background:#24495b;color:#baf3ef;font-size:.85rem}
+.entry{border-top:1px solid #2c4d5e;padding:14px 0}small{color:#a6c1cf}#message{min-height:25px;color:#a6f4db} [hidden]{display:none!important}
+</style></head><body><main>
+<header><div class="eyebrow">Echoes of Humanity · Producer & Product Portal</div><h1>Üretici ve Ürün Kabul Merkezi</h1><p>Başvurudan mağazaya: iki aşamalı denetim ve kontrollü yayın.</p></header>
+<div class="notice"><strong>SENTETİK ÖNİZLEME — GERÇEK İŞLEM YOK.</strong> Bu sayfa yalnızca tarayıcı belleğinde örnek durumlar gösterir. Kimlik, gerçek dosya, ürün, ödeme veya veritabanı kaydı oluşturmaz. Buradaki denetçi düğmeleri gerçek yetki vermez.</div>
+<nav class="tabs" aria-label="Önizleme bölümleri"><button type="button" data-tab="seller" aria-selected="true">Satıcı başvurusu</button><button type="button" data-tab="product" aria-selected="false">Ürün başvurusu</button><button type="button" data-tab="review" aria-selected="false">Denetçi simülasyonu</button></nav>
+<p id="message" role="status" aria-live="polite"></p>
+<section id="seller" class="panel"><h2>1 · Satıcı başvurusu</h2><p>Onay bekleyen satıcı ürün taslağı veya görseli yükleyemez.</p>
+<label for="sellerName">Üretici / mağaza adı</label><input id="sellerName" maxlength="80" placeholder="Örnek: Anadolu Atölyesi">
+<label for="sellerInfo">Üretim açıklaması</label><textarea id="sellerInfo" maxlength="600" placeholder="Üretim yöntemi, ürün kategorileri, hak sahipliği"></textarea>
+<div class="actions"><button class="primary" id="submitSeller">Sentetik başvuru gönder</button></div>
+<p>Satıcı durumu: <span class="status" id="sellerState">Başvuru yapılmadı</span></p></section>
+<section id="product" class="panel" hidden><h2>2 · Ürün başvurusu</h2><p>Bu bölüm yalnızca sentetik satıcı onayı verildikten sonra açılır.</p>
+<label for="productName">Ürün adı</label><input id="productName" maxlength="100" placeholder="Örnek: El yapımı seramik">
+<label for="productCategory">Yayın hedefi</label><select id="productCategory"><option value="marketplace">Marketplace</option><option value="merchandise">Merchandise (ek kurumsal onay gerekir)</option></select>
+<label for="productDescription">Ürün ve hak sahipliği açıklaması</label><textarea id="productDescription" maxlength="800"></textarea>
+<div class="actions"><button class="primary" id="submitProduct">Sentetik ürün gönder</button></div>
+<p>Ürün durumu: <span class="status" id="productState">Ürün yok</span></p><p>Yayın uygunluğu: <span class="status" id="publishState">Kapalı</span></p></section>
+<section id="review" class="panel" hidden><h2>3 · Denetçi karar simülasyonu</h2><p>Bu alan gerçek denetçi kimliği veya yetkisi doğrulamaz; sadece kabul akışının görünümünü test eder.</p>
+<div class="entry"><strong>Satıcı kararı</strong><p id="reviewSeller">Başvuru bekleniyor</p><div class="actions"><button id="approveSeller">Satıcıyı onayla</button><button id="rejectSeller">Satıcıyı reddet</button><button id="suspendSeller">Askıya al</button></div></div>
+<div class="entry"><strong>Ürün kararı</strong><p id="reviewProduct">Ürün bekleniyor</p><div class="actions"><button id="approveProduct">Ürünü onayla</button><button id="rejectProduct">Ürünü reddet</button><button id="approveMerch">Merchandise koleksiyon onayı</button></div></div>
+<label for="reason">Karar gerekçesi</label><textarea id="reason" maxlength="400" placeholder="Onay veya ret gerekçesi (zorunlu)"></textarea></section>
+<section class="panel"><h2>İşlem geçmişi (yalnızca bu oturum)</h2><div id="history"><small>Henüz sentetik işlem yok.</small></div><div class="actions"><button id="reset">Önizlemeyi sıfırla</button></div></section>
+</main><script>
+(()=>{'use strict';const $=id=>document.getElementById(id),state={seller:'none',product:'none',target:'marketplace',curator:false,history:[]};
+const names={none:'Başvuru yapılmadı',pending:'İncelemede',approved:'Onaylandı',rejected:'Reddedildi',suspended:'Askıya alındı'};
+function message(t){$('message').textContent=t}
+function log(t){state.history.unshift(new Date().toLocaleTimeString('tr-TR')+' · '+t);render()}
+function eligible(){return state.seller==='approved'&&state.product==='approved'&&(state.target==='marketplace'||state.curator)}
+function render(){$('sellerState').textContent=names[state.seller];$('productState').textContent=state.product==='none'?'Ürün yok':names[state.product];$('publishState').textContent=eligible()?'Sentetik olarak uygun':'Kapalı';$('reviewSeller').textContent=names[state.seller];$('reviewProduct').textContent=state.product==='none'?'Ürün yok':names[state.product]+' · '+state.target;$('submitProduct').disabled=state.seller!=='approved'||state.product==='pending';$('approveSeller').disabled=state.seller!=='pending';$('rejectSeller').disabled=state.seller!=='pending';$('suspendSeller').disabled=state.seller!=='approved';$('approveProduct').disabled=state.product!=='pending'||state.seller!=='approved';$('rejectProduct').disabled=state.product!=='pending';$('approveMerch').disabled=state.product!=='approved'||state.target!=='merchandise'||state.seller!=='approved'||state.curator;$('history').replaceChildren();if(!state.history.length){const n=document.createElement('small');n.textContent='Henüz sentetik işlem yok.';$('history').append(n)}else state.history.forEach(t=>{const n=document.createElement('p');n.textContent=t;$('history').append(n)})}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>{const on=x===b;x.setAttribute('aria-selected',String(on));$(x.dataset.tab).hidden=!on})}));
+$('submitSeller').onclick=()=>{if(!$('sellerName').value.trim()||!$('sellerInfo').value.trim())return message('Satıcı adı ve açıklama gerekli.');state.seller='pending';state.product='none';state.curator=false;log('Satıcı başvurusu incelemeye gönderildi');message('Başvuru alındı (sentetik).')};
+$('submitProduct').onclick=()=>{if(state.seller!=='approved')return message('Önce satıcı onayı gerekli.');if(!$('productName').value.trim()||!$('productDescription').value.trim())return message('Ürün adı ve açıklama gerekli.');state.product='pending';state.target=$('productCategory').value;state.curator=false;log('Ürün incelemeye gönderildi: '+state.target);message('Ürün başvurusu alındı (sentetik).')};
+function decision(which,value){if(!$('reason').value.trim())return message('Denetçi karar gerekçesi zorunlu.');if(which==='seller'){if(value==='suspended'&&state.seller!=='approved'||value!=='suspended'&&state.seller!=='pending')return message('Bu satıcı kararı geçerli değil.');state.seller=value}else{if(state.product!=='pending'||state.seller!=='approved')return message('Ürün kararı için onaylı satıcı ve bekleyen ürün gerekir.');state.product=value}log((which==='seller'?'Satıcı':'Ürün')+' kararı: '+names[value]+' — '+$('reason').value.trim());$('reason').value='';message('Sentetik karar kaydedildi.')};
+$('approveSeller').onclick=()=>decision('seller','approved');$('rejectSeller').onclick=()=>decision('seller','rejected');$('suspendSeller').onclick=()=>decision('seller','suspended');$('approveProduct').onclick=()=>decision('product','approved');$('rejectProduct').onclick=()=>decision('product','rejected');
+$('approveMerch').onclick=()=>{if(!$('reason').value.trim())return message('Gerekçe zorunlu.');if(state.target!=='merchandise'||state.product!=='approved'||state.seller!=='approved')return message('Önce ürün ve satıcı onayı gerekli.');state.curator=true;log('Merchandise koleksiyon onayı — '+$('reason').value.trim());$('reason').value='';message('Sentetik koleksiyon onayı kaydedildi.')};
+$('reset').onclick=()=>{Object.assign(state,{seller:'none',product:'none',target:'marketplace',curator:false,history:[]});['sellerName','sellerInfo','productName','productDescription','reason'].forEach(id=>$(id).value='');message('Sentetik önizleme sıfırlandı.');render()};render();
+})();
+</script></body></html>
