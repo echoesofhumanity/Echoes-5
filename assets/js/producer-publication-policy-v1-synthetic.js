@@ -5,7 +5,7 @@
 (function(root){
 "use strict";
 const roles=Object.freeze(["producer","seller_reviewer","product_reviewer","merchandise_curator","publisher","administrator","oversight"]);
-const actions=Object.freeze(["submit_seller","approve_seller","reject_seller","submit_product","approve_product","reject_product","approve_collection","place","remove","revise_product"]);
+const actions=Object.freeze(["submit_seller","approve_seller","reject_seller","submit_product","approve_product","reject_product","approve_collection","place","remove","revise_product","revise_images"]);
 function fail(message){throw new Error(message)}
 function text(v,max){return typeof v==="string"&&v.trim().length>0&&v.length<=max}
 function actor(a){if(!a||!text(a.id,100)||!Array.isArray(a.roles)||!a.roles.every(r=>roles.includes(r)))fail("Invalid actor");return a}
@@ -41,6 +41,11 @@ function transition(current,a,action,input){
  case "remove":
    if(!current.placed||!(role(a,"publisher")||role(a,"administrator")))fail("Removal denied");
    requireReason();next.placed=false;event="synthetic_removal";break;
+ case "revise_images":
+   if(!isOwner||!role(a,"producer")||current.product==="none"||!current.productData)fail("Image revision denied");
+   if(!Number.isInteger(data.imageCount)||data.imageCount<0||data.imageCount>6)fail("Invalid image count");
+   if(current.placed)next.placed=false;
+   next.product="pending";next.collection=false;event="image_revision_requires_review";break;
  case "revise_product":
    if(!isOwner||!role(a,"producer")||current.product==="none"||!current.productData)fail("Revision denied");
    if(!text(data.title,100)||!text(data.description,1000)||!["physical","digital"].includes(data.kind)||!["marketplace","merchandise"].includes(data.target))fail("Invalid revision");
@@ -67,6 +72,12 @@ function selfTest(){
  check("publisher only",()=>{denied(()=>transition(s,owner,"place"));s=transition(s,pub,"place");if(!s.placed)fail("Placement")});
  check("removal and reason",()=>{denied(()=>transition(s,pub,"remove"));s=transition(s,pub,"remove",{reason:"withdraw"});if(s.placed)fail("Removal")});
  check("revision revokes approvals",()=>{s=transition(s,owner,"revise_product",{title:"Revised cup",description:"Handmade",kind:"physical",target:"marketplace"});if(s.product!=="pending"||s.collection||s.placed||eligible(s))fail("Revision")});
+ check("image-only revision invalidates approval",()=>{
+   s=transition(s,pr,"approve_product",{reason:"checked again"});
+   s=transition(s,owner,"revise_images",{imageCount:2});
+   if(s.product!=="pending"||s.collection||s.placed||eligible(s))fail("Image revision");
+ });
+ check("image revision rejects unrelated actors",()=>denied(()=>transition(s,pub,"revise_images",{imageCount:2})));
  check("audit sequence",()=>{if(s.events.some((e,i)=>e.sequence!==i+1))fail("Audit order")});
  return Object.freeze({passed:checks.length,checks:Object.freeze(checks)});
 }
