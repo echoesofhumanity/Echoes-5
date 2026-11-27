@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Echoes Marketplace · Standalone Experience Preview</title><meta name="theme-color" content="#061322"><meta name="description" content="Discover human creativity and the stories behind it. Echoes Marketplace standalone experience preview.">
+<style>
+:root{color-scheme:dark;--bg:#061322;--ink:#eff8fa;--muted:#b4cbd2;--teal:#72e2d6;--line:#3c6972}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:16px/1.55 system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);background-image:radial-gradient(ellipse at 70% 0%,#174958 0,transparent 42%)}button,input,select{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer}a{color:inherit}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--teal);outline-offset:3px}.wrap{width:min(1160px,calc(100% - 32px));margin:auto}.top{position:sticky;top:0;z-index:10;background:#071725ee;backdrop-filter:blur(20px);border-bottom:1px solid #36606b}.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:68px}.brand{font-weight:750;letter-spacing:.11em;font-size:.86rem;text-decoration:none}.topnav{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.topnav a{text-decoration:none;font-size:.83rem}.pill{border:1px solid #63989c;border-radius:999px;background:#102c3b;color:var(--ink);padding:9px 14px}.hero{min-height:440px;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;padding:70px 0}.hero:before{content:"";position:absolute;width:330px;height:330px;border:1px solid #6bcbcd66;border-radius:50%;box-shadow:0 0 80px #34c7c71c,inset 0 0 80px #34c7c718;animation:breathe 8s ease-in-out infinite;pointer-events:none}.hero>*{position:relative}.eyebrow{color:var(--teal);font-size:.77rem;letter-spacing:.19em;font-weight:700;text-transform:uppercase}h1{font-size:clamp(2.6rem,8vw,5.5rem);line-height:1.03;letter-spacing:-.045em;margin:18px auto;max-width:900px}h2{font-size:clamp(1.65rem,4vw,2.65rem);line-height:1.16;margin:10px 0}h3{margin:0 0 6px}p{color:var(--muted)}.hero p{max-width:640px;margin:18px auto 28px;font-size:1.1rem}.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.primary{background:var(--teal);color:#05232b;border:0;border-radius:14px;padding:12px 20px;font-weight:750;text-decoration:none}.secondary{background:#112d3b;border:1px solid #63989c;color:var(--ink);border-radius:14px;padding:12px 20px;text-decoration:none}.notice{background:#112a35;border:1px solid #376c74;border-radius:16px;padding:13px 18px;color:#d1e9e8;font-size:.9rem;margin:18px 0 0}section{padding:55px 0}.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:15px;flex-wrap:wrap;margin-bottom:20px}.search{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.search input,.search select{min-height:46px;background:#102b39;color:var(--ink);border:1px solid #467b85;border-radius:12px;padding:9px 12px}.search input{flex:2;min-width:190px}.search select{flex:1;min-width:140px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.product,.story,.panel{border:1px solid #37616c;border-radius:20px;background:linear-gradient(155deg,#132f3d,#0a1b2a);overflow:hidden}.art{height:190px;display:grid;place-items:center;background:radial-gradient(circle at 50% 30%,#6aaeb33d,transparent 65%),linear-gradient(145deg,#1a4550,#0a1928);font-size:4.2rem}.product .info{padding:16px}.product h3{font-size:1.04rem}.price{font-weight:800;color:#b9f2e8;margin:12px 0}.product button{width:100%;background:#143b45;color:var(--ink);border:1px solid #5b999c;border-radius:11px;padding:10px}.tag{font-size:.72rem;letter-spacing:.08em;color:#b8d6da}.columns{display:grid;grid-template-columns:1.2fr 1fr;gap:20px}.panel{padding:23px}.panel h3{font-size:1.2rem}.cartline{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #335c68;padding:13px 0}.cartline button{border:1px solid #54858c;border-radius:8px;background:#143441;color:var(--ink);padding:4px 10px}.cartline .controls{display:flex;align-items:center;gap:6px}.total{font-size:1.3rem;font-weight:800;color:var(--teal)}.stories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.story{padding:24px;min-height:190px}.story .symbol{font-size:2rem;color:var(--teal)}footer{border-top:1px solid #315663;padding:32px 0;color:#a9c3ca;font-size:.84rem}@keyframes breathe{50%{transform:scale(1.17);opacity:.45}}@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.columns,.stories{grid-template-columns:1fr}.hero{min-height:390px}.art{height:145px}.topnav a.hide-sm{display:none}.product .info{padding:12px}.brand{font-size:.7rem}}@media(prefers-reduced-motion:reduce){*,*:before{animation:none!important;scroll-behavior:auto!important}}
+</style></head><body>
+<header class="top"><div class="wrap"><a class="brand" href="#home">ECHOES <span style="color:#72e2d6">MARKETPLACE</span></a><nav class="topnav" aria-label="Preview navigation"><a class="hide-sm" href="#discover">Discover</a><a href="#wallet">EC & Cart</a><button class="pill" id="lang" type="button">TR</button></nav></div></header>
+<main><div class="wrap"><div class="notice" id="notice">STANDALONE EXPERIENCE PREVIEW · Synthetic products and cart only. No real EC balance, purchase, payment or order.</div></div>
+<section class="hero" id="home"><div class="wrap"><div class="eyebrow">ECHOES OF HUMANITY · DIGITAL CIVILIZATION WITHOUT BORDERS</div><h1 id="heroTitle">Made by people.<br>Connected by humanity.</h1><p id="heroDesc">Discover meaningful creations and the people behind them. Every work carries a human story.</p><div class="actions"><a class="primary" href="#discover" id="explore">Explore creations</a><a class="secondary" href="#stories" id="meet">Meet the stories</a></div></div></section>
+<section id="discover"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">DISCOVER HUMAN CREATIVITY</div><h2 id="discoverTitle">Objects with meaning</h2><p id="discoverDesc">A first glimpse of the Echoes collection. These are concepts, not products for sale.</p></div><a href="https://echoesofhumanity.github.io/Echoes-5/merchandise.html" id="merchLink">Official Merchandise →</a></div><div class="search"><input id="query" type="search" placeholder="Search concepts" aria-label="Search concepts"><select id="category" aria-label="Category"><option value="all">All concepts</option><option value="wear">Wearables</option><option value="objects">Objects</option></select></div><div class="grid" id="products"></div><p id="empty" hidden>No matching concepts.</p></div></section>
+<section id="wallet"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">ECHOES CREDITS</div><h2 id="walletTitle">A clear path from discovery to EC</h2></div></div><div class="columns"><div class="panel"><h3 id="cartTitle">Your demo basket</h3><div id="cartLines" aria-live="polite"></div><p class="total" id="total">0 EC</p><p id="cartNotice">Demo only. Nothing here creates a payment or an order.</p><button class="secondary" id="clear" type="button">Clear basket</button></div><div class="panel"><h3 id="walletCard">EC wallet · experience preview</h3><p id="balance">Live balance: Not connected</p><p id="reference">Reference: 1 USD = 100 EC. This is not a live conversion or an offer to purchase credits.</p><p id="gate">Actual EC loading, settlement and checkout remain unavailable until security and legal approval.</p><a class="secondary" href="https://echoesofhumanity.github.io/Echoes-5/ec-wallet-preview.html" id="demoWallet">Open existing EC test wallet →</a></div></div></div></section>
+<section id="stories"><div class="wrap"><div class="eyebrow">THE PEOPLE BEHIND THE WORK</div><h2 id="storiesTitle">Human value beyond the price</h2><p id="storiesDesc">A marketplace where the maker's dignity matters as much as the work.</p><div class="stories"><article class="story"><div class="symbol">✦</div><h3 id="s1">Creators first</h3><p id="s1p">Every published creator will have an identity, story and rights-respecting presentation.</p></article><article class="story"><div class="symbol">◎</div><h3 id="s2">One Echoes home</h3><p id="s2p">Independent storefronts and official Merchandise belong to one human-centered ecosystem.</p></article><article class="story"><div class="symbol">∞</div><h3 id="s3">Without borders</h3><p id="s3p">Art, music, books and craft can meet across languages and cultures.</p></article></div></div></section></main>
+<footer><div class="wrap">Echoes of Humanity · Standalone Marketplace V2 preview · No live commerce · <a href="https://echoesofhumanity.github.io/Echoes-5/marketplace.html">Existing Marketplace</a> · <a href="https://echoesofhumanity.github.io/Echoes-5/merchandise.html">Merchandise</a></div></footer>
+<script>
+/* Echoes Marketplace — isolated synthetic catalogue validator.
+ * Read-only. No checkout, publishing, stock reservation or payment authority.
+ */
+(function (root) {
+  "use strict";
+
+  const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+  function validate(payload) {
+    if (!payload || payload.schema_version !== 1 ||
+        payload.mode !== "synthetic_demo" || payload.currency !== "EC" ||
+        payload.checkout_enabled !== false || !Array.isArray(payload.products)) {
+      throw new Error("Invalid synthetic catalogue envelope");
+    }
+
+    const ids = new Set();
+    const slugs = new Set();
+    const products = payload.products.map(function (item) {
+      if (!item || typeof item !== "object" ||
+          typeof item.product_id !== "string" || !UUID.test(item.product_id) ||
+          typeof item.concept_id !== "string" || !SLUG.test(item.concept_id) ||
+          typeof item.title !== "string" || !item.title.trim() ||
+          !Number.isSafeInteger(item.price_ec) || item.price_ec <= 0 ||
+          item.creator_id !== null || item.creator_verified !== false ||
+          item.stock_quantity !== null || item.status !== "concept" ||
+          item.published !== false || item.checkout_enabled !== false) {
+        throw new Error("Invalid or unsafe synthetic product");
+      }
+      const id = item.product_id.toLowerCase();
+      if (ids.has(id) || slugs.has(item.concept_id)) {
+        throw new Error("Duplicate synthetic product identity");
+      }
+      ids.add(id);
+      slugs.add(item.concept_id);
+      return Object.freeze({
+        product_id: id,
+        concept_id: item.concept_id,
+        title: item.title.trim(),
+        price_ec: item.price_ec,
+        status: "concept",
+        published: false,
+        checkout_enabled: false
+      });
+    });
+    return Object.freeze(products);
+  }
+
+  async function load(url) {
+    const response = await fetch(url || "assets/data/marketplace-catalog.json", {
+      cache: "no-store",
+      credentials: "same-origin"
+    });
+    if (!response.ok) throw new Error("Synthetic catalogue unavailable");
+    return validate(await response.json());
+  }
+
+  root.EchoesMarketplaceCatalog = Object.freeze({
+    validate: validate,
+    load: load
+  });
+})(window);
+
+/* Echoes Marketplace — isolated, calculation-only synthetic cart.
+ * No checkout, payment, stock reservation, order creation or persistence.
+ */
+(function (root) {
+  "use strict";
+
+  const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const MAX_LINES = 50;
+  const MAX_QUANTITY = 99;
+
+  function calculate(products, requestedLines) {
+    if (!Array.isArray(products) || !Array.isArray(requestedLines) ||
+        requestedLines.length === 0 || requestedLines.length > MAX_LINES) {
+      throw new Error("Invalid synthetic cart");
+    }
+    const catalog = new Map();
+    products.forEach(function (product) {
+      if (!product || typeof product.product_id !== "string" ||
+          !UUID.test(product.product_id) ||
+          !Number.isSafeInteger(product.price_ec) || product.price_ec <= 0 ||
+          product.status !== "concept" || product.published !== false ||
+          product.checkout_enabled !== false) {
+        throw new Error("Unsafe synthetic catalogue entry");
+      }
+      const id = product.product_id.toLowerCase();
+      if (catalog.has(id)) throw new Error("Duplicate catalogue identity");
+      catalog.set(id, product);
+    });
+
+    const used = new Set();
+    let total = 0;
+    const lines = requestedLines.map(function (line) {
+      if (!line || typeof line.product_id !== "string" ||
+          !UUID.test(line.product_id) ||
+          !Number.isSafeInteger(line.quantity) ||
+          line.quantity < 1 || line.quantity > MAX_QUANTITY) {
+        throw new Error("Invalid synthetic cart line");
+      }
+      const id = line.product_id.toLowerCase();
+      if (used.has(id)) throw new Error("Duplicate cart line");
+      used.add(id);
+      const product = catalog.get(id);
+      if (!product) throw new Error("Unknown synthetic product");
+      const subtotal = product.price_ec * line.quantity;
+      if (!Number.isSafeInteger(subtotal) || !Number.isSafeInteger(total + subtotal)) {
+        throw new Error("Synthetic EC total overflow");
+      }
+      total += subtotal;
+      return Object.freeze({
+        product_id: id,
+        quantity: line.quantity,
+        unit_price_ec: product.price_ec,
+        subtotal_ec: subtotal
+      });
+    });
+    return Object.freeze({
+      mode: "synthetic_demo",
+      currency: "EC",
+      checkout_enabled: false,
+      lines: Object.freeze(lines),
+      total_ec: total
+    });
+  }
+
+  root.EchoesMarketplaceCart = Object.freeze({ calculate: calculate });
+})(window);
+
+/* Echoes Marketplace — synthetic product-to-cart handoff.
+ * Demo only: stores selected concept IDs and quantities, never payment/customer data.
+ * Does not authorize purchase or alter the live merchandise catalogue.
+ */
+(function (root) {
+  "use strict";
+  const KEY = "echoes_marketplace_synthetic_cart_v1";
+  const MAX_AGE_MS = 60 * 60 * 1000;
+  const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  const MAX_LINES = 50;
+  function validate(lines) {
+    if (!Array.isArray(lines) || lines.length > MAX_LINES) throw new Error("Invalid demo selection");
+    const seen = new Set();
+    return lines.map(function (line) {
+      if (!line || typeof line.concept_id !== "string" || !SLUG.test(line.concept_id) ||
+          !Number.isSafeInteger(line.quantity) || line.quantity < 1 || line.quantity > 99 ||
+          seen.has(line.concept_id)) throw new Error("Invalid demo selection line");
+      seen.add(line.concept_id);
+      return Object.freeze({ concept_id: line.concept_id, quantity: line.quantity });
+    });
+  }
+  function read() {
+    try {
+      const raw = root.sessionStorage.getItem(KEY);
+      if (!raw) return Object.freeze([]);
+      const data = JSON.parse(raw);
+      if (!data || data.version !== 1 || !Number.isSafeInteger(data.saved_at) ||
+          data.saved_at > Date.now() || Date.now() - data.saved_at > MAX_AGE_MS) {
+        root.sessionStorage.removeItem(KEY);
+        return Object.freeze([]);
+      }
+      return Object.freeze(validate(data.lines));
+    } catch (error) {
+      try { root.sessionStorage.removeItem(KEY); } catch (_) {}
+      return Object.freeze([]);
+    }
+  }
+  function write(lines) {
+    const clean = validate(lines);
+    root.sessionStorage.setItem(KEY, JSON.stringify({
+      version: 1, saved_at: Date.now(), lines: clean
+    }));
+    return Object.freeze(clean);
+  }
+  function add(conceptId, quantity) {
+    if (typeof conceptId !== "string" || !SLUG.test(conceptId) ||
+        !Number.isSafeInteger(quantity) || quantity < 1 || quantity > 99) {
+      throw new Error("Invalid demo product selection");
+    }
+    const next = read().map(function (line) {
+      return { concept_id: line.concept_id, quantity: line.quantity };
+    });
+    const found = next.find(function (line) { return line.concept_id === conceptId; });
+    if (found) {
+      if (found.quantity + quantity > 99) throw new Error("Demo quantity limit exceeded");
+      found.quantity += quantity;
+    } else {
+      next.push({ concept_id: conceptId, quantity: quantity });
+    }
+    return write(next);
+  }
+  function setQuantity(conceptId, quantity) {
+    if (typeof conceptId !== "string" || !SLUG.test(conceptId) ||
+        !Number.isSafeInteger(quantity) || quantity < 0 || quantity > 99) {
+      throw new Error("Invalid demo quantity update");
+    }
+    const next = read().map(function (line) {
+      return { concept_id: line.concept_id, quantity: line.quantity };
+    }).filter(function (line) { return line.concept_id !== conceptId; });
+    if (quantity > 0) next.push({ concept_id: conceptId, quantity: quantity });
+    return write(next);
+  }
+  function clear() {
+    root.sessionStorage.removeItem(KEY);
+  }
+  root.EchoesMarketplaceSelection = Object.freeze({
+    read: read, add: add, setQuantity: setQuantity, clear: clear
+  });
+})(window);
+
+const ECHOES_STANDALONE_CATALOG={"schema_version":1,"mode":"synthetic_demo","currency":"EC","checkout_enabled":false,"description":"Isolated synthetic product model. Not connected to storefronts, payments or live orders.","products":[{"product_id":"5fa95de9-7873-4f1a-a6dc-704ff8848f2e","concept_id":"one-humanity-tee","title":"One Humanity Tee","price_ec":1990,"creator_id":null,"creator_verified":false,"stock_quantity":null,"status":"concept","published":false,"checkout_enabled":false},{"product_id":"40a0ebad-7b78-4621-a7eb-6896c2450334","concept_id":"echoes-hoodie","title":"Echoes Hoodie","price_ec":2490,"creator_id":null,"creator_verified":false,"stock_quantity":null,"status":"concept","published":false,"checkout_enabled":false},{"product_id":"a349efa0-b80f-4426-8e4e-90d0c9c904bc","concept_id":"one-world-bottle","title":"One World Bottle","price_ec":1490,"creator_id":null,"creator_verified":false,"stock_quantity":null,"status":"concept","published":false,"checkout_enabled":false},{"product_id":"d01e00cc-ce6c-4065-89e6-dbff5896f1ba","concept_id":"humanity-notebook","title":"Humanity Notebook","price_ec":990,"creator_id":null,"creator_verified":false,"stock_quantity":null,"status":"concept","published":false,"checkout_enabled":false}]};
+window.EchoesMarketplaceCatalog=Object.freeze({validate:window.EchoesMarketplaceCatalog.validate,load:async()=>window.EchoesMarketplaceCatalog.validate(ECHOES_STANDALONE_CATALOG)});
+</script>
+<script>
+(()=>{'use strict';const $=id=>document.getElementById(id);const products=[{id:'one-humanity-tee',name:'One Humanity Tee',icon:'👕',cat:'wear'},{id:'echoes-hoodie',name:'Echoes Hoodie',icon:'🧥',cat:'wear'},{id:'one-world-bottle',name:'One World Bottle',icon:'◉',cat:'objects'},{id:'humanity-notebook',name:'Humanity Notebook',icon:'📖',cat:'objects'}];let catalog=[],lang='en';const copy={en:{notice:'EXPERIENCE PREVIEW · Synthetic products and cart only. No real EC balance, purchase, payment or order.',heroTitle:'Made by people.<br>Connected by humanity.',heroDesc:'Discover meaningful creations and the people behind them. Every work carries a human story.',explore:'Explore creations',meet:'Meet the stories',discoverTitle:'Objects with meaning',discoverDesc:'A first glimpse of the Echoes collection. These are concepts, not products for sale.',merchLink:'Official Merchandise →',walletTitle:'A clear path from discovery to EC',cartTitle:'Your demo basket',cartNotice:'Demo only. Nothing here creates a payment or an order.',clear:'Clear basket',walletCard:'EC wallet · experience preview',balance:'Live balance: Not connected',reference:'Reference: 1 USD = 100 EC. This is not a live conversion or an offer to purchase credits.',gate:'Actual EC loading, settlement and checkout remain unavailable until security and legal approval.',demoWallet:'Open existing EC test wallet →',storiesTitle:'Human value beyond the price',storiesDesc:"A marketplace where the maker's dignity matters as much as the work.",s1:'Creators first',s1p:'Every published creator will have an identity, story and rights-respecting presentation.',s2:'One Echoes home',s2p:'Independent storefronts and official Merchandise belong to one human-centered ecosystem.',s3:'Without borders',s3p:'Art, music, books and craft can meet across languages and cultures.',add:'Add to demo basket',empty:'Your demo basket is empty.',concept:'CONCEPT · NOT FOR SALE',search:'Search concepts',all:'All concepts',wear:'Wearables',objects:'Objects',nomatch:'No matching concepts.',unavailable:'Demo catalog unavailable. No products can be added.'},tr:{notice:'BAĞIMSIZ DENEYİM ÖNİZLEMESİ · Yalnızca sentetik ürün ve sepet. Gerçek EC bakiyesi, satın alma, ödeme veya sipariş yok.',heroTitle:'İnsan emeğiyle doğar.<br>İnsanlıkla buluşur.',heroDesc:'Anlam taşıyan eserleri ve onları yaratan insanları keşfet. Her eserin arkasında bir insan hikâyesi var.',explore:'Eserleri keşfet',meet:'Hikâyeleri tanı',discoverTitle:'Anlam taşıyan eserler',discoverDesc:'Echoes koleksiyonuna ilk bakış. Bunlar satışa açık olmayan konseptlerdir.',merchLink:'Resmî Merchandise →',walletTitle:'Keşiften EC’ye açık bir yol',cartTitle:'Demo sepetin',cartNotice:'Yalnızca demo. Burada ödeme veya sipariş oluşturulmaz.',clear:'Sepeti temizle',walletCard:'EC cüzdanı · deneyim önizlemesi',balance:'Canlı bakiye: Bağlı değil',reference:'Referans: 1 USD = 100 EC. Bu canlı kur veya kredi satın alma teklifi değildir.',gate:'Gerçek EC yükleme, mutabakat ve ödeme güvenlik ve yasal onaya kadar kapalıdır.',demoWallet:'Mevcut EC test cüzdanını aç →',storiesTitle:'Fiyatın ötesindeki insan değeri',storiesDesc:'Üreticinin onurunun da eseri kadar önemli olduğu bir pazar yeri.',s1:'Önce üreticiler',s1p:'Yayımlanan her üreticinin kimliği, hikâyesi ve haklarına saygılı bir sunumu olacak.',s2:'Tek Echoes çatısı',s2p:'Bağımsız mağazalar ve resmî Merchandise insan merkezli tek bir ekosistemde buluşur.',s3:'Sınırların ötesinde',s3p:'Sanat, müzik, kitaplar ve el emeği diller ve kültürler arasında buluşur.',add:'Demo sepetine ekle',empty:'Demo sepetin boş.',concept:'KONSEPT · SATIŞTA DEĞİL',search:'Konsept ara',all:'Tüm konseptler',wear:'Giyim',objects:'Nesneler',nomatch:'Eşleşen konsept yok.',unavailable:'Demo kataloğa erişilemiyor. Ürün eklenemez.'}};function t(k){return copy[lang][k]}function updateLanguage(){Object.keys(copy.en).forEach(k=>{const e=$(k);if(e)e[k==='heroTitle'?'innerHTML':'textContent']=t(k)});$('lang').textContent=lang==='en'?'TR':'EN';$('query').placeholder=t('search');$('category').options[0].text=t('all');$('category').options[1].text=t('wear');$('category').options[2].text=t('objects');renderProducts();renderCart()}function safeSelection(){try{return window.EchoesMarketplaceSelection.read()}catch{return []}}function renderProducts(){const q=$('query').value.toLowerCase().trim(),cat=$('category').value;const filtered=products.filter(p=>(cat==='all'||cat===p.cat)&&p.name.toLowerCase().includes(q));$('products').replaceChildren();$('empty').hidden=!!filtered.length;$('empty').textContent=t('nomatch');filtered.forEach(p=>{const entry=catalog.find(x=>x.concept_id===p.id),card=document.createElement('article');card.className='product';const art=document.createElement('div');art.className='art';art.textContent=p.icon;art.setAttribute('aria-hidden','true');const info=document.createElement('div');info.className='info';const tag=document.createElement('div');tag.className='tag';tag.textContent=t('concept');const title=document.createElement('h3');title.textContent=p.name;const price=document.createElement('div');price.className='price';price.textContent=entry?entry.price_ec.toLocaleString()+' EC':'—';const btn=document.createElement('button');btn.type='button';btn.textContent=t('add');btn.disabled=!entry;btn.onclick=()=>{try{window.EchoesMarketplaceSelection.add(p.id,1);renderCart()}catch(e){$('cartNotice').textContent=e.message}};info.append(tag,title,price,btn);card.append(art,info);$('products').append(card)})}function renderCart(){const lines=safeSelection();$('cartLines').replaceChildren();if(!lines.length){const p=document.createElement('p');p.textContent=t('empty');$('cartLines').append(p)}const cartLines=[];lines.forEach(line=>{const p=catalog.find(x=>x.concept_id===line.concept_id);if(!p)return;cartLines.push({product_id:p.product_id,quantity:line.quantity});const row=document.createElement('div');row.className='cartline';const name=document.createElement('span');name.textContent=p.title+' · '+p.price_ec.toLocaleString()+' EC';const controls=document.createElement('div');controls.className='controls';for(const [label,delta] of [['−',-1],['+',1]]){const b=document.createElement('button');b.type='button';b.textContent=label;b.setAttribute('aria-label',label==='+'?'Increase quantity':'Decrease quantity');b.disabled=delta>0&&line.quantity>=99;b.onclick=()=>{try{window.EchoesMarketplaceSelection.setQuantity(line.concept_id,line.quantity+delta);renderCart()}catch(e){$('cartNotice').textContent=e.message}};controls.append(b)}const qty=document.createElement('span');qty.textContent=String(line.quantity);controls.insertBefore(qty,controls.lastChild);row.append(name,controls);$('cartLines').append(row)});try{const result=cartLines.length?window.EchoesMarketplaceCart.calculate(catalog,cartLines):null;$('total').textContent=(result?result.total_ec.toLocaleString():0)+' EC'}catch{$('total').textContent='— EC'} }$('query').addEventListener('input',renderProducts);$('category').addEventListener('change',renderProducts);$('lang').onclick=()=>{lang=lang==='en'?'tr':'en';updateLanguage()};$('clear').onclick=()=>{window.EchoesMarketplaceSelection.clear();renderCart()};(async()=>{try{catalog=await window.EchoesMarketplaceCatalog.load()}catch{catalog=[];$('cartNotice').textContent=t('unavailable')}updateLanguage()})();})();
+</script></body></html>
